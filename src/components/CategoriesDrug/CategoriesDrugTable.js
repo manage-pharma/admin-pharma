@@ -4,10 +4,10 @@ import { Link, useHistory } from "react-router-dom";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 const CategoriesTable = (props) => {
-  const {categoryList} = props
+  const {categoryDrugList} = props
   const history = useHistory();
 
-  const {loading, error, categories} = categoryList
+  const {loading, error, categoriesDrug} = categoryDrugList
   return (
     <div className="col-md-12 col-lg-8">
       <table id="table" className="table">
@@ -30,9 +30,9 @@ const CategoriesTable = (props) => {
           loading ? (<Loading />) : error ? (<Message>{error}</Message>) : ''
         }
         <tbody>
-        {categories?.map((item, index)=>(
+        {categoriesDrug?.map((item, index)=>(
           <tr key={index} style={{cursor:'pointer'}} onClick={(e)=>{
-            history.push(`/category/${item._id}`)
+            history.push(`/category-drug/${item._id}`)
           }}>
             <td>
               <div className="form-check">

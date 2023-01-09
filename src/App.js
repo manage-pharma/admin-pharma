@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/productScreen";
 import CategoriesScreen from "./screens/CategoriesScreen";
+import CategoriesDrugScreen from "./screens/CategoriesDrugScreen";
 import OrderScreen from "./screens/OrderScreen";
 import OrderDetailScreen from "./screens/OrderDetailScreen";
 import AddProduct from "./screens/AddProduct";
@@ -44,6 +45,7 @@ function App() {
           {/* <PrivateRouter path="/products/page/:pageNumber" component={ProductScreen} exact /> */}
           {/* <PrivateRouter path="/products/search/:keyword/page/:pageNumber" component={ProductScreen} exact /> */}
           <PrivateRouter path="/categories" component={CategoriesScreen} />
+          <PrivateRouter path="/categories-drug" component={CategoriesDrugScreen} />
           <PrivateRouter path="/category/:id" component={CategoriesDetail} />
           <PrivateRouter path="/orders" component={OrderScreen} />
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
