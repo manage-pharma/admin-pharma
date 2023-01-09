@@ -65,7 +65,7 @@ const AddProductMain = () => {
   return (
     <>
       <Toast />
-      <section className="content-main" style={{ maxWidth: "1200px" }}>
+      <section className="content-main" >
         <form onSubmit={handleSubmit}>
           <div className="content-header">
             <Link to="/products" className="btn btn-danger text-white">
@@ -79,8 +79,8 @@ const AddProductMain = () => {
             </div>
           </div>
           {/* name, price, description, image, countInStock */}
-          <div className="row mb-4">
-            <div className="col-xl-8 col-lg-8">
+          <div className="mb-4">
+            <div className="">
               <div className="card mb-4 shadow-sm">
                 <div className="card-body">
                   {

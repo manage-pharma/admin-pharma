@@ -4,10 +4,10 @@ import OrderDetailInfo from "./OrderDetailInfo";
 import { Link} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { getOrderDetails } from "../../Redux/Actions/OrderActions";
-import Message from './../LoadingError/Error';
-import Loading from './../LoadingError/Loading';
+import Message from '../LoadingError/Error';
+import Loading from '../LoadingError/Loading';
 import moment from 'moment/moment';
-import { getOrderDelivered } from './../../Redux/Actions/OrderActions';
+import { getOrderDelivered } from '../../Redux/Actions/OrderActions';
 const OrderDetailMain = (props) => {
   const {orderId} = props;
   const dispatch = useDispatch()
