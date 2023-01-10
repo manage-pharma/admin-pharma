@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import DataTable, { createTheme } from "react-data-table-component";
 import { useSelector, useDispatch } from 'react-redux';
-import { categoriesProduct } from "../../Redux/Actions/ProductActions";
+import { categoriesDrugProduct, categoriesProduct } from "../../Redux/Actions/ProductActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import { useHistory } from 'react-router-dom';
-const DetailCategories = (props) => {
+import moment from 'moment/moment';
+const DetailCategoriesDrug = (props) => {
   const {categoryId} = props;
   const dispatch = useDispatch()
   const history = useHistory();
-  const productCategory = useSelector(state => state.productCategories)
-  const {loading, error, product} = productCategory;
+  const productCategoryDrug = useSelector(state => state.productCategoriesDrug)
+  const {loading, error, product} = productCategoryDrug;
   useEffect(()=>{
-    dispatch(categoriesProduct(categoryId));
+    dispatch(categoriesDrugProduct(categoryId));
   },[dispatch, categoryId])
 
 
@@ -75,6 +76,36 @@ const DetailCategories = (props) => {
       selector: (row) => row.countInStock,
       sortable: true,
       reorder: true
+    },
+    {
+      name: "UNIT",
+      selector: (row) => row.unit,
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "CAPACITY",
+      selector: (row) => row.capacity,
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "EXP",
+      selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "REST EXP",
+      selector: (row) => (moment(row.expDrug)).diff(moment(Date.now()), "days"),
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "STATUS",
+      selector: (row) => row.statusDrug === true ? "Using" : "Stopped",
+      sortable: true,
+      reorder: true
     }
   ];
   const handleRowClicked = (row) => {
@@ -87,7 +118,7 @@ const DetailCategories = (props) => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Categories</h2>
+        <h2 className="content-title">Categories Drug</h2>
       </div>
 
       <div className="card shadow-sm">
@@ -112,4 +143,4 @@ const DetailCategories = (props) => {
   );
 };
 
-export default DetailCategories;
+export default DetailCategoriesDrug;

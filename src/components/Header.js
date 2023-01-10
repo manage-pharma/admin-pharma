@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {logout} from '../Redux/Actions/UserActions';
+import { changeTheme } from './../Redux/Actions/ThemeAction';
 const Header = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -17,6 +18,14 @@ const Header = () => {
       document.querySelector("body").classList.toggle("aside-mini");
     })
   }, []);
+  const data = useSelector((state)=> state.theme)
+  const handleChangeTheme = (e) =>{
+    e.preventDefault();
+    dispatch(changeTheme(data.theme === 'light' ? 'dark' : 'light'))
+    var element = document.getElementById("radio-inner");
+    element.classList.toggle("active");
+  }
+
   const handleLogout = (e) =>{
     e.preventDefault();
     dispatch(logout())
@@ -54,9 +63,9 @@ const Header = () => {
         </button>
         <ul className="nav">
           <li className="nav-item">
-            <Link className={`nav-link btn-icon `} title="Dark mode" to="#">
-              <i className="fas fa-moon"></i>
-            </Link>
+            <div className="radio-btn nav-link btn-icon" onClick={handleChangeTheme}>
+              <div id="radio-inner"><i className="fas fa-moon"></i></div>
+            </div>
           </li>
           <li className="nav-item">
             <Link className="nav-link btn-icon" to="#">

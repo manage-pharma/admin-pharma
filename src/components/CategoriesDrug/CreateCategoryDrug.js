@@ -8,7 +8,7 @@ const CreateCategoryDrug = (props) => {
   const {valueEdit} = props
   const categoryId = valueEdit._id
   const dispatch = useDispatch();
-  const [data, setData] = useState({name: '', description: '', image: '', isActive: false})
+  const [data, setData] = useState({name: '', description: '', image: '', isActive: true})
   const categoryCreate = useSelector(state => state.categoryDrugCreate);
   const { loading, error, categoryDrug } = categoryCreate;
 
@@ -28,7 +28,7 @@ const CreateCategoryDrug = (props) => {
     setData({
       name: '',
       description: '',
-      isActive: false
+      isActive: true
     })
   }
 
@@ -38,12 +38,11 @@ const CreateCategoryDrug = (props) => {
     setData({
       name: '',
       description: '',
-      isActive: false
+      isActive: true
     })
     props.parentCallbackUpdate(categoryU)
   }
   useEffect(()=>{
-    console.log(valueEdit.isActive)
     if(valueEdit){
       setData({
         name: valueEdit.name,
@@ -55,7 +54,7 @@ const CreateCategoryDrug = (props) => {
       setData({
         name: '',
         description: '',
-        isActive: false
+        isActive: true
       })
     }
     if(categoryDrug){
@@ -98,18 +97,21 @@ const CreateCategoryDrug = (props) => {
           ></textarea>
         </div>
         <div className="mb-4">
-          <label className="form-label">{`Active  `}</label>
-          <input
-            type = 'checkbox'
-            checked={isActive}
-            name="isActive"
-            className="form-check-input" 
-            onChange={() => setData(prev => {
-              return {
-                ...prev, isActive :!isActive
-              }
-            })}
-            />
+          <label className="form-label">Active</label>
+          <label class="switch" for="checkbox">
+            <input 
+              type="checkbox" 
+              id="checkbox"
+              checked={isActive}
+              name="isActive"
+              onChange={() => setData(prev => {
+                return {
+                  ...prev, isActive :!isActive
+                }
+              })}
+              />
+            <div class="slider round"></div>
+          </label>
         </div>
         <div className="d-grid">
           {

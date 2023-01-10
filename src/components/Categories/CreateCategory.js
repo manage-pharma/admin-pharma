@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { createCategory, updateCategory } from "../../Redux/Actions/CategoryAction";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
-
+import axios from "axios";
 const CreateCategory = (props) => {
   const {valueEdit} = props
   const categoryId = valueEdit._id
   const dispatch = useDispatch();
-  const [data, setData] = useState({name: '', description: '', image: '', isActive: false})
+  const [file, setImg] = useState(null) ;
+  const [data, setData] = useState({name: '', description: '', image: '', isActive: true})
   const categoryCreate = useSelector(state => state.categoryCreate);
   const { loading, error, category } = categoryCreate;
 
@@ -24,30 +25,49 @@ const CreateCategory = (props) => {
   }
   const handleSubmit = async(e) => {
     e.preventDefault();
-    dispatch(createCategory({ ...data }));
-    setData({
-      name: '',
-      description: '',
-      isActive: false
-    })
+    if(file){
+      const formData = new FormData();
+      formData.append('image', file);
+      const { data: dataUp } = await axios.post(`/api/category/single`, formData);
+      data.image = dataUp.filename
+      dispatch(createCategory({ ...data }));
+      setData({
+        name: '',
+        description: '',
+        image: '',
+        isActive: true
+      })
+      setImg(null);
+      document.getElementById('uploadFile').value = "";
+
+    }
   }
 
   const hanldeEdit = async(e) => {
     e.preventDefault();
+    if(file){
+      const formData = new FormData();
+      formData.append('image', file);
+      const { data: dataUp } = await axios.post(`/api/category/single`, formData);
+      data.image = dataUp.filename
+    }
     dispatch(updateCategory({ ...data, categoryId }));
     setData({
       name: '',
       description: '',
-      isActive: false
+      image: '',
+      isActive: true
     })
+    setImg(null);
+    document.getElementById('uploadFile').value = "";
     props.parentCallbackUpdate(categoryU)
   }
   useEffect(()=>{
-    console.log(valueEdit.isActive)
     if(valueEdit){
       setData({
         name: valueEdit.name,
         description: valueEdit.description,
+        image: valueEdit.image,
         isActive: valueEdit.isActive
       })
     }
@@ -55,7 +75,8 @@ const CreateCategory = (props) => {
       setData({
         name: '',
         description: '',
-        isActive: false
+        image: '',
+        isActive: true
       })
     }
     if(category){
@@ -63,7 +84,7 @@ const CreateCategory = (props) => {
     }
   },[category, valueEdit, props])
 
-  const { name, description, isActive } = data;
+  const { name, description, image, isActive } = data;
   return (
     <div className="col-md-12 col-lg-4">
       {
@@ -86,10 +107,6 @@ const CreateCategory = (props) => {
           />
         </div>
         <div className="mb-4">
-          <label className="form-label">Images</label>
-          <input className="form-control" type="file" />
-        </div>
-        <div className="mb-4">
           <label className="form-label">Description</label>
           <textarea
             placeholder="Type here"
@@ -102,18 +119,49 @@ const CreateCategory = (props) => {
           ></textarea>
         </div>
         <div className="mb-4">
-          <label className="form-label">{`Active  `}</label>
+          <label className="form-label">Images</label>
           <input
-            type = 'checkbox'
-            checked={isActive}
-            name="isActive"
-            className="form-check-input" 
-            onChange={() => setData(prev => {
-              return {
-                ...prev, isActive :!isActive
-              }
-            })}
-            />
+          id="uploadFile"
+          required={image ? false : true} 
+          onChange={e => {
+            setData(prev => ({ ...prev, image: null }))
+            setImg(e.target.files[0])
+          }}
+          className="form-control" 
+          type="file" />
+          { (image || file)  && (
+            <div>     
+              <img src={(image ? image : URL.createObjectURL(file))}
+                alt="Product"
+                className="mt-3" 
+                style={{width: '250px', marginTop: '5px'}}/>
+              <span 
+                className="delete-button"
+                onClick={e => {
+                  setImg(null)
+                  setData(prev => ({ ...prev, image: null }))
+                  document.getElementById('uploadFile').value = "";
+                }}
+                >&times;</span>
+            </div>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="form-label">Active</label>
+          <label className="switch" htmlFor="checkbox">
+            <input 
+              type="checkbox" 
+              id="checkbox"
+              checked={isActive}
+              name="isActive"
+              onChange={() => setData(prev => {
+                return {
+                  ...prev, isActive :!isActive
+                }
+              })}
+              />
+            <div className="slider round"></div>
+          </label>
         </div>
         <div className="d-grid">
           {

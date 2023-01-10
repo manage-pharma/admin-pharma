@@ -24,7 +24,7 @@ export const listCategoryDrug = () => async(dispatch, getState) =>{
 }
 
 //ADMIN CATEGORY CREATE
-export const createCategoryDrug = ({ name, description }) => async (dispatch, getState) => {
+export const createCategoryDrug = ({ name, description, isActive }) => async (dispatch, getState) => {
     try {
       dispatch({ type: CATEGORY_DRUG_CREATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -40,7 +40,7 @@ export const createCategoryDrug = ({ name, description }) => async (dispatch, ge
   
       const { data } = await axios.post(`/api/category-drug/`,
         {
-          name, description
+          name, description, isActive
         }
         , config);
       dispatch({ type: CATEGORY_DRUG_CREATE_SUCCESS, payload: data });

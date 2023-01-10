@@ -5,12 +5,14 @@ import { categoriesProduct } from "../../Redux/Actions/ProductActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import { useHistory } from 'react-router-dom';
+import moment from "moment";
 const DetailCategories = (props) => {
   const {categoryId} = props;
   const dispatch = useDispatch()
   const history = useHistory();
   const productCategory = useSelector(state => state.productCategories)
   const {loading, error, product} = productCategory;
+
   useEffect(()=>{
     dispatch(categoriesProduct(categoryId));
   },[dispatch, categoryId])
@@ -73,6 +75,36 @@ const DetailCategories = (props) => {
     {
       name: "STOCK",
       selector: (row) => row.countInStock,
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "UNIT",
+      selector: (row) => row.unit,
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "CAPACITY",
+      selector: (row) => row.capacity,
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "EXP",
+      selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "REST EXP",
+      selector: (row) => (moment(row.expDrug)).diff(moment(Date.now()), "days"),
+      sortable: true,
+      reorder: true
+    },
+    {
+      name: "STATUS",
+      selector: (row) => row.statusDrug === true ? "Using" : "Stopped",
       sortable: true,
       reorder: true
     }
