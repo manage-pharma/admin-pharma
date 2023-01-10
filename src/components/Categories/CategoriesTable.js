@@ -21,6 +21,7 @@ const CategoriesTable = (props) => {
             <th>ID</th>
             <th>Name</th>
             <th>Description</th>
+            <th>Image</th>
             <th>Active</th>
             <th className="text-end">Action</th>
           </tr>
@@ -45,7 +46,10 @@ const CategoriesTable = (props) => {
             </td>
             <td>{item.description}</td>
             <td>
-              <input  className="form-check-input"  type="checkbox" defaultChecked={item.isActive} />
+              <img style={{width:"60px", height:"40px"}} src={item.image} alt="image" />
+            </td>
+            <td>
+              <input className="form-check-input"  type="checkbox" defaultChecked={item.isActive} />
             </td>
             <td className="text-end">
               <div 

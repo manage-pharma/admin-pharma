@@ -16,12 +16,21 @@ import ProductEditScreen from "./screens/ProductEditScreen";
 import NotFound from "./screens/NotFound";
 import PrivateRouter from "./PrivateRouter";
 import CategoriesDetail from "./screens/CategoriesDetail";
+import CategoriesDrugDetail from "./screens/CategoriesDrugDetail";
 import ProductExcelCSV from "./screens/ProductExcelCSV";
 import { useDispatch, useSelector } from "react-redux";
 import { listProduct } from "./Redux/Actions/ProductActions";
 import { listOrder } from "./Redux/Actions/OrderActions";
-
 function App() {
+  const data = useSelector((state)=> state.theme)
+  if(data.theme === "dark"){
+    document.body.classList.remove("bg-light")
+    document.body.classList.add("bg-dark")
+  }
+  else{
+    document.body.classList.remove("bg-dark")
+    document.body.classList.add("bg-light")
+  }
   const dispatch = useDispatch();
   const userLogin = useSelector(state => state.userLogin)
   const {userInfo} = userLogin;
@@ -47,6 +56,7 @@ function App() {
           <PrivateRouter path="/categories" component={CategoriesScreen} />
           <PrivateRouter path="/categories-drug" component={CategoriesDrugScreen} />
           <PrivateRouter path="/category/:id" component={CategoriesDetail} />
+          <PrivateRouter path="/category-drug/:id" component={CategoriesDrugDetail} />
           <PrivateRouter path="/orders" component={OrderScreen} />
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
           <PrivateRouter path="/addproduct" component={AddProduct} />

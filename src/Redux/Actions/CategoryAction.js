@@ -60,7 +60,7 @@ export const createCategory = ({ name, description, image }) => async (dispatch,
   };
 
 //ADMIN UPDATE CATEGORY
-export const updateCategory = ({name, description, isActive, categoryId}) => async(dispatch, getState)=>{
+export const updateCategory = ({name, description, image, isActive, categoryId}) => async(dispatch, getState)=>{
   try {
     dispatch({type: CATEGORY_UPDATE_REQUEST});
     const {
@@ -74,7 +74,7 @@ export const updateCategory = ({name, description, isActive, categoryId}) => asy
       },
     };
     const { data } = await axios.put(`/api/category/${categoryId}`, {
-      name, description, isActive
+      name, description, image, isActive
     }, config)
     dispatch({type: CATEGORY_UPDATE_SUCCESS, payload: data});
   } catch (error) {

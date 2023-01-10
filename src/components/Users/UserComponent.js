@@ -24,7 +24,7 @@ const UserComponent = () => {
         </div>
       </div>
 
-      <div className="card mb-4">
+      <div className="card card-custom mb-4">
         <header className="card-header">
           <div className="row gx-3">
             <div className="col-lg-4 col-md-6 me-auto">

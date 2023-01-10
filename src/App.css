@@ -5,7 +5,7 @@ INCLUDE STYLES AND COMPONENTS
 ===================== */
 /* ================== HELPERS =================== */
 .table thead th {
-  color: #adb5bd;
+  color: unset;
   font-weight: 400;
 }
 .table-lg td,
@@ -161,7 +161,7 @@ body.offcanvas-active {
 
 .main-wrap {
   margin-left: 260px;
-  background-color: #f8f9fa;
+
 }
 
 .content-main {
@@ -178,7 +178,6 @@ body.offcanvas-active {
   bottom: 0;
   width: 100%;
   overflow-y: auto;
-  background-color: #fff;
   box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.075);
   z-index: 10;
   border-right: 1px solid rgba(108, 117, 125, 0.25);
@@ -205,7 +204,7 @@ body.offcanvas-active {
   padding-left: 3%;
   padding-right: 3%;
   min-height: 72px;
-  background-color: #fff;
+
   border-bottom: 1px solid rgba(108, 117, 125, 0.25);
 }
 .main-header .nav {
@@ -929,3 +928,84 @@ ul.row-sm {
   margin-top: 5px;
   cursor: pointer;
 }
+
+.form-divided-2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 30px;
+}
+
+.switch {
+  display: inline-block;
+  height: 27.2px;
+  position: relative;
+  width: 48px;
+  margin-left: 20px;
+  bottom: -8px;
+}
+
+.switch input {
+  display:none;
+}
+
+.slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 3.2px;
+  content: "";
+  height: 21px;
+  left: 3.2px;
+  position: absolute;
+  transition: .4s;
+  width: 21px;
+}
+
+input:checked + .slider {
+  background-color: #66bb6a;
+}
+
+input:checked + .slider:before {
+  transform: translateX(21px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.bg-light{
+  background-color: #F8FAFC !important;
+}
+.bg-light .border-product{
+  border: 1px solid #C1CDC1
+}
+.bg-dark{
+  background-color: #282C34 !important;
+  color: #f3ebf6;
+}
+
+.card-custom{
+  background-color: unset !important;
+}
+
+
+
+
+
+
+
+
+

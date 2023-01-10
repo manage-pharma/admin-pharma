@@ -3,7 +3,7 @@ import React from "react";
 const ExtraData = () => {
   return (
     <aside className="col-xl-4 col-lg-4">
-      <div className="card mb-4 shadow-sm">
+      <div className="card card-custom mb-4 shadow-sm">
         <div className="card-body">
           {/* categories */}
           <>

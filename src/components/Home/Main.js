@@ -27,7 +27,7 @@ const Main = () => {
         </div>
 
         {/* LATEST ORDER */}
-        <div className="card mb-4 shadow-sm">
+        <div className="card card-custom mb-4 shadow-sm">
           <LatestOrder orders= {orders} loading={loading} error={error}/>
         </div>
       </section>
