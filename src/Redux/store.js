@@ -7,6 +7,7 @@ import { orderDeliveredReducer, orderDetailReducer, orderListReducer } from "./R
 import { categoryCreateReducer, categoryDeleteReducer, categoryListReducer, categoryUpdateReducer } from './Reducers/CategoryReducer';
 import { categoryDrugCreateReducer, categoryDrugDeleteReducer, categoryDrugListReducer, categoryDrugUpdateReducer } from './Reducers/CategoryDrugReducer';
 import { themeReducer } from './Reducers/ThemeReducer';
+import { ProviderCreateReducer, ProviderDeleteReducer, ProviderListReducer, ProviderUpdateReducer } from "./Reducers/ProviderReducer";
 
 const reducer = combineReducers({
   theme: themeReducer,
@@ -32,6 +33,11 @@ const reducer = combineReducers({
   categoryDrugCreate: categoryDrugCreateReducer,
   categoryDrugUpdate: categoryDrugUpdateReducer,
   categoryDrugDelete: categoryDrugDeleteReducer,
+
+  providerList: ProviderListReducer,
+  providerCreate: ProviderCreateReducer,
+  providerUpdate: ProviderUpdateReducer,
+  providerDelete: ProviderDeleteReducer,
 });
 
 

@@ -21,6 +21,7 @@ import ProductExcelCSV from "./screens/ProductExcelCSV";
 import { useDispatch, useSelector } from "react-redux";
 import { listProduct } from "./Redux/Actions/ProductActions";
 import { listOrder } from "./Redux/Actions/OrderActions";
+import ProviderScreen from './screens/ProviderScreen';
 function App() {
   const data = useSelector((state)=> state.theme)
   if(data.theme === "dark"){
@@ -49,6 +50,7 @@ function App() {
         <Switch>
           <PrivateRouter path="/" component={HomeScreen} exact /> 
           <PrivateRouter path="/products" component={ProductScreen} exact/>
+          <PrivateRouter path="/providers" component={ProviderScreen} exact/>
           <PrivateRouter path="/products/excel&CSV" component={ProductExcelCSV} exact/>
           {/* <PrivateRouter path="/products/search/:keyword" component={ProductScreen} exact /> */}
           {/* <PrivateRouter path="/products/page/:pageNumber" component={ProductScreen} exact /> */}

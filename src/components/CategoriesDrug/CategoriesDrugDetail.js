@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import DataTable, { createTheme } from "react-data-table-component";
 import { useSelector, useDispatch } from 'react-redux';
-import { categoriesDrugProduct, categoriesProduct } from "../../Redux/Actions/ProductActions";
+import { categoriesDrugProduct } from "../../Redux/Actions/ProductActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import { useHistory } from 'react-router-dom';
@@ -52,7 +52,7 @@ const DetailCategoriesDrug = (props) => {
       reorder: true
     },{
       name: "IMAGE",
-      selector: (row) => <img className="mt-1 w-50 h-50" src={row.image} alt="image" />,
+      selector: (row) => <img className="mt-1 w-50 h-50" src={row.image} alt="ImageCategory" />,
     },
     {
       name: "DESCRIPTION",
