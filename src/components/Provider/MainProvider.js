@@ -1,64 +1,57 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
-import Product  from '../Products/Product'
-import { listProduct } from "../../Redux/Actions/ProductActions";
 import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
+import { listProvider } from './../../Redux/Actions/ProviderAction';
+import Provider from "./Provider";
+import AddProvider from "./AddProviderModal";
 
-const MainProducts = (props) => {
+const MainProvider = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
   const history = useHistory()
+  const [show, setShow] = useState(false);
   const [keyword, setSearch] = useState()
-  const [sort, setSort] = useState()
-  const productList = useSelector((state)=> state.productList)
-  const { loading, error, products, currentPage, totalPage } = productList
+  const providerList = useSelector((state)=> state.providerList)
+  const { loading, error, providers, currentPage, totalPage } = providerList
 
-  const handleSelected = (e)=>{
-    e.preventDefault();
-    let sortPrice = e.target.value
-    dispatch(listProduct(keyword, pageNumber, sortPrice))
-    setSort(e.target.value)
-  }
-  const callApiKeywordSearch = (keyword, pageNumber, sort) =>{
+  const callApiKeywordSearch = (keyword, pageNumber) =>{
     if( keyword.trim() !== ''){
-      dispatch(listProduct(keyword, pageNumber, sort))
+      dispatch(listProvider(keyword, pageNumber))
     }
     else{
-      history.push('/products');
+      history.push('/providers');
     }
   }
-  const debounceDropDown = useRef(debounce((keyword, pageNumber, sort) => callApiKeywordSearch(keyword, pageNumber, sort) , 300)).current;
+  const debounceDropDown = useRef(debounce((keyword, pageNumber) => callApiKeywordSearch(keyword, pageNumber) , 300)).current;
 
   const handleSubmitSearch = e =>{
     setSearch(e.target.value)
-    debounceDropDown(e.target.value, pageNumber, sort);
+    debounceDropDown(e.target.value, pageNumber);
+  }
+
+  const handleAdd = (e) =>{
+    setShow(true)
   }
 
   useEffect(()=>{
-    dispatch(listProduct(keyword, pageNumber))
+    dispatch(listProvider(keyword, pageNumber))
   },[dispatch, pageNumber])
 
   return (
     <>
+    <AddProvider show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">PRODUCTS</h2>
-        <div className="d-flex">
-          <div style={{marginRight: '10px'}}>
-            <Link to="/products/excel&CSV" className="btn btn-primary">
-              Excel & CSV 
-            </Link>
-          </div>
+        <h2 className="content-title">PROVIDER LIST</h2>
           <div>
-            <Link to="/addproduct" className="btn btn-primary">
+            <button onClick={handleAdd} className="btn btn-primary">
               Create new
-            </Link>
+            </button>
           </div>
-        </div>
       </div>
 
       <div className="card card-custom mb-4 shadow-sm">
@@ -82,7 +75,7 @@ const MainProducts = (props) => {
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
-              <select  defaultValue="" className="form-select" onChange={handleSelected}>
+              <select  defaultValue="" className="form-select">
                 <option value="">---Chosse Price---</option>
                 <option value="cheap">(1$ - 100$)</option>
                 <option value="expensive">(101$ - 1000$)</option>
@@ -102,22 +95,19 @@ const MainProducts = (props) => {
                           <tr>
                             <th scope="col">Id</th>
                             <th scope="col">Name</th>
-                            <th scope='col'>Image</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Category Drug</th>
-                            {/* <th scope="col">Unit</th>
-                            <th scope="col">Capacity</th>
-                            <th scope="col">Exp</th> */}
-                            <th scope="col">Rest Exp</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Stock</th>
-                            <th scope="col">Status</th>
+                            <th scope='col'>Contact person</th>
+                            <th scope="col">Tax code</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Address</th>
                             <th scope="col">Action</th>
                           </tr>
                         </thead>
                           <tbody>
-                             {products && products.map((product, index)=>(
-                            <Product product={product} key={index} indexSTT={index}/>))}
+                             {providers ? providers.map((provider, index)=>(
+                              <Provider provider={provider} key={index} indexSTT={index}/>)) : 
+                              <div>There are no record</div>
+                          }
                           </tbody>
                         </table>
                     </div>
@@ -130,7 +120,7 @@ const MainProducts = (props) => {
             totalPage={totalPage} 
             currentPage={currentPage} 
             keyword={keyword ? keyword : ""}
-            sort= {sort ? sort : ""}
+            sort=""
           />
         </div>
       </div>
@@ -139,4 +129,4 @@ const MainProducts = (props) => {
   );
 };
 
-export default MainProducts;
+export default MainProvider;

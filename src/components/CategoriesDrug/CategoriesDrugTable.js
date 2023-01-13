@@ -31,9 +31,7 @@ const CategoriesTable = (props) => {
         }
         <tbody>
         {categoriesDrug?.map((item, index)=>(
-          <tr key={index} style={{cursor:'pointer'}} onClick={(e)=>{
-            history.push(`/category-drug/${item._id}`)
-          }}>
+          <tr key={index} >
             <td>
               <div className="form-check">
                 <input className="form-check-input" type="checkbox" value="" />
@@ -47,9 +45,9 @@ const CategoriesTable = (props) => {
             <td>
               <input  className="form-check-input"  type="checkbox" defaultChecked={item.isActive} />
             </td>
-            <td className="text-end">
+            <td className="text-end" style={{cursor:'pointer'}}>
               <div 
-                onClick={e=>{e.stopPropagation()}} 
+                onClick={e=>{}} 
                 className="dropdown">
                 <Link
                   to="#"
@@ -59,6 +57,10 @@ const CategoriesTable = (props) => {
                   <i className="fas fa-ellipsis-h"></i>
                 </Link>
                 <div className="dropdown-menu">
+                  <button className="dropdown-item" onClick={(e)=>{
+                    e.stopPropagation()
+                    history.push(`/category-drug/${item._id}`)
+                  }}>Detail</button>
                   <button className="dropdown-item" onClick={(e)=>{
                     e.stopPropagation()
                     props.parentCallbackEdit(item)

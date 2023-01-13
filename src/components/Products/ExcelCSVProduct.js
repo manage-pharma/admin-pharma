@@ -75,7 +75,7 @@ const ExcelCSVProductComponent = () => {
         cloneData.map(item=>{
             let tmp = item.category.name
             delete item.category.name
-            item.category = tmp
+            return item.category = tmp
         })
         const wb = utils.book_new();
         const ws = utils.json_to_sheet([]);
@@ -169,7 +169,7 @@ const ExcelCSVProductComponent = () => {
                                                         <td><span className="badge bg-danger text-dark"></span>Using</td>
                                                     }
                                                     <td>
-                                                        <img style={{width:"60px", height:"40px"}} src={item.image} alt="image" />
+                                                        <img style={{width:"60px", height:"40px"}} src={item.image} alt="ImageProduct" />
                                                     </td>
                                                 </tr> 
                                             ))
@@ -192,7 +192,7 @@ const ExcelCSVProductComponent = () => {
                                                         <td><span className="badge bg-danger text-white">Stopped</span></td>
                                                     }
                                                     <td>
-                                                        <img style={{width:"60px", height:"40px"}} src={item.image} alt="image" />
+                                                        <img style={{width:"60px", height:"40px"}} src={item.image} alt="ImageProduct" />
                                                     </td>
                                                 </tr> 
                                             ))

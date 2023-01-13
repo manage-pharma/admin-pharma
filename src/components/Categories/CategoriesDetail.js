@@ -53,7 +53,7 @@ const DetailCategories = (props) => {
       reorder: true
     },{
       name: "IMAGE",
-      selector: (row) => <img className="mt-1 w-50 h-50" src={row.image} alt="image" />,
+      selector: (row) => <img className="mt-1 w-50 h-50" src={row.image} alt="ImageCategory" />,
     },
     {
       name: "DESCRIPTION",
