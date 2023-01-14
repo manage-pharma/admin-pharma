@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { PROVIDER_LIST_REQUEST, PROVIDER_LIST_SUCCESS, PROVIDER_LIST_FAIL, PROVIDER_CREATE_SUCCESS, PROVIDER_CREATE_FAIL, PROVIDER_CREATE_REQUEST, PROVIDER_UPDATE_REQUEST, PROVIDER_UPDATE_SUCCESS, PROVIDER_UPDATE_FAIL, PROVIDER_DELETE_REQUEST, PROVIDER_DELETE_SUCCESS, PROVIDER_DELETE_FAIL } from '../Constants/ProviderConstants';
+import { PROVIDER_LIST_REQUEST, PROVIDER_LIST_SUCCESS, PROVIDER_LIST_FAIL, PROVIDER_CREATE_SUCCESS, PROVIDER_CREATE_FAIL, PROVIDER_CREATE_REQUEST, PROVIDER_UPDATE_REQUEST, PROVIDER_UPDATE_SUCCESS, PROVIDER_UPDATE_FAIL, PROVIDER_DELETE_REQUEST, PROVIDER_DELETE_SUCCESS, PROVIDER_DELETE_FAIL, PROVIDER_SINGLE_SUCCESS } from '../Constants/ProviderConstants';
 import { logout } from "./UserActions";
+import { PROVIDER_SINGLE_REQUEST, PROVIDER_SINGLE_FAIL } from './../Constants/ProviderConstants';
 
 export const listProvider = ( keyword = " ", pageNumber = " ") => async (dispatch, getState) => {
   try {
@@ -29,6 +30,37 @@ export const listProvider = ( keyword = " ", pageNumber = " ") => async (dispatc
     }
     dispatch({
       type: PROVIDER_LIST_FAIL,
+      payload: message,
+    });
+  }
+};
+
+//ADMIN PRODUCT SINGLE
+export const singleProvider = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PROVIDER_SINGLE_REQUEST });
+    // userInfo -> userLogin -> getState(){globalState}
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/provider/${id}`, config);
+    dispatch({ type: PROVIDER_SINGLE_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: PROVIDER_SINGLE_FAIL,
       payload: message,
     });
   }
@@ -71,7 +103,7 @@ export const createProvider = ({ name, contactName, taxCode, phone, email, addre
   };
 
 //ADMIN UPDATE PROVIDER
-export const updateProvider = ({name, contactName, taxCode, phone, email, address, providerId}) => async(dispatch, getState)=>{
+export const updateProvider = ({name, contactName, taxCode, phone, email, address, providerID}) => async(dispatch, getState)=>{
   try {
     dispatch({type: PROVIDER_UPDATE_REQUEST});
     const {
@@ -84,7 +116,7 @@ export const updateProvider = ({name, contactName, taxCode, phone, email, addres
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.put(`/api/provider/${providerId}`, {
+    const { data } = await axios.put(`/api/provider/${providerID}`, {
       name, contactName, taxCode, phone, email, address
     }, config)
     dispatch({type: PROVIDER_UPDATE_SUCCESS, payload: data});

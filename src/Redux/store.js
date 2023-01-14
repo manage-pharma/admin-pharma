@@ -7,12 +7,14 @@ import { orderDeliveredReducer, orderDetailReducer, orderListReducer } from "./R
 import { categoryCreateReducer, categoryDeleteReducer, categoryListReducer, categoryUpdateReducer } from './Reducers/CategoryReducer';
 import { categoryDrugCreateReducer, categoryDrugDeleteReducer, categoryDrugListReducer, categoryDrugUpdateReducer } from './Reducers/CategoryDrugReducer';
 import { themeReducer } from './Reducers/ThemeReducer';
-import { ProviderCreateReducer, ProviderDeleteReducer, ProviderListReducer, ProviderUpdateReducer } from "./Reducers/ProviderReducer";
+import { ProviderCreateReducer, ProviderDeleteReducer, ProviderListReducer, ProviderSingleReducer, ProviderUpdateReducer } from "./Reducers/ProviderReducer";
 
 const reducer = combineReducers({
   theme: themeReducer,
+
   userLogin: userLoginReducer,
   userList: userListReducer,
+
   productList: productListReducer,
   productAll: productAllReducer,
   productDelete: productDeleteReducer,
@@ -22,19 +24,23 @@ const reducer = combineReducers({
   productCategoriesDrug: productCategoriesDrugReducer,
   productUpdate: productUpdateReducer,
   productImport: productImportReducer,
+
   orderList: orderListReducer,
   orderDetail: orderDetailReducer,
   orderDelivered: orderDeliveredReducer,
+
   categoryList: categoryListReducer,
   categoryCreate: categoryCreateReducer,
   categoryUpdate: categoryUpdateReducer,
   categoryDelete: categoryDeleteReducer,
+
   categoryDrugList: categoryDrugListReducer,
   categoryDrugCreate: categoryDrugCreateReducer,
   categoryDrugUpdate: categoryDrugUpdateReducer,
   categoryDrugDelete: categoryDrugDeleteReducer,
 
   providerList: ProviderListReducer,
+  providerSingle: ProviderSingleReducer,
   providerCreate: ProviderCreateReducer,
   providerUpdate: ProviderUpdateReducer,
   providerDelete: ProviderDeleteReducer,

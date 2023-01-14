@@ -93,7 +93,7 @@ const MainProvider = (props) => {
                       <table className="table">
                         <thead>
                           <tr>
-                            <th scope="col">Id</th>
+                            <th scope="col">STT</th>
                             <th scope="col">Name</th>
                             <th scope='col'>Contact person</th>
                             <th scope="col">Tax code</th>
@@ -105,7 +105,13 @@ const MainProvider = (props) => {
                         </thead>
                           <tbody>
                              {providers ? providers.map((provider, index)=>(
-                              <Provider provider={provider} key={index} indexSTT={index}/>)) : 
+                              <Provider 
+                                provider={provider} 
+                                key={index} 
+                                indexSTT={index} 
+                                show={show} 
+                                setShow={setShow}
+                                />)) : 
                               <div>There are no record</div>
                           }
                           </tbody>
