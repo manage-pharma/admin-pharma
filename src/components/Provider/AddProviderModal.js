@@ -5,12 +5,12 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import React, { useEffect, useState } from "react";
-import { createProvider } from '../../Redux/Actions/ProviderAction';
+import { createProvider, updateProvider } from '../../Redux/Actions/ProviderAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProvider } from './../../Redux/Actions/ProviderAction';
 import { toast } from "react-toastify";
 import Toast from '../LoadingError/Toast';
-import { PROVIDER_CREATE_RESET } from '../../Redux/Constants/ProviderConstants';
+import { PROVIDER_CREATE_RESET, PROVIDER_SINGLE_RESET, PROVIDER_UPDATE_RESET } from '../../Redux/Constants/ProviderConstants';
 const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
@@ -19,9 +19,11 @@ const ToastObjects = {
   };
 const AddProvider = (props) => {    
     const {show, setShow} = props
-
     const dispatch = useDispatch();
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        dispatch({type: PROVIDER_SINGLE_RESET});
+    };
     const [dataModal, setDataModal] = useState({
         name: '',
         contactName: '',
@@ -33,6 +35,9 @@ const AddProvider = (props) => {
 
     const handleSubmit = e => {
         e.preventDefault();
+        if(successProviderSingle){
+            dispatch(updateProvider({ ...dataModal, providerID }));
+        }
         dispatch(createProvider(dataModal));
     }
       
@@ -44,13 +49,26 @@ const AddProvider = (props) => {
           }
         })
     }
-
     const createProviderStatus = useSelector((state)=> state.providerCreate)
     const { success } = createProviderStatus
 
+    const providerEditing = useSelector((state)=> state.providerSingle)
+    const {success: successProviderSingle, provider: providerEdit } = providerEditing
+    const providerID = providerEdit._id
+
+    const providerUpdated = useSelector((state)=> state.providerUpdate) 
+    const {success: successProviderUpdated} = providerUpdated
+
     useEffect(()=>{
-        if(success){
-            toast.success(`Add provider successfully`, ToastObjects);
+        if(success || successProviderUpdated){
+            if(successProviderUpdated){
+                toast.success(`Updated successfully`, ToastObjects);
+                dispatch({type: PROVIDER_UPDATE_RESET})
+            }
+            else{
+                toast.success(`Added successfully`, ToastObjects);
+                dispatch({type: PROVIDER_CREATE_RESET})
+            }
             setDataModal({
                 name: '',
                 contactName: '',
@@ -60,11 +78,22 @@ const AddProvider = (props) => {
                 address: '',
             })
             dispatch(listProvider())
-            dispatch({type: PROVIDER_CREATE_RESET})
             setShow(false)
         }
-    }, [success])
-  
+        if(successProviderSingle){
+            setDataModal({
+                name: providerEdit.name,
+                contactName: providerEdit.contactName,
+                taxCode: providerEdit.taxCode,
+                phone: providerEdit.phone,
+                email: providerEdit.email,
+                address: providerEdit.address,
+            })
+        }
+    }, [success, dispatch, setShow, successProviderSingle, successProviderUpdated, providerEdit])
+
+    const { name, contactName, taxCode, phone, email, address } = dataModal
+
     return (
       <>
         <Toast />
@@ -85,6 +114,7 @@ const AddProvider = (props) => {
                                     autoFocus
                                     onChange={handelChangeModal}
                                     name="name"
+                                    value={name}
                                 />
                             </Form.Group>
                         </Col>
@@ -98,6 +128,7 @@ const AddProvider = (props) => {
                                         placeholder="contact person"
                                         onChange={handelChangeModal}
                                         name="contactName"
+                                        value={contactName}
                                     />
                             </Form.Group>
                         </Col>
@@ -111,6 +142,7 @@ const AddProvider = (props) => {
                                     placeholder="tax code"
                                     onChange={handelChangeModal}
                                     name="taxCode"
+                                    value={taxCode}
                                 />
                             </Form.Group>
                         </Col>
@@ -122,6 +154,7 @@ const AddProvider = (props) => {
                                     placeholder="phone"
                                     onChange={handelChangeModal}
                                     name="phone"
+                                    value={phone}
                                 />
                                 </Form.Group>
                         </Col>
@@ -135,6 +168,7 @@ const AddProvider = (props) => {
                                     placeholder="name@example.com"
                                     onChange={handelChangeModal}
                                     name="email"
+                                    value={email}
                                 />
                             </Form.Group>
                         </Col>
@@ -149,6 +183,7 @@ const AddProvider = (props) => {
                                     type="text"
                                     onChange={handelChangeModal}
                                     name="address"
+                                    value={address}
                                     />
                             </Form.Group>
                         </Col>
@@ -161,7 +196,7 @@ const AddProvider = (props) => {
               Close
             </Button>
             <Button variant="primary" onClick={handleSubmit}>
-              Save Changes
+              {successProviderSingle ? 'Update' : 'Add'}
             </Button>
           </Modal.Footer>
         </Modal>
