@@ -935,6 +935,11 @@ ul.row-sm {
   grid-gap: 30px;
 }
 
+.form-divided-3{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 30px;
+}
 .switch {
   display: inline-block;
   height: 27.2px;
@@ -1000,11 +1005,35 @@ input:checked + .slider:before {
 .card-custom{
   background-color: unset !important;
 }
+.lv2{
+  transition: 0.3s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+.lv1:hover >.lv2{
+  opacity: 1;
+  visibility: unset;
+}
 
-
-
-
-
+.arrow::before {
+  position: absolute;
+  content: '';
+  width: 0;
+  height: 0;  
+  border: .5em solid transparent;
+  border-left-color: #29335d;
+  transform-origin: 0 50%;
+  transition: transform .25s;
+  z-index: 1;
+  right: 30px;
+  transform: translateY(90%);
+}
+/* .arrow.down:hover::before{
+  transition: 0.3s ease-in-out;
+  right: 30px;
+  transform: rotate(90deg);
+  transition: transform .25s;
+} */
 
 
 

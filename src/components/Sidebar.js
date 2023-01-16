@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-
 const Sidebar = () => {
+
   return (
     <div>
       <aside className="navbar-aside" id="offcanvas_aside">
@@ -48,16 +48,6 @@ const Sidebar = () => {
               <NavLink
                 activeClassName="active"
                 className="menu-link"
-                to="/addproduct"
-              >
-                <i className="icon fas fa-cart-plus"></i>
-                <span className="text">Add product</span>
-              </NavLink>
-            </li>
-            <li className="menu-item">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
                 to="/categories"
               >
                 <i className="icon fas fa-list"></i>
@@ -94,7 +84,7 @@ const Sidebar = () => {
                 <span className="text">Users</span>
               </NavLink>
             </li>
-            <li className="menu-item">
+            <li className="menu-item" >
               <NavLink
                 activeClassName="active"
                 className="menu-link"
@@ -104,17 +94,40 @@ const Sidebar = () => {
                 <span className="text">Provider</span>
               </NavLink>
             </li>
-
-            <li className="menu-item">
+            <li className="menu-item lv1 arrow down">
               <NavLink
                 activeClassName="active"
-                className="menu-link disabled"
-                to="/transaction"
+                className="menu-link"
+                to="/import-stock"
               >
                 <i className="icon fas fa-usd-circle"></i>
                 <span className="text">Transactions</span>
+
               </NavLink>
+                <ul className="menu-aside lv2">
+                  <li className="menu-item">
+                      <NavLink
+                        activeClassName="active"
+                        className="menu-link"
+                        to="/import-stock"
+                      >
+                        <i className="icon fas fa-sign-in-alt"></i>
+                        <span className="text">Import Stock</span>
+                      </NavLink>
+                  </li>
+                  <li className="menu-item">
+                      <NavLink
+                        activeClassName="active"
+                        className="menu-link"
+                        to="#"
+                      >
+                        <i className="icon fas fa-sign-out-alt"></i>
+                        <span className="text">Export Stock</span>
+                      </NavLink>
+                  </li>
+                </ul>
             </li>
+
           </ul>
           <br />
           <br />

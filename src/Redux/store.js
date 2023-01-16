@@ -8,6 +8,7 @@ import { categoryCreateReducer, categoryDeleteReducer, categoryListReducer, cate
 import { categoryDrugCreateReducer, categoryDrugDeleteReducer, categoryDrugListReducer, categoryDrugUpdateReducer } from './Reducers/CategoryDrugReducer';
 import { themeReducer } from './Reducers/ThemeReducer';
 import { ProviderCreateReducer, ProviderDeleteReducer, ProviderListReducer, ProviderSingleReducer, ProviderUpdateReducer } from "./Reducers/ProviderReducer";
+import { importStockCreateReducer, importStockDetailReducer, importStockListReducer } from "./Reducers/ImportStockReducer";
 
 const reducer = combineReducers({
   theme: themeReducer,
@@ -44,6 +45,10 @@ const reducer = combineReducers({
   providerCreate: ProviderCreateReducer,
   providerUpdate: ProviderUpdateReducer,
   providerDelete: ProviderDeleteReducer,
+
+  importStockList: importStockListReducer,
+  importStockDetail: importStockDetailReducer,
+  importStockCreate: importStockCreateReducer
 });
 
 
