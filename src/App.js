@@ -10,6 +10,7 @@ import CategoriesDrugScreen from "./screens/CategoriesDrugScreen";
 import OrderScreen from "./screens/OrderScreen";
 import OrderDetailScreen from "./screens/OrderDetailScreen";
 import AddProduct from "./screens/AddProduct";
+import AddImport from "./screens/AddImport";
 import Login from "./screens/LoginScreen";
 import UsersScreen from "./screens/UsersScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
@@ -22,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { listProduct } from "./Redux/Actions/ProductActions";
 import { listOrder } from "./Redux/Actions/OrderActions";
 import ProviderScreen from './screens/ProviderScreen';
+import ImportStockScreen from "./screens/ImportStockScreen"
 function App() {
   const data = useSelector((state)=> state.theme)
   if(data.theme === "dark"){
@@ -51,6 +53,7 @@ function App() {
           <PrivateRouter path="/" component={HomeScreen} exact /> 
           <PrivateRouter path="/products" component={ProductScreen} exact/>
           <PrivateRouter path="/providers" component={ProviderScreen} exact/>
+          <PrivateRouter path="/import-stock" component={ImportStockScreen} exact/>
           <PrivateRouter path="/products/excel&CSV" component={ProductExcelCSV} exact/>
           {/* <PrivateRouter path="/products/search/:keyword" component={ProductScreen} exact /> */}
           {/* <PrivateRouter path="/products/page/:pageNumber" component={ProductScreen} exact /> */}
@@ -62,6 +65,7 @@ function App() {
           <PrivateRouter path="/orders" component={OrderScreen} />
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
           <PrivateRouter path="/addproduct" component={AddProduct} />
+          <PrivateRouter path="/stock/import" component={AddImport} />
           <PrivateRouter path="/users" component={UsersScreen} />
           <PrivateRouter path="/product/:id/edit" component={ProductEditScreen} />
           <Route path="/login" component={Login} />

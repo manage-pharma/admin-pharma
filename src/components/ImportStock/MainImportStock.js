@@ -5,25 +5,23 @@ import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
-import { listProvider } from './../../Redux/Actions/ProviderAction';
-import Provider from "./Provider";
-import AddProvider from "./AddProviderModal";
+import ImportStock from "./ImportStock";
+import { listImportStock } from "../../Redux/Actions/ImportStockAction";
 
-const MainProvider = (props) => {
+const MainImportStock = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
   const history = useHistory()
-  const [show, setShow] = useState(false);
   const [keyword, setSearch] = useState()
-  const providerList = useSelector((state)=> state.providerList)
-  const { loading, error, providers, currentPage, totalPage } = providerList
+  const importedStockList = useSelector((state)=> state.importStockList)
+  const { loading, error, importStock, currentPage, totalPage } = importedStockList
 
   const callApiKeywordSearch = (keyword, pageNumber) =>{
     if( keyword.trim() !== ''){
-      dispatch(listProvider(keyword, pageNumber))
+      dispatch(listImportStock(keyword, pageNumber))
     }
     else{
-      history.push('/providers');
+      history.push('/import-stock');
     }
   }
   const debounceDropDown = useRef(debounce((keyword, pageNumber) => callApiKeywordSearch(keyword, pageNumber) , 300)).current;
@@ -34,19 +32,19 @@ const MainProvider = (props) => {
   }
 
   const handleAdd = (e) =>{
-    setShow(true)
+    e.preventDefault();
+    history.push('/stock/import');
   }
 
   useEffect(()=>{
-    dispatch(listProvider(keyword, pageNumber)) // eslint-disable-next-line
+    dispatch(listImportStock(keyword, pageNumber)) // eslint-disable-next-line
   },[dispatch, pageNumber])
 
   return (
     <>
-    <AddProvider show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">PROVIDER LIST</h2>
+        <h2 className="content-title">Import Stock from Provider</h2>
           <div>
             <button onClick={handleAdd} className="btn btn-primary">
               Create new
@@ -94,23 +92,18 @@ const MainProvider = (props) => {
                         <thead>
                           <tr>
                             <th scope="col">STT</th>
-                            <th scope="col">Name</th>
-                            <th scope='col'>Contact person</th>
-                            <th scope="col">Tax code</th>
-                            <th scope="col">Phone</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">Import Code</th>
+                            <th scope='col'>Provider</th>
+                            <th scope="col">Total price</th>
+                            <th scope="col">Created At</th>
+                            <th scope="col">User created</th>
                           </tr>
                         </thead>
                           <tbody>
-                             {providers ? providers.map((provider, index)=>(
-                              <Provider 
-                                provider={provider} 
-                                key={index} 
+                             {importStock ? importStock.map((listImport, index)=>(
+                              <ImportStock 
+                                importStock={listImport} 
                                 indexSTT={index} 
-                                show={show} 
-                                setShow={setShow}
                                 />)) : 
                               <div>There are no record</div>
                           }
@@ -135,4 +128,4 @@ const MainProvider = (props) => {
   );
 };
 
-export default MainProvider;
+export default MainImportStock;

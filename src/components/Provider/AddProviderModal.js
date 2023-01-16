@@ -115,6 +115,7 @@ const AddProvider = (props) => {
                                     onChange={handelChangeModal}
                                     name="name"
                                     value={name}
+                                    required
                                 />
                             </Form.Group>
                         </Col>
@@ -129,6 +130,7 @@ const AddProvider = (props) => {
                                         onChange={handelChangeModal}
                                         name="contactName"
                                         value={contactName}
+                                        required
                                     />
                             </Form.Group>
                         </Col>
@@ -143,6 +145,7 @@ const AddProvider = (props) => {
                                     onChange={handelChangeModal}
                                     name="taxCode"
                                     value={taxCode}
+                                    required
                                 />
                             </Form.Group>
                         </Col>
@@ -155,6 +158,7 @@ const AddProvider = (props) => {
                                     onChange={handelChangeModal}
                                     name="phone"
                                     value={phone}
+                                    required
                                 />
                                 </Form.Group>
                         </Col>
@@ -169,6 +173,7 @@ const AddProvider = (props) => {
                                     onChange={handelChangeModal}
                                     name="email"
                                     value={email}
+                                    required
                                 />
                             </Form.Group>
                         </Col>
@@ -184,6 +189,7 @@ const AddProvider = (props) => {
                                     onChange={handelChangeModal}
                                     name="address"
                                     value={address}
+                                    required
                                     />
                             </Form.Group>
                         </Col>

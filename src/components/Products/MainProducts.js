@@ -39,7 +39,7 @@ const MainProducts = (props) => {
   }
 
   useEffect(()=>{
-    dispatch(listProduct(keyword, pageNumber))
+    dispatch(listProduct(keyword, pageNumber)) // eslint-disable-next-line
   },[dispatch, pageNumber])
 
   return (

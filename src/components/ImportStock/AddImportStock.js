@@ -1,0 +1,345 @@
+import React, { useEffect, useState } from "react";
+import { createImportStock, listImportStock } from '../../Redux/Actions/ImportStockAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from "react-toastify";
+import { IMPORT_STOCK_CREATE_RESET } from '../../Redux/Constants/ImportStockConstant';
+import { listProvider } from '../../Redux/Actions/ProviderAction';
+import { listUser } from "../../Redux/Actions/UserActions";
+import { Link } from 'react-router-dom';
+import Toast from './../LoadingError/Toast';
+const ToastObjects = {
+    pauseOnFocusLoss: false,
+    draggable: false,
+    pauseOnHover: false,
+    autoClose: 2000,
+  };
+const AddImportStock = () => {    
+    const dispatch = useDispatch();
+    const [itemProducts, setItemProducts] = useState([]);
+    const [field, setFieldProduct] = useState({
+        name: '',
+        product: '',
+        price: 0,
+        qty: 0,
+        unit: ''
+    });
+
+    const [data, setData] = useState({
+        totalPrice: 0,
+        status: false,
+        importedAt: new Date(Date.now()).toISOString().substring(0, 16)
+    })
+      
+    const handleChange = e =>{
+        e.preventDefault();
+        setData(prev => {
+          return {
+            ...prev, [e.target.name]: e.target.value
+          }
+        })
+    }
+        const handleChangeProduct = e =>{
+        e.preventDefault();
+        setFieldProduct(prev => {
+            let a = document.getElementById("select-product");
+            let b = a.options[a.selectedIndex]
+            let c = b.getAttribute('data-foo')
+            return {
+                ...prev,
+                name:c, 
+                [e.target.name]: e.target.value
+              }
+        })
+    }
+
+    const handleAddProduct = e =>{
+        let flag = false;
+        e.preventDefault();
+        importItems.forEach((item, index)=>{
+            if(item.product === field.product && item.unit === field.unit && item.price === field.price){
+                flag = true
+                importItems.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
+                setItemProducts(importItems)
+             }
+        })
+        if(!flag){
+            setItemProducts(prev => 
+                [...prev, {...field, qty: parseInt(qty)}]
+            )
+        }
+    }
+    const handleSubmit = e => {
+        e.preventDefault();
+        setData(prev=>{
+            return{
+                ...prev,
+                totalPrice: importItems?.reduce((sum, curr) => sum + curr.price * curr.qty, 0),
+                importItems:  itemProducts ? [...itemProducts] : [] ,
+            }
+        })
+        dispatch(createImportStock(data));
+    }
+    const createImportStockStatus = useSelector((state)=> state.importStockCreate)
+    const { success } = createImportStockStatus
+
+    const providerList = useSelector((state)=>state.providerList)
+    const { providers } = providerList
+
+    const productList = useSelector((state)=>state.productList)
+    const { products } = productList
+
+    const userList  = useSelector((state)=> state.userList)
+    const { users } = userList
+
+    useEffect(()=>{
+        if(success){
+            toast.success(`Added successfully`, ToastObjects);
+            dispatch({type: IMPORT_STOCK_CREATE_RESET})
+            setData({
+                totalPrice: 0,
+                status: false,
+                importedAt: new Date(Date.now()).toISOString().substring(0, 16)
+            })
+            setFieldProduct({
+                name: '',
+                product: '',
+                price: 0,
+                qty: 0,
+                unit: ''
+            })
+            setItemProducts([])
+            dispatch(listImportStock())
+        }
+        dispatch(listProvider())
+        dispatch(listUser())
+    }, [success, dispatch])
+    var { 
+        provider, 
+        importItems = itemProducts ? [...itemProducts] : [] , 
+        user,  
+        totalPrice, 
+        status, 
+        importedAt
+    } = data
+    const { product, qty, price, unit } = field
+    const UnitArr = ['Hộp', 'Vỉ', 'Viên', 'Chai', "Lọ"]
+    totalPrice= importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+
+    return (
+      <>
+        <Toast/>
+        <section className="content-main" >
+            <form onSubmit={handleSubmit}>
+                <div className="content-header">
+                    <h2 className="content-title">Import stock</h2>
+                    <div>
+                    <button type="submit" className="btn btn-primary">
+                        Publish now
+                    </button>
+                    </div>
+                </div>
+                <div className="mb-4">
+                    <div className="card card-custom mb-4 shadow-sm">
+                        <div className="card-body">
+                            <div className="mb-4">
+                                <label htmlFor="name_drug" className="form-label">
+                                    Provider
+                                </label>
+                                <select
+                                value={provider}
+                                name="provider"
+                                onChange={handleChange}
+                                className="form-control"
+                                required >
+                                    <option value=''>Chosse Provider</option>
+                                    {providers?.map((item, index)=>(
+                                    <option key={index} value={item._id}>{item.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mb-4 form-divided-3">
+                                <div>
+                                    <label className="form-label">Imported At</label>
+                                    <input
+                                        name="importedAt"
+                                        className="form-control"
+                                        type='datetime-local'
+                                        required
+                                        onChange={handleChange}
+                                        value={importedAt}
+                                    ></input>
+
+
+
+                                </div>
+                                <div>
+                                    <label htmlFor="product_category_drug" className="form-label">
+                                        Status
+                                    </label>
+                                    <select
+                                    value={status}
+                                    name="status"
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    >
+                                        <option value={false}>Incompletd</option>
+                                        <option value={true}>Completed</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="product_category" className="form-label">
+                                        User
+                                    </label>
+                                    <select
+                                    value={user}
+                                    name="user"
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    required >
+                                        <option value=''>Chosse user</option>
+                                        {users?.map((item, index)=>(
+                                            <option key={index} value={item._id}>{item.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="mb-4">
+                    <div className="card card-custom mb-4 shadow-sm">
+                        <div className="card-body">
+                            <div className="mb-4">
+                                <label htmlFor="product_category" className="form-label">
+                                    Product
+                                </label>
+                                <select
+                                id="select-product"
+                                value={product}
+                                name="product"
+                                onChange={handleChangeProduct}
+                                className="form-control"
+                                required >
+                                    <option value=''>Chosse product</option>
+                                    {products?.map((item, index)=>(
+                                        <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mb-4 form-divided-3">
+                                <div>
+                                    <label className="form-label">Price buy</label>
+                                    <input
+                                        name="price"
+                                        value={price}
+                                        type='number'
+                                        className="form-control"
+                                        required
+                                        onChange={handleChangeProduct}
+                                    ></input>
+
+                                </div>
+                                <div>
+                                    <label htmlFor="qty" className="form-label">
+                                        Quantity
+                                    </label>
+                                    <input
+                                        name="qty"
+                                        value={qty}
+                                        type="number"
+                                        className="form-control"
+                                        required
+                                        onChange={handleChangeProduct}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="unit" className="form-label">
+                                        Unit
+                                    </label>
+                                    <select
+                                    value={unit}
+                                    name="unit"
+                                    className="form-control"
+                                    required 
+                                    onChange={handleChangeProduct}
+                                    >
+                                    <option value=''>Chosse unit drug</option>
+                                    {UnitArr?.map((item, index)=>(
+                                        <option key={index} value={item}>{item}</option>
+                                    ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="mb-6 d-flex justify-content-end">
+                                <button className="btn btn-success" onClick={handleAddProduct}>Add Product</button>
+                            </div>   
+                        </div>
+                    </div>
+                </div> 
+            </form>
+            <div className="card-body">
+                <div className="row">
+                    <div className="card card-custom mb-4 shadow-sm">
+                    <header className="card-header bg-white ">
+                        <div className="row gx-3 py-3">
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price buy</th>
+                                <th scope='col'>Quantity</th>
+                                <th scope="col">Unit</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {itemProducts?.map((item, index)=>(
+                                    <tr key={index}>
+                                    <th scope="row">{ index + 1 }</th>
+                                    <td>{ item.name }</td>
+                                    <td>{ item.price}</td>
+                                    <td>{ item.qty}</td>
+                                    <td>{ item.unit}</td>
+                                    <td>
+                                        <div 
+                                            className="dropdown">
+                                            <Link
+                                            to="#"
+                                            data-bs-toggle="dropdown"
+                                            className="btn btn-light"
+                                            >
+                                            <i className="fas fa-ellipsis-h"></i>
+                                            </Link>
+                                            <div className="dropdown-menu">
+                                            {/* <button className="dropdown-item" onClick={(e)=>{
+                                                e.stopPropagation()
+                                                dispatch(singleProvider(provider._id))
+                                                setShow(true)
+                                            }}>
+                                                Edit info
+                                            </button> */}
+                                                <button className="dropdown-item text-danger">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr> 
+                                ))}
+                            </tbody>
+                            </table>
+                            <div className="mb-6 d-flex justify-content-end">
+                                {`Total Price: ${totalPrice}`}
+                            </div>
+                        </div>
+                    </header>
+                    </div>
+                </div>
+            </div>
+        </section>
+      </>
+    );
+  }
+
+  export default AddImportStock;
