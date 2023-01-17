@@ -920,7 +920,15 @@ ul.row-sm {
   color: #dc3545;
   font-weight: 600;
 }
+.my-modal-warning .modal-header {
+  background-color: #ffc107;
+  color: #fff;
+}
 
+.text-warning{
+  color: #ffc107;
+  font-weight: 600;
+}
 .delete-button{
   position: absolute;
   font-size: 20px;

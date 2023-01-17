@@ -7,7 +7,7 @@ import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
 import ImportStock from "./ImportStock";
 import { listImportStock } from "../../Redux/Actions/ImportStockAction";
-
+import Toast from './../LoadingError/Toast';
 const MainImportStock = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
@@ -42,6 +42,7 @@ const MainImportStock = (props) => {
 
   return (
     <>
+    <Toast/>
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">Import Stock from Provider</h2>
@@ -94,9 +95,11 @@ const MainImportStock = (props) => {
                             <th scope="col">STT</th>
                             <th scope="col">Import Code</th>
                             <th scope='col'>Provider</th>
+                            <th scope="col">Created by</th>
+                            <th scope="col">Imported at</th>
                             <th scope="col">Total price</th>
-                            <th scope="col">Created At</th>
-                            <th scope="col">User created</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
                           </tr>
                         </thead>
                           <tbody>

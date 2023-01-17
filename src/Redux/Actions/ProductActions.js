@@ -262,7 +262,6 @@ export const singleProduct = (id) => async (dispatch, getState) => {
 
 export const updateProduct = ({  name, category, categoryDrug, price, description, image, countInStock, unit, capacity, regisId, expDrug, statusDrug, productId }) => async (dispatch, getState) => {
   try {
-    console.log(statusDrug)
 
     dispatch({ type: PRODUCT_UPDATE_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
