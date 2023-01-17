@@ -15,6 +15,20 @@ const ToastObjects = {
   };
 const AddImportStock = () => {    
     const dispatch = useDispatch();
+
+    const createImportStockStatus = useSelector((state)=> state.importStockCreate)
+    const { success } = createImportStockStatus
+
+    const providerList = useSelector((state)=>state.providerList)
+    const { providers } = providerList
+
+    const productList = useSelector((state)=>state.productList)
+    const { products } = productList
+
+    const userList  = useSelector((state)=> state.userList)
+    const { users } = userList
+
+
     const [itemProducts, setItemProducts] = useState([]);
     const [field, setFieldProduct] = useState({
         name: '',
@@ -25,11 +39,23 @@ const AddImportStock = () => {
     });
 
     const [data, setData] = useState({
-        totalPrice: 0,
         status: false,
         importedAt: new Date(Date.now()).toISOString().substring(0, 16)
     })
       
+    var { 
+        provider, 
+        importItems = itemProducts ? [...itemProducts] : [], 
+        user,  
+        totalPrice, 
+        status, 
+        importedAt
+    } = data
+    
+    const { product, qty, price, unit } = field
+    const UnitArr = ['Hộp', 'Vỉ', 'Viên', 'Chai', "Lọ"]
+    totalPrice= importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+
     const handleChange = e =>{
         e.preventDefault();
         setData(prev => {
@@ -38,7 +64,7 @@ const AddImportStock = () => {
           }
         })
     }
-        const handleChangeProduct = e =>{
+    const handleChangeProduct = e =>{
         e.preventDefault();
         setFieldProduct(prev => {
             let a = document.getElementById("select-product");
@@ -53,8 +79,9 @@ const AddImportStock = () => {
     }
 
     const handleAddProduct = e =>{
-        let flag = false;
         e.preventDefault();
+        let flag = false;
+
         importItems.forEach((item, index)=>{
             if(item.product === field.product && item.unit === field.unit && item.price === field.price){
                 flag = true
@@ -70,27 +97,18 @@ const AddImportStock = () => {
     }
     const handleSubmit = e => {
         e.preventDefault();
-        setData(prev=>{
-            return{
-                ...prev,
-                totalPrice: importItems?.reduce((sum, curr) => sum + curr.price * curr.qty, 0),
-                importItems:  itemProducts ? [...itemProducts] : [] ,
-            }
-        })
-        dispatch(createImportStock(data));
+        dispatch(createImportStock({
+           ...data,
+           importItems: importItems,
+           totalPrice : importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+        }));
     }
-    const createImportStockStatus = useSelector((state)=> state.importStockCreate)
-    const { success } = createImportStockStatus
-
-    const providerList = useSelector((state)=>state.providerList)
-    const { providers } = providerList
-
-    const productList = useSelector((state)=>state.productList)
-    const { products } = productList
-
-    const userList  = useSelector((state)=> state.userList)
-    const { users } = userList
-
+    const handleDeleteItem = (e, index) =>{
+        e.preventDefault()
+        importItems.splice(index, 1)
+        setItemProducts(importItems)
+    }
+    
     useEffect(()=>{
         if(success){
             toast.success(`Added successfully`, ToastObjects);
@@ -113,17 +131,6 @@ const AddImportStock = () => {
         dispatch(listProvider())
         dispatch(listUser())
     }, [success, dispatch])
-    var { 
-        provider, 
-        importItems = itemProducts ? [...itemProducts] : [] , 
-        user,  
-        totalPrice, 
-        status, 
-        importedAt
-    } = data
-    const { product, qty, price, unit } = field
-    const UnitArr = ['Hộp', 'Vỉ', 'Viên', 'Chai', "Lọ"]
-    totalPrice= importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
 
     return (
       <>
@@ -319,7 +326,7 @@ const AddImportStock = () => {
                                             }}>
                                                 Edit info
                                             </button> */}
-                                                <button className="dropdown-item text-danger">
+                                                <button className="dropdown-item text-danger" onClick={(e)=>handleDeleteItem(e,index)}>
                                                     Delete
                                                 </button>
                                             </div>

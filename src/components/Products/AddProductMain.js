@@ -59,6 +59,8 @@ const AddProductMain = () => {
         expDrug: Date.now,
         statusDrug: true
       })
+      setImg(null)
+      document.getElementById('uploadFile').value = "";
     }
   }
 
