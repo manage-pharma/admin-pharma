@@ -8,6 +8,13 @@ import debounce from "lodash.debounce";
 import ImportStock from "./ImportStock";
 import { listImportStock } from "../../Redux/Actions/ImportStockAction";
 import Toast from './../LoadingError/Toast';
+import { toast } from "react-toastify";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const MainImportStock = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
@@ -33,12 +40,16 @@ const MainImportStock = (props) => {
 
   const handleAdd = (e) =>{
     e.preventDefault();
-    history.push('/stock/import');
+    history.push('/import-stock/add');
   }
-
+  const updateStatus = useSelector(state => state.importStockStatus)
+  const {success} = updateStatus
   useEffect(()=>{
+    if(success){
+      toast.success(`Update status successfully`, ToastObjects)
+    }
     dispatch(listImportStock(keyword, pageNumber)) // eslint-disable-next-line
-  },[dispatch, pageNumber])
+  },[dispatch, pageNumber, success])
 
   return (
     <>
