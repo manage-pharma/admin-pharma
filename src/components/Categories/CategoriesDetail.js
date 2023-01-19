@@ -110,7 +110,7 @@ const DetailCategories = (props) => {
     }
   ];
   const handleRowClicked = (row) => {
-    history.push(`/product/${row._id}/edit`)
+    history.push(`/product/${row._id}`)
   };
   const paginationComponentOptions = {
   selectAllRowsItem: true,

@@ -100,7 +100,7 @@ const Product = (props) => {
                 <div className="dropdown-menu">
                   <button className="dropdown-item" onClick={(e)=>{
                     e.stopPropagation()
-                    history.push(`/product/${product._id}/edit`)
+                    history.push(`/product/${product._id}`)
                   }}>
                     Edit info
                   </button>

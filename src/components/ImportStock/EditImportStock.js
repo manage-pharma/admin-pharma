@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { createImportStock, listImportStock } from '../../Redux/Actions/ImportStockAction';
+import { singleImportStock, updateImportStock } from '../../Redux/Actions/ImportStockAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
-import { IMPORT_STOCK_CREATE_RESET } from '../../Redux/Constants/ImportStockConstant';
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
 import { Link } from 'react-router-dom';
-import Toast from './../LoadingError/Toast';
+import Toast from '../LoadingError/Toast';
+import { IMPORT_STOCK_DETAILS_RESET, IMPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ImportStockConstant";
 import  moment  from 'moment';
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -14,11 +14,12 @@ const ToastObjects = {
     pauseOnHover: false,
     autoClose: 2000,
   };
-const AddImportStock = () => {  
+const EditImportStock = (props) => {   
+    const { importId } = props
     const dispatch = useDispatch();
 
-    const createImportStockStatus = useSelector((state)=> state.importStockCreate)
-    const { success } = createImportStockStatus
+    const importDetail = useSelector((state)=> state.importStockDetail)
+    const { importStockItem  } = importDetail
 
     const providerList = useSelector((state)=>state.providerList)
     const { providers } = providerList
@@ -29,7 +30,10 @@ const AddImportStock = () => {
     const userList  = useSelector((state)=> state.userList)
     const { users } = userList
 
+    const importUpdate = useSelector((state)=> state.importStockUpdate)
+    const { success } = importUpdate
 
+    const [isEdited, setIsEdited] = useState(false)
     const [itemProducts, setItemProducts] = useState([]);
     const [field, setFieldProduct] = useState({
         name: '',
@@ -55,7 +59,7 @@ const AddImportStock = () => {
     
     const { product, qty, price, unit } = field
     const UnitArr = ['Hộp', 'Vỉ', 'Viên', 'Chai', "Lọ"]
-    totalPrice= importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+    totalPrice= itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
 
     const handleChange = e =>{
         e.preventDefault();
@@ -67,6 +71,9 @@ const AddImportStock = () => {
     }
     const handleChangeProduct = e =>{
         e.preventDefault();
+        if(!isEdited){
+            setIsEdited(true)
+        }
         setFieldProduct(prev => {
             let a = document.getElementById("select-product");
             let b = a.options[a.selectedIndex]
@@ -78,16 +85,15 @@ const AddImportStock = () => {
               }
         })
     }
-
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
 
-        importItems.forEach((item, index)=>{
-            if(item.product === field.product && item.unit === field.unit && item.price === field.price){
+        itemProducts.forEach((item, index)=>{
+            if((item.product._id || item.product) === field.product && item.unit === field.unit){
                 flag = true
-                importItems.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
-                setItemProducts(importItems)
+                itemProducts.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
+                setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
              }
         })
         if(!flag){
@@ -95,55 +101,64 @@ const AddImportStock = () => {
                 [...prev, {...field, qty: parseInt(qty)}]
             )
         }
+
     }
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(createImportStock({
+        dispatch(updateImportStock({
            ...data,
-           importItems: importItems,
-           totalPrice : importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+           importItems: itemProducts,
+           totalPrice : itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0),
+           importId
         }));
     }
     const handleDeleteItem = (e, index) =>{
         e.preventDefault()
-        importItems.splice(index, 1)
-        setItemProducts(importItems)
-    }
-    
-    useEffect(()=>{
-        if(success){
-            toast.success(`Added successfully`, ToastObjects);
-            dispatch({type: IMPORT_STOCK_CREATE_RESET})
-            setData({
-                totalPrice: 0,
-                status: false,
-                importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
-            })
-            setFieldProduct({
-                name: '',
-                product: '',
-                price: 0,
-                qty: 0,
-                unit: ''
-            })
-            setItemProducts([])
-            dispatch(listImportStock())
+        if(!isEdited){
+            setIsEdited(true)
         }
+        itemProducts.splice(index, 1)
+        setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
+    }
+
+    useEffect(()=>{
         dispatch(listProvider())
         dispatch(listUser())
-    }, [success, dispatch])
-
+        if(success){
+            toast.success(`Updated successfully`, ToastObjects);
+            dispatch({type: IMPORT_STOCK_UPDATE_RESET})
+            dispatch({type: IMPORT_STOCK_DETAILS_RESET})
+            dispatch(singleImportStock(importId));
+        }
+        if (importId !== importStockItem?._id ) {
+        dispatch(singleImportStock(importId));
+        } 
+        else if(importId === importStockItem?._id && !isEdited){
+        setData({
+            provider: importStockItem?.provider?._id,
+            user: importStockItem?.user?._id,
+            importItems: importStockItem?.importItems,
+            totalPrice: importStockItem.totalPrice,
+            importedAt: moment(importStockItem.importedAt).format('YYYY-MM-DD'),
+            status: importStockItem.status,
+        })
+        if(itemProducts.length === 0 && !isEdited){
+           setItemProducts(JSON.parse(JSON.stringify(importItems))) 
+       }
+        }// eslint-disable-next-line
+    }, [ dispatch, importStockItem, importId, itemProducts, isEdited, success])
     return (
       <>
         <Toast/>
-        <section className="content-main" >
+        <section className= {`content-main ${importStockItem?.status ? 'disabled': ''}`}>
             <form onSubmit={handleSubmit}>
                 <div className="content-header">
-                    <h2 className="content-title">Import stock</h2>
+                    <h4 className="content-title">Import code: <span className="text-danger">{importStockItem?.importCode}</span></h4>
                     <div>
-                    <button type="submit" className="btn btn-primary">
-                        Publish now
-                    </button>
+                        {importStockItem?.status ? 
+                            <h4><span className="badge bg-danger text-white">This import is complete, you cannot edit</span></h4>:
+                            <button type="submit" className="btn btn-primary">Update now</button>
+                        }
                     </div>
                 </div>
                 <div className="mb-4">
@@ -169,7 +184,6 @@ const AddImportStock = () => {
                                 <div>
                                     <label className="form-label">Imported At</label>
                                     <input
-                                        id="datePicker"
                                         name="importedAt"
                                         className="form-control"
                                         type='date'
@@ -177,6 +191,9 @@ const AddImportStock = () => {
                                         onChange={handleChange}
                                         value={importedAt}
                                     ></input>
+
+
+
                                 </div>
                                 <div>
                                     <label htmlFor="product_category_drug" className="form-label">
@@ -184,7 +201,7 @@ const AddImportStock = () => {
                                     </label>
                                     <select
                                     value={status}
-                                    name="status"
+                                    name="status" 
                                     onChange={handleChange}
                                     className="form-control"
                                     >
@@ -225,7 +242,7 @@ const AddImportStock = () => {
                                 name="product"
                                 onChange={handleChangeProduct}
                                 className="form-control"
-                                required >
+                                >
                                     <option value=''>Chosse product</option>
                                     {products?.map((item, index)=>(
                                         <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
@@ -240,7 +257,6 @@ const AddImportStock = () => {
                                         value={price}
                                         type='number'
                                         className="form-control"
-                                        required
                                         onChange={handleChangeProduct}
                                     ></input>
 
@@ -254,7 +270,6 @@ const AddImportStock = () => {
                                         value={qty}
                                         type="number"
                                         className="form-control"
-                                        required
                                         onChange={handleChangeProduct}
                                     />
                                 </div>
@@ -266,7 +281,6 @@ const AddImportStock = () => {
                                     value={unit}
                                     name="unit"
                                     className="form-control"
-                                    required 
                                     onChange={handleChangeProduct}
                                     >
                                     <option value=''>Chosse unit drug</option>
@@ -277,7 +291,8 @@ const AddImportStock = () => {
                                 </div>
                             </div>
                             <div className="mb-6 d-flex justify-content-end">
-                                <button className="btn btn-success" onClick={handleAddProduct}>Add Product</button>
+                                {importStockItem?.status ? '':
+                                <button className="btn btn-success" onClick={handleAddProduct}>Add Product</button>}
                             </div>   
                         </div>
                     </div>
@@ -303,7 +318,7 @@ const AddImportStock = () => {
                                 {itemProducts?.map((item, index)=>(
                                     <tr key={index}>
                                     <th scope="row">{ index + 1 }</th>
-                                    <td>{ item.name }</td>
+                                    <td>{ item.product.name || item.name }</td>
                                     <td>{ item.price}</td>
                                     <td>{ item.qty}</td>
                                     <td>{ item.unit}</td>
@@ -348,4 +363,4 @@ const AddImportStock = () => {
     );
   }
 
-  export default AddImportStock;
+  export default EditImportStock;

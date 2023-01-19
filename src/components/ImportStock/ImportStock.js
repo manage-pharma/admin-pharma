@@ -2,21 +2,15 @@ import React, { useEffect, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
 import { listImportStock, statusImportStock } from "../../Redux/Actions/ImportStockAction";
-import { toast } from "react-toastify";
 import moment from "moment";
 import { IMPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ImportStockConstant";
-const ToastObjects = {
-  pauseOnFocusLoss: false,
-  draggable: false,
-  pauseOnHover: false,
-  autoClose: 2000,
-};
 const ImportStock = (props) => {
+  const history = useHistory()
   const MyVerticallyCenteredModal = (props) =>{
     return (
       <Modal
@@ -37,7 +31,6 @@ const ImportStock = (props) => {
         <Modal.Footer>
           <Button variant="warning" style={{fontWeight:"600"}} onClick={()=>{
             dispatch(statusImportStock(importStock._id))
-            toast.success(`Update status successfully`, ToastObjects);
           }}>OK</Button>
         </Modal.Footer>
       </Modal>
@@ -52,7 +45,6 @@ const ImportStock = (props) => {
 
   useEffect(()=>{
     if(success){
-      toast.success(`Update status successfully`, ToastObjects);
       setModalShow(false)
       dispatch({ type: IMPORT_STOCK_STATUS_RESET});
       dispatch(listImportStock())
@@ -93,15 +85,24 @@ const ImportStock = (props) => {
                 </Link>
                 <div className="dropdown-menu">
                   { importStock.status === false ?
-                      <button className="dropdown-item bg-warning" onClick={(e)=>{
-                        e.stopPropagation()
-                        setModalShow(true)
-                      }}>
-                        <span className="text-black">Confirm import</span>
-                      </button> :
-                      ''
+                      <>
+                        <button className="dropdown-item bg-warning" onClick={(e)=>{
+                          e.stopPropagation()
+                          setModalShow(true)
+                        }}>
+                          <span className="text-black">Confirm import</span>
+                        </button>
+                        <button className="dropdown-item" onClick={(e)=>{
+                          e.preventDefault()
+                          history.push(`/import-stock/${importStock._id}`)
+                        }}>Edit info</button>
+                      </>
+                       :
+                       <button className="dropdown-item" onClick={(e)=>{
+                        e.preventDefault()
+                        history.push(`/import-stock/${importStock._id}`)
+                      }}>Detail info</button>
                   }
-                  <button className="dropdown-item ">Edit info</button>
                 </div>
               </div>
           </td>

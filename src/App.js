@@ -11,6 +11,7 @@ import OrderScreen from "./screens/OrderScreen";
 import OrderDetailScreen from "./screens/OrderDetailScreen";
 import AddProduct from "./screens/AddProduct";
 import AddImport from "./screens/AddImport";
+import EditImport from "./screens/EditImport";
 import Login from "./screens/LoginScreen";
 import UsersScreen from "./screens/UsersScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
@@ -50,24 +51,29 @@ function App() {
     <>
       <Router>
         <Switch>
-          <PrivateRouter path="/" component={HomeScreen} exact /> 
+          <PrivateRouter path="/" component={HomeScreen} exact />
+
           <PrivateRouter path="/products" component={ProductScreen} exact/>
-          <PrivateRouter path="/providers" component={ProviderScreen} exact/>
-          <PrivateRouter path="/import-stock" component={ImportStockScreen} exact/>
-          <PrivateRouter path="/products/excel&CSV" component={ProductExcelCSV} exact/>
-          {/* <PrivateRouter path="/products/search/:keyword" component={ProductScreen} exact /> */}
-          {/* <PrivateRouter path="/products/page/:pageNumber" component={ProductScreen} exact /> */}
-          {/* <PrivateRouter path="/products/search/:keyword/page/:pageNumber" component={ProductScreen} exact /> */}
+          <PrivateRouter path="/product/add" component={AddProduct} />
+          <PrivateRouter path="/product/excel" component={ProductExcelCSV} exact/>
+          <PrivateRouter path="/product/:id" component={ProductEditScreen} exact/>
+
           <PrivateRouter path="/categories" component={CategoriesScreen} />
-          <PrivateRouter path="/categories-drug" component={CategoriesDrugScreen} />
           <PrivateRouter path="/category/:id" component={CategoriesDetail} />
+
+          <PrivateRouter path="/categories-drug" component={CategoriesDrugScreen} />
           <PrivateRouter path="/category-drug/:id" component={CategoriesDrugDetail} />
+
           <PrivateRouter path="/orders" component={OrderScreen} />
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
-          <PrivateRouter path="/addproduct" component={AddProduct} />
-          <PrivateRouter path="/stock/import" component={AddImport} />
+
+          <PrivateRouter path="/import-stock" component={ImportStockScreen} exact/>
+          <PrivateRouter path="/import-stock/add" component={AddImport} />
+          <PrivateRouter path="/import-stock/:id" component={EditImport} />
+
+          <PrivateRouter path="/providers" component={ProviderScreen} exact/>
           <PrivateRouter path="/users" component={UsersScreen} />
-          <PrivateRouter path="/product/:id/edit" component={ProductEditScreen} />
+
           <Route path="/login" component={Login} />
           <Route path="*" component={NotFound} />
         </Switch>

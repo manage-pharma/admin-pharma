@@ -49,12 +49,12 @@ const MainProducts = (props) => {
         <h2 className="content-title">PRODUCTS</h2>
         <div className="d-flex">
           <div style={{marginRight: '10px'}}>
-            <Link to="/products/excel&CSV" className="btn btn-primary">
+            <Link to="/product/excel" className="btn btn-primary">
               Excel & CSV 
             </Link>
           </div>
           <div>
-            <Link to="/addproduct" className="btn btn-primary">
+            <Link to="/product/add" className="btn btn-primary">
               Create new
             </Link>
           </div>
