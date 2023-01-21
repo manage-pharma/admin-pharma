@@ -9,6 +9,7 @@ import ImportStock from "./ImportStock";
 import { listImportStock } from "../../Redux/Actions/ImportStockAction";
 import Toast from './../LoadingError/Toast';
 import { toast } from "react-toastify";
+import renderToast from "../../util/Toast";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -19,28 +20,62 @@ const MainImportStock = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
   const history = useHistory()
+  const [ isStop , setIsStop ] = useState(false)
   const [keyword, setSearch] = useState()
-  const importedStockList = useSelector((state)=> state.importStockList)
-  const { loading, error, importStock, currentPage, totalPage } = importedStockList
+  const [toggleSearch, setToggleSearch] = useState(false)
+  const [data, setData] = useState({
+    from: '',
+    to: ''
+  })
+  const {from,to} = data
 
-  const callApiKeywordSearch = (keyword, pageNumber) =>{
-    if( keyword.trim() !== ''){
-      dispatch(listImportStock(keyword, pageNumber))
-    }
-    else{
-      history.push('/import-stock');
-    }
+  const importedStockList = useSelector((state)=> state.importStockList)
+  const { loading, error, stockImported, currentPage, totalPage } = importedStockList
+
+  const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
+      dispatch(listImportStock(keyword, pageNumber, from, to))
   }
-  const debounceDropDown = useRef(debounce((keyword, pageNumber) => callApiKeywordSearch(keyword, pageNumber) , 300)).current;
+  const debounceDropDown = useRef(debounce((keyword, pageNumber, from, to) => callApiKeywordSearch(keyword, pageNumber, from, to) , 300)).current;
 
   const handleSubmitSearch = e =>{
+    e.preventDefault()
     setSearch(e.target.value)
-    debounceDropDown(e.target.value, pageNumber);
+    debounceDropDown(e.target.value, pageNumber, data.from, data.to);
   }
 
   const handleAdd = (e) =>{
     e.preventDefault();
     history.push('/import-stock/add');
+  }
+
+  const handleChange = e =>{
+    e.preventDefault();
+    setData(prev => {
+      return {
+        ...prev, [e.target.name]: e.target.value
+      }
+    })
+  }
+  const handleSearchDate = (e) =>{
+    e.preventDefault();
+    if(!toggleSearch){
+      if(!data.from || !data.to){
+        if(!isStop){
+          renderToast('Date has not been selected','error', setIsStop, isStop)
+        }
+        return;
+      }
+      dispatch(listImportStock(keyword, pageNumber, data.from, data.to))
+      setToggleSearch(!toggleSearch)  
+    }
+    else{
+      setData({
+        from: '',
+        to: ''
+      })
+      dispatch(listImportStock(keyword, pageNumber))
+      setToggleSearch(!toggleSearch)  
+    }
   }
   const updateStatus = useSelector(state => state.importStockStatus)
   const {success} = updateStatus
@@ -77,19 +112,37 @@ const MainImportStock = (props) => {
               />
             </div>
             <div className="col-lg-2 col-6 col-md-3">
-              <select className="form-select">
-                <option>All category</option>
-                <option>Electronics</option>
-                <option>Clothings</option>
-                <option>Something else</option>
-              </select>
+              <div className="d-flex">
+                <span className="label-date">From: </span>
+                <input
+                    id="datePicker"
+                    name="from"
+                    value={from}
+                    className="form-control"
+                    type='date'
+                    onChange={handleChange}
+                ></input>
+              </div>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
-              <select  defaultValue="" className="form-select">
-                <option value="">---Chosse Price---</option>
-                <option value="cheap">(1$ - 100$)</option>
-                <option value="expensive">(101$ - 1000$)</option>
-              </select>
+              <div className="d-flex">
+                <span className="label-date">To: </span>
+                <input
+                    id="datePicker"
+                    name="to"
+                    value={to}
+                    className="form-control"
+                    type='date'
+                    onChange={handleChange}
+                ></input>
+              </div>
+            </div>
+            <div className="col-lg-1">
+              {toggleSearch ? 
+                <button className="btn btn-danger" onClick={handleSearchDate}>Cancel</button>
+              : 
+                <button className="btn btn-success" onClick={handleSearchDate}>Search</button>
+              }
             </div>
           </div>
         </header>
@@ -114,10 +167,11 @@ const MainImportStock = (props) => {
                           </tr>
                         </thead>
                           <tbody>
-                             {importStock ? importStock.map((listImport, index)=>(
+                             {stockImported ? stockImported.map((listImport, index)=>(
                               <ImportStock 
                                 importStock={listImport} 
                                 indexSTT={index} 
+                                key={index}
                                 />)) : 
                               <div>There are no record</div>
                           }

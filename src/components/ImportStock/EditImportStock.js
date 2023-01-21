@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import { IMPORT_STOCK_DETAILS_RESET, IMPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ImportStockConstant";
 import  moment  from 'moment';
+import renderToast from "../../util/Toast";
 const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
@@ -33,6 +34,7 @@ const EditImportStock = (props) => {
     const importUpdate = useSelector((state)=> state.importStockUpdate)
     const { success } = importUpdate
 
+    const [ isStop , setIsStop ] = useState(false)
     const [isEdited, setIsEdited] = useState(false)
     const [itemProducts, setItemProducts] = useState([]);
     const [field, setFieldProduct] = useState({
@@ -40,7 +42,6 @@ const EditImportStock = (props) => {
         product: '',
         price: 0,
         qty: 0,
-        unit: ''
     });
 
     const [data, setData] = useState({
@@ -57,8 +58,7 @@ const EditImportStock = (props) => {
         importedAt
     } = data
     
-    const { product, qty, price, unit } = field
-    const UnitArr = ['Hộp', 'Vỉ', 'Viên', 'Chai', "Lọ"]
+    const { product, qty, price } = field
     totalPrice= itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
 
     const handleChange = e =>{
@@ -88,9 +88,20 @@ const EditImportStock = (props) => {
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
-
+        if(!field.product){
+            if(!isStop){
+                renderToast('The product has not been selected','error', setIsStop, isStop)
+            }
+            return;
+        }
+        else if(field.price <= 0 || field.qty <= 0){
+            if(!isStop){
+                renderToast('Price or Quantity have to greater 0','error', setIsStop, isStop)
+            }
+            return;
+        }
         itemProducts.forEach((item, index)=>{
-            if((item.product._id || item.product) === field.product && item.unit === field.unit){
+            if((item.product._id || item.product) === field.product){
                 flag = true
                 itemProducts.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
                 setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
@@ -256,6 +267,7 @@ const EditImportStock = (props) => {
                                         name="price"
                                         value={price}
                                         type='number'
+                                        min="1"
                                         className="form-control"
                                         onChange={handleChangeProduct}
                                     ></input>
@@ -269,25 +281,10 @@ const EditImportStock = (props) => {
                                         name="qty"
                                         value={qty}
                                         type="number"
+                                        min="1"
                                         className="form-control"
                                         onChange={handleChangeProduct}
                                     />
-                                </div>
-                                <div>
-                                    <label htmlFor="unit" className="form-label">
-                                        Unit
-                                    </label>
-                                    <select
-                                    value={unit}
-                                    name="unit"
-                                    className="form-control"
-                                    onChange={handleChangeProduct}
-                                    >
-                                    <option value=''>Chosse unit drug</option>
-                                    {UnitArr?.map((item, index)=>(
-                                        <option key={index} value={item}>{item}</option>
-                                    ))}
-                                    </select>
                                 </div>
                             </div>
                             <div className="mb-6 d-flex justify-content-end">
@@ -310,7 +307,6 @@ const EditImportStock = (props) => {
                                 <th scope="col">Name</th>
                                 <th scope="col">Price buy</th>
                                 <th scope='col'>Quantity</th>
-                                <th scope="col">Unit</th>
                                 <th scope="col">Action</th>
                             </tr>
                             </thead>
@@ -321,7 +317,6 @@ const EditImportStock = (props) => {
                                     <td>{ item.product.name || item.name }</td>
                                     <td>{ item.price}</td>
                                     <td>{ item.qty}</td>
-                                    <td>{ item.unit}</td>
                                     <td>
                                         <div 
                                             className="dropdown">

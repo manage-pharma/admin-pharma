@@ -1,11 +1,14 @@
 import { IMPORT_STOCK_CREATE_FAIL, IMPORT_STOCK_CREATE_REQUEST, IMPORT_STOCK_CREATE_RESET, IMPORT_STOCK_CREATE_SUCCESS, IMPORT_STOCK_DETAILS_FAIL, IMPORT_STOCK_DETAILS_REQUEST, IMPORT_STOCK_DETAILS_SUCCESS, IMPORT_STOCK_LIST_FAIL, IMPORT_STOCK_LIST_REQUEST, IMPORT_STOCK_LIST_SUCCESS, IMPORT_STOCK_STATUS_FAIL, IMPORT_STOCK_STATUS_REQUEST, IMPORT_STOCK_STATUS_RESET, IMPORT_STOCK_STATUS_SUCCESS, IMPORT_STOCK_UPDATE_FAIL, IMPORT_STOCK_UPDATE_REQUEST, IMPORT_STOCK_UPDATE_RESET, IMPORT_STOCK_UPDATE_SUCCESS } from './../Constants/ImportStockConstant'; 
   // IMPORT_STOCK LIST
-export const importStockListReducer = (state = {importStock:[]}, action) => {
+export const importStockListReducer = (state = {stockImported:[]}, action) => {
   switch (action.type) {
     case IMPORT_STOCK_LIST_REQUEST:
       return { loading: true };
     case IMPORT_STOCK_LIST_SUCCESS:
-      return { loading: false, importStock: action.payload };
+      return { loading: false,
+        totalPage: action.payload.totalPage,
+        currentPage: action.payload.currentPage,
+        stockImported: action.payload.stockImported}
     case IMPORT_STOCK_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
