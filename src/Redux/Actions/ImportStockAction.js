@@ -2,7 +2,7 @@ import { IMPORT_STOCK_CREATE_FAIL, IMPORT_STOCK_CREATE_REQUEST, IMPORT_STOCK_CRE
 import axios from 'axios';
 import { logout } from "./UserActions";
 
-export const listImportStock = () => async(dispatch, getState) =>{
+export const listImportStock = ( keyword = " ", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
   try {
       dispatch({type: IMPORT_STOCK_LIST_REQUEST});
       const { userLogin: {userInfo}} = getState();
@@ -10,8 +10,8 @@ export const listImportStock = () => async(dispatch, getState) =>{
           headers: {
               Authorization: `Bearer ${userInfo.token}`
           }
-      }
-      const {data} = await axios.get(`/api/import-stock/`, config)
+      } 
+      const {data} = await axios.get(`/api/import-stock/?keyword=${keyword}&pageNumber=${pageNumber}&from=${from}&to=${to}`, config)
       dispatch({type: IMPORT_STOCK_LIST_SUCCESS, payload: data})
   } catch (error) {
       const message = error.response && error.response.data.message 
@@ -148,3 +148,4 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
         });
     }
   };
+

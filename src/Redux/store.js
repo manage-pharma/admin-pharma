@@ -50,7 +50,7 @@ const reducer = combineReducers({
   importStockDetail: importStockDetailReducer,
   importStockCreate: importStockCreateReducer,
   importStockStatus: importStockStatusReducer,
-  importStockUpdate: importStockUpdateReducer
+  importStockUpdate: importStockUpdateReducer,
 });
 
 

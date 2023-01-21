@@ -1036,6 +1036,11 @@ input:checked + .slider:before {
   right: 30px;
   transform: translateY(90%);
 }
+.label-date{
+  align-items: center;
+  display: flex;
+  padding-right: 10px;
+}
 /* .arrow.down:hover::before{
   transition: 0.3s ease-in-out;
   right: 30px;
