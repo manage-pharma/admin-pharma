@@ -65,17 +65,16 @@ const MainImportStock = (props) => {
         }
         return;
       }
-      dispatch(listImportStock(keyword, pageNumber, data.from, data.to))
-      setToggleSearch(!toggleSearch)  
+      dispatch(listImportStock(keyword, pageNumber, data.from, data.to)) 
     }
     else{
       setData({
         from: '',
         to: ''
       })
-      dispatch(listImportStock(keyword, pageNumber))
-      setToggleSearch(!toggleSearch)  
+      dispatch(listImportStock(keyword, pageNumber)) 
     }
+    setToggleSearch(!toggleSearch)
   }
   const updateStatus = useSelector(state => state.importStockStatus)
   const {success} = updateStatus

@@ -56,7 +56,7 @@ export const singleImportStock = (id) => async (dispatch, getState) => {
 };
 
 //ADMIN IMPORT CREATE
-export const createImportStock = ({ provider, user, importItems, status, totalPrice, importedAt }) => async (dispatch, getState) => {
+export const createImportStock = ({ provider, user, importItems, totalPrice, importedAt }) => async (dispatch, getState) => {
     try {
       dispatch({ type: IMPORT_STOCK_CREATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -71,7 +71,7 @@ export const createImportStock = ({ provider, user, importItems, status, totalPr
       };
       const { data } = await axios.post(`/api/import-stock/`,
         {
-          provider, user, importItems, status, totalPrice, importedAt
+          provider, user, importItems, totalPrice, importedAt
         }
 
         , config);

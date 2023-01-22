@@ -40,7 +40,6 @@ const AddImportStock = () => {
     });
 
     const [data, setData] = useState({
-        status: false,
         importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
     })
       
@@ -49,7 +48,6 @@ const AddImportStock = () => {
         importItems = itemProducts ? [...itemProducts] : [], 
         user,  
         totalPrice, 
-        status, 
         importedAt
     } = data
     
@@ -129,7 +127,6 @@ const AddImportStock = () => {
             dispatch({type: IMPORT_STOCK_CREATE_RESET})
             setData({
                 totalPrice: 0,
-                status: false,
                 importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
             })
             setFieldProduct({
@@ -177,7 +174,7 @@ const AddImportStock = () => {
                                     ))}
                                 </select>
                             </div>
-                            <div className="mb-4 form-divided-3">
+                            <div className="mb-4 form-divided-2">
                                 <div>
                                     <label className="form-label">Imported At</label>
                                     <input
@@ -189,20 +186,6 @@ const AddImportStock = () => {
                                         onChange={handleChange}
                                         value={importedAt}
                                     ></input>
-                                </div>
-                                <div>
-                                    <label htmlFor="product_category_drug" className="form-label">
-                                        Status
-                                    </label>
-                                    <select
-                                    value={status}
-                                    name="status"
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    >
-                                        <option value={false}>Incompletd</option>
-                                        <option value={true}>Completed</option>
-                                    </select>
                                 </div>
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
