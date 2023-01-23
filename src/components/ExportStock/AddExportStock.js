@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { singleImportStock, updateImportStock } from '../../Redux/Actions/ImportStockAction';
+import { createExportStock, listExportStock } from '../../Redux/Actions/ExportStockAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
-import { listProvider } from '../../Redux/Actions/ProviderAction';
+import { EXPORT_STOCK_CREATE_RESET } from '../../Redux/Constants/ExportStockConstant';
 import { listUser } from "../../Redux/Actions/UserActions";
 import { Link } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
-import { IMPORT_STOCK_DETAILS_RESET, IMPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ImportStockConstant";
 import  moment  from 'moment';
 import renderToast from "../../util/Toast";
 const ToastObjects = {
@@ -15,15 +14,11 @@ const ToastObjects = {
     pauseOnHover: false,
     autoClose: 2000,
   };
-const EditImportStock = (props) => {   
-    const { importId } = props
+const AddExportStock = () => {  
     const dispatch = useDispatch();
 
-    const importDetail = useSelector((state)=> state.importStockDetail)
-    const { importStockItem  } = importDetail
-
-    const providerList = useSelector((state)=>state.providerList)
-    const { providers } = providerList
+    const createExportStockStatus = useSelector((state)=> state.exportStockCreate)
+    const { success } = createExportStockStatus 
 
     const productList = useSelector((state)=>state.productList)
     const { products } = productList
@@ -31,34 +26,36 @@ const EditImportStock = (props) => {
     const userList  = useSelector((state)=> state.userList)
     const { users } = userList
 
-    const importUpdate = useSelector((state)=> state.importStockUpdate)
-    const { success } = importUpdate
-
     const [ isStop , setIsStop ] = useState(false)
-    const [isEdited, setIsEdited] = useState(false)
     const [itemProducts, setItemProducts] = useState([]);
     const [field, setFieldProduct] = useState({
         name: '',
         product: '',
-        price: 1,
-        qty: 1,
+        price: 0,
+        qty: 0,
     });
 
     const [data, setData] = useState({
-        status: false,
-        importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
+        customer: '',
+        phone: '',
+        address: '',
+        note: '',
+        exportedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
     })
       
     var { 
-        provider, 
-        importItems = itemProducts ? [...itemProducts] : [], 
+        customer,
+        phone,
+        address,
+        note,
+        exportItems = itemProducts ? [...itemProducts] : [], 
         user,  
         totalPrice, 
-        importedAt
+        exportedAt
     } = data
     
     const { product, qty, price } = field
-    totalPrice= itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+    totalPrice= exportItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
 
     const handleChange = e =>{
         e.preventDefault();
@@ -70,9 +67,6 @@ const EditImportStock = (props) => {
     }
     const handleChangeProduct = e =>{
         e.preventDefault();
-        if(!isEdited){
-            setIsEdited(true)
-        }
         setFieldProduct(prev => {
             let a = document.getElementById("select-product");
             let b = a.options[a.selectedIndex]
@@ -84,9 +78,11 @@ const EditImportStock = (props) => {
               }
         })
     }
+
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
+        
         if(!field.product){
             if(!isStop){
                 renderToast('The product has not been selected','error', setIsStop, isStop)
@@ -99,111 +95,115 @@ const EditImportStock = (props) => {
             }
             return;
         }
-        itemProducts.forEach((item, index)=>{
-            if((item.product._id || item.product) === field.product){
-                flag = true
-                itemProducts.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
-                setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
-             }
-        })
-        if(!flag){
-            setItemProducts(prev => 
-                [...prev, {...field, qty: parseInt(qty)}]
-            )
+        else{
+            exportItems.forEach((item, index)=>{
+                if(item.product === field.product){
+                    flag = true
+                    exportItems.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
+                    setItemProducts(exportItems)
+                 }
+            })
+            if(!flag){
+                setItemProducts(prev => 
+                    [...prev, {...field, qty: parseInt(qty)}]
+                )
+            }
         }
-
     }
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(updateImportStock({
+        dispatch(createExportStock({
            ...data,
-           importItems: itemProducts,
-           totalPrice : itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0),
-           importId
+           exportItems: exportItems,
+           totalPrice : exportItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
         }));
     }
     const handleDeleteItem = (e, index) =>{
         e.preventDefault()
-        if(!isEdited){
-            setIsEdited(true)
-        }
-        itemProducts.splice(index, 1)
-        setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
+        exportItems.splice(index, 1)
+        setItemProducts(exportItems)
     }
-
+    
     useEffect(()=>{
-        dispatch(listProvider())
-        dispatch(listUser())
         if(success){
-            toast.success(`Updated successfully`, ToastObjects);
-            dispatch({type: IMPORT_STOCK_UPDATE_RESET})
-            dispatch({type: IMPORT_STOCK_DETAILS_RESET})
-            dispatch(singleImportStock(importId));
+            toast.success(`Added successfully`, ToastObjects);
+            dispatch({type: EXPORT_STOCK_CREATE_RESET})
+            setData({
+                customer: '',
+                phone: '',
+                address: '',
+                note: '',
+                totalPrice: 0,
+                exportedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
+            })
+            setFieldProduct({
+                name: '',
+                product: '',
+                price: 0,
+                qty: 0,
+            })
+            setItemProducts([])
+            dispatch(listExportStock())
         }
-        if (importId !== importStockItem?._id ) {
-        dispatch(singleImportStock(importId));
-        } 
-        else if(importId === importStockItem?._id && !isEdited){
-        setData({
-            provider: importStockItem?.provider?._id,
-            user: importStockItem?.user?._id,
-            importItems: importStockItem?.importItems,
-            totalPrice: importStockItem.totalPrice,
-            importedAt: moment(importStockItem.importedAt).format('YYYY-MM-DD'),
-            status: importStockItem.status,
-        })
-        if(itemProducts.length === 0 && !isEdited){
-           setItemProducts(JSON.parse(JSON.stringify(importItems))) 
-       }
-        }// eslint-disable-next-line
-    }, [ dispatch, importStockItem, importId, itemProducts, isEdited, success])
+        dispatch(listUser())
+    }, [success, dispatch])
+
     return (
       <>
         <Toast/>
-        <section className= {`content-main ${importStockItem?.status ? 'disabled': ''}`}>
+        <section className="content-main" >
             <form onSubmit={handleSubmit}>
                 <div className="content-header">
-                    <h4 className="content-title">Import code: <span className="text-danger">{importStockItem?.importCode}</span></h4>
+                    <h2 className="content-title">Export stock</h2>
                     <div>
-                        {importStockItem?.status ? 
-                            <h4><span className="badge bg-danger text-white">This import is complete, you cannot edit</span></h4>:
-                            <button type="submit" className="btn btn-primary">Update now</button>
-                        }
+                    <button type="submit" className="btn btn-primary">
+                        Publish now
+                    </button>
                     </div>
                 </div>
                 <div className="mb-4">
                     <div className="card card-custom mb-4 shadow-sm">
                         <div className="card-body">
-                            <div className="mb-4">
-                                <label htmlFor="name_drug" className="form-label">
-                                    Provider
-                                </label>
-                                <select
-                                value={provider}
-                                name="provider"
-                                onChange={handleChange}
-                                className="form-control"
-                                required >
-                                    <option value=''>Chosse Provider</option>
-                                    {providers?.map((item, index)=>(
-                                    <option key={index} value={item._id}>{item.name}</option>
-                                    ))}
-                                </select>
+                            <div className="mb-4 form-divided-2">
+                                <div>
+                                    <label htmlFor="customer" className="form-label">
+                                        Customer name
+                                    </label>
+                                    <input
+                                        name="customer"
+                                        value={customer}
+                                        type="text"
+                                        className="form-control"
+                                        required
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="phone" className="form-label">
+                                        Phone
+                                    </label>
+                                    <input
+                                        name="phone"
+                                        value={phone}
+                                        type="text"
+                                        className="form-control"
+                                        required
+                                        onChange={handleChange}
+                                    />
+                                </div>
                             </div>
                             <div className="mb-4 form-divided-2">
                                 <div>
-                                    <label className="form-label">Imported At</label>
+                                    <label className="form-label">Exported At</label>
                                     <input
-                                        name="importedAt"
+                                        id="datePicker"
+                                        name="exportedAt"
                                         className="form-control"
                                         type='date'
                                         required
                                         onChange={handleChange}
-                                        value={importedAt}
+                                        value={exportedAt}
                                     ></input>
-
-
-
                                 </div>
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
@@ -222,6 +222,32 @@ const EditImportStock = (props) => {
                                     </select>
                                 </div>
                             </div>
+                            <div className="mb-4 form-divided-2">
+                                <div>
+                                    <label className="form-label">Address</label>
+                                    <textarea
+                                    name="address"
+                                    placeholder="Type here"
+                                    className="form-control"
+                                    rows="3"
+                                    required
+                                    onChange={handleChange}
+                                    value={address}
+                                    ></textarea>
+                                </div>
+                                <div>
+                                    <label className="form-label">Note</label>
+                                    <textarea
+                                    name="note"
+                                    placeholder="Type here"
+                                    className="form-control"
+                                    rows="3"
+                                    required
+                                    onChange={handleChange}
+                                    value={note}
+                                    ></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,7 +264,7 @@ const EditImportStock = (props) => {
                                 name="product"
                                 onChange={handleChangeProduct}
                                 className="form-control"
-                                >
+                                required >
                                     <option value=''>Chosse product</option>
                                     {products?.map((item, index)=>(
                                         <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
@@ -254,6 +280,7 @@ const EditImportStock = (props) => {
                                         type='number'
                                         min="1"
                                         className="form-control"
+                                        required
                                         onChange={handleChangeProduct}
                                     ></input>
 
@@ -268,13 +295,13 @@ const EditImportStock = (props) => {
                                         type="number"
                                         min="1"
                                         className="form-control"
+                                        required
                                         onChange={handleChangeProduct}
                                     />
                                 </div>
                             </div>
                             <div className="mb-6 d-flex justify-content-end">
-                                {importStockItem?.status ? '':
-                                <button className="btn btn-success" onClick={handleAddProduct}>Add Product</button>}
+                                <button className="btn btn-success" onClick={handleAddProduct}>Add Product</button>
                             </div>   
                         </div>
                     </div>
@@ -299,7 +326,7 @@ const EditImportStock = (props) => {
                                 {itemProducts?.map((item, index)=>(
                                     <tr key={index}>
                                     <th scope="row">{ index + 1 }</th>
-                                    <td>{ item.product.name || item.name }</td>
+                                    <td>{ item.name }</td>
                                     <td>{ item.price}</td>
                                     <td>{ item.qty}</td>
                                     <td>
@@ -343,4 +370,4 @@ const EditImportStock = (props) => {
     );
   }
 
-  export default EditImportStock;
+  export default AddExportStock;

@@ -119,7 +119,7 @@ const Sidebar = () => {
                       <NavLink
                         activeClassName="active"
                         className="menu-link"
-                        to="#"
+                        to="/export-stock"
                       >
                         <i className="icon fas fa-sign-out-alt"></i>
                         <span className="text">Export Stock</span>

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { singleImportStock, updateImportStock } from '../../Redux/Actions/ImportStockAction';
+import { singleExportStock, updateExportStock } from '../../Redux/Actions/ExportStockAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
-import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
 import { Link } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
-import { IMPORT_STOCK_DETAILS_RESET, IMPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ImportStockConstant";
+import { EXPORT_STOCK_DETAILS_RESET, EXPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ExportStockConstant";
 import  moment  from 'moment';
 import renderToast from "../../util/Toast";
 const ToastObjects = {
@@ -16,14 +15,11 @@ const ToastObjects = {
     autoClose: 2000,
   };
 const EditImportStock = (props) => {   
-    const { importId } = props
+    const { exportId } = props
     const dispatch = useDispatch();
 
-    const importDetail = useSelector((state)=> state.importStockDetail)
-    const { importStockItem  } = importDetail
-
-    const providerList = useSelector((state)=>state.providerList)
-    const { providers } = providerList
+    const exportDetail = useSelector((state)=> state.exportStockDetail)
+    const { exportStockItem  } = exportDetail
 
     const productList = useSelector((state)=>state.productList)
     const { products } = productList
@@ -31,8 +27,8 @@ const EditImportStock = (props) => {
     const userList  = useSelector((state)=> state.userList)
     const { users } = userList
 
-    const importUpdate = useSelector((state)=> state.importStockUpdate)
-    const { success } = importUpdate
+    const exportUpdate = useSelector((state)=> state.exportStockUpdate)
+    const { success } = exportUpdate
 
     const [ isStop , setIsStop ] = useState(false)
     const [isEdited, setIsEdited] = useState(false)
@@ -45,16 +41,22 @@ const EditImportStock = (props) => {
     });
 
     const [data, setData] = useState({
-        status: false,
-        importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
+        customer: '',
+        phone: '',
+        address: '',
+        note: '',
+        exportedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
     })
       
     var { 
-        provider, 
-        importItems = itemProducts ? [...itemProducts] : [], 
+        customer,
+        phone,
+        address,
+        note,
+        exportItems = itemProducts ? [...itemProducts] : [], 
         user,  
         totalPrice, 
-        importedAt
+        exportedAt
     } = data
     
     const { product, qty, price } = field
@@ -115,11 +117,11 @@ const EditImportStock = (props) => {
     }
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(updateImportStock({
+        dispatch(updateExportStock({
            ...data,
-           importItems: itemProducts,
+           exportItems: itemProducts,
            totalPrice : itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0),
-           importId
+           exportId
         }));
     }
     const handleDeleteItem = (e, index) =>{
@@ -132,78 +134,90 @@ const EditImportStock = (props) => {
     }
 
     useEffect(()=>{
-        dispatch(listProvider())
         dispatch(listUser())
         if(success){
             toast.success(`Updated successfully`, ToastObjects);
-            dispatch({type: IMPORT_STOCK_UPDATE_RESET})
-            dispatch({type: IMPORT_STOCK_DETAILS_RESET})
-            dispatch(singleImportStock(importId));
+            dispatch({type: EXPORT_STOCK_UPDATE_RESET})
+            dispatch({type: EXPORT_STOCK_DETAILS_RESET})
+            dispatch(singleExportStock(exportId));
         }
-        if (importId !== importStockItem?._id ) {
-        dispatch(singleImportStock(importId));
+        if (exportId !== exportStockItem?._id ) {
+        dispatch(singleExportStock(exportId));
         } 
-        else if(importId === importStockItem?._id && !isEdited){
+        else if(exportId === exportStockItem?._id && !isEdited){
         setData({
-            provider: importStockItem?.provider?._id,
-            user: importStockItem?.user?._id,
-            importItems: importStockItem?.importItems,
-            totalPrice: importStockItem.totalPrice,
-            importedAt: moment(importStockItem.importedAt).format('YYYY-MM-DD'),
-            status: importStockItem.status,
+            customer: exportStockItem?.customer,
+            phone: exportStockItem?.phone,
+            address: exportStockItem?.address,
+            note: exportStockItem?.note,
+            user: exportStockItem?.user?._id,
+            exportItems: exportStockItem?.exportItems,
+            totalPrice: exportStockItem.totalPrice,
+            exportedAt: moment(exportStockItem.exportedAt).format('YYYY-MM-DD'),
+            status: exportStockItem.status,
         })
         if(itemProducts.length === 0 && !isEdited){
-           setItemProducts(JSON.parse(JSON.stringify(importItems))) 
+           setItemProducts(JSON.parse(JSON.stringify(exportItems))) 
        }
         }// eslint-disable-next-line
-    }, [ dispatch, importStockItem, importId, itemProducts, isEdited, success])
+    }, [ dispatch, exportStockItem, exportId, itemProducts, isEdited, success])
     return (
       <>
         <Toast/>
-        <section className= {`content-main ${importStockItem?.status ? 'disabled': ''}`}>
+        <section className= {`content-main ${exportStockItem?.status ? 'disabled': ''}`}>
             <form onSubmit={handleSubmit}>
                 <div className="content-header">
-                    <h4 className="content-title">Import code: <span className="text-danger">{importStockItem?.importCode}</span></h4>
+                    <h4 className="content-title">Export code: <span className="text-danger">{exportStockItem?.exportCode}</span></h4>
                     <div>
-                        {importStockItem?.status ? 
-                            <h4><span className="badge bg-danger text-white">This import is complete, you cannot edit</span></h4>:
+                        {exportStockItem?.status ? 
+                            <h4><span className="badge bg-danger text-white">This export is complete, you cannot edit</span></h4>:
                             <button type="submit" className="btn btn-primary">Update now</button>
                         }
                     </div>
                 </div>
                 <div className="mb-4">
                     <div className="card card-custom mb-4 shadow-sm">
-                        <div className="card-body">
-                            <div className="mb-4">
-                                <label htmlFor="name_drug" className="form-label">
-                                    Provider
-                                </label>
-                                <select
-                                value={provider}
-                                name="provider"
-                                onChange={handleChange}
-                                className="form-control"
-                                required >
-                                    <option value=''>Chosse Provider</option>
-                                    {providers?.map((item, index)=>(
-                                    <option key={index} value={item._id}>{item.name}</option>
-                                    ))}
-                                </select>
+                    <div className="card-body">
+                            <div className="mb-4 form-divided-2">
+                                <div>
+                                    <label htmlFor="customer" className="form-label">
+                                        Customer name
+                                    </label>
+                                    <input
+                                        name="customer"
+                                        value={customer}
+                                        type="text"
+                                        className="form-control"
+                                        required
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="phone" className="form-label">
+                                        Phone
+                                    </label>
+                                    <input
+                                        name="phone"
+                                        value={phone}
+                                        type="text"
+                                        className="form-control"
+                                        required
+                                        onChange={handleChange}
+                                    />
+                                </div>
                             </div>
                             <div className="mb-4 form-divided-2">
                                 <div>
-                                    <label className="form-label">Imported At</label>
+                                    <label className="form-label">Exported At</label>
                                     <input
-                                        name="importedAt"
+                                        id="datePicker"
+                                        name="exportedAt"
                                         className="form-control"
                                         type='date'
                                         required
                                         onChange={handleChange}
-                                        value={importedAt}
+                                        value={exportedAt}
                                     ></input>
-
-
-
                                 </div>
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
@@ -220,6 +234,32 @@ const EditImportStock = (props) => {
                                             <option key={index} value={item._id}>{item.name}</option>
                                         ))}
                                     </select>
+                                </div>
+                            </div>
+                            <div className="mb-4 form-divided-2">
+                                <div>
+                                    <label className="form-label">Address</label>
+                                    <textarea
+                                    name="address"
+                                    placeholder="Type here"
+                                    className="form-control"
+                                    rows="3"
+                                    required
+                                    onChange={handleChange}
+                                    value={address}
+                                    ></textarea>
+                                </div>
+                                <div>
+                                    <label className="form-label">Note</label>
+                                    <textarea
+                                    name="note"
+                                    placeholder="Type here"
+                                    className="form-control"
+                                    rows="3"
+                                    required
+                                    onChange={handleChange}
+                                    value={note}
+                                    ></textarea>
                                 </div>
                             </div>
                         </div>
@@ -273,7 +313,7 @@ const EditImportStock = (props) => {
                                 </div>
                             </div>
                             <div className="mb-6 d-flex justify-content-end">
-                                {importStockItem?.status ? '':
+                                {exportStockItem?.status ? '':
                                 <button className="btn btn-success" onClick={handleAddProduct}>Add Product</button>}
                             </div>   
                         </div>

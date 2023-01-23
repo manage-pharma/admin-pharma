@@ -9,7 +9,7 @@ import { categoryDrugCreateReducer, categoryDrugDeleteReducer, categoryDrugListR
 import { themeReducer } from './Reducers/ThemeReducer';
 import { ProviderCreateReducer, ProviderDeleteReducer, ProviderListReducer, ProviderSingleReducer, ProviderUpdateReducer } from "./Reducers/ProviderReducer";
 import { importStockCreateReducer, importStockDetailReducer, importStockListReducer, importStockStatusReducer, importStockUpdateReducer } from "./Reducers/ImportStockReducer";
-
+import { exportStockDetailReducer, exportStockListReducer, exportStockCreateReducer, exportStockStatusReducer, exportStockUpdateReducer } from './Reducers/ExportStockReducer';
 const reducer = combineReducers({
   theme: themeReducer,
 
@@ -51,6 +51,12 @@ const reducer = combineReducers({
   importStockCreate: importStockCreateReducer,
   importStockStatus: importStockStatusReducer,
   importStockUpdate: importStockUpdateReducer,
+
+  exportStockList: exportStockListReducer,
+  exportStockDetail: exportStockDetailReducer,
+  exportStockCreate: exportStockCreateReducer,
+  exportStockStatus: exportStockStatusReducer,
+  exportStockUpdate: exportStockUpdateReducer,
 });
 
 
