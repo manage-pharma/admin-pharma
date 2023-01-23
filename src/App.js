@@ -12,6 +12,8 @@ import OrderDetailScreen from "./screens/OrderDetailScreen";
 import AddProduct from "./screens/AddProduct";
 import AddImport from "./screens/AddImport";
 import EditImport from "./screens/EditImport";
+import AddExport from "./screens/AddExport";
+import EditExport from "./screens/EditExport";
 import Login from "./screens/LoginScreen";
 import UsersScreen from "./screens/UsersScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
@@ -25,6 +27,7 @@ import { listProduct } from "./Redux/Actions/ProductActions";
 import { listOrder } from "./Redux/Actions/OrderActions";
 import ProviderScreen from './screens/ProviderScreen';
 import ImportStockScreen from "./screens/ImportStockScreen"
+import ExportStockScreen from "./screens/ExportStockScreen"
 function App() {
   const data = useSelector((state)=> state.theme)
   if(data.theme === "dark"){
@@ -70,6 +73,10 @@ function App() {
           <PrivateRouter path="/import-stock" component={ImportStockScreen} exact/>
           <PrivateRouter path="/import-stock/add" component={AddImport} />
           <PrivateRouter path="/import-stock/:id" component={EditImport} />
+
+          <PrivateRouter path="/export-stock" component={ExportStockScreen} exact/>
+          <PrivateRouter path="/export-stock/add" component={AddExport} />
+          <PrivateRouter path="/export-stock/:id" component={EditExport} />
 
           <PrivateRouter path="/providers" component={ProviderScreen} exact/>
           <PrivateRouter path="/users" component={UsersScreen} />

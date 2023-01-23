@@ -1,18 +1,19 @@
-import { IMPORT_STOCK_CREATE_FAIL, IMPORT_STOCK_CREATE_REQUEST, IMPORT_STOCK_CREATE_SUCCESS, IMPORT_STOCK_DETAILS_FAIL, IMPORT_STOCK_DETAILS_REQUEST, IMPORT_STOCK_DETAILS_SUCCESS, IMPORT_STOCK_LIST_FAIL, IMPORT_STOCK_LIST_REQUEST, IMPORT_STOCK_LIST_SUCCESS, IMPORT_STOCK_STATUS_FAIL, IMPORT_STOCK_STATUS_REQUEST, IMPORT_STOCK_STATUS_SUCCESS, IMPORT_STOCK_UPDATE_FAIL, IMPORT_STOCK_UPDATE_REQUEST, IMPORT_STOCK_UPDATE_SUCCESS } from './../Constants/ImportStockConstant';
+import { EXPORT_STOCK_CREATE_FAIL, EXPORT_STOCK_CREATE_REQUEST, EXPORT_STOCK_CREATE_SUCCESS, EXPORT_STOCK_DETAILS_FAIL, EXPORT_STOCK_DETAILS_REQUEST, EXPORT_STOCK_DETAILS_SUCCESS, EXPORT_STOCK_LIST_FAIL, EXPORT_STOCK_LIST_REQUEST, EXPORT_STOCK_LIST_SUCCESS, EXPORT_STOCK_STATUS_FAIL, EXPORT_STOCK_STATUS_REQUEST, EXPORT_STOCK_STATUS_SUCCESS, EXPORT_STOCK_UPDATE_FAIL, EXPORT_STOCK_UPDATE_REQUEST, EXPORT_STOCK_UPDATE_SUCCESS } from '../Constants/ExportStockConstant';
 import axios from 'axios';
 import { logout } from "./UserActions";
 
-export const listImportStock = ( keyword = " ", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
+export const listExportStock = ( keyword = " ", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
   try {
-      dispatch({type: IMPORT_STOCK_LIST_REQUEST});
+      dispatch({type: EXPORT_STOCK_LIST_REQUEST});
       const { userLogin: {userInfo}} = getState();
       const config = {
           headers: {
               Authorization: `Bearer ${userInfo.token}`
           }
       } 
-      const {data} = await axios.get(`/api/import-stock/?keyword=${keyword}&pageNumber=${pageNumber}&from=${from}&to=${to}`, config)
-      dispatch({type: IMPORT_STOCK_LIST_SUCCESS, payload: data})
+      const {data} = await axios.get(`/api/export-stock/?keyword=${keyword}&pageNumber=${pageNumber}&from=${from}&to=${to}`, config)
+      dispatch({type: EXPORT_STOCK_LIST_SUCCESS, payload: data})
+
   } catch (error) {
       const message = error.response && error.response.data.message 
           ? error.response.data.message
@@ -20,14 +21,14 @@ export const listImportStock = ( keyword = " ", pageNumber = " ", from=' ', to =
       if(message === "Not authorized, token failed"){
           dispatch(logout());
       }
-      dispatch({type: IMPORT_STOCK_LIST_FAIL, payload: message});
+      dispatch({type: EXPORT_STOCK_LIST_FAIL, payload: message});
   }
 }
 
-//ADMIN IMPORT STOCK SINGLE
-export const singleImportStock = (id) => async (dispatch, getState) => {
+//ADMIN EXPORT STOCK SINGLE
+export const singleExportStock = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: IMPORT_STOCK_DETAILS_REQUEST });
+    dispatch({ type: EXPORT_STOCK_DETAILS_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
     const {
       userLogin: { userInfo },
@@ -38,8 +39,8 @@ export const singleImportStock = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(`/api/import-stock/${id}`, config);
-    dispatch({ type: IMPORT_STOCK_DETAILS_SUCCESS, payload: data });
+    const { data } = await axios.get(`/api/export-stock/${id}`, config);
+    dispatch({ type: EXPORT_STOCK_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -49,16 +50,16 @@ export const singleImportStock = (id) => async (dispatch, getState) => {
       dispatch(logout());
     }
     dispatch({
-      type: IMPORT_STOCK_DETAILS_FAIL,
+      type: EXPORT_STOCK_DETAILS_FAIL,
       payload: message,
     });
   }
 };
 
-//ADMIN IMPORT CREATE
-export const createImportStock = ({ provider, user, importItems, totalPrice, importedAt }) => async (dispatch, getState) => {
+//ADMIN EXPORT CREATE
+export const createExportStock = ({ customer, phone, address, note, user, exportItems, totalPrice, exportedAt }) => async (dispatch, getState) => {
     try {
-      dispatch({ type: IMPORT_STOCK_CREATE_REQUEST });
+      dispatch({ type: EXPORT_STOCK_CREATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
       const {
         userLogin: { userInfo },
@@ -69,13 +70,13 @@ export const createImportStock = ({ provider, user, importItems, totalPrice, imp
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const { data } = await axios.post(`/api/import-stock/`,
+      const { data } = await axios.post(`/api/export-stock/`,
         {
-          provider, user, importItems, totalPrice, importedAt
+          customer, phone, address, note, user, exportItems, totalPrice, exportedAt
         }
 
         , config);
-      dispatch({ type: IMPORT_STOCK_CREATE_SUCCESS, payload: data });
+      dispatch({ type: EXPORT_STOCK_CREATE_SUCCESS, payload: data });
     } catch (error) {
       const message =
         error.response && error.response.data.message
@@ -85,16 +86,16 @@ export const createImportStock = ({ provider, user, importItems, totalPrice, imp
         dispatch(logout());
       }
         dispatch({
-          type: IMPORT_STOCK_CREATE_FAIL,
+          type: EXPORT_STOCK_CREATE_FAIL,
           payload: message,
         });
     }
   };
 
-  //ADMIN IMPORT STATUS
-export const statusImportStock = (id) => async (dispatch, getState) => {
+  //ADMIN EXPORT STATUS
+export const statusExportStock = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: IMPORT_STOCK_STATUS_REQUEST });
+    dispatch({ type: EXPORT_STOCK_STATUS_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
     const { userLogin: {userInfo}} = getState();
     const config = {
@@ -102,8 +103,8 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
             Authorization: `Bearer ${userInfo.token}`
         }
     }
-    const { data } = await axios.put(`/api/import-stock/${id}/status`,{}, config);
-    dispatch({ type: IMPORT_STOCK_STATUS_SUCCESS, payload: data });
+    const { data } = await axios.put(`/api/export-stock/${id}/status`,{}, config);
+    dispatch({ type: EXPORT_STOCK_STATUS_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -113,16 +114,16 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
       dispatch(logout());
     }
       dispatch({
-        type: IMPORT_STOCK_STATUS_FAIL,
+        type: EXPORT_STOCK_STATUS_FAIL,
         payload: message,
       });
   }
 };
 
-  //ADMIN UPDATE IMPORT
-  export const updateImportStock = ({ provider, user, importItems, status, totalPrice, importedAt, importId }) => async (dispatch, getState) => {
+  //ADMIN UPDATE EXPORT
+  export const updateExportStock = ({ customer, phone, address, note,  user, exportItems, totalPrice, exportedAt, exportId }) => async (dispatch, getState) => {
     try {
-      dispatch({ type: IMPORT_STOCK_UPDATE_REQUEST });
+      dispatch({ type: EXPORT_STOCK_UPDATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
       const { userLogin: {userInfo}} = getState();
       const config = {
@@ -130,10 +131,10 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
               Authorization: `Bearer ${userInfo.token}`
           }
       }
-      const { data } = await axios.put(`/api/import-stock/${importId}`,
-      { provider, user, importItems, status, totalPrice, importedAt },
+      const { data } = await axios.put(`/api/export-stock/${exportId}`,
+      { customer, phone, address, note, user, exportItems, totalPrice, exportedAt, },
       config);
-      dispatch({ type: IMPORT_STOCK_UPDATE_SUCCESS, payload: data });
+      dispatch({ type: EXPORT_STOCK_UPDATE_SUCCESS, payload: data });
     } catch (error) {
       const message =
         error.response && error.response.data.message
@@ -143,7 +144,7 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
         dispatch(logout());
       }
         dispatch({
-          type: IMPORT_STOCK_UPDATE_FAIL,
+          type: EXPORT_STOCK_UPDATE_FAIL,
           payload: message,
         });
     }

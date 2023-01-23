@@ -5,9 +5,9 @@ import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
-import ImportStock from "./ImportStock";
-import { listImportStock } from "../../Redux/Actions/ImportStockAction";
-import Toast from './../LoadingError/Toast';
+import ExportStock from "./ExportStock";
+import { listExportStock } from "../../Redux/Actions/ExportStockAction";
+import Toast from '../LoadingError/Toast';
 import { toast } from "react-toastify";
 import renderToast from "../../util/Toast";
 const ToastObjects = {
@@ -16,7 +16,7 @@ const ToastObjects = {
   pauseOnHover: false,
   autoClose: 2000,
 };
-const MainImportStock = (props) => {
+const MainExportStock = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
   const history = useHistory()
@@ -29,11 +29,11 @@ const MainImportStock = (props) => {
   })
   const {from,to} = data
 
-  const importedStockList = useSelector((state)=> state.importStockList)
-  const { loading, error, stockImported, currentPage, totalPage } = importedStockList
+  const exportedStockList = useSelector((state)=> state.exportStockList)
+  const { loading, error, stockExported, currentPage, totalPage } = exportedStockList
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
-      dispatch(listImportStock(keyword, pageNumber, from, to))
+      dispatch(listExportStock(keyword, pageNumber, from, to))
   }
   const debounceDropDown = useRef(debounce((keyword, pageNumber, from, to) => callApiKeywordSearch(keyword, pageNumber, from, to) , 300)).current;
 
@@ -45,7 +45,7 @@ const MainImportStock = (props) => {
 
   const handleAdd = (e) =>{
     e.preventDefault();
-    history.push('/import-stock/add');
+    history.push('/export-stock/add');
   }
 
   const handleChange = e =>{
@@ -65,24 +65,24 @@ const MainImportStock = (props) => {
         }
         return;
       }
-      dispatch(listImportStock(keyword, pageNumber, data.from, data.to)) 
+      dispatch(listExportStock(keyword, pageNumber, data.from, data.to)) 
     }
     else{
       setData({
         from: '',
         to: ''
       })
-      dispatch(listImportStock(keyword, pageNumber)) 
+      dispatch(listExportStock(keyword, pageNumber)) 
     }
     setToggleSearch(!toggleSearch)
   }
-  const updateStatus = useSelector(state => state.importStockStatus)
+  const updateStatus = useSelector(state => state.exportStockStatus)
   const {success} = updateStatus
   useEffect(()=>{
     if(success){
       toast.success(`Update status successfully`, ToastObjects)
     }
-    dispatch(listImportStock(keyword, pageNumber)) // eslint-disable-next-line
+    dispatch(listExportStock(keyword, pageNumber)) // eslint-disable-next-line
   },[dispatch, pageNumber, success])
 
   return (
@@ -90,7 +90,7 @@ const MainImportStock = (props) => {
     <Toast/>
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Import Stock from Provider</h2>
+        <h2 className="content-title">Export Stock from Provider</h2>
           <div>
             <button onClick={handleAdd} className="btn btn-primary">
               Create new
@@ -156,19 +156,21 @@ const MainImportStock = (props) => {
                         <thead>
                           <tr>
                             <th scope="col">STT</th>
-                            <th scope="col">Import Code</th>
-                            <th scope='col'>Provider</th>
+                            <th scope="col">Export Code</th>
+                            <th scope="col">Customer</th>
+                            <th scope='col'>Phone</th>
+                            <th scope='col'>Address</th>
                             <th scope="col">Created by</th>
-                            <th scope="col">Imported at</th>
+                            <th scope="col">Exported at</th>
                             <th scope="col">Total price</th>
                             <th scope="col">Status</th>
                             <th scope="col">Action</th>
                           </tr>
                         </thead>
                           <tbody>
-                             {stockImported ? stockImported.map((listImport, index)=>(
-                              <ImportStock 
-                                importStock={listImport} 
+                             {stockExported ? stockExported.map((listExport, index)=>(
+                              <ExportStock 
+                                exportStock={listExport} 
                                 indexSTT={index} 
                                 key={index}
                                 />)) : 
@@ -195,4 +197,4 @@ const MainImportStock = (props) => {
   );
 };
 
-export default MainImportStock;
+export default MainExportStock;
