@@ -77,7 +77,7 @@ const MainExportStock = (props) => {
     setToggleSearch(!toggleSearch)
   }
   const updateStatus = useSelector(state => state.exportStockStatus)
-  const {success} = updateStatus
+  const {loading: loadingStatus, error: errorStatus, success} = updateStatus
   useEffect(()=>{
     if(success){
       toast.success(`Update status successfully`, ToastObjects)
@@ -88,6 +88,7 @@ const MainExportStock = (props) => {
   return (
     <>
     <Toast/>
+    { loading || loadingStatus ? (<Loading/>) : error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">Export Stock from Provider</h2>
@@ -147,42 +148,40 @@ const MainExportStock = (props) => {
         </header>
 
         <div className="card-body">
-          { loading ? (<Loading/>) : error ? (<Message variant="alert-danger">{error}</Message>) : (
-            <div className="row">
-                <div className="card card-custom mb-4 shadow-sm">
-                  <header className="card-header bg-white ">
-                    <div className="row gx-3 py-3">
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Export Code</th>
-                            <th scope="col">Customer</th>
-                            <th scope='col'>Phone</th>
-                            <th scope='col'>Address</th>
-                            <th scope="col">Created by</th>
-                            <th scope="col">Exported at</th>
-                            <th scope="col">Total price</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                          <tbody>
-                             {stockExported ? stockExported.map((listExport, index)=>(
-                              <ExportStock 
-                                exportStock={listExport} 
-                                indexSTT={index} 
-                                key={index}
-                                />)) : 
-                              <div>There are no record</div>
-                          }
-                          </tbody>
-                        </table>
-                    </div>
-                  </header>
-                </div>
-            </div>
-          )}
+          <div className="row">
+              <div className="card card-custom mb-4 shadow-sm">
+                <header className="card-header bg-white ">
+                  <div className="row gx-3 py-3">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">STT</th>
+                          <th scope="col">Export Code</th>
+                          <th scope="col">Customer</th>
+                          <th scope='col'>Phone</th>
+                          <th scope='col'>Address</th>
+                          <th scope="col">Created by</th>
+                          <th scope="col">Exported at</th>
+                          <th scope="col">Total price</th>
+                          <th scope="col">Status</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                            {stockExported ? stockExported.map((listExport, index)=>(
+                            <ExportStock 
+                              exportStock={listExport} 
+                              indexSTT={index} 
+                              key={index}
+                              />)) : 
+                            <div>There are no record</div>
+                        }
+                        </tbody>
+                      </table>
+                  </div>
+                </header>
+              </div>
+          </div>
 
           <Pagination 
             totalPage={totalPage} 

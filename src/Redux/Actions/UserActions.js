@@ -1,4 +1,7 @@
 import {
+  USER_CREATE_FAIL,
+  USER_CREATE_REQUEST,
+  USER_CREATE_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_REQUEST,
   USER_LIST_RESET,
@@ -9,17 +12,16 @@ import {
   USER_LOGOUT,
 } from "../Constants/UserConstants";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { PRODUCT_LIST_RESET } from "../Constants/ProductConstants";
-
+// import { toast } from "react-toastify";
+// const ToastObjects = {
+//   pauseOnFocusLoss: false,
+//   draggable: false,
+//   pauseOnHover: false,
+//   autoClose: 2000,
+// };
 // ADMIN LOGIN
 export const login = (email, password) => async (dispatch) => {
-  const ToastObjects = {
-    pauseOnFocusLoss: false,
-    draggable: false,
-    pauseOnHover: false,
-    autoClose: 2000,
-  };
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
 
@@ -34,15 +36,15 @@ export const login = (email, password) => async (dispatch) => {
       { email, password },
       config
     );
-
-    if (!data.isAdmin === true) {
-      toast.error("You are not Admin", ToastObjects);
-      dispatch({
-        type: USER_LOGIN_FAIL,
-      });
-    } else {
-      dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-    }
+    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+    // if (!data.isAdmin === true) {
+    //   toast.error("You are not Admin", ToastObjects);
+    //   dispatch({
+    //     type: USER_LOGIN_FAIL,
+    //   });
+    // } else {
+    //   dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+    // }
 
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
@@ -57,6 +59,42 @@ export const login = (email, password) => async (dispatch) => {
       type: USER_LOGIN_FAIL,
       payload: message,
     });
+  }
+};
+
+// ADMIN CREATE
+export const createUser = ({ name, email, phone, password }) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_CREATE_REQUEST });
+    // userInfo -> userLogin -> getState(){globalState}
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/users/add`,
+      {
+        name, email, phone, password
+      }
+      , config);
+    dispatch({ type: USER_CREATE_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+      dispatch({
+        type: USER_CREATE_FAIL,
+        payload: message,
+      });
   }
 };
 
