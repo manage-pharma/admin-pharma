@@ -4,8 +4,6 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Message from "../LoadingError/Error";
-import Loading from "../LoadingError/Loading";
 import { listExportStock, statusExportStock } from "../../Redux/Actions/ExportStockAction";
 import moment from "moment";
 import { EXPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ExportStockConstant";
@@ -31,6 +29,7 @@ const ExportStock = (props) => {
         <Modal.Footer>
           <Button variant="warning" style={{fontWeight:"600"}} onClick={()=>{
             dispatch(statusExportStock(exportStock._id))
+            setModalShow(false)
           }}>OK</Button>
         </Modal.Footer>
       </Modal>
@@ -41,11 +40,10 @@ const ExportStock = (props) => {
   const [modalShow, setModalShow] = useState(false);
 
   const updateStatus = useSelector(state => state.exportStockStatus)
-  const { loading, error, success} = updateStatus
+  const {success} = updateStatus
 
   useEffect(()=>{
     if(success){
-      setModalShow(false)
       dispatch({ type: EXPORT_STOCK_STATUS_RESET});
       dispatch(listExportStock())
     }
@@ -54,13 +52,10 @@ const ExportStock = (props) => {
 
   return (
     <>
-      { error && (<Message variant="alert-danger">{error}</Message>) }
-      { loading ? (<><Loading/></>) : (
-        <MyVerticallyCenteredModal
+      <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        />
-      )}
+      /> 
       <tr key={indexSTT}>
         <th scope="row">{ indexSTT + 1 }</th>
         <td>{ exportStock.exportCode }</td>

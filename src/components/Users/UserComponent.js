@@ -1,26 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { listUser } from "../../Redux/Actions/UserActions";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
+import AddUser from "./AddUserModal";
 const UserComponent = () => {
   const dispatch = useDispatch();
   const userList = useSelector(state => state.userList);
   const { loading, error, users } = userList 
-
+  const [show, setShow] = useState(false);
+  const handleAdd = (e) =>{
+    setShow(true)
+  }
   useEffect(() => {
     dispatch((listUser()));
   }, [dispatch])
 
   return (
+    <>
+    <AddUser show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">Customers</h2>
         <div>
-          <Link to="#" className="btn btn-primary">
+          {/* <Link to="#" className="btn btn-primary">
             <i className="material-icons md-plus"></i> Create new
-          </Link>
+          </Link> */}
+            <button onClick={handleAdd} className="btn btn-primary">
+              Create new
+            </button>
         </div>
       </div>
 
@@ -117,6 +126,8 @@ const UserComponent = () => {
         </div>
       </div>
     </section>
+    </>
+
   );
 };
 

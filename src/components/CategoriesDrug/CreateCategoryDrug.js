@@ -13,7 +13,7 @@ const CreateCategoryDrug = (props) => {
   const { loading, error, categoryDrug } = categoryCreate;
 
   const categoryUpdate = useSelector(state => state.categoryDrugUpdate);
-  const { categoryDrug: categoryU } = categoryUpdate;
+  const { loading: loadingUpdateDrug, error: errorUpdateDrug ,success: successUpdateDrug, categoryDrug: categoryU } = categoryUpdate;
   
   const handleChange = e => {
     setData(prev => {
@@ -40,7 +40,6 @@ const CreateCategoryDrug = (props) => {
       description: '',
       isActive: true
     })
-    props.parentCallbackUpdate(categoryU)
   }
   useEffect(()=>{
     if(valueEdit){
@@ -60,13 +59,16 @@ const CreateCategoryDrug = (props) => {
     if(categoryDrug){
       props.parentCallbackCreate(categoryDrug)
     }
-  },[categoryDrug, valueEdit, props])
+    if(successUpdateDrug){
+      props.parentCallbackUpdate(categoryU)
+    }
+  },[categoryDrug, successUpdateDrug, categoryU, valueEdit, props])
 
   const { name, description, isActive } = data;
   return (
     <div className="col-md-12 col-lg-4">
       {
-        loading ? (<Loading />) : error ? (<Message>{error}</Message>) : ''
+        loading || loadingUpdateDrug ? (<Loading />) : error || errorUpdateDrug ? (<Message>{error || errorUpdateDrug}</Message>) : ''
       }
       <form>
         <div className="mb-4">
@@ -98,7 +100,7 @@ const CreateCategoryDrug = (props) => {
         </div>
         <div className="mb-4">
           <label className="form-label">Active</label>
-          <label class="switch" for="checkbox">
+          <label className="switch" for="checkbox">
             <input 
               type="checkbox" 
               id="checkbox"

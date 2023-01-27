@@ -14,7 +14,7 @@ const CreateCategory = (props) => {
   const { loading, error, category } = categoryCreate;
 
   const categoryUpdate = useSelector(state => state.categoryUpdate);
-  const { category: categoryU } = categoryUpdate;
+  const { loading: loadingUpdateDrug, error: errorUpdateDrug ,success: successUpdateDrug, categoryDrug: categoryU } = categoryUpdate;
   
   const handleChange = e => {
     setData(prev => {
@@ -60,7 +60,6 @@ const CreateCategory = (props) => {
     })
     setImg(null);
     document.getElementById('uploadFile').value = "";
-    props.parentCallbackUpdate(categoryU)
   }
   useEffect(()=>{
     if(valueEdit){
@@ -82,13 +81,16 @@ const CreateCategory = (props) => {
     if(category){
       props.parentCallbackCreate(category)
     }
-  },[category, valueEdit, props])
+    if(successUpdateDrug){
+      props.parentCallbackUpdate(categoryU)
+    }
+  },[category, successUpdateDrug, categoryU, valueEdit, props])
 
   const { name, description, image, isActive } = data;
   return (
     <div className="col-md-12 col-lg-4">
       {
-        loading ? (<Loading />) : error ? (<Message>{error}</Message>) : ''
+        loading || loadingUpdateDrug ? (<Loading />) : error || errorUpdateDrug ? (<Message>{error || errorUpdateDrug}</Message>) : ''
       }
       <form>
         <div className="mb-4">

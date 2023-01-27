@@ -5,8 +5,6 @@ import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { deleteProduct, listProduct } from "../../Redux/Actions/ProductActions";
 import { useSelector } from "react-redux";
-import Message from "../LoadingError/Error";
-import Loading from "../LoadingError/Loading";
 import { PRODUCT_DELETE_RESET } from "../../Redux/Constants/ProductConstants";
 import moment from "moment/moment";
 const Product = (props) => {
@@ -26,10 +24,11 @@ const Product = (props) => {
         </Modal.Header>
         <Modal.Body>
           <p>Are you sure you want to delete <span className="text-danger">{product.name}</span> ?</p>
-        </Modal.Body>
+        </Modal.Body> 
         <Modal.Footer>
           <Button className="btn-danger" onClick={()=>{
             dispatch(deleteProduct(product._id))
+            setModalShow(false)
           }}>OK</Button>
         </Modal.Footer>
       </Modal>
@@ -43,7 +42,7 @@ const Product = (props) => {
     setModalShow(true)
   }
   const productDelete = useSelector(state => state.productDelete)
-  const { loading: loadingDelete, error: errorDelete, success: successDelete} = productDelete
+  const { success: successDelete} = productDelete
 
   useEffect(()=>{
     if(successDelete){
@@ -60,13 +59,11 @@ const Product = (props) => {
 
   return (
     <>
-      { errorDelete && (<Message variant="alert-danger">{errorDelete}</Message>) }
-      { loadingDelete ? (<Loading/>) : (
-        <MyVerticallyCenteredModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        />
-      )}
+      <MyVerticallyCenteredModal
+      show={modalShow}
+      onHide={() => setModalShow(false)}
+      />
+      
       <tr key={indexSTT}>
         <th scope="row">{ indexSTT + 1 }</th>
         <td>{ product.name }</td>

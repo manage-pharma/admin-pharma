@@ -5,19 +5,20 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import React, { useEffect, useState } from "react";
-import { createProvider, updateProvider } from '../../Redux/Actions/ProviderAction';
+import { updateProvider } from '../../Redux/Actions/ProviderAction';
 import { useDispatch, useSelector } from 'react-redux';
-import { listProvider } from './../../Redux/Actions/ProviderAction';
 import { toast } from "react-toastify";
 import Toast from '../LoadingError/Toast';
-import { PROVIDER_CREATE_RESET, PROVIDER_SINGLE_RESET, PROVIDER_UPDATE_RESET } from '../../Redux/Constants/ProviderConstants';
+import { PROVIDER_SINGLE_RESET, PROVIDER_UPDATE_RESET } from '../../Redux/Constants/ProviderConstants';
+import { USER_CREATE_RESET } from '../../Redux/Constants/UserConstants';
+import { createUser, listUser } from './../../Redux/Actions/UserActions';
 const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
     pauseOnHover: false,
     autoClose: 2000,
   };
-const AddProvider = (props) => {    
+const AddUser = (props) => {    
     const {show, setShow} = props
     const dispatch = useDispatch();
     const handleClose = () => {
@@ -26,11 +27,10 @@ const AddProvider = (props) => {
     };
     const [dataModal, setDataModal] = useState({
         name: '',
-        contactName: '',
-        taxCode: '',
-        phone: '',
         email: '',
-        address: '',
+        phone: '',
+        password: '',
+        passwordAgain: ''
     })
 
     const handleSubmit = e => {
@@ -39,7 +39,11 @@ const AddProvider = (props) => {
             dispatch(updateProvider({ ...dataModal, providerID }));
         }
         else{
-            dispatch(createProvider(dataModal));
+            if(dataModal.password !== dataModal.passwordAgain){
+                toast.error("Password do not match", ToastObjects);
+                return;
+            }
+            dispatch(createUser(dataModal));
         }
     }
       
@@ -51,28 +55,17 @@ const AddProvider = (props) => {
           }
         })
     }
-    const createProviderStatus = useSelector((state)=> state.providerCreate)
-    const {error: errorCreate, success } = createProviderStatus
+    const createUserStatus = useSelector((state)=> state.userCreate)
+    const { success } = createUserStatus
 
     const providerEditing = useSelector((state)=> state.providerSingle)
     const {success: successProviderSingle, provider: providerEdit } = providerEditing
     const providerID = providerEdit._id
 
     const providerUpdated = useSelector((state)=> state.providerUpdate) 
-    const {error: errorUpdate, success: successProviderUpdated} = providerUpdated
+    const {success: successProviderUpdated} = providerUpdated
 
     useEffect(()=>{
-        if (errorCreate || errorUpdate){
-            if(errorCreate){
-                toast.error( errorCreate, ToastObjects);
-                dispatch({type: PROVIDER_CREATE_RESET})
-            }
-            else{
-                toast.error( errorUpdate, ToastObjects);
-                dispatch({type: PROVIDER_UPDATE_RESET})
-            }
-            setShow(false)
-        }
         if(success || successProviderUpdated){
             if(successProviderUpdated){
                 toast.success(`Updated successfully`, ToastObjects);
@@ -80,17 +73,16 @@ const AddProvider = (props) => {
             }
             else{
                 toast.success(`Added successfully`, ToastObjects);
-                dispatch({type: PROVIDER_CREATE_RESET})
+                dispatch({type: USER_CREATE_RESET})
             }
             setDataModal({
                 name: '',
-                contactName: '',
-                taxCode: '',
-                phone: '',
                 email: '',
-                address: '',
+                phone: '',
+                password: '',
+                passwordAgain: ''
             })
-            dispatch(listProvider())
+            dispatch(listUser())
             setShow(false)
         }
         if(successProviderSingle){
@@ -103,16 +95,16 @@ const AddProvider = (props) => {
                 address: providerEdit.address,
             })
         }
-    }, [success, dispatch, setShow, successProviderSingle, successProviderUpdated, providerEdit, errorCreate, errorUpdate])
+    }, [success, dispatch, setShow, successProviderSingle, successProviderUpdated, providerEdit])
 
-    const { name, contactName, taxCode, phone, email, address } = dataModal
+    const { name, email, phone, password, passwordAgain } = dataModal
 
     return (
       <>
         <Toast />
         <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter">
           <Modal.Header closeButton>
-            <Modal.Title  id="contained-modal-title-vcenter">Add Provider</Modal.Title>
+            <Modal.Title  id="contained-modal-title-vcenter">Add User</Modal.Title>
           </Modal.Header>
           <Modal.Body  className="show-grid">
             <Form>
@@ -120,9 +112,10 @@ const AddProvider = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Provider</Form.Label>
+                                <Form.Label>Username</Form.Label>
                                 <Form.Control
                                     type="text"
+                                    autoComplete="off"
                                     placeholder="provider name"
                                     autoFocus
                                     onChange={handelChangeModal}
@@ -135,53 +128,11 @@ const AddProvider = (props) => {
                     </Row>
                     <Row>
                         <Col xs={12} md={12}>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Contact person</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="contact person"
-                                        onChange={handelChangeModal}
-                                        name="contactName"
-                                        value={contactName}
-                                        required
-                                    />
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={12} md={6}>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Tax code</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="tax code"
-                                    onChange={handelChangeModal}
-                                    name="taxCode"
-                                    value={taxCode}
-                                    required
-                                />
-                            </Form.Group>
-                        </Col>
-                        <Col xs={6} md={6}>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Phone</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="phone"
-                                    onChange={handelChangeModal}
-                                    name="phone"
-                                    value={phone}
-                                    required
-                                />
-                                </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={12} md={12}>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                                 <Form.Label>Email address</Form.Label>
                                 <Form.Control
                                     type="email"
+                                    autoComplete="off"
                                     placeholder="name@example.com"
                                     onChange={handelChangeModal}
                                     name="email"
@@ -193,20 +144,52 @@ const AddProvider = (props) => {
                     </Row>
                     <Row>
                         <Col xs={12} md={12}>
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                                <Form.Label>Address</Form.Label>
-                                <Form.Control 
-                                    as="textarea" 
-                                    rows={3} 
-                                    type="text"
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
+                                <Form.Label>Phone</Form.Label>
+                                <Form.Control
+                                    type="email"
+                                    autoComplete="off"
+                                    placeholder="phone number"
                                     onChange={handelChangeModal}
-                                    name="address"
-                                    value={address}
+                                    name="phone"
+                                    value={phone}
                                     required
-                                    />
+                                />
                             </Form.Group>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col xs={12} md={12}>
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    autoComplete="new-password"
+                                    onChange={handelChangeModal}
+                                    name="password"
+                                    value={password}
+                                    required
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    { !successProviderSingle ? 
+                        <Row>
+                            <Col xs={12} md={12}>
+                                <Form.Group className="mb-3" controlId="exampleForm.ControlInput5">
+                                    <Form.Label>Confirm new password</Form.Label>
+                                    <Form.Control
+                                        type="password"
+                                        autoComplete="new-password"
+                                        onChange={handelChangeModal}
+                                        name="passwordAgain"
+                                        value={passwordAgain}
+                                        required
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row> : ''
+                    }
                 </Container>
             </Form>
           </Modal.Body>
@@ -224,4 +207,5 @@ const AddProvider = (props) => {
   }
 
 
-  export default AddProvider;
+
+  export default AddUser;

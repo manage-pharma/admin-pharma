@@ -4,8 +4,6 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Message from "../LoadingError/Error";
-import Loading from "../LoadingError/Loading";
 import { listImportStock, statusImportStock } from "../../Redux/Actions/ImportStockAction";
 import moment from "moment";
 import { IMPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ImportStockConstant";
@@ -31,6 +29,7 @@ const ImportStock = (props) => {
         <Modal.Footer>
           <Button variant="warning" style={{fontWeight:"600"}} onClick={()=>{
             dispatch(statusImportStock(importStock._id))
+            setModalShow(false)
           }}>OK</Button>
         </Modal.Footer>
       </Modal>
@@ -41,11 +40,10 @@ const ImportStock = (props) => {
   const [modalShow, setModalShow] = useState(false);
 
   const updateStatus = useSelector(state => state.importStockStatus)
-  const { loading, error, success} = updateStatus
+  const {success} = updateStatus
 
   useEffect(()=>{
     if(success){
-      setModalShow(false)
       dispatch({ type: IMPORT_STOCK_STATUS_RESET});
       dispatch(listImportStock())
     }
@@ -54,13 +52,10 @@ const ImportStock = (props) => {
 
   return (
     <>
-      { error && (<Message variant="alert-danger">{error}</Message>) }
-      { loading ? (<><Loading/></>) : (
-        <MyVerticallyCenteredModal
+      <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        />
-      )}
+      /> 
       <tr key={indexSTT}>
         <th scope="row">{ indexSTT + 1 }</th>
         <td>{ importStock.importCode }</td>

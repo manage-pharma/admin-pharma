@@ -7,7 +7,14 @@ import Product  from '../Products/Product'
 import { listProduct } from "../../Redux/Actions/ProductActions";
 import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
-
+import Toast from './../LoadingError/Toast';
+import { toast } from "react-toastify";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const MainProducts = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
@@ -17,6 +24,9 @@ const MainProducts = (props) => {
   const productList = useSelector((state)=> state.productList)
   const { loading, error, products, currentPage, totalPage } = productList
 
+  const productDelete = useSelector(state => state.productDelete)
+  const { loading: loadingDelete, error: errorDelete, success: successDelete} = productDelete
+  
   const handleSelected = (e)=>{
     e.preventDefault();
     let sortPrice = e.target.value
@@ -39,11 +49,18 @@ const MainProducts = (props) => {
   }
 
   useEffect(()=>{
-    dispatch(listProduct(keyword, pageNumber)) // eslint-disable-next-line
-  },[dispatch, pageNumber])
+    if(successDelete){
+      toast.success("Deleted successfully", ToastObjects);
+    }
+    else{
+      dispatch(listProduct(keyword, pageNumber)) 
+    }// eslint-disable-next-line
+  },[dispatch, successDelete, pageNumber])
 
   return (
     <>
+    <Toast />
+    { loading || loadingDelete ? (<Loading/>) : error || errorDelete ? (<Message variant="alert-danger">{error || errorDelete}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">PRODUCTS</h2>
@@ -92,40 +109,37 @@ const MainProducts = (props) => {
         </header>
 
         <div className="card-body">
-          { loading ? (<Loading/>) : error ? (<Message variant="alert-danger">{error}</Message>) : (
-            <div className="row">
-                <div className="card card-custom mb-4 shadow-sm">
-                  <header className="card-header bg-white ">
-                    <div className="row gx-3 py-3">
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Name</th>
-                            <th scope='col'>Image</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Category Drug</th>
-                            {/* <th scope="col">Unit</th>
-                            <th scope="col">Capacity</th>
-                            <th scope="col">Exp</th> */}
-                            <th scope="col">Rest Exp</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Stock</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                          <tbody>
-                             {products && products.map((product, index)=>(
-                            <Product product={product} key={index} indexSTT={index}/>))}
-                          </tbody>
-                        </table>
-                    </div>
-                  </header>
-                </div>
-            </div>
-          )}
-
+          <div className="row">
+              <div className="card card-custom mb-4 shadow-sm">
+                <header className="card-header bg-white ">
+                  <div className="row gx-3 py-3">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Id</th>
+                          <th scope="col">Name</th>
+                          <th scope='col'>Image</th>
+                          <th scope="col">Category</th>
+                          <th scope="col">Category Drug</th>
+                          {/* <th scope="col">Unit</th>
+                          <th scope="col">Capacity</th>
+                          <th scope="col">Exp</th> */}
+                          <th scope="col">Rest Exp</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Stock</th>
+                          <th scope="col">Status</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                            {products && products.map((product, index)=>(
+                          <Product product={product} key={index} indexSTT={index}/>))}
+                        </tbody>
+                      </table>
+                  </div>
+                </header>
+              </div>
+          </div>
           <Pagination 
             totalPage={totalPage} 
             currentPage={currentPage} 

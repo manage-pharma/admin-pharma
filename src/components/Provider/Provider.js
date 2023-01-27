@@ -4,17 +4,8 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Message from "../LoadingError/Error";
-import Loading from "../LoadingError/Loading";
 import { PROVIDER_DELETE_RESET } from "../../Redux/Constants/ProviderConstants";
 import { deleteProvider, listProvider, singleProvider } from "../../Redux/Actions/ProviderAction";
-import { toast } from "react-toastify";
-const ToastObjects = {
-  pauseOnFocusLoss: false,
-  draggable: false,
-  pauseOnHover: false,
-  autoClose: 2000,
-};
 const Provider = (props) => {
   const MyVerticallyCenteredModal = (props) =>{
     return (
@@ -36,7 +27,7 @@ const Provider = (props) => {
         <Modal.Footer>
           <Button className="btn-danger" onClick={()=>{
             dispatch(deleteProvider(provider._id))
-            toast.success(`Deleted successfully`, ToastObjects);
+            setModalShow(false)
           }}>OK</Button>
         </Modal.Footer>
       </Modal>
@@ -49,11 +40,10 @@ const Provider = (props) => {
     setModalShow(true)
   }
   const providerDeleted = useSelector(state => state.providerDelete)
-  const { loading: loadingDelete, error: errorDelete, success: successDelete} = providerDeleted
+  const {success: successDelete} = providerDeleted
 
   useEffect(()=>{
     if(successDelete){
-      setModalShow(false)
       dispatch({ type: PROVIDER_DELETE_RESET});
       dispatch(listProvider())
     }
@@ -62,13 +52,11 @@ const Provider = (props) => {
 
   return (
     <>
-      { errorDelete && (<Message variant="alert-danger">{errorDelete}</Message>) }
-      { loadingDelete ? (<><Loading/></>) : (
-        <MyVerticallyCenteredModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        />
-      )}
+      <MyVerticallyCenteredModal
+      show={modalShow}
+      onHide={() => setModalShow(false)}
+      />
+      
       <tr key={indexSTT}>
         <th scope="row">{ indexSTT + 1 }</th>
         <td>{ provider.name }</td>

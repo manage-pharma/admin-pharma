@@ -77,7 +77,7 @@ const MainImportStock = (props) => {
     setToggleSearch(!toggleSearch)
   }
   const updateStatus = useSelector(state => state.importStockStatus)
-  const {success} = updateStatus
+  const {loading: loadingStatus, error: errorStatus, success} = updateStatus
   useEffect(()=>{
     if(success){
       toast.success(`Update status successfully`, ToastObjects)
@@ -88,6 +88,7 @@ const MainImportStock = (props) => {
   return (
     <>
     <Toast/>
+    { loading || loadingStatus ? (<Loading/>) : error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">Import Stock from Provider</h2>
@@ -147,40 +148,38 @@ const MainImportStock = (props) => {
         </header>
 
         <div className="card-body">
-          { loading ? (<Loading/>) : error ? (<Message variant="alert-danger">{error}</Message>) : (
-            <div className="row">
-                <div className="card card-custom mb-4 shadow-sm">
-                  <header className="card-header bg-white ">
-                    <div className="row gx-3 py-3">
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Import Code</th>
-                            <th scope='col'>Provider</th>
-                            <th scope="col">Created by</th>
-                            <th scope="col">Imported at</th>
-                            <th scope="col">Total price</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                          <tbody>
-                             {stockImported ? stockImported.map((listImport, index)=>(
-                              <ImportStock 
-                                importStock={listImport} 
-                                indexSTT={index} 
-                                key={index}
-                                />)) : 
-                              <div>There are no record</div>
-                          }
-                          </tbody>
-                        </table>
-                    </div>
-                  </header>
-                </div>
-            </div>
-          )}
+          <div className="row">
+              <div className="card card-custom mb-4 shadow-sm">
+                <header className="card-header bg-white ">
+                  <div className="row gx-3 py-3">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">STT</th>
+                          <th scope="col">Import Code</th>
+                          <th scope='col'>Provider</th>
+                          <th scope="col">Created by</th>
+                          <th scope="col">Imported at</th>
+                          <th scope="col">Total price</th>
+                          <th scope="col">Status</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                            {stockImported ? stockImported.map((listImport, index)=>(
+                            <ImportStock 
+                              importStock={listImport} 
+                              indexSTT={index} 
+                              key={index}
+                              />)) : 
+                            <div>There are no record</div>
+                        }
+                        </tbody>
+                      </table>
+                  </div>
+                </header>
+              </div>
+          </div>
 
           <Pagination 
             totalPage={totalPage} 

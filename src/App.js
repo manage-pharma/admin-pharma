@@ -79,6 +79,7 @@ function App() {
           <PrivateRouter path="/export-stock/:id" component={EditExport} />
 
           <PrivateRouter path="/providers" component={ProviderScreen} exact/>
+
           <PrivateRouter path="/users" component={UsersScreen} />
 
           <Route path="/login" component={Login} />

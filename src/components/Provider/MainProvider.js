@@ -8,15 +8,26 @@ import debounce from "lodash.debounce";
 import { listProvider } from './../../Redux/Actions/ProviderAction';
 import Provider from "./Provider";
 import AddProvider from "./AddProviderModal";
-
+import Toast from './../LoadingError/Toast';
+import { toast } from "react-toastify";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const MainProvider = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
   const history = useHistory()
   const [show, setShow] = useState(false);
   const [keyword, setSearch] = useState()
+  
   const providerList = useSelector((state)=> state.providerList)
   const { loading, error, providers, currentPage, totalPage } = providerList
+
+  const providerDeleted = useSelector(state => state.providerDelete)
+  const { loading: loadingDelete, error: errorDelete, success: successDelete} = providerDeleted
 
   const callApiKeywordSearch = (keyword, pageNumber) =>{
     if( keyword.trim() !== ''){
@@ -38,11 +49,18 @@ const MainProvider = (props) => {
   }
 
   useEffect(()=>{
-    dispatch(listProvider(keyword, pageNumber)) // eslint-disable-next-line
-  },[dispatch, pageNumber])
+    if(successDelete){
+      toast.success("Deleted successfully", ToastObjects);
+    }
+    else{
+      dispatch(listProvider(keyword, pageNumber))
+    } // eslint-disable-next-line
+  },[dispatch, successDelete, pageNumber])
 
   return (
     <>
+    <Toast />
+    { loading || loadingDelete? (<Loading/>) : error || errorDelete ? (<Message variant="alert-danger">{error ||  errorDelete}</Message>) : ''}
     <AddProvider show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
@@ -85,42 +103,40 @@ const MainProvider = (props) => {
         </header>
 
         <div className="card-body">
-          { loading ? (<Loading/>) : error ? (<Message variant="alert-danger">{error}</Message>) : (
-            <div className="row">
-                <div className="card card-custom mb-4 shadow-sm">
-                  <header className="card-header bg-white ">
-                    <div className="row gx-3 py-3">
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Name</th>
-                            <th scope='col'>Contact person</th>
-                            <th scope="col">Tax code</th>
-                            <th scope="col">Phone</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                          <tbody>
-                             {providers ? providers.map((provider, index)=>(
-                              <Provider 
-                                provider={provider} 
-                                key={index} 
-                                indexSTT={index} 
-                                show={show} 
-                                setShow={setShow}
-                                />)) : 
-                              <div>There are no record</div>
-                          }
-                          </tbody>
-                        </table>
-                    </div>
-                  </header>
-                </div>
-            </div>
-          )}
+          <div className="row">
+              <div className="card card-custom mb-4 shadow-sm">
+                <header className="card-header bg-white ">
+                  <div className="row gx-3 py-3">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">STT</th>
+                          <th scope="col">Name</th>
+                          <th scope='col'>Contact person</th>
+                          <th scope="col">Tax code</th>
+                          <th scope="col">Phone</th>
+                          <th scope="col">Email</th>
+                          <th scope="col">Address</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                            {providers ? providers.map((provider, index)=>(
+                            <Provider 
+                              provider={provider} 
+                              key={index} 
+                              indexSTT={index} 
+                              show={show} 
+                              setShow={setShow}
+                              />)) : 
+                            <div>There are no record</div>
+                        }
+                        </tbody>
+                      </table>
+                  </div>
+                </header>
+              </div>
+          </div>
 
           <Pagination 
             totalPage={totalPage} 
