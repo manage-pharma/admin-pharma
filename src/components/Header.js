@@ -1,11 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {logout} from '../Redux/Actions/UserActions';
 import { changeTheme } from './../Redux/Actions/ThemeAction';
+import Modal from 'react-bootstrap/Modal';
 const Header = () => {
+  const MyVerticallyCenteredModal = (props) =>{
+    return (
+      <Modal
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        className="my-modal-simple"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-sm">
+            My profile
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="fw-bold">Username: {
+            userInfo.isAdmin ? (
+              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>Admin</p>
+            )
+            :
+            (
+              <p className="m-0 badge bg-primary text-wrap" style={{width: '4rem', fontSize: '16px'}}>User</p>
+            )
+          }</div>
+          <div className="fw-bold">Email: <span class="fw-normal">{userInfo.email}</span></div>
+          <div className="fw-bold">Phone number: <span class="fw-normal">{userInfo.phone}</span></div>
+        </Modal.Body>
+      </Modal>
+    );
+  }
+
+
   const history = useHistory();
   const dispatch = useDispatch();
+  const [modalShow, setModalShow] = useState(false);
+
   useEffect(() => {
     document.querySelector("button[data-trigger]").addEventListener("click",function (e) {
       e.preventDefault();
@@ -18,7 +53,11 @@ const Header = () => {
       document.querySelector("body").classList.toggle("aside-mini");
     })
   }, []);
+
   const data = useSelector((state)=> state.theme)
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const handleChangeTheme = (e) =>{
     e.preventDefault();
     dispatch(changeTheme(data.theme === 'light' ? 'dark' : 'light'))
@@ -31,75 +70,88 @@ const Header = () => {
     dispatch(logout())
     history.push('/login');
   }
+
+  const handleMyProfile = e =>{
+    e.preventDefault();
+    setModalShow(true);
+    console.log("12",userInfo.phone)
+  }
   return (
-    <header className="main-header navbar">
-      <div className="col-search">
-        <form className="searchform">
-          <div className="input-group">
-            <input
-              list="search_terms"
-              type="text"
-              className="form-control"
-              placeholder="Search term"
-            />
-            <button className="btn btn-light bg" type="button">
-              <i className="far fa-search"></i>
-            </button>
-          </div>
-          <datalist id="search_terms">
-            <option value="Products" />
-            <option value="New orders" />
-            <option value="Apple iphone" />
-            <option value="Ahmed Hassan" />
-          </datalist>
-        </form>
-      </div>
-      <div className="col-nav">
-        <button
-          className="btn btn-icon btn-mobile me-auto"
-          data-trigger="#offcanvas_aside"
-        >
-          <i className="md-28 fas fa-bars"></i>
-        </button>
-        <ul className="nav">
-          <li className="nav-item">
-            <div className="radio-btn nav-link btn-icon" onClick={handleChangeTheme}>
-              <div id="radio-inner"><i className="fas fa-moon"></i></div>
-            </div>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link btn-icon" to="#">
-              <i className="fas fa-bell"></i>
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="#">
-              English
-            </Link>
-          </li>
-          <li className="dropdown nav-item">
-            <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
-              <img
-                className="img-xs rounded-circle"
-                src="/images/favicon.png"
-                alt="User"
+    <>
+      <MyVerticallyCenteredModal
+      show={modalShow}
+      onHide={() => setModalShow(false)}
+      />
+      <header className="main-header navbar">
+        <div className="col-search">
+          <form className="searchform">
+            <div className="input-group">
+              <input
+                list="search_terms"
+                type="text"
+                className="form-control"
+                placeholder="Search term"
               />
-            </Link>
-            <div className="dropdown-menu dropdown-menu-end">
-              <Link className="dropdown-item" to="/">
-                My profile
-              </Link>
-              <Link className="dropdown-item" to="#">
-                Settings
-              </Link>
-              <Link className="dropdown-item text-danger" to='#' onClick={handleLogout}>
-                Logout
-              </Link>
+              <button className="btn btn-light bg" type="button">
+                <i className="far fa-search"></i>
+              </button>
             </div>
-          </li>
-        </ul>
-      </div>
-    </header>
+            <datalist id="search_terms">
+              <option value="Products" />
+              <option value="New orders" />
+              <option value="Apple iphone" />
+              <option value="Ahmed Hassan" />
+            </datalist>
+          </form>
+        </div>
+        <div className="col-nav">
+          <button
+            className="btn btn-icon btn-mobile me-auto"
+            data-trigger="#offcanvas_aside"
+          >
+            <i className="md-28 fas fa-bars"></i>
+          </button>
+          <ul className="nav">
+            <li className="nav-item">
+              <div className="radio-btn nav-link btn-icon" onClick={handleChangeTheme}>
+                <div id="radio-inner"><i className="fas fa-moon"></i></div>
+              </div>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link btn-icon" to="#">
+                <i className="fas fa-bell"></i>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="#">
+                English
+              </Link>
+            </li>
+            <li className="dropdown nav-item">
+              <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
+                <img
+                  className="img-xs rounded-circle"
+                  src="/images/favicon.png"
+                  alt="User"
+                />
+              </Link>
+              <div className="dropdown-menu dropdown-menu-end">
+                <Link className="dropdown-item" to="#" onClick={handleMyProfile}>
+                  My profile
+                </Link>
+                <Link className="dropdown-item" to="#">
+                  Settings
+                </Link>
+                <Link className="dropdown-item text-danger" to='#' onClick={handleLogout}>
+                  Logout
+                </Link>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </header>
+    </>
+
   );
 };
 

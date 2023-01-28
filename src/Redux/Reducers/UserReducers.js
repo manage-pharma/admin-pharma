@@ -1,4 +1,10 @@
-import {
+import { 
+  USER_SINGLE_SUCCESS,
+  USER_UPDATE_RESET,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_FAIL,
+  USER_SINGLE_REQUEST,
   USER_CREATE_FAIL,
   USER_CREATE_REQUEST,
   USER_CREATE_RESET,
@@ -11,6 +17,8 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
+  USER_SINGLE_RESET,
+  USER_SINGLE_FAIL,
 } from "../Constants/UserConstants";
 
 // LOGIN
@@ -58,4 +66,35 @@ export const userCreateReducer = (state= {}, action) =>{
       default:
           return state;
   }
+};
+//UPDATE
+export const userUpdateReducer = (state = {user:{}}, action) =>{
+  switch (action.type) {
+      case USER_UPDATE_REQUEST:
+          return {loading: true};
+      case USER_UPDATE_SUCCESS:
+          return {loading: false, success: true, user: action.payload}
+      case USER_UPDATE_FAIL:
+          return {loading: false, error: action.payload};
+      case USER_UPDATE_RESET:
+          return {USER: {}}
+      default:
+          return state
+  }
+}
+
+// SINGLE USER
+export const userSingleReducer = (state = {user:{}}, action) => {
+switch (action.type) {
+  case USER_SINGLE_REQUEST:
+    return {...state, loading: true };
+  case USER_SINGLE_SUCCESS:
+    return { loading: false, success: true, user: action.payload };
+  case USER_SINGLE_FAIL:
+    return { loading: false, error: action.payload };
+  case USER_SINGLE_RESET:
+    return {user:{}};
+  default:
+    return state;
+}
 };

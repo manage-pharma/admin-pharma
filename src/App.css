@@ -924,7 +924,10 @@ ul.row-sm {
   background-color: #ffc107;
   color: #fff;
 }
-
+.my-modal-simple .modal-header{
+  background-color: #5468FF;
+  color: #fff;
+}
 .text-warning{
   color: #ffc107;
   font-weight: 600;
@@ -1047,7 +1050,11 @@ input:checked + .slider:before {
   transform: rotate(90deg);
   transition: transform .25s;
 } */
-
+.user-effect{
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+}
 
 
 
