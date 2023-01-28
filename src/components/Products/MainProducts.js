@@ -63,7 +63,7 @@ const MainProducts = (props) => {
     { loading || loadingDelete ? (<Loading/>) : error || errorDelete ? (<Message variant="alert-danger">{error || errorDelete}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">PRODUCTS</h2>
+        <h2 className="content-title">PRODUCT LIST</h2>
         <div className="d-flex">
           <div style={{marginRight: '10px'}}>
             <Link to="/product/excel" className="btn btn-primary">

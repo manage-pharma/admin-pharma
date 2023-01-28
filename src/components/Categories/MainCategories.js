@@ -104,7 +104,7 @@ const MainCategories = () => {
       <Toast />
       <section className="content-main">
         <div className="content-header">
-          <h2 className="content-title">Categories</h2>
+          <h2 className="content-title">CATEGORY LIST</h2>
           <div>{ editCallback ? (
             <button onClick={(e)=>{
               e.preventDefault()

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { listUser } from "../../Redux/Actions/UserActions";
+import { listUser, singleUser } from "../../Redux/Actions/UserActions";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import AddUser from "./AddUserModal";
@@ -22,7 +22,7 @@ const UserComponent = () => {
     <AddUser show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Customers</h2>
+        <h2 className="content-title">USER LIST</h2>
         <div>
           {/* <Link to="#" className="btn btn-primary">
             <i className="material-icons md-plus"></i> Create new
@@ -71,6 +71,11 @@ const UserComponent = () => {
                     <div className="col" key={index}>
                       <div className="card card-user shadow-sm">
                         <div className="card-header">
+                          <div className="user-effect" onClick={e=>{
+                            e.preventDefault();
+                            dispatch(singleUser(user._id))
+                            setShow(true)
+                          }}><i className="far fa-edit"></i></div>
                           <img
                             className="img-md img-avatar"
                             src="images/favicon.png"
@@ -82,16 +87,16 @@ const UserComponent = () => {
                           <div className="card-text text-muted">
                             {
                               user.isAdmin ? (
-                                <p className="m-0">Admin</p>
+                                <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>Admin</p>
                               )
                               :
                               (
-                                <p className="m-0">Customer</p>
+                                <p className="m-0 badge bg-primary text-wrap" style={{width: '4rem', fontSize: '16px'}}>User</p>
                               )
                             }
-                            <h6 className="card-title">{user.phone}</h6>
+                            <h6 className="mt-2 card-title">{user.phone}</h6>
                             <p>
-                              <a href={`mailto:admin@example.com`}>{user.email}</a>
+                              <a href={`mailto:${user.email}`}>{user.email}</a>
                             </p>
                           </div>
                         </div>

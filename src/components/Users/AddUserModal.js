@@ -5,13 +5,11 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import React, { useEffect, useState } from "react";
-import { updateProvider } from '../../Redux/Actions/ProviderAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import Toast from '../LoadingError/Toast';
-import { PROVIDER_SINGLE_RESET, PROVIDER_UPDATE_RESET } from '../../Redux/Constants/ProviderConstants';
-import { USER_CREATE_RESET } from '../../Redux/Constants/UserConstants';
-import { createUser, listUser } from './../../Redux/Actions/UserActions';
+import { USER_CREATE_RESET, USER_SINGLE_RESET, USER_UPDATE_RESET } from '../../Redux/Constants/UserConstants';
+import { createUser, listUser, updateUser } from './../../Redux/Actions/UserActions';
 const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
@@ -23,7 +21,14 @@ const AddUser = (props) => {
     const dispatch = useDispatch();
     const handleClose = () => {
         setShow(false);
-        dispatch({type: PROVIDER_SINGLE_RESET});
+        dispatch({type: USER_SINGLE_RESET})
+        setDataModal({
+            name: '',
+            email: '',
+            phone: '',
+            password: '',
+            passwordAgain: ''
+        })  
     };
     const [dataModal, setDataModal] = useState({
         name: '',
@@ -35,8 +40,8 @@ const AddUser = (props) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        if(successProviderSingle){
-            dispatch(updateProvider({ ...dataModal, providerID }));
+        if(successUserSingle){
+            dispatch(updateUser({ ...dataModal, userID }));
         }
         else{
             if(dataModal.password !== dataModal.passwordAgain){
@@ -56,20 +61,31 @@ const AddUser = (props) => {
         })
     }
     const createUserStatus = useSelector((state)=> state.userCreate)
-    const { success } = createUserStatus
+    const { error: errorCreate, success } = createUserStatus
 
-    const providerEditing = useSelector((state)=> state.providerSingle)
-    const {success: successProviderSingle, provider: providerEdit } = providerEditing
-    const providerID = providerEdit._id
+    const userEditing = useSelector((state)=> state.userSingle)
+    const {success: successUserSingle, user: userEdit } = userEditing
+    const userID = userEdit._id
 
-    const providerUpdated = useSelector((state)=> state.providerUpdate) 
-    const {success: successProviderUpdated} = providerUpdated
+    const userUpdated = useSelector((state)=> state.userUpdate) 
+    const {error: errorUpdate, success: successUserUpdated} = userUpdated
 
     useEffect(()=>{
-        if(success || successProviderUpdated){
-            if(successProviderUpdated){
+        if (errorCreate || errorUpdate){
+            if(errorCreate){
+                toast.error( errorCreate, ToastObjects);
+                dispatch({type: USER_CREATE_RESET})
+            }
+            else{
+                toast.error( errorUpdate, ToastObjects);
+                dispatch({type: USER_UPDATE_RESET})
+            }
+            setShow(false)
+        }
+        if(success || successUserUpdated){
+            if(successUserUpdated){
                 toast.success(`Updated successfully`, ToastObjects);
-                dispatch({type: PROVIDER_UPDATE_RESET})
+                dispatch({type: USER_UPDATE_RESET})
             }
             else{
                 toast.success(`Added successfully`, ToastObjects);
@@ -85,17 +101,14 @@ const AddUser = (props) => {
             dispatch(listUser())
             setShow(false)
         }
-        if(successProviderSingle){
+        if(successUserSingle){
             setDataModal({
-                name: providerEdit.name,
-                contactName: providerEdit.contactName,
-                taxCode: providerEdit.taxCode,
-                phone: providerEdit.phone,
-                email: providerEdit.email,
-                address: providerEdit.address,
+                name: userEdit.name,
+                phone: userEdit.phone,
+                email: userEdit.email,
             })
         }
-    }, [success, dispatch, setShow, successProviderSingle, successProviderUpdated, providerEdit])
+    }, [success, dispatch, setShow, successUserSingle, successUserUpdated, userEdit, errorCreate, errorUpdate])
 
     const { name, email, phone, password, passwordAgain } = dataModal
 
@@ -104,7 +117,7 @@ const AddUser = (props) => {
         <Toast />
         <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter">
           <Modal.Header closeButton>
-            <Modal.Title  id="contained-modal-title-vcenter">Add User</Modal.Title>
+            <Modal.Title  id="contained-modal-title-vcenter">{successUserSingle ? `Update ${name}` : 'Add User'}</Modal.Title>
           </Modal.Header>
           <Modal.Body  className="show-grid">
             <Form>
@@ -116,7 +129,7 @@ const AddUser = (props) => {
                                 <Form.Control
                                     type="text"
                                     autoComplete="off"
-                                    placeholder="provider name"
+                                    placeholder="Username"
                                     autoFocus
                                     onChange={handelChangeModal}
                                     name="name"
@@ -173,7 +186,6 @@ const AddUser = (props) => {
                             </Form.Group>
                         </Col>
                     </Row>
-                    { !successProviderSingle ? 
                         <Row>
                             <Col xs={12} md={12}>
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput5">
@@ -188,8 +200,7 @@ const AddUser = (props) => {
                                     />
                                 </Form.Group>
                             </Col>
-                        </Row> : ''
-                    }
+                        </Row> 
                 </Container>
             </Form>
           </Modal.Body>
@@ -198,7 +209,7 @@ const AddUser = (props) => {
               Close
             </Button>
             <Button variant="primary" onClick={handleSubmit}>
-              {successProviderSingle ? 'Update' : 'Add'}
+              {successUserSingle ? 'Update' : 'Add'}
             </Button>
           </Modal.Footer>
         </Modal>
