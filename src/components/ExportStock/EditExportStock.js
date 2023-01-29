@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import { EXPORT_STOCK_DETAILS_RESET, EXPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ExportStockConstant";
 import  moment  from 'moment';
+import { listProduct } from './../../Redux/Actions/ProductActions';
 import renderToast from "../../util/Toast";
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -34,6 +35,7 @@ const EditImportStock = (props) => {
     const [isEdited, setIsEdited] = useState(false)
     const [itemProducts, setItemProducts] = useState([]);
     const [field, setFieldProduct] = useState({
+        countInStock: 0,
         name: '',
         product: '',
         price: 1,
@@ -79,9 +81,13 @@ const EditImportStock = (props) => {
             let a = document.getElementById("select-product");
             let b = a.options[a.selectedIndex]
             let c = b.getAttribute('data-foo')
+
+            let b1 = a.options[a.selectedIndex]
+            let c1 = b1.getAttribute('data-countinstock')
             return {
                 ...prev,
-                name:c, 
+                name:c,
+                countInStock:c1, 
                 [e.target.name]: e.target.value
               }
         })
@@ -89,6 +95,10 @@ const EditImportStock = (props) => {
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
+        if(parseInt(field.qty) > parseInt(field.countInStock)){
+            toast.error(`Quantity is greater than quantity of ${field.name} in stock`, ToastObjects);
+            return;
+        }   
         if(!field.product){
             if(!isStop){
                 renderToast('The product has not been selected','error', setIsStop, isStop)
@@ -103,10 +113,18 @@ const EditImportStock = (props) => {
         }
         itemProducts.forEach((item, index)=>{
             if((item.product._id || item.product) === field.product){
-                flag = true
-                itemProducts.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
-                setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
-             }
+                let a =  (item.product.qty || item.qty) + parseInt(field.qty) 
+                console.log(a)
+                if(parseInt(a) > parseInt(field.countInStock)){
+                    flag = true
+                    toast.error(`Quantity is greater than quantity of ${field.name} in stock`, ToastObjects);
+                    return;
+                }else{
+                    flag = true
+                    itemProducts.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
+                    setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
+                }
+            }
         })
         if(!flag){
             setItemProducts(prev => 
@@ -135,6 +153,7 @@ const EditImportStock = (props) => {
 
     useEffect(()=>{
         dispatch(listUser())
+        dispatch(listProduct())
         if(success){
             toast.success(`Updated successfully`, ToastObjects);
             dispatch({type: EXPORT_STOCK_UPDATE_RESET})
@@ -281,7 +300,13 @@ const EditImportStock = (props) => {
                                 >
                                     <option value=''>Chosse product</option>
                                     {products?.map((item, index)=>(
-                                        <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
+                                        <option 
+                                            key={index} 
+                                            value={item._id} 
+                                            data-foo={item.name} 
+                                            data-countinstock={item.countInStock}
+                                            >{item.name}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
@@ -339,9 +364,9 @@ const EditImportStock = (props) => {
                                 {itemProducts?.map((item, index)=>(
                                     <tr key={index}>
                                     <th scope="row">{ index + 1 }</th>
-                                    <td>{ item.product.name || item.name }</td>
-                                    <td>{ item.price}</td>
-                                    <td>{ item.qty}</td>
+                                    <td>{ item?.product?.name || item?.name }</td>
+                                    <td>{ item?.price}</td>
+                                    <td>{ item?.qty}</td>
                                     <td>
                                         <div 
                                             className="dropdown">

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
+import { listProduct } from './../../Redux/Actions/ProductActions';
 import { Link } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import { IMPORT_STOCK_DETAILS_RESET, IMPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ImportStockConstant";
@@ -133,6 +134,7 @@ const EditImportStock = (props) => {
 
     useEffect(()=>{
         dispatch(listProvider())
+        dispatch(listProduct())
         dispatch(listUser())
         if(success){
             toast.success(`Updated successfully`, ToastObjects);
@@ -299,9 +301,9 @@ const EditImportStock = (props) => {
                                 {itemProducts?.map((item, index)=>(
                                     <tr key={index}>
                                     <th scope="row">{ index + 1 }</th>
-                                    <td>{ item.product.name || item.name }</td>
-                                    <td>{ item.price}</td>
-                                    <td>{ item.qty}</td>
+                                    <td>{ item?.product?.name || item?.name }</td>
+                                    <td>{ item?.price}</td>
+                                    <td>{ item?.qty}</td>
                                     <td>
                                         <div 
                                             className="dropdown">
