@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import { EXPORT_STOCK_CREATE_RESET } from '../../Redux/Constants/ExportStockConstant';
 import { listUser } from "../../Redux/Actions/UserActions";
+import { listProduct } from './../../Redux/Actions/ProductActions';
 import { Link } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import  moment  from 'moment';
@@ -29,6 +30,7 @@ const AddExportStock = () => {
     const [ isStop , setIsStop ] = useState(false)
     const [itemProducts, setItemProducts] = useState([]);
     const [field, setFieldProduct] = useState({
+        countInStock: 0,
         name: '',
         product: '',
         price: 0,
@@ -71,9 +73,13 @@ const AddExportStock = () => {
             let a = document.getElementById("select-product");
             let b = a.options[a.selectedIndex]
             let c = b.getAttribute('data-foo')
+
+            let b1 = a.options[a.selectedIndex]
+            let c1 = b1.getAttribute('data-countinstock')
             return {
                 ...prev,
-                name:c, 
+                name:c,
+                countInStock:c1,
                 [e.target.name]: e.target.value
               }
         })
@@ -82,7 +88,10 @@ const AddExportStock = () => {
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
-        
+        if(parseInt(field.qty) > parseInt(field.countInStock)){
+            toast.error(`Quantity is greater than quantity of ${field.name} in stock`, ToastObjects);
+            return;
+        }                    
         if(!field.product){
             if(!isStop){
                 renderToast('The product has not been selected','error', setIsStop, isStop)
@@ -98,9 +107,16 @@ const AddExportStock = () => {
         else{
             exportItems.forEach((item, index)=>{
                 if(item.product === field.product){
-                    flag = true
-                    exportItems.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
-                    setItemProducts(exportItems)
+                    let a = item.qty += parseInt(field.qty)
+                    if( parseInt(a) > parseInt(field.countInStock)){
+                        flag = true
+                        toast.error(`Quantity is greater than quantity of ${field.name} in stock`, ToastObjects);
+                        return;
+                    }else{
+                        flag = true
+                        exportItems.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
+                        setItemProducts(exportItems)
+                    }
                  }
             })
             if(!flag){
@@ -137,6 +153,7 @@ const AddExportStock = () => {
                 exportedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
             })
             setFieldProduct({
+                countInStock: 0,
                 name: '',
                 product: '',
                 price: 0,
@@ -146,6 +163,7 @@ const AddExportStock = () => {
             dispatch(listExportStock())
         }
         dispatch(listUser())
+        dispatch(listProduct())
     }, [success, dispatch])
 
     return (
@@ -267,7 +285,13 @@ const AddExportStock = () => {
                                 required >
                                     <option value=''>Chosse product</option>
                                     {products?.map((item, index)=>(
-                                        <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
+                                        <option 
+                                            key={index} 
+                                            value={item._id} 
+                                            data-foo={item.name} 
+                                            data-countinstock={item.countInStock}
+                                            >{item.name}
+                                        </option>
                                     ))}
                                 </select>
                             </div>

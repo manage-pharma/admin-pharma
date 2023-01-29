@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { IMPORT_STOCK_CREATE_RESET } from '../../Redux/Constants/ImportStockConstant';
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
+import { listProduct } from './../../Redux/Actions/ProductActions';
 import { Link } from 'react-router-dom';
 import Toast from './../LoadingError/Toast';
 import  moment  from 'moment';
@@ -139,6 +140,7 @@ const AddImportStock = () => {
             dispatch(listImportStock())
         }
         dispatch(listProvider())
+        dispatch(listProduct())
         dispatch(listUser())
     }, [success, dispatch])
 
@@ -186,6 +188,7 @@ const AddImportStock = () => {
                                         onChange={handleChange}
                                         value={importedAt}
                                     ></input>
+
                                 </div>
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
