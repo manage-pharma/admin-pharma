@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
 import { listProduct } from './../../Redux/Actions/ProductActions';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import { IMPORT_STOCK_DETAILS_RESET, IMPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ImportStockConstant";
 import  moment  from 'moment';
@@ -19,6 +19,7 @@ const ToastObjects = {
 const EditImportStock = (props) => {   
     const { importId } = props
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const importDetail = useSelector((state)=> state.importStockDetail)
     const { importStockItem  } = importDetail
@@ -165,7 +166,13 @@ const EditImportStock = (props) => {
         <section className= {`content-main ${importStockItem?.status ? 'disabled': ''}`}>
             <form onSubmit={handleSubmit}>
                 <div className="content-header">
-                    <h4 className="content-title">Import code: <span className="text-danger">{importStockItem?.importCode}</span></h4>
+                    <div className="content-title d-flex" onClick={e=>{
+                        e.preventDefault()
+                        history.push("/import-stock")
+                    }}>
+                        <h4 className="arrow-breadcrum"><i className="fas fa-arrow-left"></i></h4>
+                        <h3 className="content-title">Import code: <span className="text-danger">{importStockItem?.importCode}</span></h3>
+                    </div>
                     <div>
                         {importStockItem?.status ? 
                             <h4><span className="badge bg-danger text-white">This import is complete, you cannot edit</span></h4>:

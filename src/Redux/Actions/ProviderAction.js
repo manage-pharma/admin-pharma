@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PROVIDER_LIST_REQUEST, PROVIDER_LIST_SUCCESS, PROVIDER_LIST_FAIL, PROVIDER_CREATE_SUCCESS, PROVIDER_CREATE_FAIL, PROVIDER_CREATE_REQUEST, PROVIDER_UPDATE_REQUEST, PROVIDER_UPDATE_SUCCESS, PROVIDER_UPDATE_FAIL, PROVIDER_DELETE_REQUEST, PROVIDER_DELETE_SUCCESS, PROVIDER_DELETE_FAIL, PROVIDER_SINGLE_SUCCESS } from '../Constants/ProviderConstants';
+import { PROVIDER_LIST_REQUEST, PROVIDER_LIST_SUCCESS, PROVIDER_LIST_FAIL, PROVIDER_CREATE_SUCCESS, PROVIDER_CREATE_FAIL, PROVIDER_CREATE_REQUEST, PROVIDER_UPDATE_REQUEST, PROVIDER_UPDATE_SUCCESS, PROVIDER_UPDATE_FAIL, PROVIDER_DELETE_REQUEST, PROVIDER_DELETE_SUCCESS, PROVIDER_DELETE_FAIL, PROVIDER_SINGLE_SUCCESS, PROVIDER_LIST_RESET, PROVIDER_SINGLE_RESET, PROVIDER_CREATE_RESET, PROVIDER_UPDATE_RESET, PROVIDER_DELETE_RESET } from '../Constants/ProviderConstants';
 import { logout } from "./UserActions";
 import { PROVIDER_SINGLE_REQUEST, PROVIDER_SINGLE_FAIL } from './../Constants/ProviderConstants';
 
@@ -32,6 +32,9 @@ export const listProvider = ( keyword = " ", pageNumber = " ") => async (dispatc
       type: PROVIDER_LIST_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PROVIDER_LIST_RESET });
+    }, 3000);
   }
 };
 
@@ -63,6 +66,9 @@ export const singleProvider = (id) => async (dispatch, getState) => {
       type: PROVIDER_SINGLE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PROVIDER_SINGLE_RESET });
+    }, 3000);
   }
 };
 
@@ -95,10 +101,13 @@ export const createProvider = ({ name, contactName, taxCode, phone, email, addre
       if (message === "Not authorized, token failed") {
         dispatch(logout());
       }
-        dispatch({
-          type: PROVIDER_CREATE_FAIL,
-          payload: message,
-        });
+      dispatch({
+        type: PROVIDER_CREATE_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: PROVIDER_CREATE_RESET });
+      }, 3000);
     }
   };
 
@@ -132,6 +141,9 @@ export const updateProvider = ({name, contactName, taxCode, phone, email, addres
       type: PROVIDER_UPDATE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PROVIDER_UPDATE_RESET });
+    }, 3000);
   }
 }
 
@@ -164,5 +176,8 @@ export const deleteProvider = (id) => async(dispatch, getState) => {
       type: PROVIDER_DELETE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PROVIDER_DELETE_RESET });
+    }, 3000);
   }
 };

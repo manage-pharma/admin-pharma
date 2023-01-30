@@ -3,6 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {logout} from '../Redux/Actions/UserActions';
 import { changeTheme } from './../Redux/Actions/ThemeAction';
+import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 const Header = () => {
   const MyVerticallyCenteredModal = (props) =>{
@@ -74,7 +75,6 @@ const Header = () => {
   const handleMyProfile = e =>{
     e.preventDefault();
     setModalShow(true);
-    console.log("12",userInfo.phone)
   }
   return (
     <>
@@ -112,6 +112,13 @@ const Header = () => {
             <i className="md-28 fas fa-bars"></i>
           </button>
           <ul className="nav">
+            <li className="nav-item me-4">
+              <Badge pill bg={userInfo.isAdmin ? 'danger' : 'primary'} >
+                <Link className={`dropdown-item text-white fw-bold ${userInfo.isAdmin ? 'bg-danger' : 'bg-primary'}`} to="#" onClick={handleMyProfile}>
+                  {userInfo.name}
+                </Link>
+                </Badge>
+            </li>
             <li className="nav-item">
               <div className="radio-btn nav-link btn-icon" onClick={handleChangeTheme}>
                 <div id="radio-inner"><i className="fas fa-moon"></i></div>

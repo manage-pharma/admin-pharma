@@ -1,16 +1,13 @@
 import React from "react";
-import { listProduct } from "../../Redux/Actions/ProductActions";
-import { useDispatch } from "react-redux";
 const Pagination = (props) => {
   const { totalPage, currentPage, keyword = "", sort = "" } = props
-  const dispatch = useDispatch()
   return (
     <nav className="float-end mt-4" aria-label="Page navigation">
       <ul className="pagination">
         <li className={`page-item ${currentPage === 1 ? 'disabled': ''}`}>
             <button className="page-link" onClick={(e)=>{
               e.preventDefault();
-              dispatch(listProduct(keyword, currentPage-1, sort))
+              props.handlePage(keyword, currentPage-1, sort)
             }}>
                 Previous
             </button>
@@ -21,7 +18,7 @@ const Pagination = (props) => {
         <li className={`page-item ${indexPage === currentPage ? "active" : ""}`} key={indexPage}>
             <button className="page-link" onClick={(e)=>{
               e.preventDefault();
-              dispatch(listProduct(keyword, indexPage, sort))
+              props.handlePage(keyword, indexPage, sort)
             }}>
               {indexPage}
             </button>
@@ -31,7 +28,7 @@ const Pagination = (props) => {
         <li className={`page-item ${currentPage === totalPage?.length  ? 'disabled': ''}`}>
             <button className="page-link" onClick={(e)=>{
               e.preventDefault();
-              dispatch(listProduct(keyword, currentPage+1, sort))
+              props.handlePage(keyword, currentPage+1, sort)
             }}>
                 Next
             </button>

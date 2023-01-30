@@ -48,6 +48,9 @@ const MainProducts = (props) => {
     debounceDropDown(e.target.value, pageNumber, sort);
   }
 
+  const handlePaginate = (keywordProp, currentPageProp, sortProp) =>{
+    dispatch(listProduct(keywordProp, currentPageProp, sortProp))
+  }
   useEffect(()=>{
     if(successDelete){
       toast.success("Deleted successfully", ToastObjects);
@@ -145,6 +148,7 @@ const MainProducts = (props) => {
             currentPage={currentPage} 
             keyword={keyword ? keyword : ""}
             sort= {sort ? sort : ""}
+            handlePage={handlePaginate}
           />
         </div>
       </div>

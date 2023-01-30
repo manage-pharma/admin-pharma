@@ -1,4 +1,4 @@
-import { EXPORT_STOCK_CREATE_FAIL, EXPORT_STOCK_CREATE_REQUEST, EXPORT_STOCK_CREATE_SUCCESS, EXPORT_STOCK_DETAILS_FAIL, EXPORT_STOCK_DETAILS_REQUEST, EXPORT_STOCK_DETAILS_SUCCESS, EXPORT_STOCK_LIST_FAIL, EXPORT_STOCK_LIST_REQUEST, EXPORT_STOCK_LIST_SUCCESS, EXPORT_STOCK_STATUS_FAIL, EXPORT_STOCK_STATUS_REQUEST, EXPORT_STOCK_STATUS_SUCCESS, EXPORT_STOCK_UPDATE_FAIL, EXPORT_STOCK_UPDATE_REQUEST, EXPORT_STOCK_UPDATE_SUCCESS } from '../Constants/ExportStockConstant';
+import { EXPORT_STOCK_CREATE_FAIL, EXPORT_STOCK_CREATE_REQUEST, EXPORT_STOCK_CREATE_RESET, EXPORT_STOCK_CREATE_SUCCESS, EXPORT_STOCK_DETAILS_FAIL, EXPORT_STOCK_DETAILS_REQUEST, EXPORT_STOCK_DETAILS_RESET, EXPORT_STOCK_DETAILS_SUCCESS, EXPORT_STOCK_LIST_FAIL, EXPORT_STOCK_LIST_REQUEST, EXPORT_STOCK_LIST_RESET, EXPORT_STOCK_LIST_SUCCESS, EXPORT_STOCK_STATUS_FAIL, EXPORT_STOCK_STATUS_REQUEST, EXPORT_STOCK_STATUS_RESET, EXPORT_STOCK_STATUS_SUCCESS, EXPORT_STOCK_UPDATE_FAIL, EXPORT_STOCK_UPDATE_REQUEST, EXPORT_STOCK_UPDATE_RESET, EXPORT_STOCK_UPDATE_SUCCESS } from '../Constants/ExportStockConstant';
 import axios from 'axios';
 import { logout } from "./UserActions";
 
@@ -22,6 +22,9 @@ export const listExportStock = ( keyword = " ", pageNumber = " ", from=' ', to =
           dispatch(logout());
       }
       dispatch({type: EXPORT_STOCK_LIST_FAIL, payload: message});
+      setTimeout(() => {
+        dispatch({ type: EXPORT_STOCK_LIST_RESET });
+      }, 3000);
   }
 }
 
@@ -53,6 +56,9 @@ export const singleExportStock = (id) => async (dispatch, getState) => {
       type: EXPORT_STOCK_DETAILS_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: EXPORT_STOCK_DETAILS_RESET });
+    }, 3000);
   }
 };
 
@@ -85,10 +91,13 @@ export const createExportStock = ({ customer, phone, address, note, user, export
       if (message === "Not authorized, token failed") {
         dispatch(logout());
       }
-        dispatch({
-          type: EXPORT_STOCK_CREATE_FAIL,
-          payload: message,
-        });
+      dispatch({
+        type: EXPORT_STOCK_CREATE_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: EXPORT_STOCK_CREATE_RESET });
+      }, 3000);
     }
   };
 
@@ -113,10 +122,13 @@ export const statusExportStock = (id) => async (dispatch, getState) => {
     if (message === "Not authorized, token failed") {
       dispatch(logout());
     }
-      dispatch({
-        type: EXPORT_STOCK_STATUS_FAIL,
-        payload: message,
-      });
+    dispatch({
+      type: EXPORT_STOCK_STATUS_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: EXPORT_STOCK_STATUS_RESET });
+    }, 3000);
   }
 };
 
@@ -143,10 +155,13 @@ export const statusExportStock = (id) => async (dispatch, getState) => {
       if (message === "Not authorized, token failed") {
         dispatch(logout());
       }
-        dispatch({
-          type: EXPORT_STOCK_UPDATE_FAIL,
-          payload: message,
-        });
+      dispatch({
+        type: EXPORT_STOCK_UPDATE_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: EXPORT_STOCK_UPDATE_RESET });
+      }, 3000);
     }
   };
 

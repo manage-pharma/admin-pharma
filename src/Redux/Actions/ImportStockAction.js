@@ -1,4 +1,4 @@
-import { IMPORT_STOCK_CREATE_FAIL, IMPORT_STOCK_CREATE_REQUEST, IMPORT_STOCK_CREATE_SUCCESS, IMPORT_STOCK_DETAILS_FAIL, IMPORT_STOCK_DETAILS_REQUEST, IMPORT_STOCK_DETAILS_SUCCESS, IMPORT_STOCK_LIST_FAIL, IMPORT_STOCK_LIST_REQUEST, IMPORT_STOCK_LIST_SUCCESS, IMPORT_STOCK_STATUS_FAIL, IMPORT_STOCK_STATUS_REQUEST, IMPORT_STOCK_STATUS_SUCCESS, IMPORT_STOCK_UPDATE_FAIL, IMPORT_STOCK_UPDATE_REQUEST, IMPORT_STOCK_UPDATE_SUCCESS } from './../Constants/ImportStockConstant';
+import { IMPORT_STOCK_CREATE_FAIL, IMPORT_STOCK_CREATE_REQUEST, IMPORT_STOCK_CREATE_RESET, IMPORT_STOCK_CREATE_SUCCESS, IMPORT_STOCK_DETAILS_FAIL, IMPORT_STOCK_DETAILS_REQUEST, IMPORT_STOCK_DETAILS_RESET, IMPORT_STOCK_DETAILS_SUCCESS, IMPORT_STOCK_LIST_FAIL, IMPORT_STOCK_LIST_REQUEST, IMPORT_STOCK_LIST_RESET, IMPORT_STOCK_LIST_SUCCESS, IMPORT_STOCK_STATUS_FAIL, IMPORT_STOCK_STATUS_REQUEST, IMPORT_STOCK_STATUS_RESET, IMPORT_STOCK_STATUS_SUCCESS, IMPORT_STOCK_UPDATE_FAIL, IMPORT_STOCK_UPDATE_REQUEST, IMPORT_STOCK_UPDATE_RESET, IMPORT_STOCK_UPDATE_SUCCESS } from './../Constants/ImportStockConstant';
 import axios from 'axios';
 import { logout } from "./UserActions";
 
@@ -21,6 +21,9 @@ export const listImportStock = ( keyword = " ", pageNumber = " ", from=' ', to =
           dispatch(logout());
       }
       dispatch({type: IMPORT_STOCK_LIST_FAIL, payload: message});
+      setTimeout(() => {
+        dispatch({ type: IMPORT_STOCK_LIST_RESET });
+      }, 3000);
   }
 }
 
@@ -52,6 +55,9 @@ export const singleImportStock = (id) => async (dispatch, getState) => {
       type: IMPORT_STOCK_DETAILS_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: IMPORT_STOCK_DETAILS_RESET });
+    }, 3000);
   }
 };
 
@@ -84,10 +90,13 @@ export const createImportStock = ({ provider, user, importItems, totalPrice, imp
       if (message === "Not authorized, token failed") {
         dispatch(logout());
       }
-        dispatch({
-          type: IMPORT_STOCK_CREATE_FAIL,
-          payload: message,
-        });
+      dispatch({
+        type: IMPORT_STOCK_CREATE_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: IMPORT_STOCK_CREATE_RESET });
+      }, 3000);
     }
   };
 
@@ -112,10 +121,13 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
     if (message === "Not authorized, token failed") {
       dispatch(logout());
     }
-      dispatch({
-        type: IMPORT_STOCK_STATUS_FAIL,
-        payload: message,
-      });
+    dispatch({
+      type: IMPORT_STOCK_STATUS_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: IMPORT_STOCK_STATUS_RESET });
+    }, 3000);
   }
 };
 
@@ -142,10 +154,13 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
       if (message === "Not authorized, token failed") {
         dispatch(logout());
       }
-        dispatch({
-          type: IMPORT_STOCK_UPDATE_FAIL,
-          payload: message,
-        });
+      dispatch({
+        type: IMPORT_STOCK_UPDATE_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: IMPORT_STOCK_UPDATE_RESET });
+      }, 3000);
     }
   };
 

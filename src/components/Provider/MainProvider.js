@@ -48,6 +48,10 @@ const MainProvider = (props) => {
     setShow(true)
   }
 
+  const handlePaginate = (keywordProp, currentPageProp, sortProp) =>{
+    dispatch(listProvider(keywordProp, currentPageProp, sortProp))
+  }
+
   useEffect(()=>{
     if(successDelete){
       toast.success("Deleted successfully", ToastObjects);
@@ -142,7 +146,8 @@ const MainProvider = (props) => {
             totalPage={totalPage} 
             currentPage={currentPage} 
             keyword={keyword ? keyword : ""}
-            sort=""
+            sort= ""
+            handlePage={handlePaginate}
           />
         </div>
       </div>
