@@ -6,7 +6,7 @@ import { IMPORT_STOCK_CREATE_RESET } from '../../Redux/Constants/ImportStockCons
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
 import { listProduct } from './../../Redux/Actions/ProductActions';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Toast from './../LoadingError/Toast';
 import  moment  from 'moment';
 import renderToast from "../../util/Toast";
@@ -18,7 +18,7 @@ const ToastObjects = {
   };
 const AddImportStock = () => {  
     const dispatch = useDispatch();
-
+    const history = useHistory();
     const createImportStockStatus = useSelector((state)=> state.importStockCreate)
     const { success } = createImportStockStatus
 
@@ -150,7 +150,13 @@ const AddImportStock = () => {
         <section className="content-main" >
             <form onSubmit={handleSubmit}>
                 <div className="content-header">
-                    <h2 className="content-title">Import stock</h2>
+                    <div className="content-title d-flex" onClick={e=>{
+                        e.preventDefault()
+                        history.push("/import-stock")
+                    }}>
+                        <h4 className="arrow-breadcrum"><i className="fas fa-arrow-left"></i></h4>
+                        <h3>Add import stock</h3>
+                    </div>
                     <div>
                     <button type="submit" className="btn btn-primary">
                         Publish now

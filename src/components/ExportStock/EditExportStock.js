@@ -3,7 +3,7 @@ import { singleExportStock, updateExportStock } from '../../Redux/Actions/Export
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import { listUser } from "../../Redux/Actions/UserActions";
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import { EXPORT_STOCK_DETAILS_RESET, EXPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ExportStockConstant";
 import  moment  from 'moment';
@@ -18,6 +18,7 @@ const ToastObjects = {
 const EditImportStock = (props) => {   
     const { exportId } = props
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const exportDetail = useSelector((state)=> state.exportStockDetail)
     const { exportStockItem  } = exportDetail
@@ -114,7 +115,6 @@ const EditImportStock = (props) => {
         itemProducts.forEach((item, index)=>{
             if((item.product._id || item.product) === field.product){
                 let a =  (item.product.qty || item.qty) + parseInt(field.qty) 
-                console.log(a)
                 if(parseInt(a) > parseInt(field.countInStock)){
                     flag = true
                     toast.error(`Quantity is greater than quantity of ${field.name} in stock`, ToastObjects);
@@ -186,7 +186,13 @@ const EditImportStock = (props) => {
         <section className= {`content-main ${exportStockItem?.status ? 'disabled': ''}`}>
             <form onSubmit={handleSubmit}>
                 <div className="content-header">
-                    <h4 className="content-title">Export code: <span className="text-danger">{exportStockItem?.exportCode}</span></h4>
+                    <div className="content-title d-flex" onClick={e=>{
+                        e.preventDefault()
+                        history.push("/export-stock")
+                    }}>
+                        <h4 className="arrow-breadcrum"><i className="fas fa-arrow-left"></i></h4>
+                        <h3 className="content-title">Export code: <span className="text-danger">{exportStockItem?.exportCode}</span></h3>
+                    </div>
                     <div>
                         {exportStockItem?.status ? 
                             <h4><span className="badge bg-danger text-white">This export is complete, you cannot edit</span></h4>:

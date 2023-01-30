@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CATEGORY_LIST_REQUEST, CATEGORY_LIST_SUCCESS, CATEGORY_LIST_FAIL, CATEGORY_CREATE_SUCCESS, CATEGORY_CREATE_FAIL, CATEGORY_CREATE_REQUEST, CATEGORY_UPDATE_REQUEST, CATEGORY_UPDATE_SUCCESS, CATEGORY_UPDATE_FAIL, CATEGORY_DELETE_REQUEST, CATEGORY_DELETE_SUCCESS, CATEGORY_DELETE_FAIL } from './../Constants/CategoryConstants';
+import { CATEGORY_LIST_REQUEST, CATEGORY_LIST_SUCCESS, CATEGORY_LIST_FAIL, CATEGORY_CREATE_SUCCESS, CATEGORY_CREATE_FAIL, CATEGORY_CREATE_REQUEST, CATEGORY_UPDATE_REQUEST, CATEGORY_UPDATE_SUCCESS, CATEGORY_UPDATE_FAIL, CATEGORY_DELETE_REQUEST, CATEGORY_DELETE_SUCCESS, CATEGORY_DELETE_FAIL, CATEGORY_LIST_RESET, CATEGORY_CREATE_RESET, CATEGORY_UPDATE_RESET, CATEGORY_DELETE_RESET } from './../Constants/CategoryConstants';
 import { logout } from "./UserActions";
 export const listCategory = () => async(dispatch, getState) =>{
     try {
@@ -20,6 +20,9 @@ export const listCategory = () => async(dispatch, getState) =>{
             dispatch(logout());
         }
         dispatch({type: CATEGORY_LIST_FAIL, payload: message});
+        setTimeout(() => {
+          dispatch({ type: CATEGORY_LIST_RESET });
+        }, 3000);
     }
 }
 
@@ -52,10 +55,13 @@ export const createCategory = ({ name, description, image }) => async (dispatch,
       if (message === "Not authorized, token failed") {
         dispatch(logout());
       }
-        dispatch({
-          type: CATEGORY_CREATE_FAIL,
-          payload: message,
-        });
+      dispatch({
+        type: CATEGORY_CREATE_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: CATEGORY_CREATE_RESET });
+      }, 3000);
     }
   };
 
@@ -89,6 +95,9 @@ export const updateCategory = ({name, description, image, isActive, categoryId})
       type: CATEGORY_UPDATE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: CATEGORY_UPDATE_RESET });
+    }, 3000);
   }
 }
 
@@ -121,5 +130,8 @@ export const deleteCategory = (id) => async(dispatch, getState) => {
       type: CATEGORY_DELETE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: CATEGORY_DELETE_RESET });
+    }, 3000);
   }
 };

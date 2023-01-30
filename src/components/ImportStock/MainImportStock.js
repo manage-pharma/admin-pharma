@@ -76,6 +76,11 @@ const MainImportStock = (props) => {
     }
     setToggleSearch(!toggleSearch)
   }
+
+  const handlePaginate = (keywordProp, currentPageProp, sortProp) =>{
+    dispatch(listImportStock(keywordProp, currentPageProp, sortProp))
+  }
+
   const updateStatus = useSelector(state => state.importStockStatus)
   const {loading: loadingStatus, error: errorStatus, success} = updateStatus
   useEffect(()=>{
@@ -186,6 +191,7 @@ const MainImportStock = (props) => {
             currentPage={currentPage} 
             keyword={keyword ? keyword : ""}
             sort=""
+            handlePage={handlePaginate}
           />
         </div>
       </div>

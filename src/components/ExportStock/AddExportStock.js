@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { EXPORT_STOCK_CREATE_RESET } from '../../Redux/Constants/ExportStockConstant';
 import { listUser } from "../../Redux/Actions/UserActions";
 import { listProduct } from './../../Redux/Actions/ProductActions';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import  moment  from 'moment';
 import renderToast from "../../util/Toast";
@@ -17,7 +17,7 @@ const ToastObjects = {
   };
 const AddExportStock = () => {  
     const dispatch = useDispatch();
-
+    const history = useHistory();
     const createExportStockStatus = useSelector((state)=> state.exportStockCreate)
     const { success } = createExportStockStatus 
 
@@ -172,11 +172,17 @@ const AddExportStock = () => {
         <section className="content-main" >
             <form onSubmit={handleSubmit}>
                 <div className="content-header">
-                    <h2 className="content-title">Export stock</h2>
+                    <div className="content-title d-flex" onClick={e=>{
+                        e.preventDefault()
+                        history.push("/export-stock")
+                    }}>
+                        <h4 className="arrow-breadcrum"><i className="fas fa-arrow-left"></i></h4>
+                        <h3>Add export stock</h3>
+                    </div>
                     <div>
-                    <button type="submit" className="btn btn-primary">
-                        Publish now
-                    </button>
+                        <button type="submit" className="btn btn-primary">
+                            Publish now
+                        </button>
                     </div>
                 </div>
                 <div className="mb-4">

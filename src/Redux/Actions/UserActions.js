@@ -1,6 +1,7 @@
 import {
   USER_CREATE_FAIL,
   USER_CREATE_REQUEST,
+  USER_CREATE_RESET,
   USER_CREATE_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_REQUEST,
@@ -8,6 +9,7 @@ import {
   USER_LIST_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
+  USER_LOGIN_RESET,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
   USER_SINGLE_FAIL,
@@ -16,6 +18,8 @@ import {
   USER_UPDATE_FAIL,
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
+  USER_UPDATE_RESET,
+  USER_SINGLE_RESET,
 } from "../Constants/UserConstants";
 import axios from "axios";
 import { PRODUCT_LIST_RESET } from "../Constants/ProductConstants";
@@ -65,6 +69,9 @@ export const login = (email, password) => async (dispatch) => {
       type: USER_LOGIN_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: USER_LOGIN_RESET });
+    }, 3000);
   }
 };
 
@@ -97,10 +104,13 @@ export const createUser = ({ name, email, phone, password }) => async (dispatch,
     if (message === "Not authorized, token failed") {
       dispatch(logout());
     }
-      dispatch({
-        type: USER_CREATE_FAIL,
-        payload: message,
-      });
+    dispatch({
+      type: USER_CREATE_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: USER_CREATE_RESET });
+    }, 3000);
   }
 };
 
@@ -142,6 +152,9 @@ export const listUser = () => async (dispatch, getState) => {
       type: USER_LIST_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: USER_LIST_RESET });
+    }, 3000);
   }
 };
 
@@ -149,7 +162,6 @@ export const listUser = () => async (dispatch, getState) => {
 //ADMIN UPDATE PROVIDER
 export const updateUser = ({name, email, phone, password ,userID}) => async(dispatch, getState)=>{
   try {
-    console.log(name, email, phone, password ,userID)
     dispatch({type: USER_UPDATE_REQUEST});
     const {
       userLogin: { userInfo },
@@ -177,6 +189,9 @@ export const updateUser = ({name, email, phone, password ,userID}) => async(disp
       type: USER_UPDATE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: USER_UPDATE_RESET });
+    }, 3000);
   }
 }
 
@@ -208,5 +223,8 @@ export const singleUser = (id) => async (dispatch, getState) => {
       type: USER_SINGLE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: USER_SINGLE_RESET });
+    }, 3000);
   }
 };

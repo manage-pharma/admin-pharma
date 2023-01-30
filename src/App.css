@@ -242,7 +242,7 @@ body.offcanvas-active {
   margin-bottom: 30px;
 }
 .content-header .content-title {
-  margin-bottom: 0;
+  font-weight: 600;
 }
 
 .inner {
@@ -1056,5 +1056,12 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 
-
-
+.arrow-breadcrum{
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+.arrow-breadcrum:hover{
+  color: #4fa607;
+}

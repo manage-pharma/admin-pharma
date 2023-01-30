@@ -1,30 +1,39 @@
 import {
   PRODUCT_ALL_FAIL,
   PRODUCT_ALL_REQUEST,
+  PRODUCT_ALL_RESET,
   PRODUCT_ALL_SUCCESS,
   PRODUCT_CATEGORY_DRUG_FAIL,
   PRODUCT_CATEGORY_DRUG_REQUEST,
+  PRODUCT_CATEGORY_DRUG_RESET,
   PRODUCT_CATEGORY_DRUG_SUCCESS,
   PRODUCT_CATEGORY_FAIL,
   PRODUCT_CATEGORY_REQUEST,
+  PRODUCT_CATEGORY_RESET,
   PRODUCT_CATEGORY_SUCCESS,
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQUEST,
+  PRODUCT_CREATE_RESET,
   PRODUCT_CREATE_SUCCESS,
   PRODUCT_DELETE_FAIL,
   PRODUCT_DELETE_REQUEST,
+  PRODUCT_DELETE_RESET,
   PRODUCT_DELETE_SUCCESS,
   PRODUCT_IMPORT_FAIL,
   PRODUCT_IMPORT_REQUEST,
+  PRODUCT_IMPORT_RESET,
   PRODUCT_IMPORT_SUCCESS,
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQUEST,
+  PRODUCT_LIST_RESET,
   PRODUCT_LIST_SUCCESS,
   PRODUCT_SINGLE_FAIL,
   PRODUCT_SINGLE_REQUEST,
+  PRODUCT_SINGLE_RESET,
   PRODUCT_SINGLE_SUCCESS,
   PRODUCT_UPDATE_FAIL,
   PRODUCT_UPDATE_REQUEST,
+  PRODUCT_UPDATE_RESET,
   PRODUCT_UPDATE_SUCCESS,
 } from '../Constants/ProductConstants';
 import { logout } from './UserActions';
@@ -60,6 +69,9 @@ export const listProduct = ( keyword = " ", pageNumber = " ", sort= " ") => asyn
       type: PRODUCT_LIST_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_LIST_RESET });
+    }, 3000);
   }
 };
 
@@ -92,6 +104,9 @@ export const allProduct = () => async (dispatch, getState) => {
       type: PRODUCT_ALL_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_ALL_RESET });
+    }, 3000);
   }
 };
 
@@ -125,6 +140,9 @@ export const deleteProduct = (id) => async(dispatch, getState) => {
       type: PRODUCT_DELETE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_DELETE_RESET });
+    }, 3000);
   }
 };
 
@@ -157,10 +175,13 @@ export const createProduct = ({ name, category, categoryDrug, price, description
     if (message === "Not authorized, token failed") {
       dispatch(logout());
     }
-      dispatch({
-        type: PRODUCT_CREATE_FAIL,
-        payload: message,
-      });
+    dispatch({
+      type: PRODUCT_CREATE_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_CREATE_RESET });
+    }, 3000);
   }
 };
 //ADMIN PRODUCT CATEGORY
@@ -191,6 +212,9 @@ export const categoriesProduct = (id) => async (dispatch, getState) => {
       type: PRODUCT_CATEGORY_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_CATEGORY_RESET });
+    }, 3000);
   }
 };
 
@@ -222,6 +246,9 @@ export const categoriesDrugProduct = (id) => async (dispatch, getState) => {
       type: PRODUCT_CATEGORY_DRUG_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_CATEGORY_DRUG_RESET });
+    }, 3000);
   }
 };
 
@@ -255,6 +282,9 @@ export const singleProduct = (id) => async (dispatch, getState) => {
       type: PRODUCT_SINGLE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_SINGLE_RESET });
+    }, 3000);
   }
 };
 
@@ -294,6 +324,9 @@ export const updateProduct = ({  name, category, categoryDrug, price, descriptio
       type: PRODUCT_UPDATE_FAIL,
       payload: message,
     });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_UPDATE_RESET });
+    }, 3000);
   }
 };
 
@@ -321,9 +354,12 @@ export const importProduct = (dataImport) => async (dispatch, getState) => {
     if (message === "Not authorized, token failed") {
       dispatch(logout());
     }
-      dispatch({
-        type: PRODUCT_IMPORT_FAIL,
-        payload: message,
-      });
+    dispatch({
+      type: PRODUCT_IMPORT_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: PRODUCT_IMPORT_RESET });
+    }, 3000);
   }
 };
