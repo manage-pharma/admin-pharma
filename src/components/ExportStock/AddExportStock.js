@@ -107,7 +107,7 @@ const AddExportStock = () => {
         else{   
             exportItems.forEach((item, index)=>{
                 if(item.product === field.product){
-                    let a = item.qty += parseInt(field.qty)
+                    let a = item.qty + parseInt(field.qty)
                     if( parseInt(a) > parseInt(field.countInStock)){
                         flag = true
                         toast.error(`Quantity is greater than quantity of ${field.name} (${field.countInStock}) in stock`, ToastObjects);
