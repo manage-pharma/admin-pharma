@@ -97,7 +97,7 @@ const EditImportStock = (props) => {
         e.preventDefault();
         let flag = false;
         if(parseInt(field.qty) > parseInt(field.countInStock)){
-            toast.error(`Quantity is greater than quantity of ${field.name} in stock`, ToastObjects);
+            toast.error(`Quantity is greater than quantity of ${field.name} (${field.countInStock}) in stock`, ToastObjects);
             return;
         }   
         if(!field.product){
@@ -117,7 +117,7 @@ const EditImportStock = (props) => {
                 let a =  (item.product.qty || item.qty) + parseInt(field.qty) 
                 if(parseInt(a) > parseInt(field.countInStock)){
                     flag = true
-                    toast.error(`Quantity is greater than quantity of ${field.name} in stock`, ToastObjects);
+                    toast.error(`Quantity is greater than quantity of ${field.name} (${field.countInStock}) in stock`, ToastObjects);
                     return;
                 }else{
                     flag = true

@@ -23,3 +23,4 @@ To run this project in your local machine:
 3. Pagination product
 
 ```
+"proxy": "https://server-pharma.vercel.app/",

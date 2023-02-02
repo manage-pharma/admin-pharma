@@ -154,6 +154,7 @@ const EditProductMain = (props) => {
                           onChange={handleChange}
                           className="form-control"
                           required >
+                            <option value=''>Chosse Category</option>
                             {categories?.map((item, index)=>(
                               <option key={index} value={item._id}>{item.name}</option>
                             ))}
@@ -169,6 +170,7 @@ const EditProductMain = (props) => {
                             onChange={handleChange}
                             className="form-control"
                             required >
+                              <option value=''>Chosse Category Drug</option>
                               {categoriesDrug?.map((item, index)=>(
                                 <option key={index} value={item._id}>{item.name}</option>
                               ))}
