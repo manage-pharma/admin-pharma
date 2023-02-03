@@ -96,7 +96,7 @@ const MainExportStock = (props) => {
     { loading || loadingStatus ? (<Loading/>) : error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
-        <h3 className="content-title">Export Stock from Provider</h3>
+        <h3 className="content-title">Export Stock List</h3>
           <div>
             <button onClick={handleAdd} className="btn btn-primary">
               Create new

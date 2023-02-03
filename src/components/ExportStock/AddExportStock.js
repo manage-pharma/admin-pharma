@@ -13,7 +13,7 @@ const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
     pauseOnHover: false,
-    autoClose: 2000,
+    autoClose: 5000,
   };
 const AddExportStock = () => {  
     const dispatch = useDispatch();
