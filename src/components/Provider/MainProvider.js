@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
-import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
 import { listProvider } from './../../Redux/Actions/ProviderAction';
 import Provider from "./Provider";
@@ -24,7 +23,7 @@ const MainProvider = (props) => {
   const [keyword, setSearch] = useState()
   
   const providerList = useSelector((state)=> state.providerList)
-  const { loading, error, providers, currentPage, totalPage } = providerList
+  const { loading, error, providers} = providerList
 
   const providerDeleted = useSelector(state => state.providerDelete)
   const { loading: loadingDelete, error: errorDelete, success: successDelete} = providerDeleted
@@ -46,10 +45,6 @@ const MainProvider = (props) => {
 
   const handleAdd = (e) =>{
     setShow(true)
-  }
-
-  const handlePaginate = (keywordProp, currentPageProp, sortProp) =>{
-    dispatch(listProvider(keywordProp, currentPageProp, sortProp))
   }
 
   useEffect(()=>{
@@ -105,52 +100,18 @@ const MainProvider = (props) => {
             </div>
           </div>
         </header>
-
-        <div className="card-body">
-          <div className="row">
-              <div className="card card-custom mb-4 shadow-sm">
-                <header className="card-header bg-white ">
-                  <div className="row gx-3 py-3">
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">STT</th>
-                          <th scope="col">Name</th>
-                          <th scope='col'>Contact person</th>
-                          <th scope="col">Tax code</th>
-                          <th scope="col">Phone</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Address</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                        <tbody>
-                            {providers ? providers.map((provider, index)=>(
-                            <Provider 
-                              provider={provider} 
-                              key={index} 
-                              indexSTT={index} 
-                              show={show} 
-                              setShow={setShow}
-                              />)) : 
-                            <div>There are no record</div>
-                        }
-                        </tbody>
-                      </table>
-                  </div>
-                </header>
-              </div>
-          </div>
-
-          <Pagination 
-            totalPage={totalPage} 
-            currentPage={currentPage} 
-            keyword={keyword ? keyword : ""}
-            sort= ""
-            handlePage={handlePaginate}
-          />
+        <div>
+          {
+            providers ?
+            <Provider 
+              provider={providers} 
+              show={show} 
+              setShow={setShow}
+              /> : 
+            <div>There are no record</div>
+          }
         </div>
-      </div>
+        </div>
     </section>
     </>
   );

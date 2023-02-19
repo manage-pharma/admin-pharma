@@ -8,7 +8,7 @@ export const exportStockListReducer = (state = {stockExported:[]}, action) => {
       return { loading: false,
         totalPage: action.payload.totalPage,
         currentPage: action.payload.currentPage,
-        stockExported: action.payload.stockExported}
+        stockExported: action.payload}
     case EXPORT_STOCK_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:

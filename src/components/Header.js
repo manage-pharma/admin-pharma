@@ -30,8 +30,8 @@ const Header = () => {
               <p className="m-0 badge bg-primary text-wrap" style={{width: '4rem', fontSize: '16px'}}>User</p>
             )
           }</div>
-          <div className="fw-bold">Email: <span class="fw-normal">{userInfo.email}</span></div>
-          <div className="fw-bold">Phone number: <span class="fw-normal">{userInfo.phone}</span></div>
+          <div className="fw-bold">Email: <span className="fw-normal">{userInfo.email}</span></div>
+          <div className="fw-bold">Phone number: <span className="fw-normal">{userInfo.phone}</span></div>
         </Modal.Body>
       </Modal>
     );
@@ -41,9 +41,9 @@ const Header = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [modalShow, setModalShow] = useState(false);
-
   useEffect(() => {
     document.querySelector("button[data-trigger]").addEventListener("click",function (e) {
+      document.querySelector("body").classList.remove("aside-mini");
       e.preventDefault();
       e.stopPropagation();
       var offcanvas_id = this.getAttribute("data-trigger");
@@ -52,6 +52,10 @@ const Header = () => {
 
     document.querySelector(".btn-aside-minimize").addEventListener("click", function(){
       document.querySelector("body").classList.toggle("aside-mini");
+      
+      var a = document.querySelector("button[data-trigger]")
+      var offcanvas_id = a.getAttribute("data-trigger");
+      document.querySelector(offcanvas_id).classList.remove("show");
     })
   }, []);
 

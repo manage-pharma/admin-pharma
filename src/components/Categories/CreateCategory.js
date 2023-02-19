@@ -14,7 +14,7 @@ const CreateCategory = (props) => {
   const { loading, error, category } = categoryCreate;
 
   const categoryUpdate = useSelector(state => state.categoryUpdate);
-  const { loading: loadingUpdateDrug, error: errorUpdateDrug ,success: successUpdateDrug, categoryDrug: categoryU } = categoryUpdate;
+  const { loading: loadingUpdateDrug, error: errorUpdateDrug , success: successUpdate, category: categoryU } = categoryUpdate;
   
   const handleChange = e => {
     setData(prev => {
@@ -81,10 +81,10 @@ const CreateCategory = (props) => {
     if(category){
       props.parentCallbackCreate(category)
     }
-    if(successUpdateDrug){
+    if(successUpdate){
       props.parentCallbackUpdate(categoryU)
     }
-  },[category, successUpdateDrug, categoryU, valueEdit, props])
+  },[category, successUpdate, categoryU, valueEdit, props])
 
   const { name, description, image, isActive } = data;
   return (

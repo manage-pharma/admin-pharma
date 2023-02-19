@@ -178,6 +178,7 @@ body.offcanvas-active {
   bottom: 0;
   width: 100%;
   overflow-y: auto;
+  background-color: #fff;
   box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.075);
   z-index: 10;
   border-right: 1px solid rgba(108, 117, 125, 0.25);
@@ -259,6 +260,9 @@ body.aside-mini .navbar-aside {
   min-height: 100%;
   bottom: auto;
   transition: 0.3s ease-in;
+}
+@media (max-width: 768px) {
+
 }
 body.aside-mini .navbar-aside .aside-top {
   text-align: center;
@@ -1002,7 +1006,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.bg-light{
+/* .bg-light{
   background-color: #F8FAFC !important;
 }
 .bg-light .border-product{
@@ -1011,7 +1015,7 @@ input:checked + .slider:before {
 .bg-dark{
   background-color: #282C34 !important;
   color: #f3ebf6;
-}
+} */
 
 .card-custom{
   background-color: unset !important;

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
-import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
 import ExportStock from "./ExportStock";
 import { listExportStock } from "../../Redux/Actions/ExportStockAction";
@@ -30,7 +29,7 @@ const MainExportStock = (props) => {
   const {from,to} = data
 
   const exportedStockList = useSelector((state)=> state.exportStockList)
-  const { loading, error, stockExported, currentPage, totalPage } = exportedStockList
+  const { loading, error, stockExported} = exportedStockList
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
       dispatch(listExportStock(keyword, pageNumber, from, to))
@@ -75,10 +74,6 @@ const MainExportStock = (props) => {
       dispatch(listExportStock(keyword, pageNumber)) 
     }
     setToggleSearch(!toggleSearch)
-  }
-
-  const handlePaginate = (keywordProp, currentPageProp, sortProp) =>{
-    dispatch(listExportStock(keywordProp, currentPageProp, sortProp))
   }
 
   const updateStatus = useSelector(state => state.exportStockStatus)
@@ -152,49 +147,13 @@ const MainExportStock = (props) => {
           </div>
         </header>
 
-        <div className="card-body">
-          <div className="row">
-              <div className="card card-custom mb-4 shadow-sm">
-                <header className="card-header bg-white ">
-                  <div className="row gx-3 py-3">
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">STT</th>
-                          <th scope="col">Export Code</th>
-                          <th scope="col">Customer</th>
-                          <th scope='col'>Phone</th>
-                          <th scope='col'>Address</th>
-                          <th scope="col">Created by</th>
-                          <th scope="col">Exported at</th>
-                          <th scope="col">Total price</th>
-                          <th scope="col">Status</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                        <tbody>
-                            {stockExported ? stockExported.map((listExport, index)=>(
-                            <ExportStock 
-                              exportStock={listExport} 
-                              indexSTT={index} 
-                              key={index}
-                              />)) : 
-                            <div>There are no record</div>
-                        }
-                        </tbody>
-                      </table>
-                  </div>
-                </header>
-              </div>
-          </div>
-
-          <Pagination 
-            totalPage={totalPage} 
-            currentPage={currentPage} 
-            keyword={keyword ? keyword : ""}
-            sort=""
-            handlePage={handlePaginate}
-          />
+        <div>
+        { stockExported ? 
+          <ExportStock 
+            exportStock={stockExported} 
+          /> : 
+          <div>There are no record</div>
+        }
         </div>
       </div>
     </section>

@@ -8,7 +8,7 @@ export const importStockListReducer = (state = {stockImported:[]}, action) => {
       return { loading: false,
         totalPage: action.payload.totalPage,
         currentPage: action.payload.currentPage,
-        stockImported: action.payload.stockImported}
+        stockImported: action.payload}
     case IMPORT_STOCK_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:

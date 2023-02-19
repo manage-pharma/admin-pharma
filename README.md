@@ -24,3 +24,4 @@ To run this project in your local machine:
 
 ```
 "proxy": "https://server-pharma.vercel.app/",
+https://jbetancur.github.io/react-data-table-component/?path=/story/custom-styles-compact-grid--compact-grid
