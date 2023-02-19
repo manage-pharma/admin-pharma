@@ -100,7 +100,7 @@ const CreateCategoryDrug = (props) => {
         </div>
         <div className="mb-4">
           <label className="form-label">Active</label>
-          <label className="switch" for="checkbox">
+          <label className="switch" htmlFor="checkbox">
             <input 
               type="checkbox" 
               id="checkbox"
@@ -112,7 +112,7 @@ const CreateCategoryDrug = (props) => {
                 }
               })}
               />
-            <div class="slider round"></div>
+            <div className="slider round"></div>
           </label>
         </div>
         <div className="d-grid">

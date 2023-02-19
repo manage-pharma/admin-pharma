@@ -9,7 +9,7 @@ export const ProviderListReducer = (state = { providers: [] }, action) => {
         return { loading: false,
           totalPage: action.payload.totalPage,
           currentPage: action.payload.currentPage,
-          providers: action.payload.providers}
+          providers: action.payload}
       case PROVIDER_LIST_FAIL:
         return { loading: false, error: action.payload };
       case PROVIDER_LIST_RESET:

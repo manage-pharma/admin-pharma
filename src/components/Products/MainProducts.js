@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
-import Product  from '../Products/Product'
 import { listProduct } from "../../Redux/Actions/ProductActions";
-import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
 import Toast from './../LoadingError/Toast';
 import { toast } from "react-toastify";
+
+import DataTableProduct from "./DataTable";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -21,8 +21,9 @@ const MainProducts = (props) => {
   const history = useHistory()
   const [keyword, setSearch] = useState()
   const [sort, setSort] = useState()
+  const [dessert, setDessert] = useState(false)
   const productList = useSelector((state)=> state.productList)
-  const { loading, error, products, currentPage, totalPage } = productList
+  const { loading, error, products } = productList
 
   const productDelete = useSelector(state => state.productDelete)
   const { loading: loadingDelete, error: errorDelete, success: successDelete} = productDelete
@@ -48,9 +49,6 @@ const MainProducts = (props) => {
     debounceDropDown(e.target.value, pageNumber, sort);
   }
 
-  const handlePaginate = (keywordProp, currentPageProp, sortProp) =>{
-    dispatch(listProduct(keywordProp, currentPageProp, sortProp))
-  }
   useEffect(()=>{
     if(successDelete){
       toast.success("Deleted successfully", ToastObjects);
@@ -68,6 +66,14 @@ const MainProducts = (props) => {
       <div className="content-header">
         <h2 className="content-title">PRODUCT LIST</h2>
         <div className="d-flex">
+        <div style={{marginRight: '10px'}}>
+            <Link to="#" className="btn btn-primary" onClick={(e)=>{
+              e.preventDefault()
+              setDessert(prev => !prev)
+            }}>
+              Desserts EXP
+            </Link>
+          </div>
           <div style={{marginRight: '10px'}}>
             <Link to="/product/excel" className="btn btn-primary">
               Excel & CSV 
@@ -111,46 +117,19 @@ const MainProducts = (props) => {
           </div>
         </header>
 
-        <div className="card-body">
-          <div className="row">
-              <div className="card card-custom mb-4 shadow-sm">
-                <header className="card-header bg-white ">
-                  <div className="row gx-3 py-3">
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">Id</th>
-                          <th scope="col">Name</th>
-                          <th scope='col'>Image</th>
-                          <th scope="col">Category</th>
-                          <th scope="col">Category Drug</th>
-                          {/* <th scope="col">Unit</th>
-                          <th scope="col">Capacity</th>
-                          <th scope="col">Exp</th> */}
-                          <th scope="col">Rest Exp</th>
-                          <th scope="col">Price</th>
-                          <th scope="col">Stock</th>
-                          <th scope="col">Status</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                        <tbody>
-                            {products && products.map((product, index)=>(
-                          <Product product={product} key={index} indexSTT={index}/>))}
-                        </tbody>
-                      </table>
-                  </div>
-                </header>
-              </div>
-          </div>
-          <Pagination 
+        <div>
+          <DataTableProduct 
+            products={products}
+            dessert={dessert}
+          />
+        </div>
+          {/* <Pagination 
             totalPage={totalPage} 
             currentPage={currentPage} 
             keyword={keyword ? keyword : ""}
             sort= {sort ? sort : ""}
             handlePage={handlePaginate}
-          />
-        </div>
+          /> */}
       </div>
     </section>
     </>

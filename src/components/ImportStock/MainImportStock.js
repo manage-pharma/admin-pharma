@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
-import Pagination from "../LoadingError/Pagination";
 import debounce from "lodash.debounce";
 import ImportStock from "./ImportStock";
 import { listImportStock } from "../../Redux/Actions/ImportStockAction";
@@ -30,7 +29,7 @@ const MainImportStock = (props) => {
   const {from,to} = data
 
   const importedStockList = useSelector((state)=> state.importStockList)
-  const { loading, error, stockImported, currentPage, totalPage } = importedStockList
+  const { loading, error, stockImported } = importedStockList
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
       dispatch(listImportStock(keyword, pageNumber, from, to))
@@ -75,10 +74,6 @@ const MainImportStock = (props) => {
       dispatch(listImportStock(keyword, pageNumber)) 
     }
     setToggleSearch(!toggleSearch)
-  }
-
-  const handlePaginate = (keywordProp, currentPageProp, sortProp) =>{
-    dispatch(listImportStock(keywordProp, currentPageProp, sortProp))
   }
 
   const updateStatus = useSelector(state => state.importStockStatus)
@@ -152,47 +147,13 @@ const MainImportStock = (props) => {
           </div>
         </header>
 
-        <div className="card-body">
-          <div className="row">
-              <div className="card card-custom mb-4 shadow-sm">
-                <header className="card-header bg-white ">
-                  <div className="row gx-3 py-3">
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">STT</th>
-                          <th scope="col">Import Code</th>
-                          <th scope='col'>Provider</th>
-                          <th scope="col">Created by</th>
-                          <th scope="col">Imported at</th>
-                          <th scope="col">Total price</th>
-                          <th scope="col">Status</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                        <tbody>
-                            {stockImported ? stockImported.map((listImport, index)=>(
-                            <ImportStock 
-                              importStock={listImport} 
-                              indexSTT={index} 
-                              key={index}
-                              />)) : 
-                            <div>There are no record</div>
-                        }
-                        </tbody>
-                      </table>
-                  </div>
-                </header>
-              </div>
-          </div>
-
-          <Pagination 
-            totalPage={totalPage} 
-            currentPage={currentPage} 
-            keyword={keyword ? keyword : ""}
-            sort=""
-            handlePage={handlePaginate}
-          />
+        <div>
+          {stockImported ?
+            (<ImportStock 
+              importStock={stockImported} 
+            />) : 
+            <div>There are no record</div>
+          }
         </div>
       </div>
     </section>
