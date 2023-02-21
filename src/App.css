@@ -240,10 +240,11 @@ body.offcanvas-active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 .content-header .content-title {
   font-weight: 600;
+  font-size: x-large;
 }
 
 .inner {
@@ -952,7 +953,7 @@ ul.row-sm {
 
 .form-divided-3{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 50px 1fr;
   grid-gap: 30px;
 }
 .switch {
@@ -1068,4 +1069,40 @@ input:checked + .slider:before {
 }
 .arrow-breadcrum:hover{
   color: #4fa607;
+}
+
+.circle-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: #007bff; /* Change color as desired */
+  color: #fff; /* Change color as desired */
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.list-group {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.form-line {
+  border-bottom: 1px solid #000;
+  padding-bottom: 16px;
+}
+
+.list-line {
+  margin-top: 16px;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-group-item .delete-btn {
+  margin-left: 8px;
 }

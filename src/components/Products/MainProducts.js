@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import { listProduct } from "../../Redux/Actions/ProductActions";
 import debounce from "lodash.debounce";
@@ -61,7 +60,7 @@ const MainProducts = (props) => {
   return (
     <>
     <Toast />
-    { loading || loadingDelete ? (<Loading/>) : error || errorDelete ? (<Message variant="alert-danger">{error || errorDelete}</Message>) : ''}
+    { error || errorDelete ? (<Message variant="alert-danger">{error || errorDelete}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">PRODUCT LIST</h2>
@@ -121,6 +120,8 @@ const MainProducts = (props) => {
           <DataTableProduct 
             products={products}
             dessert={dessert}
+            loading={loading}
+            loadingDelete={loadingDelete}
           />
         </div>
           {/* <Pagination 

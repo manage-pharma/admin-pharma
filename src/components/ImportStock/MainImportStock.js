@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import debounce from "lodash.debounce";
 import ImportStock from "./ImportStock";
@@ -27,9 +26,13 @@ const MainImportStock = (props) => {
     to: ''
   })
   const {from,to} = data
-
-  const importedStockList = useSelector((state)=> state.importStockList)
+  
+  const importedStockList = useSelector(state=> state.importStockList)
   const { loading, error, stockImported } = importedStockList
+
+  const updateStatus = useSelector(state => state.importStockStatus)
+  const {loading: loadingStatus, error: errorStatus, success} = updateStatus
+
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
       dispatch(listImportStock(keyword, pageNumber, from, to))
@@ -76,19 +79,19 @@ const MainImportStock = (props) => {
     setToggleSearch(!toggleSearch)
   }
 
-  const updateStatus = useSelector(state => state.importStockStatus)
-  const {loading: loadingStatus, error: errorStatus, success} = updateStatus
   useEffect(()=>{
     if(success){
       toast.success(`Update status successfully`, ToastObjects)
     }
-    dispatch(listImportStock(keyword, pageNumber)) // eslint-disable-next-line
+    else{
+      dispatch(listImportStock(keyword, pageNumber)) 
+    } // eslint-disable-next-line
   },[dispatch, pageNumber, success])
 
   return (
     <>
     <Toast/>
-    { loading || loadingStatus ? (<Loading/>) : error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
+    { error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">Import Stock List</h2>
@@ -149,9 +152,11 @@ const MainImportStock = (props) => {
 
         <div>
           {stockImported ?
-            (<ImportStock 
-              importStock={stockImported} 
-            />) : 
+            <ImportStock 
+              importStock={stockImported}
+              loading={loading}
+              loadingStatus={loadingStatus}
+            /> : 
             <div>There are no record</div>
           }
         </div>

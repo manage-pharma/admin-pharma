@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import debounce from "lodash.debounce";
 import ExportStock from "./ExportStock";
@@ -30,6 +29,9 @@ const MainExportStock = (props) => {
 
   const exportedStockList = useSelector((state)=> state.exportStockList)
   const { loading, error, stockExported} = exportedStockList
+
+  const updateStatus = useSelector(state => state.exportStockStatus)
+  const {loading: loadingStatus, error: errorStatus, success} = updateStatus
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
       dispatch(listExportStock(keyword, pageNumber, from, to))
@@ -76,8 +78,6 @@ const MainExportStock = (props) => {
     setToggleSearch(!toggleSearch)
   }
 
-  const updateStatus = useSelector(state => state.exportStockStatus)
-  const {loading: loadingStatus, error: errorStatus, success} = updateStatus
   useEffect(()=>{
     if(success){
       toast.success(`Update status successfully`, ToastObjects)
@@ -88,7 +88,7 @@ const MainExportStock = (props) => {
   return (
     <>
     <Toast/>
-    { loading || loadingStatus ? (<Loading/>) : error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
+    { error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h3 className="content-title">Export Stock List</h3>
@@ -151,6 +151,8 @@ const MainExportStock = (props) => {
         { stockExported ? 
           <ExportStock 
             exportStock={stockExported} 
+            loading={loading}
+            loadingStatus={loadingStatus}
           /> : 
           <div>There are no record</div>
         }

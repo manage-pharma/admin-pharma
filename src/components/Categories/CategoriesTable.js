@@ -1,9 +1,9 @@
 
 import React from "react";
-import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import { Link, useHistory } from "react-router-dom";
 import DataTable from "react-data-table-component";
+import CustomLoader from "../../util/LoadingTable";
 
 const CategoriesTable = (props) => {
   const {categoryList} = props
@@ -152,7 +152,7 @@ const CategoriesTable = (props) => {
   return (
     <div className="col-md-12 col-lg-8">
       {
-        loading ? (<Loading />) : error ? (<Message>{error}</Message>) : ''
+        error ? (<Message>{error}</Message>) : ''
       }
       {categories ?
         <DataTable
@@ -164,6 +164,8 @@ const CategoriesTable = (props) => {
           pagination
           onRowClicked={handleRowClicked}
           paginationComponentOptions={paginationComponentOptions}
+          progressPending={loading}
+          progressComponent={<CustomLoader />}
           highlightOnHover
           pointerOnHover
         /> : <div>There is no data</div>
@@ -181,7 +183,6 @@ export default CategoriesTable;
                       // table.rows[index+1].setAttribute("contentEditable", true)
                       // // var row = table.rows[index+1];
                       // for(var i = 0; i <= table.rows.length; i++ ){
-                      //   console.log(i)
                       //   if(i === index){
                       //     let td= table.rows[i+1].getElementsByTagName("td");
                       //     td[2].setAttribute("contentEditable", true)

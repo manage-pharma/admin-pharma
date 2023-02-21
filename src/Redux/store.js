@@ -10,6 +10,7 @@ import { themeReducer } from './Reducers/ThemeReducer';
 import { ProviderCreateReducer, ProviderDeleteReducer, ProviderListReducer, ProviderSingleReducer, ProviderUpdateReducer } from "./Reducers/ProviderReducer";
 import { importStockCreateReducer, importStockDetailReducer, importStockListReducer, importStockStatusReducer, importStockUpdateReducer } from "./Reducers/ImportStockReducer";
 import { exportStockDetailReducer, exportStockListReducer, exportStockCreateReducer, exportStockStatusReducer, exportStockUpdateReducer } from './Reducers/ExportStockReducer';
+import { UnitCreateReducer, UnitDeleteReducer, UnitListReducer } from './Reducers/UnitReducer';
 const reducer = combineReducers({
   theme: themeReducer,
 
@@ -55,11 +56,16 @@ const reducer = combineReducers({
   importStockStatus: importStockStatusReducer,
   importStockUpdate: importStockUpdateReducer,
 
+
   exportStockList: exportStockListReducer,
   exportStockDetail: exportStockDetailReducer,
   exportStockCreate: exportStockCreateReducer,
   exportStockStatus: exportStockStatusReducer,
   exportStockUpdate: exportStockUpdateReducer,
+
+  unitList: UnitListReducer,
+  unitCreate: UnitCreateReducer,
+  unitDelete: UnitDeleteReducer,
 });
 
 

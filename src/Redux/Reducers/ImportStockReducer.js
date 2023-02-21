@@ -3,7 +3,7 @@ import { IMPORT_STOCK_CREATE_FAIL, IMPORT_STOCK_CREATE_REQUEST, IMPORT_STOCK_CRE
 export const importStockListReducer = (state = {stockImported:[]}, action) => {
   switch (action.type) {
     case IMPORT_STOCK_LIST_REQUEST:
-      return { loading: true };
+      return { loading: true, stockImported: [] };
     case IMPORT_STOCK_LIST_SUCCESS:
       return { loading: false,
         totalPage: action.payload.totalPage,
