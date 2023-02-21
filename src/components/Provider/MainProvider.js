@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import debounce from "lodash.debounce";
 import { listProvider } from './../../Redux/Actions/ProviderAction';
@@ -59,7 +58,7 @@ const MainProvider = (props) => {
   return (
     <>
     <Toast />
-    { loading || loadingDelete? (<Loading/>) : error || errorDelete ? (<Message variant="alert-danger">{error ||  errorDelete}</Message>) : ''}
+    { error || errorDelete ? (<Message variant="alert-danger">{error ||  errorDelete}</Message>) : ''}
     <AddProvider show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
@@ -107,11 +106,13 @@ const MainProvider = (props) => {
               provider={providers} 
               show={show} 
               setShow={setShow}
+              loading={loading}
+              loadingDelete={loadingDelete}
               /> : 
             <div>There are no record</div>
           }
         </div>
-        </div>
+      </div>
     </section>
     </>
   );

@@ -6,9 +6,10 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from "react-redux";
 import { PROVIDER_DELETE_RESET } from "../../Redux/Constants/ProviderConstants";
 import { deleteProvider, listProvider, singleProvider } from "../../Redux/Actions/ProviderAction";
+import CustomLoader from './../../util/LoadingTable';
 
 const Provider = (props) =>{
-    const { provider, setShow } = props;
+    const { provider, setShow, loading, loadingDelete } = props;
     const dispatch = useDispatch()
     const [modalShow, setModalShow] = useState(false);
     const [dataModal, setDataModal] = useState();
@@ -201,6 +202,8 @@ const Provider = (props) =>{
             pagination
             // onRowClicked={handleRowClicked}
             paginationComponentOptions={paginationComponentOptions}
+            progressPending={loading||loadingDelete}
+			      progressComponent={<CustomLoader />}
             highlightOnHover
             pointerOnHover
         />

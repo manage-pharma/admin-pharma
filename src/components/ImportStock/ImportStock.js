@@ -7,9 +7,9 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from "react-redux";
 import { listImportStock, statusImportStock } from "../../Redux/Actions/ImportStockAction";
 import { IMPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ImportStockConstant";
-
+import CustomLoader from './../../util/LoadingTable';
 const ImportStock = (props) =>{
-    const {importStock} = props 
+    const {importStock, loading, loadingStatus} = props 
     const history = useHistory()
     const dispatch = useDispatch()
     const [modalShow, setModalShow] = useState(false);
@@ -227,6 +227,8 @@ const ImportStock = (props) =>{
             pagination
             // onRowClicked={handleRowClicked}
             paginationComponentOptions={paginationComponentOptions}
+            progressPending={loading||loadingStatus}
+			      progressComponent={<CustomLoader />}
             highlightOnHover
             pointerOnHover
         />

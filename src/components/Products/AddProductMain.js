@@ -10,6 +10,10 @@ import Message from "../LoadingError/Error";
 import axios from "axios";
 import { listCategory } from './../../Redux/Actions/CategoryAction';
 import { listCategoryDrug } from './../../Redux/Actions/CategoryDrugAction';
+import { listUnit } from './../../Redux/Actions/UnitAction';
+import MyVerticallyCenteredModal from "./ModalUnit";
+import { UNIT_CREATE_RESET, UNIT_DELETE_RESET } from "../../Redux/Constants/UnitConstants";
+
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -20,16 +24,26 @@ const AddProductMain = () => {
   const dispatch = useDispatch();
 
   const [file, setImg] = useState(null) ;
+  const [modalShow, setModalShow] = useState(false);
   const [data, setData] = useState({name: '', price: 0, description: '', image: '', countInStock: 0, unit: '', regisId: '', capacity: '', expDrug: Date.now, statusDrug: true})
   const productCreate = useSelector(state => state.productCreate);
   const { loading, product, error } = productCreate;
 
   const categoryList = useSelector((state)=> state.categoryList)
   const {categories} = categoryList
+
   const categoryDrugList = useSelector((state)=> state.categoryDrugList)
   const {categoriesDrug} = categoryDrugList
 
-  const UnitArr = ['Hộp', 'Vỉ', 'Viên', 'Chai', "Lọ"]
+  const unitList = useSelector(state => state.unitList)
+  const {error: errorUnit, units} = unitList
+
+  const unitCreated = useSelector(state => state.unitCreate)
+  const {loading: loadingUnitCreate, error: errorUnitCreate, success: successUnitCreate} = unitCreated
+
+  const unitDeleted = useSelector(state => state.unitDelete)
+  const {loading: loadingUnitDelete, error: errorUnitDelete, success: successUnitDelete} = unitDeleted
+
   const handleChange = e => {
     setData(prev => {
       return {
@@ -65,18 +79,33 @@ const AddProductMain = () => {
   }
 
   useEffect(() => {
-    dispatch(listCategory())
-    dispatch(listCategoryDrug())
     if (product) {
-      toast.success("Product Added", ToastObjects);
+      toast.success("Product added", ToastObjects);
       dispatch({ type: PRODUCT_CREATE_RESET })
     }
-  }, [dispatch, product])
+    if(successUnitCreate){
+      toast.success("Unit added", ToastObjects);
+      dispatch({ type: UNIT_CREATE_RESET })
+    }
+    if(successUnitDelete){
+      toast.success("Unit deleted", ToastObjects);
+      dispatch({ type: UNIT_DELETE_RESET })
+    }
+    dispatch(listCategory())
+    dispatch(listCategoryDrug())
+    dispatch(listUnit())
+  }, [dispatch, product, successUnitCreate, successUnitDelete])
 
   const { name, price, description, countInStock, category, categoryDrug, unit, regisId, expDrug, capacity, statusDrug } = data;
   return (
     <>
       <Toast />
+      <MyVerticallyCenteredModal
+        data={units}
+        show={modalShow}
+        loading={loadingUnitCreate || loadingUnitDelete}
+        onHide={() => setModalShow(false)}
+      />
       <section className="content-main" >
         <form onSubmit={handleSubmit}>
           <div className="content-header">
@@ -96,7 +125,9 @@ const AddProductMain = () => {
               <div className="card card-custom mb-4 shadow-sm">
                 <div className="card-body">
                   {
-                    loading ? (<Loading />) : error ? (<Message>{error}</Message>) : ''
+                    loading ? (<Loading />) : 
+                    error || errorUnit || errorUnitCreate || errorUnitDelete ? 
+                    (<Message>{error || errorUnit || errorUnitCreate || errorUnitDelete}</Message>)  : ''
                   }
                   <div className="mb-4">
                     <div>
@@ -165,7 +196,6 @@ const AddProductMain = () => {
                         required
                       />
                     </div>
-
                     <div>
                       <label htmlFor="product_price" className="form-label">
                         Price
@@ -183,7 +213,8 @@ const AddProductMain = () => {
                     </div>
                   </div>
                   <div className="mb-4 form-divided-2">
-                    <div>
+                    <div className="d-flex align-items-end">
+                      <div style={{flexGrow:'1'}}>
                       <label htmlFor="unit" className="form-label">
                           Unit
                         </label>
@@ -194,19 +225,17 @@ const AddProductMain = () => {
                           className="form-control"
                           required >
                           <option value=''>Chosse unit drug</option>
-                          {UnitArr?.map((item, index)=>(
+                          {units?.map((item, index)=>(
                             <option key={index} value={item}>{item}</option>
                           ))}
                       </select>
-                        {/* <input
-                          onChange={handleChange}
-                          value={unit}
-                          name="unit"
-                          type="text"
-                          placeholder="Type here"
-                          className="form-control"
-                          required
-                        /> */}
+                      </div>
+                      <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                        <button className="circle-btn" onClick={(e)=>{
+                          e.preventDefault();
+                          setModalShow(true)
+                        }}><i className="fas fa-plus"></i></button>
+                      </div>
                     </div>
                     <div>
                       <label htmlFor="product_regisId" className="form-label">

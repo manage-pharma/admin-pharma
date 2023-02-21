@@ -8,8 +8,9 @@ import { useDispatch } from "react-redux";
 import { deleteProduct, listProduct } from "../../Redux/Actions/ProductActions";
 import { useSelector } from "react-redux";
 import { PRODUCT_DELETE_RESET } from "../../Redux/Constants/ProductConstants";
+import CustomLoader from './../../util/LoadingTable';
 const DataTableProduct = (props) =>{
-    const {products, dessert} = props 
+    const {products, dessert, loading, loadingDelete} = props 
     const history = useHistory()
     const dispatch = useDispatch()
     const [modalShow, setModalShow] = useState(false);
@@ -86,21 +87,24 @@ const DataTableProduct = (props) =>{
             name: "NAME",
             selector: (row) => row.name,
             sortable: true,
-            reorder: true
+            reorder: true,
+            minWidth: "180px",
         },
         // {
         //     name: "IMAGE",
         //     selector: (row) => <img className="mt-1 w-50 h-50" src={row.image} alt="ImageCategory" />,
         // },
         {
-          name: "CATEGORY",
-          selector: (row) => row.category.name,
-          sortable: true
+            name: "CATEGORY",
+            selector: (row) => row.category.name,
+            sortable: true,
+            minWidth: "180px",
         },
         {
             name: "CATEGORY DRUG",
             selector: (row) => row.categoryDrug.name,
-            sortable: true
+            sortable: true,
+            minWidth: "180px",
         },
         {
             name: "STOCK",
@@ -249,7 +253,7 @@ const DataTableProduct = (props) =>{
             },
         },
     };
-  
+
     useEffect(()=>{
       if(successDelete){
         dispatch({ type: PRODUCT_DELETE_RESET});
@@ -272,6 +276,8 @@ const DataTableProduct = (props) =>{
             // onRowClicked={handleRowClicked}
             conditionalRowStyles={dessert ? conditionalRowStyles: ''}
             paginationComponentOptions={paginationComponentOptions}
+            progressPending={loading||loadingDelete}
+			progressComponent={<CustomLoader />}
             highlightOnHover
             pointerOnHover
         />
