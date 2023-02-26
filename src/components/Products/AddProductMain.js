@@ -23,6 +23,21 @@ const ToastObjects = {
 const AddProductMain = () => {
   const dispatch = useDispatch();
 
+  const itemProducts = [
+    {
+      hoatchat: 'lorem',
+      hamluong: '12g'
+    },
+    {
+      hoatchat: 'axit',
+      hamluong: '1g'
+    },
+    {
+      hoatchat: 'sugar',
+      hamluong: '13g'
+    },
+  ]
+
   const [file, setImg] = useState(null) ;
   const [modalShow, setModalShow] = useState(false);
   const [data, setData] = useState({name: '', price: 0, description: '', image: '', countInStock: 0, unit: '', regisId: '', capacity: '', expDrug: Date.now, statusDrug: true})
@@ -95,8 +110,8 @@ const AddProductMain = () => {
     dispatch(listCategoryDrug())
     dispatch(listUnit())
   }, [dispatch, product, successUnitCreate, successUnitDelete])
-
-  const { name, price, description, countInStock, category, categoryDrug, unit, regisId, expDrug, capacity, statusDrug } = data;
+  // name, regisId, category, categoryDrug, unit, packing, APIS, branchName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image
+  const { name, price, description, category, categoryDrug, unit, regisId, expDrug, capacity, statusDrug } = data;
   return (
     <>
       <Toast />
@@ -129,7 +144,8 @@ const AddProductMain = () => {
                     error || errorUnit || errorUnitCreate || errorUnitDelete ? 
                     (<Message>{error || errorUnit || errorUnitCreate || errorUnitDelete}</Message>)  : ''
                   }
-                  <div className="mb-4">
+                  {/* //! tên thuốc - tên biệt dược - số đăng ký */}
+                  <div className="mb-4 form-divided-3">
                     <div>
                       <label htmlFor="name_drug" className="form-label">
                         Name drug
@@ -144,8 +160,37 @@ const AddProductMain = () => {
                         required
                       />  
                     </div>
+                    <div>
+                      <label htmlFor="name_drug" className="form-label">
+                        Branch name
+                      </label>
+                      <input
+                        onChange={handleChange}
+                        value={name}
+                        name="name"
+                        type="text"
+                        placeholder="Enter name drug"
+                        className="form-control"
+                        required
+                      />  
+                    </div>
+                    <div>
+                      <label htmlFor="product_regisId" className="form-label">
+                          Regis number
+                        </label>
+                        <input
+                          onChange={handleChange}
+                          value={regisId}
+                          name="regisId"
+                          type="text"
+                          placeholder="Type here"
+                          className="form-control"
+                          required
+                        />
+                    </div>
                   </div>
-                  <div className="mb-4 form-divided-2">
+                  {/* // ! danh mục hàng hóa - danh mục thuốc - thuốc kê đơn  */}
+                  <div className="mb-4 form-divided-3">
                     <div>
                       <label htmlFor="product_category" className="form-label">
                         Category
@@ -179,44 +224,159 @@ const AddProductMain = () => {
                         ))}
                       </select>
                     </div>
-                  </div>
-                  <div className="mb-4 form-divided-2">
+
                     <div>
-                      <label htmlFor="product_countInStock" className="form-label">
-                        Count In Stock
+                      <label htmlFor="product_category_drug" className="form-label">
+                        Prescription
                       </label>
-                      <input
-                        name="countInStock"
-                        onChange={handleChange}
-                        value={countInStock}
-                        type="number"
-                        placeholder="Type here"
-                        className="form-control"
-                        id="product_price"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="product_price" className="form-label">
-                        Price
-                      </label>
-                      <input
-                        name="price"
-                        onChange={handleChange}
-                        value={price}
-                        type="number"
-                        placeholder="Type here"
-                        className="form-control"
-                        id="product_price"
-                        required
-                      />
+                      <select
+                      value={categoryDrug}
+                      name="categoryDrug"
+                      onChange={handleChange}
+                      className="form-control"
+                      required >
+                        <option value='true'>Thuốc kê đơn</option>
+                        <option value='false'>Thuốc không kê đơn</option>
+                      </select>
                     </div>
                   </div>
+                  {/* // ! (đơn vị tính - giá - quy cách đóng gói) - (hoạt chất -hàm lượng)*/}
+                  <div className="mb-4 form-divided-custom-2">
+                    <div className="d-block">
+                      <div className="d-flex align-items-end mb-4">
+                        <div style={{flexGrow:'1'}}>
+                        <label htmlFor="unit" className="form-label">
+                            Unit
+                          </label>
+                          <select
+                            value={unit}
+                            name="unit"
+                            onChange={handleChange}
+                            className="form-control"
+                            required >
+                            <option value=''>Chosse unit drug</option>
+                            {units?.map((item, index)=>(
+                              <option key={index} value={item}>{item}</option>
+                            ))}
+                        </select>
+                        </div>
+                        <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                          <button className="circle-btn" onClick={(e)=>{
+                            e.preventDefault();
+                            setModalShow(true)
+                          }}><i className="fas fa-plus"></i></button>
+                        </div>
+                      </div>
+                      <div className="mb-4">
+                        <label htmlFor="product_price" className="form-label">
+                          Price
+                        </label>
+                        <input
+                          name="price"
+                          onChange={handleChange}
+                          value={price}
+                          type="number"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="product_price"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="product_packing" className="form-label">
+                          Packing
+                        </label>
+                        <input
+                          name="packing"
+                          onChange={handleChange}
+
+                          type="text"
+                          placeholder="Type here"
+                          className="form-control"
+                          id="product_packing"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="d-flex flex-wrap">
+                      <div style={{display: 'flex', gridGap: '30px', width: '-webkit-fill-available'}}>
+                        <div className="d-flex align-items-end w-50 mb-3">
+                          <div style={{flexGrow:'1'}}>
+                          <label htmlFor="unit" className="form-label">
+                              Hoạt chất
+                            </label>
+                            <select
+                              value={unit}
+                              name="unit"
+                              onChange={handleChange}
+                              className="form-control"
+                              required >
+                              <option value=''>Chọn hoạt chất</option>
+                              {units?.map((item, index)=>(
+                                <option key={index} value={item}>{item}</option>
+                              ))}
+                          </select>
+                          </div>
+                          <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                            <button className="circle-btn" onClick={(e)=>{
+                              e.preventDefault();
+                              setModalShow(true)
+                            }}><i className="fas fa-plus"></i></button>
+                          </div>
+                        </div>
+                        <div className="w-50 mb-3">
+                          <label htmlFor="product_packing" className="form-label">
+                            Hàm lượng
+                          </label>
+                          <input
+                            name="packing"
+                            onChange={handleChange}
+
+                            type="text"
+                            placeholder="Type here"
+                            className="form-control"
+                            id="product_packing"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="w-100">
+                        <div className="card card-custom">
+                          <header className="card-header bg-white" style={{height: '170px', overflowY: 'scroll'}}>
+                            <table className="table">
+                              <thead>
+                                <tr>
+                                    <th scope="col">Hoạt chất</th>
+                                    <th scope="col">hàm lượng</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {itemProducts?.map((item, index)=>(
+                                  <tr key={index}>
+                                  <td>{ item.hoatchat }</td>
+                                  <td>{ item.hamluong}</td>
+                                  <td>
+                                    <button className="dropdown-item text-danger">
+                                    <i className="fas fa-trash"></i>
+                                    </button>
+                                  </td>
+                                  </tr> 
+                                ))}
+                              </tbody>
+                            </table>
+                          </header>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* // ! nhà sản xuất và nước sản xuất */}
                   <div className="mb-4 form-divided-2">
                     <div className="d-flex align-items-end">
                       <div style={{flexGrow:'1'}}>
-                      <label htmlFor="unit" className="form-label">
-                          Unit
+                        <label htmlFor="unit" className="form-label">
+                          Nhà sản xuất
                         </label>
                         <select
                           value={unit}
@@ -224,11 +384,11 @@ const AddProductMain = () => {
                           onChange={handleChange}
                           className="form-control"
                           required >
-                          <option value=''>Chosse unit drug</option>
+                          <option value=''>Chọn nước sản xuất</option>
                           {units?.map((item, index)=>(
                             <option key={index} value={item}>{item}</option>
                           ))}
-                      </select>
+                        </select>
                       </div>
                       <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
                         <button className="circle-btn" onClick={(e)=>{
@@ -237,61 +397,60 @@ const AddProductMain = () => {
                         }}><i className="fas fa-plus"></i></button>
                       </div>
                     </div>
-                    <div>
-                      <label htmlFor="product_regisId" className="form-label">
-                          Regis number
+                    <div className="d-flex align-items-end">
+                      <div style={{flexGrow:'1'}}>
+                        <label htmlFor="unit" className="form-label">
+                          Nước sản xuất
                         </label>
-                        <input
+                        <select
+                          value={unit}
+                          name="unit"
                           onChange={handleChange}
-                          value={regisId}
-                          name="regisId"
-                          type="text"
-                          placeholder="Type here"
                           className="form-control"
-                          required
-                        />
+                          required >
+                          <option value=''>Chọn nước sản xuất</option>
+                          {units?.map((item, index)=>(
+                            <option key={index} value={item}>{item}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                        <button className="circle-btn" onClick={(e)=>{
+                          e.preventDefault();
+                          setModalShow(true)
+                        }}><i className="fas fa-plus"></i></button>
+                      </div>
                     </div>
                   </div>
+                  {/* // ! mô tả - lời chỉ dẫn */}
                   <div className="mb-4 form-divided-2">
                     <div>
-                      <label htmlFor="capacity" className="form-label">
-                        Capacity
-                      </label>
-                      <input
-                        onChange={handleChange}
-                        value={capacity}
-                        name="capacity"
-                        type="text"
+                      <label className="form-label">Description</label>
+                      <textarea
+                        name="description"
                         placeholder="Type here"
                         className="form-control"
-                        required
-                        />
-                    </div>
-                    <div>
-                      <label className="form-label">Exp drug</label>
-                      <input
-                        name="expDrug"
-                        className="form-control"
-                        type='date'
+                        rows="4"
                         required
                         onChange={handleChange}
-                        value={expDrug}
-                      ></input>
+                        value={description}
+                      ></textarea>
+                    </div>
+                    <div>
+                      <label className="form-label">Lời chỉ dẫn</label>
+                      <textarea
+                        name="description"
+                        placeholder="Type here"
+                        className="form-control"
+                        rows="4"
+                        required
+                        onChange={handleChange}
+                        value={description}
+                      ></textarea>
                     </div>
                   </div>
-                  <div className="mb-4">
-                    <label className="form-label">Description</label>
-                    <textarea
-                      name="description"
-                      placeholder="Type here"
-                      className="form-control"
-                      rows="7"
-                      required
-                      onChange={handleChange}
-                      value={description}
-                    ></textarea>
-                  </div>
-                  <div className="mb-4 form-divided-2">
+                  {/* // ! ảnh - cho phép bán */}
+                  <div className="mb-4 form-divided-3">
                     <div>
                       <label className="form-label">Images</label>
                       <input
@@ -315,7 +474,7 @@ const AddProductMain = () => {
                       )}
                     </div>
                     <div className="form-check form-switch">
-                      <label className="form-label d-flex">Status drug</label>
+                      <label className="form-label d-flex">Thuốc được phép bán</label>
                       <input 
                         style={{ 
                           transform: 'scale(1.5)',

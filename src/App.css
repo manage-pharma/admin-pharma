@@ -951,9 +951,16 @@ ul.row-sm {
   grid-gap: 30px;
 }
 
+.form-divided-custom-2{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: flex-start;
+  grid-gap: 30px;
+}
+
 .form-divided-3{
   display: grid;
-  grid-template-columns: 1fr 50px 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 30px;
 }
 .switch {

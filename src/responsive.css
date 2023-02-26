@@ -199,6 +199,13 @@
 }
 /*Shrinking for mobile*/
 @media (max-width: 768px) {
+  .form-divided-2{
+    display: block
+  }
+  
+  .form-divided-3{
+    display: block
+  }
   .waves {
     height:40px;
     min-height:40px;
