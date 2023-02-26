@@ -12,7 +12,7 @@ import { listCategory } from './../../Redux/Actions/CategoryAction';
 import { listCategoryDrug } from "../../Redux/Actions/CategoryDrugAction";
 import moment from 'moment/moment';
 import { listUnit } from './../../Redux/Actions/UnitAction';
-import MyVerticallyCenteredModal from "./ModalUnit";
+import MyVerticallyCenteredModal from "./Modal/ModalUnit";
 import { UNIT_CREATE_RESET, UNIT_DELETE_RESET } from "../../Redux/Constants/UnitConstants";
 
 const ToastObjects = {

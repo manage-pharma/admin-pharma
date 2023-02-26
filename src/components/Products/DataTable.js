@@ -96,13 +96,13 @@ const DataTableProduct = (props) =>{
         // },
         {
             name: "CATEGORY",
-            selector: (row) => row.category.name,
+            selector: (row) => row?.category?.name,
             sortable: true,
             minWidth: "180px",
         },
         {
             name: "CATEGORY DRUG",
-            selector: (row) => row.categoryDrug.name,
+            selector: (row) => row?.categoryDrug?.name,
             sortable: true,
             minWidth: "180px",
         },
