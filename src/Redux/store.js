@@ -11,6 +11,9 @@ import { ProviderCreateReducer, ProviderDeleteReducer, ProviderListReducer, Prov
 import { importStockCreateReducer, importStockDetailReducer, importStockListReducer, importStockStatusReducer, importStockUpdateReducer } from "./Reducers/ImportStockReducer";
 import { exportStockDetailReducer, exportStockListReducer, exportStockCreateReducer, exportStockStatusReducer, exportStockUpdateReducer } from './Reducers/ExportStockReducer';
 import { UnitCreateReducer, UnitDeleteReducer, UnitListReducer } from './Reducers/UnitReducer';
+import { ManufacturerCreateReducer, ManufacturerDeleteReducer, ManufacturerListReducer } from './Reducers/ManufacturerReducer';
+import { CountryCreateReducer, CountryDeleteReducer, CountryListReducer } from './Reducers/CountryOfOriginReducer';
+import { APICreateReducer, APIDeleteReducer, APIListReducer } from './Reducers/ActivePharmaReducer';
 const reducer = combineReducers({
   theme: themeReducer,
 
@@ -56,7 +59,6 @@ const reducer = combineReducers({
   importStockStatus: importStockStatusReducer,
   importStockUpdate: importStockUpdateReducer,
 
-
   exportStockList: exportStockListReducer,
   exportStockDetail: exportStockDetailReducer,
   exportStockCreate: exportStockCreateReducer,
@@ -66,6 +68,18 @@ const reducer = combineReducers({
   unitList: UnitListReducer,
   unitCreate: UnitCreateReducer,
   unitDelete: UnitDeleteReducer,
+
+  manufacturerList: ManufacturerListReducer,
+  manufacturerCreate: ManufacturerCreateReducer,
+  manufacturerDelete: ManufacturerDeleteReducer,
+
+  countryList: CountryListReducer,
+  countryCreate: CountryCreateReducer,
+  countryDelete: CountryDeleteReducer,
+
+  APIList: APIListReducer,
+  APICreate: APICreateReducer,
+  APIDelete: APIDeleteReducer,
 });
 
 

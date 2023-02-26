@@ -147,7 +147,7 @@ export const deleteProduct = (id) => async(dispatch, getState) => {
 };
 
 //ADMIN PRODUCT CREATE
-export const createProduct = ({ name, category, categoryDrug, price, description, image, countInStock, unit, capacity, regisId, expDrug, statusDrug }) => async (dispatch, getState) => {
+export const createProduct = ({ name, regisId, category, categoryDrug, unit, packing, APIs, branchName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image }) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_CREATE_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
@@ -163,7 +163,7 @@ export const createProduct = ({ name, category, categoryDrug, price, description
 
     const { data } = await axios.post(`/api/products/`,
       {
-        name, category, categoryDrug, price, description, image, countInStock, unit, capacity, regisId, expDrug, statusDrug
+        name, regisId, category, categoryDrug, unit, packing, APIs, branchName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image
       }
       , config);
     dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });

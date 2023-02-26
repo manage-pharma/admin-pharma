@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import { PRODUCT_CREATE_RESET } from "../../Redux/Constants/ProductConstants";
@@ -11,9 +11,18 @@ import axios from "axios";
 import { listCategory } from './../../Redux/Actions/CategoryAction';
 import { listCategoryDrug } from './../../Redux/Actions/CategoryDrugAction';
 import { listUnit } from './../../Redux/Actions/UnitAction';
-import MyVerticallyCenteredModal from "./ModalUnit";
+import MyVerticallyCenteredModalUnit from "./Modal/ModalUnit";
 import { UNIT_CREATE_RESET, UNIT_DELETE_RESET } from "../../Redux/Constants/UnitConstants";
-
+import { listManufacturer } from './../../Redux/Actions/ManufacturerAction';
+import { MANUFACTURER_CREATE_RESET, MANUFACTURER_DELETE_RESET } from "../../Redux/Constants/ManufacturerConstants";
+import MyVerticallyCenteredModalManufacturer from './Modal/ModalManufacturer';
+import { listCountry } from './../../Redux/Actions/CountryOfOriginAction';
+import { COUNTRY_CREATE_RESET, COUNTRY_DELETE_RESET } from "../../Redux/Constants/CountryOfOriginConstants";
+import MyVerticallyCenteredModalCountry from './Modal/ModalCountry';
+import { listAPI } from './../../Redux/Actions/ActivePharmaAction';
+import MyVerticallyCenteredModalAPI from './Modal/ModalActivePharma';
+import { API_CREATE_RESET, API_DELETE_RESET } from "../../Redux/Constants/ActivePharmaConstants";
+import renderToast from "../../util/Toast";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -22,25 +31,22 @@ const ToastObjects = {
 };
 const AddProductMain = () => {
   const dispatch = useDispatch();
-
-  const itemProducts = [
-    {
-      hoatchat: 'lorem',
-      hamluong: '12g'
-    },
-    {
-      hoatchat: 'axit',
-      hamluong: '1g'
-    },
-    {
-      hoatchat: 'sugar',
-      hamluong: '13g'
-    },
-  ]
-
+  const history = useHistory();
   const [file, setImg] = useState(null) ;
-  const [modalShow, setModalShow] = useState(false);
-  const [data, setData] = useState({name: '', price: 0, description: '', image: '', countInStock: 0, unit: '', regisId: '', capacity: '', expDrug: Date.now, statusDrug: true})
+  const [itemAPI, setItemAPI] = useState([]);
+  const [fieldAPI, setFieldAPI] = useState({
+    API: '',
+    content: 0,
+  });
+  const [ isStop , setIsStop ] = useState(false)
+  const [modalShowUnit, setModalShowUnit] = useState(false);
+  const [modalShowManufacturer, setModalShowManufacturer] = useState(false);
+  const [modalShowCountry, setModalShowCountry] = useState(false);
+  const [modalShowActivePharma, setModalShowActivePharma] = useState(false);
+
+  const [data, setData] = useState({name: '', regisId: '', unit: '', packing: '', branchName: '', manufacturer: '', countryOfOrigin: '', instruction: '', price: 0, prescription: true, description: '', image: '', allowToSell: true})
+  var {APIs = itemAPI ? [...itemAPI] : []} = data
+
   const productCreate = useSelector(state => state.productCreate);
   const { loading, product, error } = productCreate;
 
@@ -50,6 +56,8 @@ const AddProductMain = () => {
   const categoryDrugList = useSelector((state)=> state.categoryDrugList)
   const {categoriesDrug} = categoryDrugList
 
+
+  //! UNIT
   const unitList = useSelector(state => state.unitList)
   const {error: errorUnit, units} = unitList
 
@@ -59,6 +67,38 @@ const AddProductMain = () => {
   const unitDeleted = useSelector(state => state.unitDelete)
   const {loading: loadingUnitDelete, error: errorUnitDelete, success: successUnitDelete} = unitDeleted
 
+  //! MANUFACTURER
+  const manufacturerList = useSelector(state => state.manufacturerList)
+  const {error: errorManufacturer, manufacturers} = manufacturerList
+
+  const manufacturerCreated = useSelector(state => state.manufacturerCreate)
+  const {loading: loadingManufacturerCreate, error: errorManufacturerCreate, success: successManufacturerCreate} =manufacturerCreated
+
+  const manufacturerDeleted = useSelector(state => state.manufacturerDelete)
+  const {loading: loadingManufacturerDelete, error: errorManufacturerDelete, success: successManufacturerDelete} =manufacturerDeleted
+    
+  //! COUNTRY OF ORIGIN
+  const countryList = useSelector(state => state.countryList)
+  const {error: errorCountry, countries} =countryList
+
+  const countryCreated = useSelector(state => state.countryCreate)
+  const {loading: loadingCountryCreate, error: errorCountryCreate, success: successCountryCreate} =countryCreated
+
+  const countryDeleted = useSelector(state => state.countryDelete)
+  const {loading: loadingCountryDelete, error: errorCountryDelete, success: successCountryDelete} =countryDeleted
+
+ //! ACTIVE PHARMA INGREDIENT (API)
+ const APIList = useSelector(state => state.APIList)
+ const {error: errorAPI, API_item} =APIList
+
+ const APICreated = useSelector(state => state.APICreate)
+ const {loading: loadingAPICreate, error: errorAPICreate, success: successAPICreate} =APICreated
+
+ const APIDeleted = useSelector(state => state.APIDelete)
+ const {loading: loadingAPIDelete, error: errorAPIDelete, success: successAPIDelete} =APIDeleted
+
+
+  //! Handler
   const handleChange = e => {
     setData(prev => {
       return {
@@ -67,8 +107,53 @@ const AddProductMain = () => {
     })
   }
 
-  const handleSubmit = async(e) => {
+  const handleChangeAPI = e => {
+    setFieldAPI(prev => {
+      return {
+        ...prev, [e.target.name] : e.target.value
+      }
+    })
+  }
 
+  const handleAddAPI = e =>{
+    e.preventDefault();
+    let flag = false;
+    
+    if(!fieldAPI.API){
+        if(!isStop){
+            renderToast('Hoạt chất chưa được chọn','error', setIsStop, isStop)
+        }
+        return;
+    }
+    else if(fieldAPI.content <= 0){
+        if(!isStop){
+            renderToast('Hàm lượng phải lớn hơn 0','error', setIsStop, isStop)
+        }
+        return;
+    }
+    else{
+        APIs.forEach((item, index)=>{
+            if(item.API === fieldAPI.API){
+                flag = true
+                APIs.splice(index, 1, {...item, content:  item.content + parseInt(fieldAPI.content)})
+                setItemAPI(APIs)
+             }
+        })
+        if(!flag){
+          setItemAPI(prev => 
+              [...prev, {...fieldAPI, content: parseInt(content)}]
+          )
+        }
+    }
+  }
+
+  const handleDeleteAPI = (e, index) =>{
+    e.preventDefault()
+    APIs.splice(index, 1)
+    setItemAPI(APIs)
+  }
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     if(file){
@@ -76,17 +161,9 @@ const AddProductMain = () => {
       formData.append('image', file);
       const { data: dataUp } = await axios.post(`/api/products/single`, formData);
       data.image = dataUp.filename
-      dispatch(createProduct({ ...data }));
+      dispatch(createProduct({ ...data, APIs: APIs, }));
       setData({
-        name: '',
-        price: 0,
-        description: '',
-        countInStock: 0,
-        unit: '',
-        capacity: '',
-        regisId: '',
-        expDrug: Date.now,
-        statusDrug: true
+        name: '', regisId: '', unit: '', packing: '', branchName: '', manufacturer: '', countryOfOrigin: '', instruction: '', price: 0, prescription: true, description: '', image: '', allowToSell: true
       })
       setImg(null)
       document.getElementById('uploadFile').value = "";
@@ -106,84 +183,131 @@ const AddProductMain = () => {
       toast.success("Unit deleted", ToastObjects);
       dispatch({ type: UNIT_DELETE_RESET })
     }
+    if(successManufacturerCreate){
+      toast.success("Manufacturer added", ToastObjects);
+      dispatch({ type: MANUFACTURER_CREATE_RESET })
+    }
+    if(successManufacturerDelete){
+      toast.success("Manufacturer deleted", ToastObjects);
+      dispatch({ type: MANUFACTURER_DELETE_RESET })
+    }
+    if(successCountryCreate){
+      toast.success("Country added", ToastObjects);
+      dispatch({ type: COUNTRY_CREATE_RESET })
+    }
+    if(successCountryDelete){
+      toast.success("Country deleted", ToastObjects);
+      dispatch({ type: COUNTRY_DELETE_RESET })
+    }
+    if(successAPICreate){
+      toast.success("Active pharma deleted", ToastObjects);
+      dispatch({ type: API_CREATE_RESET })
+    }
+    if(successAPIDelete){
+      toast.success("Country deleted", ToastObjects);
+      dispatch({ type: API_DELETE_RESET })
+    }
     dispatch(listCategory())
     dispatch(listCategoryDrug())
     dispatch(listUnit())
-  }, [dispatch, product, successUnitCreate, successUnitDelete])
-  // name, regisId, category, categoryDrug, unit, packing, APIS, branchName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image
-  const { name, price, description, category, categoryDrug, unit, regisId, expDrug, capacity, statusDrug } = data;
+    dispatch(listManufacturer())
+    dispatch(listCountry())
+    dispatch(listAPI())
+  }, [dispatch, product, successUnitCreate, successUnitDelete, successManufacturerCreate, successManufacturerDelete, successCountryCreate, successCountryDelete, successAPICreate, successAPIDelete])
+  const { API, content } = fieldAPI
+  const { name, regisId, category, categoryDrug, unit, packing, branchName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description } = data;
+
   return (
     <>
       <Toast />
-      <MyVerticallyCenteredModal
+      <MyVerticallyCenteredModalUnit
         data={units}
-        show={modalShow}
+        show={modalShowUnit}
         loading={loadingUnitCreate || loadingUnitDelete}
-        onHide={() => setModalShow(false)}
+        onHide={() => setModalShowUnit(false)}
+      />
+
+      <MyVerticallyCenteredModalManufacturer
+        data={manufacturers}
+        show={modalShowManufacturer}
+        loading={loadingManufacturerCreate || loadingManufacturerDelete}
+        onHide={() => setModalShowManufacturer(false)}
+      />
+
+      <MyVerticallyCenteredModalCountry
+        data={countries}
+        show={modalShowCountry}
+        loading={loadingCountryCreate || loadingCountryDelete}
+        onHide={() => setModalShowCountry(false)}
+      />
+
+      <MyVerticallyCenteredModalAPI
+        data={API_item}
+        show={modalShowActivePharma}
+        loading={loadingAPICreate || loadingAPIDelete}
+        onHide={() => setModalShowActivePharma(false)}
       />
       <section className="content-main" >
         <form onSubmit={handleSubmit}>
           <div className="content-header">
-            <Link to="/products" className="btn btn-danger text-white">
-              Go to products
-            </Link>
-            <h2 className="content-title">Add product</h2>
-            <div>
-              <button type="submit" className="btn btn-primary">
-                Publish now
-              </button>
+            <div className="content-title d-flex" onClick={e=>{
+              e.preventDefault()
+              history.push("/products")
+            }}>
+              <h4 className="arrow-breadcrum"><i className="fas fa-arrow-left"></i></h4>
+              <h4>Thêm thuốc</h4>
             </div>
           </div>
-          {/* name, price, description, image, countInStock */}
+
           <div className="mb-4">
             <div className="">
-              <div className="card card-custom mb-4 shadow-sm">
+              <div className="card card-custom mb-4">
                 <div className="card-body">
                   {
                     loading ? (<Loading />) : 
-                    error || errorUnit || errorUnitCreate || errorUnitDelete ? 
+                    error || errorUnit || errorUnitCreate || errorUnitDelete || errorManufacturer || errorCountry || errorManufacturerCreate || errorManufacturerDelete || errorCountryCreate || errorCountryDelete || errorAPI || errorAPICreate || errorAPIDelete ?
                     (<Message>{error || errorUnit || errorUnitCreate || errorUnitDelete}</Message>)  : ''
                   }
                   {/* //! tên thuốc - tên biệt dược - số đăng ký */}
                   <div className="mb-4 form-divided-3">
                     <div>
                       <label htmlFor="name_drug" className="form-label">
-                        Name drug
+                        Tên thuốc
                       </label>
                       <input
                         onChange={handleChange}
                         value={name}
                         name="name"
                         type="text"
-                        placeholder="Enter name drug"
+                        placeholder="Nhập tên thuốc"
                         className="form-control"
                         required
                       />  
                     </div>
                     <div>
-                      <label htmlFor="name_drug" className="form-label">
-                        Branch name
+                      <label htmlFor="branchName" className="form-label">
+                        Tên biệt dược
                       </label>
                       <input
                         onChange={handleChange}
-                        value={name}
-                        name="name"
+                        value={branchName}
+                        name="branchName"
                         type="text"
-                        placeholder="Enter name drug"
+                        placeholder="Nhập tên biệt dược"
                         className="form-control"
                         required
                       />  
                     </div>
                     <div>
                       <label htmlFor="product_regisId" className="form-label">
-                          Regis number
+                          Số đăng ký
                         </label>
                         <input
                           onChange={handleChange}
                           value={regisId}
                           name="regisId"
                           type="text"
-                          placeholder="Type here"
+                          placeholder="Nhập số đăng ký"
                           className="form-control"
                           required
                         />
@@ -193,7 +317,7 @@ const AddProductMain = () => {
                   <div className="mb-4 form-divided-3">
                     <div>
                       <label htmlFor="product_category" className="form-label">
-                        Category
+                        Nhóm hàng
                       </label>
                       <select
                       value={category}
@@ -201,7 +325,7 @@ const AddProductMain = () => {
                       onChange={handleChange}
                       className="form-control"
                       required >
-                        <option value=''>Chosse Category</option>
+                        <option value=''>Chọn nhóm hàng</option>
                         {categories?.map((item, index)=>(
                           <option key={index} value={item._id}>{item.name}</option>
                         ))}
@@ -210,7 +334,7 @@ const AddProductMain = () => {
 
                     <div>
                       <label htmlFor="product_category_drug" className="form-label">
-                        Category Drug
+                        Nhóm thuốc
                       </label>
                       <select
                       value={categoryDrug}
@@ -218,7 +342,7 @@ const AddProductMain = () => {
                       onChange={handleChange}
                       className="form-control"
                       required >
-                        <option value=''>Chosse Category Drug</option>
+                        <option value=''>Chọn nhóm thuốc</option>
                         {categoriesDrug?.map((item, index)=>(
                           <option key={index} value={item._id}>{item.name}</option>
                         ))}
@@ -227,11 +351,11 @@ const AddProductMain = () => {
 
                     <div>
                       <label htmlFor="product_category_drug" className="form-label">
-                        Prescription
+                        Thuốc kê đơn
                       </label>
                       <select
-                      value={categoryDrug}
-                      name="categoryDrug"
+                      value={prescription}
+                      name="prescription"
                       onChange={handleChange}
                       className="form-control"
                       required >
@@ -240,263 +364,288 @@ const AddProductMain = () => {
                       </select>
                     </div>
                   </div>
-                  {/* // ! (đơn vị tính - giá - quy cách đóng gói) - (hoạt chất -hàm lượng)*/}
-                  <div className="mb-4 form-divided-custom-2">
-                    <div className="d-block">
-                      <div className="d-flex align-items-end mb-4">
-                        <div style={{flexGrow:'1'}}>
-                        <label htmlFor="unit" className="form-label">
-                            Unit
-                          </label>
-                          <select
-                            value={unit}
-                            name="unit"
-                            onChange={handleChange}
-                            className="form-control"
-                            required >
-                            <option value=''>Chosse unit drug</option>
-                            {units?.map((item, index)=>(
-                              <option key={index} value={item}>{item}</option>
-                            ))}
-                        </select>
-                        </div>
-                        <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
-                          <button className="circle-btn" onClick={(e)=>{
-                            e.preventDefault();
-                            setModalShow(true)
-                          }}><i className="fas fa-plus"></i></button>
-                        </div>
-                      </div>
-                      <div className="mb-4">
-                        <label htmlFor="product_price" className="form-label">
-                          Price
-                        </label>
-                        <input
-                          name="price"
-                          onChange={handleChange}
-                          value={price}
-                          type="number"
-                          placeholder="Type here"
-                          className="form-control"
-                          id="product_price"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="product_packing" className="form-label">
-                          Packing
-                        </label>
-                        <input
-                          name="packing"
-                          onChange={handleChange}
+                </div>
+              </div>
+            </div>
+          </div>
 
-                          type="text"
-                          placeholder="Type here"
+          <div className="mb-4">
+            <div className="card card-custom mb-4">
+              <div className="card-body">
+                {/* // ! (đơn vị tính - giá - quy cách đóng gói) - (hoạt chất -hàm lượng)*/}
+                <div className="mb-4 form-divided-custom-2">
+                  <div className="d-block">
+                    <div className="d-flex align-items-end mb-4">
+                      <div style={{flexGrow:'1'}}>
+                      <label htmlFor="unit" className="form-label">
+                          Đơn vị tính
+                        </label>
+                        <select
+                          value={unit}
+                          name="unit"
+                          onChange={handleChange}
                           className="form-control"
-                          id="product_packing"
-                          required
-                        />
+                          required >
+                          <option value=''>Chọn đơn vị tính</option>
+                          {units?.map((item, index)=>(
+                            <option key={index} value={item}>{item}</option>
+                          ))}
+                      </select>
+                      </div>
+                      <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                        <button className="circle-btn" onClick={(e)=>{
+                          e.preventDefault();
+                          setModalShowUnit(true)
+                        }}><i className="fas fa-plus"></i></button>
                       </div>
                     </div>
-                    <div className="d-flex flex-wrap">
-                      <div style={{display: 'flex', gridGap: '30px', width: '-webkit-fill-available'}}>
-                        <div className="d-flex align-items-end w-50 mb-3">
-                          <div style={{flexGrow:'1'}}>
+                    <div className="mb-4">
+                      <label htmlFor="product_price" className="form-label">
+                        Giá thuốc
+                      </label>
+                      <input
+                        name="price"
+                        onChange={handleChange}
+                        value={price}
+                        type="number"
+                        placeholder="Type here"
+                        className="form-control"
+                        id="product_price"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="product_packing" className="form-label">
+                        Quy cách đóng gói
+                      </label>
+                      <input
+                        name="packing"
+                        onChange={handleChange}
+                        value={packing}
+                        type="text"
+                        placeholder="Type here"
+                        className="form-control"
+                        id="product_packing"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="d-flex flex-wrap">
+                    <div style={{display: 'flex', gridGap: '30px', width: '-webkit-fill-available'}}>
+                      <div className="d-flex align-items-end w-50 mb-3">
+                        <div style={{flexGrow:'1'}}>
                           <label htmlFor="unit" className="form-label">
                               Hoạt chất
                             </label>
                             <select
-                              value={unit}
-                              name="unit"
-                              onChange={handleChange}
+                              value={API}
+                              name="API"
+                              onChange={handleChangeAPI}
                               className="form-control"
                               required >
                               <option value=''>Chọn hoạt chất</option>
-                              {units?.map((item, index)=>(
+                              {API_item?.map((item, index)=>(
                                 <option key={index} value={item}>{item}</option>
                               ))}
                           </select>
-                          </div>
-                          <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
-                            <button className="circle-btn" onClick={(e)=>{
-                              e.preventDefault();
-                              setModalShow(true)
-                            }}><i className="fas fa-plus"></i></button>
-                          </div>
                         </div>
-                        <div className="w-50 mb-3">
+                        <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                          <button className="circle-btn" onClick={(e)=>{
+                            e.preventDefault();
+                            setModalShowActivePharma(true)
+                          }}><i className="fas fa-plus"></i></button>
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-end w-50 mb-3">
+                        <div style={{flexGrow:'1'}}>
                           <label htmlFor="product_packing" className="form-label">
                             Hàm lượng
                           </label>
                           <input
-                            name="packing"
-                            onChange={handleChange}
-
-                            type="text"
+                            name="content"
+                            value={content}
+                            onChange={handleChangeAPI}
+                            type="number"
                             placeholder="Type here"
                             className="form-control"
                             id="product_packing"
                             required
                           />
                         </div>
+                        <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                          <button className="btn btn-success" onClick={handleAddAPI}><i className="fas fa-plus"></i></button>
+                        </div>
                       </div>
+                    </div>
 
-                      <div className="w-100">
-                        <div className="card card-custom">
-                          <header className="card-header bg-white" style={{height: '170px', overflowY: 'scroll'}}>
-                            <table className="table">
-                              <thead>
-                                <tr>
-                                    <th scope="col">Hoạt chất</th>
-                                    <th scope="col">hàm lượng</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {itemProducts?.map((item, index)=>(
-                                  <tr key={index}>
-                                  <td>{ item.hoatchat }</td>
-                                  <td>{ item.hamluong}</td>
-                                  <td>
-                                    <button className="dropdown-item text-danger">
+                    <div className="w-100">
+                      <div className="card card-custom">
+                        <header className="card-header bg-white" style={{height: '170px', overflowY: 'scroll'}}>
+                          <table className="table">
+                            <thead>
+                              <tr>
+                                  <th scope="col">Hoạt chất</th>
+                                  <th scope="col">hàm lượng</th>
+                                  <th scope="col">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {itemAPI?.map((item, index)=>(
+                                <tr key={index}>
+                                <td>{ item.API }</td>
+                                <td>{ item.content}</td>
+                                <td>
+                                  <button className="dropdown-item text-danger" onClick={(e)=>handleDeleteAPI(e,index)}>
                                     <i className="fas fa-trash"></i>
-                                    </button>
-                                  </td>
-                                  </tr> 
-                                ))}
-                              </tbody>
-                            </table>
-                          </header>
-                        </div>
+                                  </button>
+                                </td>
+                                </tr> 
+                              ))}
+                            </tbody>
+                          </table>
+                        </header>
                       </div>
-                    </div>
-                  </div>
-                  {/* // ! nhà sản xuất và nước sản xuất */}
-                  <div className="mb-4 form-divided-2">
-                    <div className="d-flex align-items-end">
-                      <div style={{flexGrow:'1'}}>
-                        <label htmlFor="unit" className="form-label">
-                          Nhà sản xuất
-                        </label>
-                        <select
-                          value={unit}
-                          name="unit"
-                          onChange={handleChange}
-                          className="form-control"
-                          required >
-                          <option value=''>Chọn nước sản xuất</option>
-                          {units?.map((item, index)=>(
-                            <option key={index} value={item}>{item}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
-                        <button className="circle-btn" onClick={(e)=>{
-                          e.preventDefault();
-                          setModalShow(true)
-                        }}><i className="fas fa-plus"></i></button>
-                      </div>
-                    </div>
-                    <div className="d-flex align-items-end">
-                      <div style={{flexGrow:'1'}}>
-                        <label htmlFor="unit" className="form-label">
-                          Nước sản xuất
-                        </label>
-                        <select
-                          value={unit}
-                          name="unit"
-                          onChange={handleChange}
-                          className="form-control"
-                          required >
-                          <option value=''>Chọn nước sản xuất</option>
-                          {units?.map((item, index)=>(
-                            <option key={index} value={item}>{item}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
-                        <button className="circle-btn" onClick={(e)=>{
-                          e.preventDefault();
-                          setModalShow(true)
-                        }}><i className="fas fa-plus"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                  {/* // ! mô tả - lời chỉ dẫn */}
-                  <div className="mb-4 form-divided-2">
-                    <div>
-                      <label className="form-label">Description</label>
-                      <textarea
-                        name="description"
-                        placeholder="Type here"
-                        className="form-control"
-                        rows="4"
-                        required
-                        onChange={handleChange}
-                        value={description}
-                      ></textarea>
-                    </div>
-                    <div>
-                      <label className="form-label">Lời chỉ dẫn</label>
-                      <textarea
-                        name="description"
-                        placeholder="Type here"
-                        className="form-control"
-                        rows="4"
-                        required
-                        onChange={handleChange}
-                        value={description}
-                      ></textarea>
-                    </div>
-                  </div>
-                  {/* // ! ảnh - cho phép bán */}
-                  <div className="mb-4 form-divided-3">
-                    <div>
-                      <label className="form-label">Images</label>
-                      <input
-                      id="uploadFile"
-                      onChange={e => setImg(e.target.files[0])}
-                      className="form-control" type="file" />
-                      { file && (
-                        <div>     
-                          <img src={(file && URL.createObjectURL(file))}
-                            alt="Product"
-                            className="mt-3" 
-                            style={{width: '250px', marginTop: '5px'}}/>
-                          <span 
-                            className="delete-button"
-                            onClick={e => {
-                              setImg(null)
-                              document.getElementById('uploadFile').value = "";
-                            }}
-                            >&times;</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="form-check form-switch">
-                      <label className="form-label d-flex">Thuốc được phép bán</label>
-                      <input 
-                        style={{ 
-                          transform: 'scale(1.5)',
-                          marginTop: '10px',
-                          marginLeft: '10px'
-                        }}
-                        className="form-check-input" 
-                        type="checkbox" 
-                        id="flexSwitchCheckChecked" 
-                        checked={statusDrug}
-                        name="statusDrug"
-                        onChange={() => setData(prev => {
-                          return {
-                            ...prev, statusDrug :!statusDrug
-                          }
-                        })}
-                        />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="mb-4">
+            <div className="card card-custom mb-4">
+              <div className="card-body">
+                {/* // ! nhà sản xuất và nước sản xuất */}
+                <div className="mb-4 form-divided-2">
+                  <div className="d-flex align-items-end">
+                    <div style={{flexGrow:'1'}}>
+                      <label htmlFor="unit" className="form-label">
+                        Nhà sản xuất
+                      </label>
+                      <select
+                        value={manufacturer}
+                        name="manufacturer"
+                        onChange={handleChange}
+                        className="form-control"
+                        required >
+                        <option value=''>Chọn nhà sản xuất</option>
+                        {manufacturers?.map((item, index)=>(
+                          <option key={index} value={item}>{item}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                      <button className="circle-btn" onClick={(e)=>{
+                        e.preventDefault();
+                        setModalShowManufacturer(true)
+                      }}><i className="fas fa-plus"></i></button>
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-end">
+                    <div style={{flexGrow:'1'}}>
+                      <label htmlFor="unit" className="form-label">
+                        Nước sản xuất
+                      </label>
+                      <select
+                        value={countryOfOrigin}
+                        name="countryOfOrigin"
+                        onChange={handleChange}
+                        className="form-control"
+                        required >
+                        <option value=''>Chọn nước sản xuất</option>
+                        {countries?.map((item, index)=>(
+                          <option key={index} value={item}>{item}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div style={{marginLeft:'10px', transform: 'translateY(-3px)'}}>
+                      <button className="circle-btn" onClick={(e)=>{
+                        e.preventDefault();
+                        setModalShowCountry(true)
+                      }}><i className="fas fa-plus"></i></button>
+                    </div>
+                  </div>
+                </div>
+                {/* // ! mô tả - lời chỉ dẫn */}
+                <div className="mb-4 form-divided-2">
+                  <div>
+                    <label className="form-label">Mô tả</label>
+                    <textarea
+                      name="description"
+                      placeholder="Type here"
+                      className="form-control"
+                      rows="4"
+                      required
+                      onChange={handleChange}
+                      value={description}
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label className="form-label">Lời chỉ dẫn</label>
+                    <textarea
+                      name="instruction"
+                      placeholder="Type here"
+                      className="form-control"
+                      rows="4"
+                      required
+                      onChange={handleChange}
+                      value={instruction}
+                    ></textarea>
+                  </div>
+                </div>
+                {/* // ! ảnh - cho phép bán */}
+                <div className="mb-4 form-divided-3">
+                  <div>
+                    <label className="form-label">Ảnh thuốc</label>
+                    <input
+                    id="uploadFile"
+                    onChange={e => setImg(e.target.files[0])}
+                    className="form-control" type="file" />
+                    { file && (
+                      <div>     
+                        <img src={(file && URL.createObjectURL(file))}
+                          alt="Product"
+                          className="mt-3" 
+                          style={{width: '250px', marginTop: '5px'}}/>
+                        <span 
+                          className="delete-button"
+                          onClick={e => {
+                            setImg(null)
+                            document.getElementById('uploadFile').value = "";
+                          }}
+                          >&times;</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="form-check form-switch">
+                    <label className="form-label d-flex">Thuốc được phép bán</label>
+                    <input 
+                      style={{ 
+                        transform: 'scale(1.5)',
+                        marginTop: '10px',
+                        marginLeft: '10px'
+                      }}
+                      className="form-check-input" 
+                      type="checkbox" 
+                      id="flexSwitchCheckChecked" 
+                      checked={allowToSell}
+                      name="allowToSell"
+                      onChange={() => setData(prev => {
+                        return {
+                          ...prev, allowToSell :!allowToSell
+                        }
+                      })}
+                      />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>      
+
+          <div>
+            <button type="submit" className="btn btn-primary mb-4" style={{float: 'right'}}>
+               Lưu lại
+            </button>
           </div>
         </form>
       </section>
