@@ -40,7 +40,7 @@ import { logout } from './UserActions';
 import axios from 'axios';
 
 // ADMIN PRODUCT LIST
-export const listProduct = ( keyword = " ", pageNumber = " ", sort= " ") => async (dispatch, getState) => {
+export const listProduct = (keyword = " ", pageNumber = " ", sort = " ") => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
@@ -112,7 +112,7 @@ export const allProduct = () => async (dispatch, getState) => {
 
 
 // ADMIN PRODUCT DELETE
-export const deleteProduct = (id) => async(dispatch, getState) => {
+export const deleteProduct = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_DELETE_REQUEST });
 
@@ -147,7 +147,7 @@ export const deleteProduct = (id) => async(dispatch, getState) => {
 };
 
 //ADMIN PRODUCT CREATE
-export const createProduct = ({ name, regisId, category, categoryDrug, unit, packing, APIs, branchName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image }) => async (dispatch, getState) => {
+export const createProduct = ({ name, regisId, category, categoryDrug, unit, packing, APIs, brandName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image }) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_CREATE_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
@@ -163,7 +163,7 @@ export const createProduct = ({ name, regisId, category, categoryDrug, unit, pac
 
     const { data } = await axios.post(`/api/products/`,
       {
-        name, regisId, category, categoryDrug, unit, packing, APIs, branchName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image
+        name, regisId, category, categoryDrug, unit, packing, APIs, brandName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image
       }
       , config);
     dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
@@ -290,9 +290,9 @@ export const singleProduct = (id) => async (dispatch, getState) => {
 
 // ADMIN UPDATE PRODUCT
 
-export const updateProduct = ({  name, category, categoryDrug, price, description, image, countInStock, unit, capacity, regisId, expDrug, statusDrug, productId }) => async (dispatch, getState) => {
+export const updateProduct = ({ name, price, prescription, APIs, brandName, manufacturer, image, countInStock, category, categoryDrug, countryOfOrigin, description, unit, regisId, packing, expDrug, instruction, allowToSell, productId }) => async (dispatch, getState) => {
   try {
-
+    console.log("action", APIs);
     dispatch({ type: PRODUCT_UPDATE_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
     const {
@@ -307,7 +307,7 @@ export const updateProduct = ({  name, category, categoryDrug, price, descriptio
     };
     const { data } = await axios.put(`/api/products/${productId}`,
       {
-        name, category, categoryDrug, price, description, image, countInStock, unit, capacity, regisId, expDrug, statusDrug
+        name, price, APIs, prescription, brandName, manufacturer, image, category, categoryDrug, countryOfOrigin, description, unit, regisId, packing, instruction, allowToSell
       }
       , config);
     dispatch({ type: PRODUCT_UPDATE_SUCCESS, payload: data });
