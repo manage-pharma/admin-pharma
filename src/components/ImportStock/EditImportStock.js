@@ -42,6 +42,8 @@ const EditImportStock = (props) => {
     const [field, setFieldProduct] = useState({
         name: '',
         product: '',
+        lotNumber: '',
+        expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         price: 1,
         qty: 1,
     });
@@ -59,7 +61,8 @@ const EditImportStock = (props) => {
         importedAt
     } = data
     
-    const { product, qty, price } = field
+    // eslint-disable-next-line
+    const { name, product, lotNumber, expDrug, qty, price } = field
     totalPrice= itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
 
     const handleChange = e =>{
@@ -104,7 +107,11 @@ const EditImportStock = (props) => {
         itemProducts.forEach((item, index)=>{
             if((item.product._id || item.product) === field.product){
                 flag = true
-                itemProducts.splice(index, 1, {...item, qty:  item.qty += parseInt(field.qty)})
+                itemProducts.splice(index, 1, {...item,
+                     lotNumber: field.lotNumber,
+                     price: parseInt(field.price),
+                     expDrug: field.expDrug,
+                     qty:  item.qty + parseInt(field.qty)})
                 setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
              }
         })
@@ -237,26 +244,49 @@ const EditImportStock = (props) => {
                 <div className="mb-4">
                     <div className="card card-custom mb-4 shadow-sm">
                         <div className="card-body">
-                            <div className="mb-4">
-                                <label htmlFor="product_category" className="form-label">
-                                    Product
-                                </label>
-                                <select
-                                id="select-product"
-                                value={product}
-                                name="product"
-                                onChange={handleChangeProduct}
-                                className="form-control"
-                                >
-                                    <option value=''>Chosse product</option>
-                                    {products?.map((item, index)=>(
-                                        <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
-                                    ))}
-                                </select>
+                            <div className="mb-4 form-divided-3">
+                                <div>
+                                    <label htmlFor="product_category" className="form-label">
+                                        Tên thuốc
+                                    </label>
+                                    <select
+                                    id="select-product"
+                                    value={product}
+                                    name="product"
+                                    onChange={handleChangeProduct}
+                                    className="form-control"
+                                    >
+                                        <option value=''>Chọn thuốc</option>
+                                        {products?.map((item, index)=>(
+                                            <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="form-label">Số lô</label>
+                                    <input
+                                        name="lotNumber"
+                                        value={lotNumber}
+                                        type='text'
+                                        className="form-control"
+                                        onChange={handleChangeProduct}
+                                    ></input>
+                                </div>
+                                <div>
+                                    <label className="form-label">Hạn sử dụng</label>
+                                    <input
+                                        name="expDrug"
+                                        value={expDrug}
+                                        type='Date'
+                                        className="form-control"
+                                        required
+                                        onChange={handleChangeProduct}
+                                    ></input>
+                                </div>
                             </div>
                             <div className="mb-4 form-divided-2">
                                 <div>
-                                    <label className="form-label">Price buy</label>
+                                    <label className="form-label">Giá nhập</label>
                                     <input
                                         name="price"
                                         value={price}
@@ -265,11 +295,10 @@ const EditImportStock = (props) => {
                                         className="form-control"
                                         onChange={handleChangeProduct}
                                     ></input>
-
                                 </div>
                                 <div>
                                     <label htmlFor="qty" className="form-label">
-                                        Quantity
+                                        Số lượng
                                     </label>
                                     <input
                                         name="qty"
@@ -298,9 +327,11 @@ const EditImportStock = (props) => {
                             <thead>
                             <tr>
                                 <th scope="col">STT</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price buy</th>
-                                <th scope='col'>Quantity</th>
+                                <th scope="col">Tên thuốc</th>
+                                <th scope="col">Số lô</th>
+                                <th scope="col">HSD</th>
+                                <th scope="col">Giá nhập</th>
+                                <th scope='col'>Số lượng</th>
                                 <th scope="col">Action</th>
                             </tr>
                             </thead>
@@ -309,6 +340,8 @@ const EditImportStock = (props) => {
                                     <tr key={index}>
                                     <th scope="row">{ index + 1 }</th>
                                     <td>{ item?.product?.name || item?.name }</td>
+                                    <td>{ item.lotNumber}</td>
+                                    <td>{ moment(item.expDrug).format("DD-MM-YYYY")}</td>
                                     <td>{ item?.price}</td>
                                     <td>{ item?.qty}</td>
                                     <td>
