@@ -1,18 +1,16 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import MainImportStock from './../components/ImportStock/MainImportStock';
-
-const ImportStockScreen = () => {
+import MainInventory from "../components/Inventories/InventoryMain";
+const DrugStoreScreen = () => {
   return (
     <>
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <MainImportStock/>
+        <MainInventory/>
       </main>
     </>
   );
 };
-
-export default ImportStockScreen;
+export default DrugStoreScreen;

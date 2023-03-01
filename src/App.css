@@ -1029,15 +1029,31 @@ input:checked + .slider:before {
   background-color: unset !important;
 }
 .lv2{
-  transition: 0.3s ease-in-out;
+  position: absolute;
   opacity: 0;
-  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: opacity 300ms, visibility 600ms;
+  transition: opacity 300ms, visibility 600ms;
 }
 .lv1:hover >.lv2{
+  position: static;
+  visibility: visible;
+  height: auto;
   opacity: 1;
-  visibility: unset;
+  animation: fade 1s;
 }
 
+@keyframes fade {
+  0% {
+      opacity: 0;
+  }
+
+  100% {
+      opacity: 1;
+  
+  }
+}
 .arrow::before {
   position: absolute;
   content: '';
@@ -1056,12 +1072,10 @@ input:checked + .slider:before {
   display: flex;
   padding-right: 10px;
 }
-/* .arrow.down:hover::before{
+.arrow.down:hover::before{
   transition: 0.3s ease-in-out;
-  right: 30px;
-  transform: rotate(90deg);
-  transition: transform .25s;
-} */
+  transform: translateY(90%) rotate(90deg);
+}
 .user-effect{
   display: flex;
   justify-content: flex-end;

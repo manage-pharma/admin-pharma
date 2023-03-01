@@ -23,6 +23,7 @@ const Sidebar = () => {
 
         <nav>
           <ul className="menu-aside">
+            {/* //! Trang chủ */}
             <li className="menu-item">
               <NavLink
                 activeClassName="active"
@@ -31,39 +32,55 @@ const Sidebar = () => {
                 exact={true}
               >
                 <i className="icon fas fa-home"></i>
-                <span className="text">Dashboard</span>
+                <span className="text">Trang chủ</span>
               </NavLink>
             </li>
-            <li className="menu-item">
+
+            {/* //! Danh mục  */}
+            <li className="menu-item lv1 arrow down">
               <NavLink
                 activeClassName="active"
                 className="menu-link"
                 to="/products"
               >
-                <i className="icon fas fa-shopping-bag"></i>
-                <span className="text">Products</span>
+                <i className="icon fas fa-usd-circle"></i>
+                <span className="text">Danh mục</span>
               </NavLink>
+                <ul className="menu-aside lv2">
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/products"
+                    >
+                      <i className="icon fas fa-capsules"></i>
+                      <span className="text">Dược phẩm</span>
+                    </NavLink>
+                  </li>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/categories"
+                    >
+                      <i className="icon fas fa-list"></i>
+                      <span className="text">loại hàng</span>
+                    </NavLink>
+                  </li>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/categories-drug"
+                    >
+                      <i className="icon fas fa-pills"></i>
+                      <span className="text">Loại thuốc</span>
+                    </NavLink>
+                  </li>
+                </ul>
             </li>
-            <li className="menu-item">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
-                to="/categories"
-              >
-                <i className="icon fas fa-list"></i>
-                <span className="text">Categories</span>
-              </NavLink>
-            </li>
-            <li className="menu-item">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
-                to="/categories-drug"
-              >
-                <i className="icon fas fa-capsules"></i>
-                <span className="text">Categories Drug</span>
-              </NavLink>
-            </li>
+
+            {/* //! Order */}
             <li className="menu-item">
               <NavLink
                 activeClassName="active"
@@ -74,6 +91,8 @@ const Sidebar = () => {
                 <span className="text">Orders</span>
               </NavLink>
             </li>
+
+            {/* //! Thông tin cá nhân */}
             <li className="menu-item">
               <NavLink
                 activeClassName="active"
@@ -91,9 +110,34 @@ const Sidebar = () => {
                 to="/providers"
               >
                 <i className="icon fas fa-store-alt"></i>
-                <span className="text">Provider</span>
+                <span className="text">Nhà cung cấp</span>
               </NavLink>
             </li>
+
+            {/* //! Nhà thuốc */}
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/drugstore"
+              >
+                <i className="icon fas fa-clinic-medical"></i>
+                <span className="text">Nhà Thuốc</span>
+              </NavLink>
+            </li>
+            {/* //! Kho dược */}
+            <li className="menu-item" >
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/inventories"
+              >
+                <i className="icon fab fa-dropbox"></i>
+                <span className="text">Kho dược</span>
+              </NavLink>
+            </li>
+
+            {/* //! Giao dịch */}
             <li className="menu-item lv1 arrow down">
               <NavLink
                 activeClassName="active"
@@ -127,7 +171,6 @@ const Sidebar = () => {
                   </li>
                 </ul>
             </li>
-
           </ul>
           <br />
           <br />

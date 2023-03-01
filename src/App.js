@@ -28,6 +28,8 @@ import { listOrder } from "./Redux/Actions/OrderActions";
 import ProviderScreen from './screens/ProviderScreen';
 import ImportStockScreen from "./screens/ImportStockScreen"
 import ExportStockScreen from "./screens/ExportStockScreen"
+import InventoryScreen from './screens/InventoryScreen';
+import DrugStoreScreen from './screens/DrugStoreScreen'
 function App() {
   const data = useSelector((state)=> state.theme)
   if(data.theme === "dark"){
@@ -79,6 +81,10 @@ function App() {
           <PrivateRouter path="/export-stock/:id" component={EditExport} />
 
           <PrivateRouter path="/providers" component={ProviderScreen} exact/>
+
+          <PrivateRouter path="/inventories" component={InventoryScreen} exact/>
+          <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact/>
+
 
           <PrivateRouter path="/users" component={UsersScreen} />
 

@@ -14,6 +14,7 @@ import { UnitCreateReducer, UnitDeleteReducer, UnitListReducer } from './Reducer
 import { ManufacturerCreateReducer, ManufacturerDeleteReducer, ManufacturerListReducer } from './Reducers/ManufacturerReducer';
 import { CountryCreateReducer, CountryDeleteReducer, CountryListReducer } from './Reducers/CountryOfOriginReducer';
 import { APICreateReducer, APIDeleteReducer, APIListReducer } from './Reducers/ActivePharmaReducer';
+import { inventoryDetailReducer, inventoryListReducer } from './Reducers/InventoryReducer';
 const reducer = combineReducers({
   theme: themeReducer,
 
@@ -80,6 +81,9 @@ const reducer = combineReducers({
   APIList: APIListReducer,
   APICreate: APICreateReducer,
   APIDelete: APIDeleteReducer,
+
+  inventoryList: inventoryListReducer,
+  inventoryDetail: inventoryDetailReducer
 });
 
 
