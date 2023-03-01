@@ -1,39 +1,114 @@
 import React from 'react'
 import  moment  from 'moment';
-
+import DataTable from "react-data-table-component";
 const ExpandedComponent = (props) =>{
-    const {data} = props
+    const {data, dessert} = props
+    const columns = [
+        {
+            name: "STT",
+            selector: (row, index) => <bold>{index+1}</bold>,
+            reorder: true,
+        },
+        {
+            name: "Số lô",
+            selector: (row) => row.lotNumber,
+            sortable: true,
+            reorder: true,
+        },
+        {
+            name: "Số lượng",
+            selector: (row) => row?.count,
+            sortable: true,
+        },
+        {
+            name: "HSD",
+            selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
+            sortable: true,
+            minWidth: "180px",
+        }
+    ];
+
+    const conditionalRowStyles = [
+        {
+            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") > 180,
+            style: {
+                backgroundColor: 'rgba(63, 195, 128, 0.9)',
+                color: 'white',
+                '&:hover': {
+                    cursor: 'pointer',
+                },
+            },
+        },
+        {
+            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") >= 90 && (moment(row.expDrug)).diff(moment(Date.now()), "days") < 180,
+            style: {
+                backgroundColor: 'rgba(248, 148, 6, 0.9)',
+                color: 'white',
+                '&:hover': {
+                    cursor: 'pointer',
+                },
+            },
+        },
+        {
+            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") < 90,
+            style: {
+                backgroundColor: 'rgba(242, 38, 19, 0.9)',
+                color: 'white',
+                '&:hover': {
+                    cursor: 'not-allowed',
+                },
+            },
+        },
+    ];
+
+    const customStyles = {
+        rows: {
+            highlightOnHoverStyle: {
+            backgroundColor: 'rgb(230, 244, 244)',
+            borderBottomColor: '#FFFFFF',
+            // borderRadius: '25px',
+            outline: '1px solid #FFFFFF',
+            },
+            style: {
+                minHeight: '32px',
+            },
+        },
+        header: {
+            style: {
+                minHeight: '56px',
+            },
+        },
+        headRow: {
+            style: {
+                fontSize: '14px',
+                minHeight: '40px',
+            },
+        },
+    };
+
+
     return (
-        <div className="card-body">
-            <div className="row">
-                <div className="card card-custom mb-4 shadow-sm">
-                    <header className="card-header bg-white ">
-                        <div className="row gx-3 py-3">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">STT</th>
-                                        <th scope="col">Số lô</th>
-                                        <th scope='col'>Số lượng</th>
-                                        <th scope="col">HSD</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data?.data?.products?.map((item, index)=>(
-                                        <tr key={index}>
-                                            <th scope="row">{ index + 1 }</th>
-                                            <td>{ item.lotNumber}</td>
-                                            <td>{ moment(item.expDrug).format("DD-MM-YYYY")}</td>
-                                            <td>{ item?.count}</td>
-                                        </tr> 
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </header>
-                </div>
+        <div style={{paddingBottom: '1rem'}}>
+        <div className="row">
+            <div className="card card-custom mb-4 shadow-sm">
+                <header className="card-header bg-white ">
+                    <DataTable
+                        // theme="solarized"
+                        columns={columns}
+                        data={data?.data?.products}
+                        customStyles={customStyles}
+                        defaultSortFieldId
+                        // onRowClicked={handleRowClicked}
+                        conditionalRowStyles={dessert ? conditionalRowStyles: ''}
+                        // progressPending={loading||loadingDelete}
+                        // progressComponent={<CustomLoader />}
+                        highlightOnHover
+                        pointerOnHover
+                    />
+                </header>
             </div>
-        </div> 
+        </div>
+    </div>
     )
 }
 export default ExpandedComponent
