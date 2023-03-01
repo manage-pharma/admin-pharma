@@ -1,9 +1,9 @@
 import DataTable from "react-data-table-component";
-import React from "react";
+import React, {useEffect} from "react";
 import CustomLoader from '../../util/LoadingTable';
 import ExpandedComponent from './ExpandedComponent'
 const InventoryTable = (props) =>{
-    const {inventory, loading, loadingStatus} = props 
+    const {inventory, dessert, expanded, loading} = props 
     const columns = [
         {
             name: "STT",
@@ -40,59 +40,13 @@ const InventoryTable = (props) =>{
             reorder: true,
             grow: 2
         },
-        // {
-        //     name: "PROVIDER",
-        //     selector: (row) => row.provider.name,
-        //     sortable: true,
-        //     reorder: true,
-        //     grow: 2
-        // },
-        // {
-        //     name: "CREATED BY",
-        //     selector: (row) => row.user.name,
-        //     sortable: true,
-        //     reorder: true,
-        //     grow: 2
-        // },
-        // {
-        //     name: "IMPORTED AT",
-        //     selector: (row) => moment(row.importedAt).format("DD/MM/YYYY"),
-        //     sortable: true,
-        //     reorder: true,
-        //     grow: 2
-        // },
-        // {
-        //     name: "STATUS",
-        //     selector: (rows) => rows.status === true ? 
-        //         (<span className="badge bg-success text-white">Completed</span>) : 
-        //         (<span className="badge bg-danger text-white">Incomplete</span>),
-        //     sortable: true,
-        //     reorder: true,
-        //     sortFunction: (importStock) => {
-        //         return [importStock].map((a, b) => {
-        //           const fieldA = a.status;
-        //           const fieldB = b.status;
-        //           let comparison = 0;
-              
-        //           if (fieldA === fieldB) {
-        //             comparison = 0;
-        //           } else if (fieldA === true) {
-        //             comparison = 1;
-        //           } else {
-        //             comparison = -1;
-        //           }
-              
-        //           return comparison
-        //         });
-        //     },
-        //     grow: 1
-        // },
-        // {   name: "ACTION",
-        //     cell: row => <CustomMaterialMenu row={row} />,
-        //     allowOverflow: true,
-        //     button: true,
-        //     width: '100px',
-        // },
+        {
+            name: "UNIT",
+            selector: (row) => row.unit,
+            sortable: true,
+            reorder: true,
+            grow: 2
+        }     
     ];
 
     const paginationComponentOptions = {
@@ -142,6 +96,12 @@ const InventoryTable = (props) =>{
         },
     };
     const isExpanded = row => row.defaultExpanded;
+
+    useEffect(()=>{
+        inventory?.map(item=>item.defaultExpanded = expanded)// eslint-disable-next-line
+    },[expanded])
+
+
   return (
     <>
 
@@ -154,10 +114,10 @@ const InventoryTable = (props) =>{
             pagination
             // onRowClicked={handleRowClicked}
             paginationComponentOptions={paginationComponentOptions}
-            progressPending={loading||loadingStatus}
+            progressPending={loading}
             expandableRows
 			expandableRowExpanded={isExpanded}
-            expandableRowsComponent={(data) => <ExpandedComponent data={data} />}
+            expandableRowsComponent={(data) => <ExpandedComponent data={data} dessert={dessert} />}
 		    progressComponent={<CustomLoader />}
             highlightOnHover
             pointerOnHover

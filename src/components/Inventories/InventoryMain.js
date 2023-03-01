@@ -10,6 +10,9 @@ const MainInventory = () => {
   const dispatch = useDispatch()
 
   const [ isStop , setIsStop ] = useState(false)
+  const [dessert, setDessert] = useState(false)
+  const [expanded, setExpanded] = useState(false)
+
   const [keyword, setSearch] = useState()
   const [toggleSearch, setToggleSearch] = useState(false)
   const [data, setData] = useState({
@@ -76,16 +79,30 @@ const MainInventory = () => {
       </div>
 
       <div className="card card-custom mb-4 shadow-sm">
-        <header className="card-header bg-white ">
+        <header className="card-header bg-white">
           <div className="row gx-3 py-3">
-            <div className="col-lg-4 col-md-6 me-auto ">
-              <input
-                type="search"
-                placeholder="Search..."
-                className="form-control p-2"
-                value={keyword}
-                onChange={handleSubmitSearch}
-              />
+            <div className="col-lg-4 col-md-6 me-auto d-flex">
+              <div>
+                <input
+                  type="search"
+                  placeholder="Search..."
+                  className="form-control p-2"
+                  value={keyword}
+                  onChange={handleSubmitSearch}
+                />
+              </div>
+              <div>
+                <button className="btn btn-success" onClick={(e)=>{
+                  e.preventDefault()
+                  setDessert(prev => !prev)
+                }}>Desserts</button>
+              </div>
+              <div>
+                <button className="btn btn-success" onClick={(e)=>{
+                  e.preventDefault()
+                  setExpanded(prev => !prev)
+                }}>Expandable</button>
+              </div>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
@@ -128,6 +145,8 @@ const MainInventory = () => {
             <InventoryTable
               inventory={inventories}
               loading={loading}
+              dessert={dessert}
+              expanded={expanded}
             /> : 
             <div>There are no record</div>
           }
