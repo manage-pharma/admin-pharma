@@ -43,7 +43,7 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/products"
               >
-                <i className="icon fas fa-usd-circle"></i>
+                <i className="icon fas fa-list"></i>
                 <span className="text">Danh mục</span>
               </NavLink>
                 <ul className="menu-aside lv2">
@@ -63,8 +63,8 @@ const Sidebar = () => {
                       className="menu-link"
                       to="/categories"
                     >
-                      <i className="icon fas fa-list"></i>
-                      <span className="text">loại hàng</span>
+                      <i className="icon fas fa-medkit"></i>
+                      <span className="text">Nhóm sản phẩm</span>
                     </NavLink>
                   </li>
                   <li className="menu-item">
@@ -74,7 +74,7 @@ const Sidebar = () => {
                       to="/categories-drug"
                     >
                       <i className="icon fas fa-pills"></i>
-                      <span className="text">Loại thuốc</span>
+                      <span className="text">Nhóm thuốc</span>
                     </NavLink>
                   </li>
                 </ul>
@@ -88,7 +88,7 @@ const Sidebar = () => {
                 to="/orders"
               >
                 <i className="icon fas fa-bags-shopping"></i>
-                <span className="text">Orders</span>
+                <span className="text">Đơn đặt hàng</span>
               </NavLink>
             </li>
 
@@ -100,7 +100,7 @@ const Sidebar = () => {
                 to="/users"
               >
                 <i className="icon fas fa-user"></i>
-                <span className="text">Users</span>
+                <span className="text">Người dùng</span>
               </NavLink>
             </li>
             <li className="menu-item" >
@@ -145,7 +145,7 @@ const Sidebar = () => {
                 to="/import-stock"
               >
                 <i className="icon fas fa-usd-circle"></i>
-                <span className="text">Transactions</span>
+                <span className="text">Nhập xuất</span>
 
               </NavLink>
                 <ul className="menu-aside lv2">
@@ -156,7 +156,7 @@ const Sidebar = () => {
                         to="/import-stock"
                       >
                         <i className="icon fas fa-sign-in-alt"></i>
-                        <span className="text">Import Stock</span>
+                        <span className="text">Nhập kho</span>
                       </NavLink>
                   </li>
                   <li className="menu-item">
@@ -166,7 +166,7 @@ const Sidebar = () => {
                         to="/export-stock"
                       >
                         <i className="icon fas fa-sign-out-alt"></i>
-                        <span className="text">Export Stock</span>
+                        <span className="text">Xuất kho</span>
                       </NavLink>
                   </li>
                 </ul>

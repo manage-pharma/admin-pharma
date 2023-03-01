@@ -27,17 +27,17 @@ const Provider = (props) =>{
         >
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">
-              Delete 
+              Xóa 
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Are you sure you want to delete <span className="text-danger">{dataModal?.name}</span> ?</p>
+            <p>Bạn có chắc chắn xóa <span className="text-danger">{dataModal?.name}</span> ?</p>
           </Modal.Body>
           <Modal.Footer>
             <Button className="btn-danger" onClick={()=>{
               dispatch(deleteProvider(dataModal?._id))
               setModalShow(false)
-            }}>OK</Button>
+            }}>Đồng ý</Button>
           </Modal.Footer>
         </Modal>
       );
@@ -61,14 +61,14 @@ const Provider = (props) =>{
                     setShow(true)
                     setDataModal(row)
                   }}>
-                    Edit info
+                    Sửa
                   </button>
                   <button className="dropdown-item text-danger" onClick={(e)=>{
                     e.preventDefault()
                     setModalShow(true)
                     setDataModal(row)
                   }}>
-                    Delete
+                    Xóa
                   </button>
                 </div>
             </div>
@@ -84,48 +84,48 @@ const Provider = (props) =>{
 
         },
         {
-            name: "NAME",
+            name: "Tên nhà cung cấp",
             selector: (row) => row.name,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
-            name: "CONTACT PERSON",
+            name: "Người liên hệ",
             selector: (row) => row.contactName,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "TAXCODE",
+            name: "Mã số thuế",
             selector: (row) => row.taxCode,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "PHONE",
+            name: "Số điện thoại",
             selector: (row) => row.phone,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "EMAIL",
+            name: "Email",
             selector: (row) => row.email,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "ADDRESS",
+            name: "Địa chỉ",
             selector: (row) => row.address,
             sortable: true,
             reorder: true,
             grow: 2
         },
-        {   name: "ACTION",
+        {   name: "Hành động",
             cell: row => <CustomMaterialMenu row={row} />,
             allowOverflow: true,
             button: true,

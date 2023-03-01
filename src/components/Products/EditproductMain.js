@@ -205,38 +205,38 @@ const EditProductMain = (props) => {
         type: PRODUCT_UPDATE_RESET
       });
       dispatch(singleProduct(productId));
-      toast.success("Product Updated", ToastObjects);
+      toast.success("Thuốc đẫ được cập nhật", ToastObjects);
     }
     if (successUnitCreate) {
-      toast.success("Unit added", ToastObjects);
+      toast.success("Đơn vị tính đã được thêm", ToastObjects);
       dispatch({ type: UNIT_CREATE_RESET })
     }
     if (successUnitDelete) {
-      toast.success("Unit deleted", ToastObjects);
+      toast.success("Đơn vị tính đã được xóa", ToastObjects);
       dispatch({ type: UNIT_DELETE_RESET })
     }
     if (successManufacturerCreate) {
-      toast.success("Manufacturer added", ToastObjects);
+      toast.success("Nhà cung cấp đã được thêm", ToastObjects);
       dispatch({ type: MANUFACTURER_CREATE_RESET })
     }
     if (successManufacturerDelete) {
-      toast.success("Manufacturer deleted", ToastObjects);
+      toast.success("Nhà cung cấp đã được xóa", ToastObjects);
       dispatch({ type: MANUFACTURER_DELETE_RESET })
     }
     if (successCountryCreate) {
-      toast.success("Country added", ToastObjects);
+      toast.success("Nước sản xuất đẫ được thêm", ToastObjects);
       dispatch({ type: COUNTRY_CREATE_RESET })
     }
     if (successCountryDelete) {
-      toast.success("Country deleted", ToastObjects);
+      toast.success("Nhà sản xuất đã được xóa", ToastObjects);
       dispatch({ type: COUNTRY_DELETE_RESET })
     }
     if (successAPICreate) {
-      toast.success("Active pharma deleted", ToastObjects);
+      toast.success("Hoạt chất đã được thêm", ToastObjects);
       dispatch({ type: API_CREATE_RESET })
     }
     if (successAPIDelete) {
-      toast.success("Country deleted", ToastObjects);
+      toast.success("Hoạt chất đã được xóa", ToastObjects);
       dispatch({ type: API_DELETE_RESET })
     }
     if (product._id !== productId) {
@@ -463,7 +463,7 @@ const EditProductMain = (props) => {
                         onChange={handleChange}
                         value={price}
                         type="number"
-                        placeholder="Type here"
+                        placeholder="100.000"
                         className="form-control"
                         id="product_price"
                         required
@@ -478,7 +478,7 @@ const EditProductMain = (props) => {
                         onChange={handleChange}
                         value={packing}
                         type="text"
-                        placeholder="Type here"
+                        placeholder="1 Hộp = 10 Vĩ ..."
                         className="form-control"
                         id="product_packing"
                         required
@@ -514,14 +514,14 @@ const EditProductMain = (props) => {
                       <div className="d-flex align-items-end w-50 mb-3">
                         <div style={{ flexGrow: '1' }}>
                           <label htmlFor="product_packing" className="form-label">
-                            Hàm lượng
+                            Hàm lượng (g)
                           </label>
                           <input
                             name="content"
                             value={content}
                             onChange={handleChangeAPI}
                             type="number"
-                            placeholder="Type here"
+                            placeholder="Nhập số gam"
                             className="form-control"
                             id="product_packing"
                           />
@@ -626,7 +626,7 @@ const EditProductMain = (props) => {
                     <label className="form-label">Mô tả</label>
                     <textarea
                       name="description"
-                      placeholder="Type here"
+                      placeholder="Nhập mô tả, công dụng,.."
                       className="form-control"
                       rows="4"
                       required
@@ -638,7 +638,7 @@ const EditProductMain = (props) => {
                     <label className="form-label">Lời chỉ dẫn</label>
                     <textarea
                       name="instruction"
-                      placeholder="Type here"
+                      placeholder="Nhập lời chỉ dẫn"
                       className="form-control"
                       rows="4"
                       required

@@ -16,11 +16,11 @@ const OrderDetailProducts = (props) => {
     <table className="table border table-lg">
       <thead>
         <tr>
-          <th style={{ width: "40%" }}>Product</th>
-          <th style={{ width: "20%" }}>Unit Price</th>
-          <th style={{ width: "20%" }}>Quantity</th>
+          <th style={{ width: "40%" }}>Sản phẩm</th>
+          <th style={{ width: "20%" }}>Giá</th>
+          <th style={{ width: "20%" }}>Số lượng</th>
           <th style={{ width: "20%" }} className="text-end">
-            Total
+            Tổng cộng
           </th>
         </tr>
       </thead>
@@ -53,28 +53,31 @@ const OrderDetailProducts = (props) => {
           <td colSpan="4">
             <article className="float-end">
               <dl className="dlist">
-                <dt>Subtotal:</dt> <dd>${order.itemsPrice}</dd>
+                <dt>Tổng tiền hàng:</dt> <dd>${order.itemsPrice}</dd>
               </dl>
               <dl className="dlist">
-                <dt>Shipping cost:</dt> <dd>${order.shippingPrice}</dd>
+                <dt>Phí vận chuyển:</dt> <dd>${order.shippingPrice}</dd>
               </dl>
               <dl className="dlist">
-                <dt>Grand total:</dt>
+                <dt>Vouncher:</dt> <dd>$0</dd>
+              </dl>
+              <dl className="dlist">
+                <dt>Tổng thanh toán:</dt>
                 <dd>
                   <b className="h5">${order.totalPrice}</b>
                 </dd>
               </dl>
               <dl className="dlist">
-                <dt className="text-muted">Status: </dt>
+                <dt className="text-muted">Trạng thái: </dt>
                 <dd>
                   {
                     order.isPaid ? (
                       <span className="badge rounded-pill alert alert-success text-success">
-                        Payment done
+                        Hoàn tất
                       </span>
                     ) : (
                       <span className="badge rounded-pill alert alert-success text-danger">
-                        Not paid
+                        Chưa trả 
                       </span>
                     )
                   }

@@ -119,7 +119,7 @@ const DetailCategoriesDrug = (props) => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Categories Drug</h2>
+        <h2 className="content-title">Nhóm thuốc</h2>
       </div>
 
       <div className="card shadow-sm">
