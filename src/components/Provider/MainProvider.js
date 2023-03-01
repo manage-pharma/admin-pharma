@@ -48,7 +48,7 @@ const MainProvider = (props) => {
 
   useEffect(()=>{
     if(successDelete){
-      toast.success("Deleted successfully", ToastObjects);
+      toast.success("Xóa thành công", ToastObjects);
     }
     else{
       dispatch(listProvider(keyword, pageNumber))
@@ -62,10 +62,10 @@ const MainProvider = (props) => {
     <AddProvider show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">PROVIDER LIST</h2>
+        <h2 className="content-title">Danh sách nhà cung cấp</h2>
           <div>
             <button onClick={handleAdd} className="btn btn-primary">
-              Create new
+              Tạo mới
             </button>
           </div>
       </div>
@@ -76,26 +76,11 @@ const MainProvider = (props) => {
             <div className="col-lg-4 col-md-6 me-auto ">
               <input
                 type="search"
-                placeholder="Search..."
+                placeholder="Tìm kiếm nhà cung cấp..."
                 className="form-control p-2"
                 value={keyword}
                 onChange={handleSubmitSearch}
               />
-            </div>
-            <div className="col-lg-2 col-6 col-md-3">
-              <select className="form-select">
-                <option>All category</option>
-                <option>Electronics</option>
-                <option>Clothings</option>
-                <option>Something else</option>
-              </select>
-            </div>
-            <div className="col-lg-2 col-6 col-md-3">
-              <select  defaultValue="" className="form-select">
-                <option value="">---Chosse Price---</option>
-                <option value="cheap">(1$ - 100$)</option>
-                <option value="expensive">(101$ - 1000$)</option>
-              </select>
             </div>
           </div>
         </header>
@@ -109,7 +94,7 @@ const MainProvider = (props) => {
               loading={loading}
               loadingDelete={loadingDelete}
               /> : 
-            <div>There are no record</div>
+            <div>Không có dữ liệu</div>
           }
         </div>
       </div>

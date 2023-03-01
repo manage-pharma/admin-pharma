@@ -278,7 +278,7 @@ const EditImportStock = (props) => {
                                     <label className="form-label">Note</label>
                                     <textarea
                                     name="note"
-                                    placeholder="Type here"
+                                    placeholder="Typ"
                                     className="form-control"
                                     rows="3"
                                     required

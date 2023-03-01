@@ -21,7 +21,7 @@ const ExpandedComponent = (props) =>{
             sortable: true,
         },
         {
-            name: "HSD",
+            name: "Hạn sử dụng",
             selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
             sortable: true,
             minWidth: "180px",

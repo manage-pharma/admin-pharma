@@ -20,7 +20,7 @@ const MainProducts = (props) => {
   const history = useHistory()
   const [keyword, setSearch] = useState()
   const [sort, setSort] = useState()
-  const [dessert, setDessert] = useState(false)
+  // const [dessert, setDessert] = useState(false)
   const productList = useSelector((state)=> state.productList)
   const { loading, error, products } = productList
 
@@ -63,15 +63,15 @@ const MainProducts = (props) => {
     { error || errorDelete ? (<Message variant="alert-danger">{error || errorDelete}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">PRODUCT LIST</h2>
+        <h3 className="content-title">Danh sách thông tin thuốc</h3>
         <div className="d-flex">
         <div style={{marginRight: '10px'}}>
-            <Link to="#" className="btn btn-primary" onClick={(e)=>{
+            {/* <Link to="#" className="btn btn-primary" onClick={(e)=>{
               e.preventDefault()
               setDessert(prev => !prev)
             }}>
-              Desserts EXP
-            </Link>
+              Đổ màu
+            </Link> */}
           </div>
           <div style={{marginRight: '10px'}}>
             <Link to="/product/excel" className="btn btn-primary">
@@ -80,7 +80,7 @@ const MainProducts = (props) => {
           </div>
           <div>
             <Link to="/product/add" className="btn btn-primary">
-              Create new
+              Tạo mới thuốc
             </Link>
           </div>
         </div>
@@ -92,23 +92,23 @@ const MainProducts = (props) => {
             <div className="col-lg-4 col-md-6 me-auto ">
               <input
                 type="search"
-                placeholder="Search..."
+                placeholder="Tìm kiếm thuốc..."
                 className="form-control p-2"
                 value={keyword}
                 onChange={handleSubmitSearch}
               />
             </div>
-            <div className="col-lg-2 col-6 col-md-3">
+            {/* <div className="col-lg-2 col-6 col-md-3">
               <select className="form-select">
                 <option>All category</option>
                 <option>Electronics</option>
                 <option>Clothings</option>
                 <option>Something else</option>
               </select>
-            </div>
+            </div> */}
             <div className="col-lg-2 col-6 col-md-3">
               <select  defaultValue="" className="form-select" onChange={handleSelected}>
-                <option value="">---Chosse Price---</option>
+                <option value="">---Chọn giá--</option>
                 <option value="cheap">(1$ - 100$)</option>
                 <option value="expensive">(101$ - 1000$)</option>
               </select>
@@ -119,7 +119,7 @@ const MainProducts = (props) => {
         <div>
           <DataTableProduct 
             products={products}
-            dessert={dessert}
+            // dessert={dessert}
             loading={loading}
             loadingDelete={loadingDelete}
           />

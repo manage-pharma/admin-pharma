@@ -1,4 +1,4 @@
-import moment from 'moment/moment';
+// import moment from 'moment/moment';
 import DataTable from "react-data-table-component";
 import { Link, useHistory } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { PRODUCT_DELETE_RESET } from "../../Redux/Constants/ProductConstants";
 import CustomLoader from './../../util/LoadingTable';
 const DataTableProduct = (props) => {
-    const { products, dessert, loading, loadingDelete } = props
+    const { products, loading, loadingDelete } = props
     const history = useHistory()
     const dispatch = useDispatch()
     const [modalShow, setModalShow] = useState(false);
@@ -79,7 +79,7 @@ const DataTableProduct = (props) => {
     const columns = [
 
         {
-            name: "Tên",
+            name: "Tên thuốc",
             selector: (row) => row.name,
             sortable: true,
             reorder: true,
@@ -146,7 +146,7 @@ const DataTableProduct = (props) => {
             minWidth: "120px",
         },
         {
-            name: "ACTION",
+            name: "Hành động",
             cell: row => <CustomMaterialMenu size="small" row={row} />,
             allowOverflow: true,
             button: true,
@@ -159,38 +159,38 @@ const DataTableProduct = (props) => {
         selectAllRowsItemText: "ALL"
     };
 
-    const conditionalRowStyles = [
-        {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") > 180,
-            style: {
-                backgroundColor: 'rgba(63, 195, 128, 0.9)',
-                color: 'white',
-                '&:hover': {
-                    cursor: 'pointer',
-                },
-            },
-        },
-        {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") >= 90 && (moment(row.expDrug)).diff(moment(Date.now()), "days") < 180,
-            style: {
-                backgroundColor: 'rgba(248, 148, 6, 0.9)',
-                color: 'white',
-                '&:hover': {
-                    cursor: 'pointer',
-                },
-            },
-        },
-        {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") < 90,
-            style: {
-                backgroundColor: 'rgba(242, 38, 19, 0.9)',
-                color: 'white',
-                '&:hover': {
-                    cursor: 'not-allowed',
-                },
-            },
-        },
-    ];
+    // const conditionalRowStyles = [
+    //     {
+    //         when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") > 180,
+    //         style: {
+    //             backgroundColor: 'rgba(63, 195, 128, 0.9)',
+    //             color: 'white',
+    //             '&:hover': {
+    //                 cursor: 'pointer',
+    //             },
+    //         },
+    //     },
+    //     {
+    //         when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") >= 90 && (moment(row.expDrug)).diff(moment(Date.now()), "days") < 180,
+    //         style: {
+    //             backgroundColor: 'rgba(248, 148, 6, 0.9)',
+    //             color: 'white',
+    //             '&:hover': {
+    //                 cursor: 'pointer',
+    //             },
+    //         },
+    //     },
+    //     {
+    //         when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") < 90,
+    //         style: {
+    //             backgroundColor: 'rgba(242, 38, 19, 0.9)',
+    //             color: 'white',
+    //             '&:hover': {
+    //                 cursor: 'not-allowed',
+    //             },
+    //         },
+    //     },
+    // ];
 
     // const handleRowClicked = (row) => {
     // history.push(`/product/${row._id}`)
@@ -258,7 +258,7 @@ const DataTableProduct = (props) => {
                 defaultSortFieldId
                 pagination
                 // onRowClicked={handleRowClicked}
-                conditionalRowStyles={dessert ? conditionalRowStyles : ''}
+                // conditionalRowStyles={dessert ? conditionalRowStyles : ''}
                 paginationComponentOptions={paginationComponentOptions}
                 progressPending={loading || loadingDelete}
                 progressComponent={<CustomLoader />}

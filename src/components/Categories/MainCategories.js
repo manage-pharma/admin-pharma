@@ -31,18 +31,18 @@ const MainCategories = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Delete 
+            Xóa 
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete <span className="text-danger">{data.name}</span> ?</p>
+          <p>Bạn có chác chắn xóa <span className="text-danger">{data.name}</span> ?</p>
         </Modal.Body>
         <Modal.Footer>
           <Button className="btn-danger" onClick={(e)=>{
             e.preventDefault()
             dispatch(deleteCategory(data._id))
             setModalShow(false)
-          }}>OK</Button>
+          }}>Đồng ý</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -104,13 +104,13 @@ const MainCategories = () => {
       <Toast />
       <section className="content-main">
         <div className="content-header">
-          <h2 className="content-title">CATEGORY LIST</h2>
+          <h2 className="content-title">Danh sách nhóm sản phẩm</h2>
           <div>{ editCallback ? (
             <button onClick={(e)=>{
               e.preventDefault()
               setEditcallback('')
             }}className="btn btn-primary">
-              Create new
+              Tạo mới
             </button>
            ) : ""}
           </div>

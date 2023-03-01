@@ -120,7 +120,7 @@ const DetailCategories = (props) => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Categories</h2>
+        <h2 className="content-title">Nhóm sản phẩm</h2>
       </div>
 
       <div className="card shadow-sm">

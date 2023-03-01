@@ -19,25 +19,25 @@ const CategoriesTable = (props) => {
 
     },
     {
-        name: "NAME",
+        name: "Tên nhóm hàng",
         selector: (row) => row.name,
         sortable: true,
         reorder: true,
         grow: 3
     },
     {
-        name: "	DESCRIPTION",
+        name: "	Mô tả",
         selector: (row) => row.description,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
-        name: "IMAGE",
+        name: "Ảnh",
         selector: (row) => <img className="mt-1 w-50 h-50" src={row.image} alt="ImageCategory" />,
     },
     {
-      name: "ACTIVE",
+      name: "Trạng thái",
       selector: (rows) => rows.isActive === true ? 
           (<input className="form-check-input"  type="checkbox" defaultChecked={rows.isActive}/>) : 
           (<input className="form-check-input"  type="checkbox" />),
@@ -62,7 +62,7 @@ const CategoriesTable = (props) => {
       },
       grow: 1
     },
-    {   name: "ACTION",
+    {   name: "Hành động",
         cell: (row) =>{
           return (
             <div className="dropdown">
@@ -78,14 +78,14 @@ const CategoriesTable = (props) => {
                     e.preventDefault();
                     props.parentCallbackEdit(row)
                   }}>
-                    Edit info
+                    Sửa
                   </button>
                   <button className="dropdown-item text-danger" onClick={(e)=>{
                     e.preventDefault()
                     props.parentModal(true)
                     props.parentCallbackDelete(row)
                   }}>
-                    Delete
+                    Xóa
                   </button>
                 </div>
             </div>
@@ -168,7 +168,7 @@ const CategoriesTable = (props) => {
           progressComponent={<CustomLoader />}
           highlightOnHover
           pointerOnHover
-        /> : <div>There is no data</div>
+        /> : <div>Không có dữ liệu</div>
       }
     </div>
   );
