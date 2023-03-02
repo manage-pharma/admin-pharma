@@ -29,7 +29,8 @@ import ProviderScreen from './screens/ProviderScreen';
 import ImportStockScreen from "./screens/ImportStockScreen"
 import ExportStockScreen from "./screens/ExportStockScreen"
 import InventoryScreen from './screens/InventoryScreen';
-import DrugStoreScreen from './screens/DrugStoreScreen'
+import DrugStoreScreen from './screens/DrugStoreScreen';
+import TagInventory from './screens/TagInventory';
 function App() {
   const data = useSelector((state)=> state.theme)
   if(data.theme === "dark"){
@@ -83,8 +84,9 @@ function App() {
           <PrivateRouter path="/providers" component={ProviderScreen} exact/>
 
           <PrivateRouter path="/inventories" component={InventoryScreen} exact/>
-          <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact/>
+          <PrivateRouter path="/tag-inventory" component={TagInventory} exact/>
 
+          <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact/>
 
           <PrivateRouter path="/users" component={UsersScreen} />
 
