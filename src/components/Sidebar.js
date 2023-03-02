@@ -125,16 +125,49 @@ const Sidebar = () => {
                 <span className="text">Nhà Thuốc</span>
               </NavLink>
             </li>
+
             {/* //! Kho dược */}
-            <li className="menu-item" >
+            <li className="menu-item lv1 arrow down">
               <NavLink
                 activeClassName="active"
                 className="menu-link"
                 to="/inventories"
               >
-                <i className="icon fab fa-dropbox"></i>
+                <i className="icon fas fa-warehouse"></i>
                 <span className="text">Kho dược</span>
               </NavLink>
+                <ul className="menu-aside lv2">
+                  <li className="menu-item" >
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/inventories"
+                    >
+                      <i className="icon fas fa-archive"></i>
+                      <span className="text">Xem tồn kho</span>
+                    </NavLink>
+                  </li>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/tag-inventory"
+                    >
+                      <i className="icon fas fa-tags"></i>
+                      <span className="text">Thẻ kho</span>
+                    </NavLink>
+                  </li>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/categories-drug"
+                    >
+                      <i className="icon fab fa-dropbox"></i>
+                      <span className="text">Kiểm kê tồn kho</span>
+                    </NavLink>
+                  </li>
+                </ul>
             </li>
 
             {/* //! Giao dịch */}

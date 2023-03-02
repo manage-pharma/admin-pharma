@@ -116,7 +116,7 @@ const MainImportStock = (props) => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
-                <span className="label-date">Từ ngày: </span>
+                <span className="label-date">Từ: </span>
                 <input
                     id="datePicker"
                     name="from"
