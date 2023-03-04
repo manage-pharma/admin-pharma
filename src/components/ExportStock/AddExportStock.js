@@ -8,11 +8,12 @@ import { toast } from "react-toastify";
 import { EXPORT_STOCK_CREATE_RESET } from "../../Redux/Constants/ExportStockConstant";
 import { listUser } from "../../Redux/Actions/UserActions";
 import { listProduct } from "./../../Redux/Actions/ProductActions";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
 import moment from "moment";
 import renderToast from "../../util/Toast";
 import { listInventory } from "../../Redux/Actions/InventoryAction";
+import ExportTable from "./ExportStockTable";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -33,7 +34,6 @@ const AddExportStock = () => {
   const { users } = userList;
 
   const [inventoriesClone, setInventoriesClone] = useState([]);
-
   useEffect(() => {
     if (inventories.length > 0) {
       setInventoriesClone([...inventories]);
@@ -65,16 +65,11 @@ const AddExportStock = () => {
     note,
     exportItems = itemProducts ? [...itemProducts] : [],
     user,
-    totalPrice,
     exportedAt,
   } = data;
 
   const { product, lotField } = field;
-  totalPrice = exportItems.reduce(
-    (sum, curr) => sum + curr.price * curr.qty,
-    0
-  );
-
+  console.log(exportItems);
   const handleChange = (e) => {
     e.preventDefault();
     setData((prev) => {
@@ -90,11 +85,11 @@ const AddExportStock = () => {
     updateQtyLot[index] = {
       name,
       value,
-      expDrug
+      expDrug,
     };
     setqtyLost(updateQtyLot);
   };
-  
+
   const refreshField = () => {
     const inputElements = document.querySelectorAll("#list-lot input");
     inputElements.forEach((input, index) => {
@@ -123,8 +118,10 @@ const AddExportStock = () => {
         toast.error(`Số lượng phải là số`, ToastObjects);
         return;
       }
-      if ( lotNumberData === qtyLot[index].name &&
-        expDrug === qtyLot[index].expDrug) {
+      if (
+        lotNumberData === qtyLot[index].name &&
+        expDrug === qtyLot[index].expDrug
+      ) {
         if (parseInt(qtyLotData) < parseInt(qtyLot[index].value)) {
           data.isError = true;
 
@@ -138,7 +135,7 @@ const AddExportStock = () => {
             _id: id,
             lotNumber: lotNumberData,
             count: parseInt(qtyLot[index].value),
-            expDrug
+            expDrug,
           });
         }
       }
@@ -172,8 +169,10 @@ const AddExportStock = () => {
   const vonglap = (product, newData) => {
     let index = -1;
     for (let i = 0; i < newData.length; i++) {
-      if (product.lotNumber === newData[i].lotNumber &&
-        product.expDrug === newData[i].expDrug) {
+      if (
+        product.lotNumber === newData[i].lotNumber &&
+        product.expDrug === newData[i].expDrug
+      ) {
         return (index = i);
       }
     }
@@ -313,7 +312,7 @@ const AddExportStock = () => {
     inventoriesClone.splice(findProductIndex, 1, {
       ...findProduct,
     });
-    
+
     setFieldProduct(() => {
       return {
         countInStock: findProduct.total_count,
@@ -525,7 +524,9 @@ const AddExportStock = () => {
                           data-id={lot._id}
                           data-expdrug={lot.expDrug}
                           className="form-control"
-                          onChange={(e) => handleChangeQuantity(e, index, lot.expDrug)}
+                          onChange={(e) =>
+                            handleChangeQuantity(e, index, lot.expDrug)
+                          }
                         ></input>
                       </div>
                     );
@@ -549,46 +550,10 @@ const AddExportStock = () => {
             <div className="card card-custom mb-4 shadow-sm">
               <header className="card-header bg-white ">
                 <div className="row gx-3 py-3">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">STT</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {itemProducts?.map((item, index) => (
-                        <tr key={index}>
-                          <th scope="row">{index + 1}</th>
-                          <td>{item.name}</td>
-                          <td>{item.qty}</td>
-                          <td>
-                            <div className="dropdown">
-                              <Link
-                                to="#"
-                                data-bs-toggle="dropdown"
-                                className="btn btn-light"
-                              >
-                                <i className="fas fa-ellipsis-h"></i>
-                              </Link>
-                              <div className="dropdown-menu">
-                                <button
-                                  className="dropdown-item text-danger"
-                                  onClick={(e) =>
-                                    handleDeleteItem(e, index, item.product)
-                                  }
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <ExportTable
+                    itemProducts={itemProducts}
+                    handleDeleteItem={handleDeleteItem}
+                  />
                 </div>
               </header>
             </div>

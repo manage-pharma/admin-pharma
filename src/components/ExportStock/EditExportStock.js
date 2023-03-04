@@ -6,7 +6,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { listUser } from "../../Redux/Actions/UserActions";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
 import {
   EXPORT_STOCK_DETAILS_RESET,
@@ -16,6 +16,7 @@ import moment from "moment";
 import { listProduct } from "./../../Redux/Actions/ProductActions";
 import renderToast from "../../util/Toast";
 import { listInventory } from "../../Redux/Actions/InventoryAction";
+import ExportTable from "./ExportStockTable";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -66,22 +67,10 @@ const EditImportStock = (props) => {
     exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
 
-  var {
-    customer,
-    phone,
-    address,
-    note,
-    exportItems = itemProducts ? [...itemProducts] : [],
-    user,
-    totalPrice,
-    exportedAt,
-  } = data;
+  var { customer, phone, address, note, user, exportedAt } = data;
 
   const { product, lotField } = field;
-  totalPrice = itemProducts.reduce(
-    (sum, curr) => sum + curr.price * curr.qty,
-    0
-  );
+
   const handleChange = (e) => {
     e.preventDefault();
     setData((prev) => {
@@ -101,7 +90,7 @@ const EditImportStock = (props) => {
     };
     setqtyLost(updateQtyLot);
   };
-  
+
   const refreshField = () => {
     const inputElements = document.querySelectorAll("#list-lot input");
     inputElements.forEach((input, index) => {
@@ -673,50 +662,10 @@ const EditImportStock = (props) => {
             <div className="card card-custom mb-4 shadow-sm">
               <header className="card-header bg-white ">
                 <div className="row gx-3 py-3">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">STT</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {itemProducts?.map((item, index) => (
-                        <tr key={index}>
-                          <th scope="row">{index + 1}</th>
-                          <td>{item?.product?.name || item?.name}</td>
-                          <td>{item?.qty}</td>
-                          <td>
-                            <div className="dropdown">
-                              <Link
-                                to="#"
-                                data-bs-toggle="dropdown"
-                                className="btn btn-light"
-                              >
-                                <i className="fas fa-ellipsis-h"></i>
-                              </Link>
-                              <div className="dropdown-menu">
-                                <button
-                                  className="dropdown-item text-danger"
-                                  onClick={(e) =>
-                                    handleDeleteItem(
-                                      e,
-                                      index,
-                                      item.product._id || item.product
-                                    )
-                                  }
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <ExportTable
+                    itemProducts={itemProducts}
+                    handleDeleteItem={handleDeleteItem}
+                  />
                 </div>
               </header>
             </div>
