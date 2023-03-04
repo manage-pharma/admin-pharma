@@ -17,11 +17,11 @@ const Header = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-sm">
-            My profile
+            Thông tin người dùng
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="fw-bold">Username: {
+          <div className="fw-bold">Quyền người dùng: {
             userInfo.isAdmin ? (
               <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>Admin</p>
             )
@@ -31,7 +31,7 @@ const Header = () => {
             )
           }</div>
           <div className="fw-bold">Email: <span className="fw-normal">{userInfo.email}</span></div>
-          <div className="fw-bold">Phone number: <span className="fw-normal">{userInfo.phone}</span></div>
+          <div className="fw-bold">Số điện thoại: <span className="fw-normal">{userInfo.phone}</span></div>
         </Modal.Body>
       </Modal>
     );
@@ -94,18 +94,12 @@ const Header = () => {
                 list="search_terms"
                 type="text"
                 className="form-control"
-                placeholder="Search term"
+                placeholder="Nhập tìm kiếm"
               />
               <button className="btn btn-light bg" type="button">
                 <i className="far fa-search"></i>
               </button>
             </div>
-            <datalist id="search_terms">
-              <option value="Products" />
-              <option value="New orders" />
-              <option value="Apple iphone" />
-              <option value="Ahmed Hassan" />
-            </datalist>
           </form>
         </div>
         <div className="col-nav">
@@ -148,13 +142,13 @@ const Header = () => {
               </Link>
               <div className="dropdown-menu dropdown-menu-end">
                 <Link className="dropdown-item" to="#" onClick={handleMyProfile}>
-                  My profile
+                  Thông tin người dùng
                 </Link>
                 <Link className="dropdown-item" to="#">
-                  Settings
+                  Cài đặt
                 </Link>
                 <Link className="dropdown-item text-danger" to='#' onClick={handleLogout}>
-                  Logout
+                  Đăng xuất
                 </Link>
               </div>
             </li>

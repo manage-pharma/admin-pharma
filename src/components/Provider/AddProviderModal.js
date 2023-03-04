@@ -75,11 +75,11 @@ const AddProvider = (props) => {
         }
         if(success || successProviderUpdated){
             if(successProviderUpdated){
-                toast.success(`Updated successfully`, ToastObjects);
+                toast.success(`Cập nhật thành công`, ToastObjects);
                 dispatch({type: PROVIDER_UPDATE_RESET})
             }
             else{
-                toast.success(`Added successfully`, ToastObjects);
+                toast.success(`Thêm thành công`, ToastObjects);
                 dispatch({type: PROVIDER_CREATE_RESET})
             }
             setDataModal({
@@ -112,7 +112,7 @@ const AddProvider = (props) => {
         <Toast />
         <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter">
           <Modal.Header closeButton>
-            <Modal.Title  id="contained-modal-title-vcenter">Add Provider</Modal.Title>
+            <Modal.Title  id="contained-modal-title-vcenter">Thêm nhà cung cấp</Modal.Title>
           </Modal.Header>
           <Modal.Body  className="show-grid">
             <Form>
@@ -120,10 +120,10 @@ const AddProvider = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Provider</Form.Label>
+                                <Form.Label>Nhà cung cấp</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    placeholder="provider name"
+                                    placeholder="Nhập nhà cung cấp"
                                     autoFocus
                                     onChange={handelChangeModal}
                                     name="name"
@@ -136,10 +136,10 @@ const AddProvider = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Contact person</Form.Label>
+                                <Form.Label>Người liên hệ</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        placeholder="contact person"
+                                        placeholder="Nhập người liên hệ"
                                         onChange={handelChangeModal}
                                         name="contactName"
                                         value={contactName}
@@ -151,10 +151,10 @@ const AddProvider = (props) => {
                     <Row>
                         <Col xs={12} md={6}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Tax code</Form.Label>
+                                <Form.Label>Mã số thuế</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    placeholder="tax code"
+                                    placeholder="Nhập mã số thuế"
                                     onChange={handelChangeModal}
                                     name="taxCode"
                                     value={taxCode}
@@ -164,10 +164,10 @@ const AddProvider = (props) => {
                         </Col>
                         <Col xs={6} md={6}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Phone</Form.Label>
+                                <Form.Label>Số điện thoại</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    placeholder="phone"
+                                    placeholder="Nhập số điện thoại"
                                     onChange={handelChangeModal}
                                     name="phone"
                                     value={phone}
@@ -179,7 +179,7 @@ const AddProvider = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Email address</Form.Label>
+                                <Form.Label>Email</Form.Label>
                                 <Form.Control
                                     type="email"
                                     placeholder="name@example.com"
@@ -194,7 +194,7 @@ const AddProvider = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                                <Form.Label>Address</Form.Label>
+                                <Form.Label>Địa chỉ</Form.Label>
                                 <Form.Control 
                                     as="textarea" 
                                     rows={3} 
@@ -212,10 +212,10 @@ const AddProvider = (props) => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-              Close
+              Đóng
             </Button>
             <Button variant="primary" onClick={handleSubmit}>
-              {successProviderSingle ? 'Update' : 'Add'}
+              {successProviderSingle ? 'Cập nhật' : 'Thêm'}
             </Button>
           </Modal.Footer>
         </Modal>

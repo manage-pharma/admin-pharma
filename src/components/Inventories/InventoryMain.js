@@ -82,26 +82,26 @@ const MainInventory = () => {
         <header className="card-header bg-white">
           <div className="row gx-3 py-3">
             <div className="col-lg-4 col-md-6 me-auto d-flex">
-              <div>
+              <div className="me-1" style={{flexGrow: '1'}}>
                 <input
                   type="search"
-                  placeholder="Search..."
+                  placeholder="Tìm kiếm tên thuốc..."
                   className="form-control p-2"
                   value={keyword}
                   onChange={handleSubmitSearch}
                 />
               </div>
               <div>
-                <button className="btn btn-success" onClick={(e)=>{
+                <button className="btn btn-success me-1" onClick={(e)=>{
                   e.preventDefault()
                   setDessert(prev => !prev)
-                }}>Desserts</button>
+                }}>{!dessert ? 'Đổ màu' : 'Tắt màu'}</button>
               </div>
               <div>
                 <button className="btn btn-success" onClick={(e)=>{
                   e.preventDefault()
                   setExpanded(prev => !prev)
-                }}>Expandable</button>
+                }}>{!expanded ? 'Mở rộng' : 'Thu gọn' }</button>
               </div>
             </div>
             <div className="col-lg-2 col-6 col-md-3">

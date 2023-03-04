@@ -5,9 +5,9 @@ const SaleStatistics = () => {
     <div className="col-xl-6 col-lg-12">
       <div className="card card-custom mb-4 shadow-sm">
         <article className="card-body">
-          <h5 className="card-title">Sale statistics</h5>
+          <h5 className="card-title">Doanh thu</h5>
           <iframe 
-            title="Sale statistics"
+            title="Doanh thu"
             style={{
               background: "#FFFFFF",
               border: "none",

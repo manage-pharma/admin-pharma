@@ -28,17 +28,17 @@ const ImportStock = (props) =>{
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter" style={{color: 'black'}}>
-                Update status 
+                Cập nhật trạng thái 
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <p>Are you sure want to set status <span className="text-warning">{dataModal?.importCode}</span> ?</p>
+              <p>Bạn có chắc chắn duyệt đơn <span className="text-warning">{dataModal?.importCode}</span> ?</p>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="warning" style={{fontWeight:"600"}} onClick={()=>{
                 dispatch(statusImportStock(dataModal?._id))
                 setModalShow(false)
-              }}>OK</Button>
+              }}>Đồng ý</Button>
             </Modal.Footer>
           </Modal>
         );
@@ -63,18 +63,18 @@ const ImportStock = (props) =>{
                           setModalShow(true)
                           setDataModal(row)
                         }}>
-                          <span className="text-black">Confirm import</span>
+                          <span className="text-black">Xác nhận nhập</span>
                         </button>
                         <button className="dropdown-item" onClick={(e)=>{
                           e.preventDefault()
                           history.push(`/import-stock/${row._id}`)
-                        }}>Edit info</button>
+                        }}>Chỉnh sửa</button>
                       </>
                        :
                        <button className="dropdown-item" onClick={(e)=>{
                         e.preventDefault()
                         history.push(`/import-stock/${row._id}`)
-                      }}>Detail info</button>
+                      }}>Xem chi tiết</button>
                   }
                 </div>
             </div>
@@ -90,45 +90,45 @@ const ImportStock = (props) =>{
 
         },
         {
-            name: "IMPORT CODE",
+            name: "Mã hóa đơn",
             selector: (row) => row.importCode,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
-            name: "PROVIDER",
+            name: "Nhà cung cấp",
             selector: (row) => row.provider.name,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "CREATED BY",
+            name: "Tạo bởi",
             selector: (row) => row.user.name,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "IMPORTED AT",
+            name: "Ngày nhập",
             selector: (row) => moment(row.importedAt).format("DD/MM/YYYY"),
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "TOTAL PRICE",
+            name: "Tổng cộng",
             selector: (row) => row.totalPrice,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "STATUS",
+            name: "Trạng thái",
             selector: (rows) => rows.status === true ? 
-                (<span className="badge bg-success text-white">Completed</span>) : 
-                (<span className="badge bg-danger text-white">Incomplete</span>),
+                (<span className="badge bg-success text-white">Đã hoàn tất</span>) : 
+                (<span className="badge bg-danger text-white">Chưa duyệt</span>),
             sortable: true,
             reorder: true,
             sortFunction: (importStock) => {
@@ -150,7 +150,7 @@ const ImportStock = (props) =>{
             },
             grow: 1
         },
-        {   name: "ACTION",
+        {   name: "Hành động",
             cell: row => <CustomMaterialMenu row={row} />,
             allowOverflow: true,
             button: true,

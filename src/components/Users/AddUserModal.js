@@ -45,7 +45,7 @@ const AddUser = (props) => {
         }
         else{
             if(dataModal.password !== dataModal.passwordAgain){
-                toast.error("Password do not match", ToastObjects);
+                toast.error("Mật khẩu không khớp", ToastObjects);
                 return;
             }
             dispatch(createUser(dataModal));
@@ -84,11 +84,11 @@ const AddUser = (props) => {
         }
         if(success || successUserUpdated){
             if(successUserUpdated){
-                toast.success(`Updated successfully`, ToastObjects);
+                toast.success(`Cập nhật thành công`, ToastObjects);
                 dispatch({type: USER_UPDATE_RESET})
             }
             else{
-                toast.success(`Added successfully`, ToastObjects);
+                toast.success(`Thêm thành công`, ToastObjects);
                 dispatch({type: USER_CREATE_RESET})
             }
             setDataModal({
@@ -125,11 +125,11 @@ const AddUser = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Username</Form.Label>
+                                <Form.Label>Tên tài khoản</Form.Label>
                                 <Form.Control
                                     type="text"
                                     autoComplete="off"
-                                    placeholder="Username"
+                                    placeholder="Nhập tên người dùng"
                                     autoFocus
                                     onChange={handelChangeModal}
                                     name="name"
@@ -142,7 +142,7 @@ const AddUser = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                                <Form.Label>Email address</Form.Label>
+                                <Form.Label>Email</Form.Label>
                                 <Form.Control
                                     type="email"
                                     autoComplete="off"
@@ -158,11 +158,11 @@ const AddUser = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                                <Form.Label>Phone</Form.Label>
+                                <Form.Label>Số điện thoại</Form.Label>
                                 <Form.Control
                                     type="email"
                                     autoComplete="off"
-                                    placeholder="phone number"
+                                    placeholder="Nhập số điện thoại"
                                     onChange={handelChangeModal}
                                     name="phone"
                                     value={phone}
@@ -174,7 +174,7 @@ const AddUser = (props) => {
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput4">
-                                <Form.Label>Password</Form.Label>
+                                <Form.Label>Mật khẩu</Form.Label>
                                 <Form.Control
                                     type="password"
                                     autoComplete="new-password"
@@ -189,7 +189,7 @@ const AddUser = (props) => {
                         <Row>
                             <Col xs={12} md={12}>
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput5">
-                                    <Form.Label>Confirm new password</Form.Label>
+                                    <Form.Label>Xác nhận mật khẩu</Form.Label>
                                     <Form.Control
                                         type="password"
                                         autoComplete="new-password"
@@ -206,10 +206,10 @@ const AddUser = (props) => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-              Close
+              Đóng
             </Button>
             <Button variant="primary" onClick={handleSubmit}>
-              {successUserSingle ? 'Update' : 'Add'}
+              {successUserSingle ? 'Cập nhật' : 'Thêm'}
             </Button>
           </Modal.Footer>
         </Modal>

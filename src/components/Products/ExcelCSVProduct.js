@@ -23,7 +23,7 @@ const ExcelCSVProductComponent = () => {
     const { productall } = productAll
     useEffect(()=>{
         if(success){
-            toast.success("Import Successful", ToastObjects);
+            toast.success("Nhập thành công", ToastObjects);
             dispatch({type: PRODUCT_IMPORT_RESET})
             setData(null)
             dispatch(allProduct())
@@ -57,18 +57,21 @@ const ExcelCSVProductComponent = () => {
     const handleExport = () => {
         const headings = [[
             'ID',
-            'name',
-            'category',
-            'image',
-            'description',
-            'rating',
-            'numberReviews',
-            'price',
-            'countInStock',
-            'reviews',
-            'createdAt',
-            'updatedAt',
-            'version'
+            'Tên thuốc',
+            'Số đăng ký',
+            'Nhóm hàng',
+            'Nhóm thuốc',
+            'Đơn vị tính',
+            'Quy cách đóng gói',
+            'Hoạt chất',
+            'Tên biệt dược',
+            'Nhà cung cấp',
+            'Nước sản xuất',
+            'Lời chỉ dẫn',
+            'Giá',
+            'Thuốc bán',
+            'Thuốc kê đơn',
+            'Ngày tạo'
         ]];
 
         const cloneData = JSON.parse(JSON.stringify(productall))
@@ -97,7 +100,7 @@ const ExcelCSVProductComponent = () => {
                                 marginRight:"10px", 
                                 paddingTop:"5px", 
                                 fontWeight:"bold"
-                            }}>Import</label>
+                            }}>Nhập</label>
                         <input 
                             type="file" 
                             name="file" 
@@ -114,12 +117,12 @@ const ExcelCSVProductComponent = () => {
                                 marginLeft:"10px", 
                                 paddingTop:"5px", 
                                 fontWeight:"bold"
-                            }}>Save</button>)
+                            }}>Lưu</button>)
                         }
                     </div>
                     <div>
                         <button onClick={handleExport} className="btn btn-primary float-right">
-                            Export <i className="fa fa-download"></i>
+                            Xuất <i className="fa fa-download"></i>
                         </button>
                     </div>
                 </div>

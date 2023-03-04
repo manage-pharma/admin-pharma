@@ -8,14 +8,14 @@ const Orders = (props) => {
     <table className="table">
       <thead>
         <tr>
-          <th scope="col">Name</th>
+          <th scope="col">Tên</th>
           <th scope="col">Email</th>
-          <th scope="col">Total</th>
-          <th scope="col">Paid</th>
-          <th scope="col">Date</th>
-          <th>Status</th>
+          <th scope="col">Tổng côgnj</th>
+          <th scope="col">Trạng thái</th>
+          <th scope="col">Ngày đặt</th>
+          <th>Trạng thái</th>
           <th scope="col" className="text-end">
-            Action
+            Chi tiết
           </th>
         </tr>
       </thead>
@@ -30,20 +30,20 @@ const Orders = (props) => {
               <td>${order?.totalPrice}</td>
               <td>{
                   order.isPaid ? (
-                    <span className="badge rounded-pill alert-success">Paid At {moment(order.paidAt).format("MMM Do YY")}</span>
+                    <span className="badge rounded-pill alert-success">Trả ngày {moment(order.paidAt).format("MMM Do YY")}</span>
                   ) : 
                   (
-                    <span className="badge rounded-pill alert-danger">Not Paid</span>
+                    <span className="badge rounded-pill alert-danger">Chưa trả</span>
                   ) 
                 }
               </td>
               <td>{moment(order.createdAt).format("MMM Do YY")}</td>
               <td>{
                   order.isDelivered ? (
-                    <span className="badge btn-success">Delivered</span>
+                    <span className="badge btn-success">Đã vận chuyển</span>
                   ) : 
                   (
-                    <span className="badge btn-dark">Not delivered</span>
+                    <span className="badge btn-dark">Chưa vận chuyển</span>
                   ) 
                 }
               </td>

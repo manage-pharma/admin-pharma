@@ -94,13 +94,13 @@ const EditImportStock = (props) => {
         let flag = false;
         if(!field.product){
             if(!isStop){
-                renderToast('The product has not been selected','error', setIsStop, isStop)
+                renderToast('Sản phẩm chưa được chọn','error', setIsStop, isStop)
             }
             return;
         }
         else if(field.price <= 0 || field.qty <= 0){
             if(!isStop){
-                renderToast('Price or Quantity have to greater 0','error', setIsStop, isStop)
+                renderToast('Giá nhập và số lượng nhập phải lớn hơn 0','error', setIsStop, isStop)
             }
             return;
         }
@@ -145,7 +145,7 @@ const EditImportStock = (props) => {
         dispatch(listProduct())
         dispatch(listUser())
         if(success){
-            toast.success(`Updated successfully`, ToastObjects);
+            toast.success(`Cập nhập đơn thành công`, ToastObjects);
             dispatch({type: IMPORT_STOCK_UPDATE_RESET})
             dispatch({type: IMPORT_STOCK_DETAILS_RESET})
             dispatch(singleImportStock(importId));
@@ -178,12 +178,12 @@ const EditImportStock = (props) => {
                         history.push("/import-stock")
                     }}>
                         <h4 className="arrow-breadcrum"><i className="fas fa-arrow-left"></i></h4>
-                        <h3 className="content-title">Import code: <span className="text-danger">{importStockItem?.importCode}</span></h3>
+                        <h3 className="content-title">Mã hóa đơn: <span className="text-danger">{importStockItem?.importCode}</span></h3>
                     </div>
                     <div>
                         {importStockItem?.status ? 
-                            <h4><span className="badge bg-danger text-white">This import is complete, you cannot edit</span></h4>:
-                            <button type="submit" className="btn btn-primary">Update now</button>
+                            <h4><span className="badge bg-danger text-white">Hóa đơn này đã hoàn tất, bạn không thể chỉnh sửa</span></h4>:
+                            <button type="submit" className="btn btn-primary">Cập nhật đơn</button>
                         }
                     </div>
                 </div>
@@ -192,7 +192,7 @@ const EditImportStock = (props) => {
                         <div className="card-body">
                             <div className="mb-4">
                                 <label htmlFor="name_drug" className="form-label">
-                                    Provider
+                                    Nhà cung cấp
                                 </label>
                                 <select
                                 value={provider}
@@ -200,7 +200,7 @@ const EditImportStock = (props) => {
                                 onChange={handleChange}
                                 className="form-control"
                                 required >
-                                    <option value=''>Chosse Provider</option>
+                                    <option value=''>Chọn nhà cung cấp</option>
                                     {providers?.map((item, index)=>(
                                     <option key={index} value={item._id}>{item.name}</option>
                                     ))}
@@ -208,7 +208,7 @@ const EditImportStock = (props) => {
                             </div>
                             <div className="mb-4 form-divided-2">
                                 <div>
-                                    <label className="form-label">Imported At</label>
+                                    <label className="form-label">Ngày nhập</label>
                                     <input
                                         name="importedAt"
                                         className="form-control"
@@ -223,7 +223,7 @@ const EditImportStock = (props) => {
                                 </div>
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
-                                        User
+                                        Người nhập
                                     </label>
                                     <select
                                     value={user}
@@ -231,7 +231,7 @@ const EditImportStock = (props) => {
                                     onChange={handleChange}
                                     className="form-control"
                                     required >
-                                        <option value=''>Chosse user</option>
+                                        <option value=''>Chọn người nhập</option>
                                         {users?.map((item, index)=>(
                                             <option key={index} value={item._id}>{item.name}</option>
                                         ))}
@@ -312,7 +312,7 @@ const EditImportStock = (props) => {
                             </div>
                             <div className="mb-6 d-flex justify-content-end">
                                 {importStockItem?.status ? '':
-                                <button className="btn btn-success" onClick={handleAddProduct}>Add Product</button>}
+                                <button className="btn btn-success" onClick={handleAddProduct}>Thêm sản phẩm</button>}
                             </div>   
                         </div>
                     </div>
@@ -332,7 +332,7 @@ const EditImportStock = (props) => {
                                 <th scope="col">HSD</th>
                                 <th scope="col">Giá nhập</th>
                                 <th scope='col'>Số lượng</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">Hành động</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -363,7 +363,7 @@ const EditImportStock = (props) => {
                                                 Edit info
                                             </button> */}
                                                 <button className="dropdown-item text-danger" onClick={(e)=>handleDeleteItem(e,index)}>
-                                                    Delete
+                                                    Xóa
                                                 </button>
                                             </div>
                                         </div>
@@ -373,7 +373,7 @@ const EditImportStock = (props) => {
                             </tbody>
                             </table>
                             <div className="mb-6 d-flex justify-content-end">
-                                {`Total Price: ${totalPrice}`}
+                                {`Tổng cộng: ${totalPrice}`}
                             </div>
                         </div>
                     </header>

@@ -81,7 +81,7 @@ const MainImportStock = (props) => {
 
   useEffect(()=>{
     if(success){
-      toast.success(`Update status successfully`, ToastObjects)
+      toast.success(`Cập nhật đơn thành công`, ToastObjects)
     }
     else{
       dispatch(listImportStock(keyword, pageNumber)) 
@@ -94,10 +94,10 @@ const MainImportStock = (props) => {
     { error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Import Stock List</h2>
+        <h2 className="content-title">Danh sách nhập kho</h2>
           <div>
             <button onClick={handleAdd} className="btn btn-primary">
-              Create new
+              Tạo mới
             </button>
           </div>
       </div>
@@ -108,7 +108,7 @@ const MainImportStock = (props) => {
             <div className="col-lg-4 col-md-6 me-auto ">
               <input
                 type="search"
-                placeholder="Search..."
+                placeholder="Tìm kiếm đơn nhập kho..."
                 className="form-control p-2"
                 value={keyword}
                 onChange={handleSubmitSearch}
@@ -116,7 +116,7 @@ const MainImportStock = (props) => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
-                <span className="label-date">From: </span>
+                <span className="label-date">Từ: </span>
                 <input
                     id="datePicker"
                     name="from"
@@ -129,7 +129,7 @@ const MainImportStock = (props) => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
-                <span className="label-date">To: </span>
+                <span className="label-date">đến: </span>
                 <input
                     id="datePicker"
                     name="to"
@@ -142,9 +142,9 @@ const MainImportStock = (props) => {
             </div>
             <div className="col-lg-1">
               {toggleSearch ? 
-                <button className="btn btn-danger" onClick={handleSearchDate}>Cancel</button>
+                <button className="btn btn-danger" onClick={handleSearchDate}>Hủy tìm kiếm</button>
               : 
-                <button className="btn btn-success" onClick={handleSearchDate}>Search</button>
+                <button className="btn btn-success" onClick={handleSearchDate}>Tìm kiếm</button>
               }
             </div>
           </div>
@@ -157,7 +157,7 @@ const MainImportStock = (props) => {
               loading={loading}
               loadingStatus={loadingStatus}
             /> : 
-            <div>There are no record</div>
+            <div>Không có dữ liệu</div>
           }
         </div>
       </div>

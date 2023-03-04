@@ -8,7 +8,7 @@ const Loading = () => {
         role="status"
         style={{ width: "50px", height: "50px" }}
       >
-        <span className="sr-only">Loading...</span>
+        <span className="sr-only">Đang tải...</span>
       </div>
     </div>
   );
