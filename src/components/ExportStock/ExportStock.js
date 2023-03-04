@@ -125,13 +125,13 @@ const ExportStock = (props) =>{
             reorder: true,
             grow: 2
         },
-        {
-            name: "TOTAL PRICE",
-            selector: (row) => row.totalPrice,
-            sortable: true,
-            reorder: true,
-            grow: 2
-        },
+        // {
+        //     name: "TOTAL PRICE",
+        //     selector: (row) => row.totalPrice,
+        //     sortable: true,
+        //     reorder: true,
+        //     grow: 2
+        // },
         {
             name: "STATUS",
             selector: (rows) => rows.status === true ? 

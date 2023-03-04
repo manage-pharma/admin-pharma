@@ -57,6 +57,9 @@ const AddImportStock = () => {
     const { name, product, lotNumber, expDrug, qty, price } = field
     totalPrice= importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
 
+
+    console.log(itemProducts)
+
     const handleChange = e =>{
         e.preventDefault();
         setData(prev => {
