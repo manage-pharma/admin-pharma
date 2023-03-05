@@ -5,11 +5,13 @@ import Header from "./../components/Header";
 import debounce from "lodash.debounce";
 import Message from "../components/LoadingError/Error";
 import renderToast from "../util/Toast";
-import { listImportStock } from "../Redux/Actions/ImportStockAction";
 import Toast from "../components/LoadingError/Toast";
 import CustomLoader from "../util/LoadingTable";
 import DataTable from "react-data-table-component";
-const TagInventory = (props) => {
+import { listProduct } from "../Redux/Actions/ProductActions";
+import { tagInventory } from "../Redux/Actions/InventoryAction";
+
+const TagInventory = () => {
   const dispatch = useDispatch()
   const [ isStop , setIsStop ] = useState(false)
   const [keyword, setSearch] = useState()
@@ -20,11 +22,14 @@ const TagInventory = (props) => {
   })
   const {from,to} = data
   
-  const importedStockList = useSelector(state=> state.importStockList)
-  const { loading, error, stockImported } = importedStockList
+  const productList = useSelector((state)=>state.productList)
+  const { products } = productList
+
+  const tagInventoryStock = useSelector(state=> state.inventoryTag)
+  const { loading, error, inventoryItem } = tagInventoryStock
 
   const callApiKeywordSearch = (keyword, from, to) =>{
-      dispatch(listImportStock(keyword, from, to))
+      dispatch(tagInventory(keyword, from, to))
   }
   const debounceDropDown = useRef(debounce((keyword, from, to) => callApiKeywordSearch(keyword, from, to) , 300)).current;
 
@@ -51,14 +56,14 @@ const TagInventory = (props) => {
         }
         return;
       }
-      dispatch(listImportStock(keyword, data.from, data.to)) 
+      dispatch(tagInventory(keyword, data.from, data.to)) 
     }
     else{
       setData({
         from: '',
         to: ''
       })
-      dispatch(listImportStock(keyword)) 
+      dispatch(tagInventory(keyword)) 
     }
     setToggleSearch(!toggleSearch)
   }
@@ -75,6 +80,7 @@ const TagInventory = (props) => {
         name: "Số lô",
         selector: (row) => row.importCode,
         sortable: true,
+
         reorder: true,
         grow: 3
     },
@@ -158,7 +164,7 @@ const customStyles = {
 
 
   useEffect(()=>{
-      dispatch(listImportStock(keyword)) 
+    dispatch(listProduct())
      // eslint-disable-next-line
   },[dispatch])
 
@@ -179,13 +185,18 @@ const customStyles = {
           <header className="card-header bg-white ">
             <div className="row gx-3 py-3">
               <div className="col-lg-4 col-md-6 me-auto ">
-                <input
-                  type="search"
-                  placeholder="Tìm kiếm đơn nhập kho..."
-                  className="form-control p-2"
+                <select
+                  id="select-product"
                   value={keyword}
+                  name="keyword"
                   onChange={handleSubmitSearch}
-                />
+                  className="form-control"
+                  required >
+                  <option value=''>Chọn thuốc</option>
+                    {products?.map((item, index)=>(
+                      <option key={index} value={item._id}>{item.name}</option>
+                    ))}
+                </select>
               </div>
               <div className="col-lg-2 col-6 col-md-3">
                 <div className="d-flex">
@@ -224,12 +235,12 @@ const customStyles = {
           </header>
 
           <div>
-            {stockImported ?
+            {inventoryItem ?
               (
                   <DataTable
                       // theme="solarized"
                       columns={columns}
-                      data={stockImported}
+                      data={[]}
                       customStyles={customStyles}
                       defaultSortFieldId
                       pagination
