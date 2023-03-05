@@ -69,7 +69,6 @@ const AddExportStock = () => {
   } = data;
 
   const { product, lotField } = field;
-  console.log(exportItems);
   const handleChange = (e) => {
     e.preventDefault();
     setData((prev) => {
@@ -92,10 +91,13 @@ const AddExportStock = () => {
 
   const refreshField = () => {
     const inputElements = document.querySelectorAll("#list-lot input");
-    inputElements.forEach((input, index) => {
+    inputElements.forEach((input) => {
       input.value = "";
     });
     setqtyLost([]);
+  };
+  const CheckIsNaN = (str) => {
+    return isNaN(parseInt(str)) ? 0 : parseInt(str);
   };
   const checkQtyLot = () => {
     const data = {
@@ -108,21 +110,12 @@ const AddExportStock = () => {
       const qtyLotData = input.dataset.qtylot;
       const id = input.dataset.id;
       const expDrug = input.dataset.expdrug;
-      if (!qtyLot[index]) {
-        data.isError = true;
-        toast.error(`Số lượng không được để trống`, ToastObjects);
-        return;
-      }
-      if (isNaN(parseInt(qtyLot[index].value))) {
-        data.isError = true;
-        toast.error(`Số lượng phải là số`, ToastObjects);
-        return;
-      }
       if (
         lotNumberData === qtyLot[index].name &&
         expDrug === qtyLot[index].expDrug
       ) {
-        if (parseInt(qtyLotData) < parseInt(qtyLot[index].value)) {
+        let checkQtyLot = CheckIsNaN(qtyLot[index].value);
+        if (parseInt(qtyLotData) < checkQtyLot) {
           data.isError = true;
 
           toast.error(
@@ -134,7 +127,7 @@ const AddExportStock = () => {
           data.newData.push({
             _id: id,
             lotNumber: lotNumberData,
-            count: parseInt(qtyLot[index].value),
+            count: CheckIsNaN(qtyLot[index].value),
             expDrug,
           });
         }
@@ -155,13 +148,24 @@ const AddExportStock = () => {
     let d1 = d.getAttribute("data-lotlist");
     refreshField();
 
+    const tempLot = d1 ? [...JSON.parse(d1)] : [];
+    const updateQtyLot = [];
+    tempLot.forEach((lot, index) => {
+      updateQtyLot[index] = {
+        name: lot.lotNumber,
+        value: 0,
+        expDrug: lot.expDrug,
+      };
+    });
+    setqtyLost(updateQtyLot);
+
     setFieldProduct((prev) => {
       return {
         ...prev,
         name: c,
         countInStock: c1,
         qty: 0,
-        lotField: d1 ? [...JSON.parse(d1)] : [],
+        lotField: tempLot,
         [e.target.name]: e.target.value,
       };
     });
@@ -184,7 +188,7 @@ const AddExportStock = () => {
     });
     const findProduct = inventoriesClone.find((item) => item.idDrug === id);
     if (findProductIndex > -1) {
-      const a = findProduct.products.map((product, index) => {
+      const a = findProduct.products.map((product) => {
         let positon = vonglap(product, newData);
         return positon !== -1
           ? {
@@ -210,8 +214,9 @@ const AddExportStock = () => {
     e.preventDefault();
     let flag = false;
     const sumUserInput = qtyLot.reduce((accumulator, currentValue) => {
-      return accumulator + parseInt(currentValue.value);
+      return accumulator + CheckIsNaN(currentValue.value);
     }, 0);
+
     const { isError, newData } = checkQtyLot();
     if (isError) {
       return;
@@ -252,10 +257,11 @@ const AddExportStock = () => {
             return;
           } else {
             flag = true;
+
             const newLotfieldArray = item.lotField.map((f, index) => {
               return {
                 ...f,
-                count: f.count + parseInt(qtyLot[index].value),
+                count: f.count + (parseInt(qtyLot[index].value) || 0),
               };
             });
 
@@ -272,12 +278,13 @@ const AddExportStock = () => {
       if (!flag) {
         const newLotfieldArray = field.lotField.map((f, index) => {
           return {
-            count: parseInt(qtyLot[index].value),
+            count: CheckIsNaN(qtyLot[index].value),
             idDrug: f.idDrug,
             lotNumber: f.lotNumber,
             expDrug: f.expDrug,
           };
         });
+
         setItemProducts((prev) => [
           ...prev,
           {
@@ -519,6 +526,7 @@ const AddExportStock = () => {
                         <input
                           name={lot.lotNumber}
                           type="number"
+                          min="0"
                           data-lotnumber={lot.lotNumber}
                           data-qtylot={lot.count}
                           data-id={lot._id}
@@ -550,10 +558,12 @@ const AddExportStock = () => {
             <div className="card card-custom mb-4 shadow-sm">
               <header className="card-header bg-white ">
                 <div className="row gx-3 py-3">
-                  <ExportTable
-                    itemProducts={itemProducts}
-                    handleDeleteItem={handleDeleteItem}
-                  />
+                  <div>
+                    <ExportTable
+                      itemProducts={itemProducts}
+                      handleDeleteItem={handleDeleteItem}
+                    />
+                  </div>
                 </div>
               </header>
             </div>

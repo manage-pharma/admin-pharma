@@ -32,7 +32,7 @@ const EditImportStock = (props) => {
   const { exportStockItem } = exportDetail;
 
   const inventoryList = useSelector((state) => state.inventoryList);
-  const { inventories } = inventoryList;
+  var { inventories } = inventoryList;
   const [inventoriesClone, setInventoriesClone] = useState([]);
   const [qtyLot, setqtyLost] = useState([]);
   useEffect(() => {
@@ -93,10 +93,13 @@ const EditImportStock = (props) => {
 
   const refreshField = () => {
     const inputElements = document.querySelectorAll("#list-lot input");
-    inputElements.forEach((input, index) => {
+    inputElements.forEach((input) => {
       input.value = "";
     });
     setqtyLost([]);
+  };
+  const CheckIsNaN = (str) => {
+    return isNaN(parseInt(str)) ? 0 : parseInt(str);
   };
   const checkQtyLot = () => {
     const data = {
@@ -109,21 +112,13 @@ const EditImportStock = (props) => {
       const qtyLotData = input.dataset.qtylot;
       const id = input.dataset.id;
       const expDrug = input.dataset.expdrug;
-      if (!qtyLot[index]) {
-        data.isError = true;
-        toast.error(`Số lượng không được để trống`, ToastObjects);
-        return;
-      }
-      if (isNaN(parseInt(qtyLot[index].value))) {
-        data.isError = true;
-        toast.error(`Số lượng phải là số`, ToastObjects);
-        return;
-      }
+
       if (
         lotNumberData === qtyLot[index].name &&
         expDrug === qtyLot[index].expDrug
       ) {
-        if (parseInt(qtyLotData) < parseInt(qtyLot[index].value)) {
+        let checkQtyLot = CheckIsNaN(qtyLot[index].value);
+        if (parseInt(qtyLotData) < checkQtyLot) {
           data.isError = true;
 
           toast.error(
@@ -135,7 +130,7 @@ const EditImportStock = (props) => {
           data.newData.push({
             _id: id,
             lotNumber: lotNumberData,
-            count: parseInt(qtyLot[index].value),
+            count: CheckIsNaN(qtyLot[index].value),
             expDrug,
           });
         }
@@ -170,7 +165,17 @@ const EditImportStock = (props) => {
     let d = a.options[a.selectedIndex];
     let d1 = d.getAttribute("data-lotlist");
     refreshField();
+    const tempLot = d1 ? [...JSON.parse(d1)] : [];
+    const updateQtyLot = [];
     const { index, product } = checkExistProduct(idProduct, itemProducts);
+    tempLot.forEach((lot, index) => {
+      updateQtyLot[index] = {
+        name: lot.lotNumber,
+        value: 0,
+        expDrug: lot.expDrug,
+      };
+    });
+    setqtyLost(updateQtyLot);
     if (index === -1) {
       setGlobalFlag(false);
       setFieldProduct((prev) => {
@@ -179,7 +184,7 @@ const EditImportStock = (props) => {
           name: c,
           countInStock: c1,
           qty: 0,
-          lotField: d1 ? [...JSON.parse(d1)] : [],
+          lotField: tempLot,
           [e.target.name]: e.target.value,
         };
       });
@@ -280,7 +285,7 @@ const EditImportStock = (props) => {
     e.preventDefault();
     let flag = false;
     const sumUserInput = qtyLot.reduce((accumulator, currentValue) => {
-      return accumulator + parseInt(currentValue.value);
+      return accumulator + CheckIsNaN(currentValue.value);
     }, 0);
     const checkNegative = inventoriesClone.some(
       (item) => parseInt(item.value) < 0
@@ -333,12 +338,33 @@ const EditImportStock = (props) => {
           return;
         } else {
           flag = true;
-          const newLotfieldArray = item.lotField.map((f, index) => {
+
+          let newLotfieldArray = item.lotField.map((f, index) => {
             return {
               ...f,
-              count: f.count + parseInt(qtyLot[index].value),
+              count: f.count + (parseInt(qtyLot[index].value) || 0),
             };
           });
+          if (newLotfieldArray.length !== qtyLot.length) {
+            let arrayNotExsistInNewLot = field.lotField
+              .map((f, index) => {
+                return {
+                  count: CheckIsNaN(qtyLot[index].value),
+                  idDrug: f.idDrug,
+                  lotNumber: f.lotNumber,
+                  expDrug: f.expDrug,
+                };
+              })
+              .filter((obj) => {
+                return !newLotfieldArray.some((obj1) => {
+                  return (
+                    obj.expDrug === obj1.expDrug &&
+                    obj.lotNumber === obj1.lotNumber
+                  );
+                });
+              });
+            newLotfieldArray = [...newLotfieldArray, ...arrayNotExsistInNewLot ]
+          }
           itemProducts.splice(index, 1, {
             ...item,
             qty: (item.qty += parseInt(sumUserInput)),
@@ -352,7 +378,7 @@ const EditImportStock = (props) => {
     if (!flag) {
       const newLotfieldArray = field.lotField.map((f, index) => {
         return {
-          count: parseInt(qtyLot[index].value),
+          count: CheckIsNaN(qtyLot[index].value),
           idDrug: f.idDrug,
           lotNumber: f.lotNumber,
           expDrug: f.expDrug,
@@ -369,7 +395,6 @@ const EditImportStock = (props) => {
       EditDataMinus(field.product, newData);
     }
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
@@ -388,6 +413,7 @@ const EditImportStock = (props) => {
       lotField: [],
     });
   };
+
   const handleDeleteItem = (e, index, id) => {
     e.preventDefault();
     if (!isEdited) {
@@ -403,6 +429,16 @@ const EditImportStock = (props) => {
     inventoriesClone.splice(findProductIndex, 1, {
       ...findProduct,
     });
+    const tempLot = [...findProduct.products];
+    const updateQtyLot = [];
+    tempLot.forEach((lot, index) => {
+      updateQtyLot[index] = {
+        name: lot.lotNumber,
+        value: 0,
+        expDrug: lot.expDrug,
+      };
+    });
+    setqtyLost(updateQtyLot);
     setFieldProduct(() => {
       return {
         countInStock: findProduct.total_count,
