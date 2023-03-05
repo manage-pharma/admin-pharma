@@ -31,17 +31,19 @@ const ExportTable = (props) => {
     },
     {
       name: "Hành động",
-      selector: (row, index) => (
-        <div>
-          <button
-            style={{fontSize: '18px'}}
-            className="dropdown-item text-danger"
-            onClick={(e) => handleDeleteItem(e, index, row.product._id || row.product)}
-          >
-            <i class="fa fa-trash"></i>
-          </button>
-        </div>
-      ),
+      selector: (row, index) => {
+        return (
+          <div>
+            <button
+              style={{fontSize: '18px'}}
+              className="dropdown-item text-danger"
+              onClick={(e) => handleDeleteItem(e, index, row?.product?._id || row?.product)}
+            >
+              <i className="fa fa-trash"></i>
+            </button>
+          </div>
+        )
+      },
       sortable: true,
       reorder: true,
       grow: 2,
@@ -106,7 +108,7 @@ const ExportTable = (props) => {
         expandableRows
         expandableRowExpanded={isExpanded}
         expandableRowsComponent={(data) => (
-          <ExpandedExportComponent data={data} dessert={dessert} />
+          <ExpandedExportComponent data={data?.data?.lotField.filter((row) => row.count > 0)} dessert={dessert} />
         )}
         progressComponent={<CustomLoader />}
         highlightOnHover
