@@ -78,7 +78,7 @@ const TagInventory = () => {
     },
     {
         name: "Số lô",
-        selector: (row) => row.importCode,
+        selector: (row) => row.lotNumber,
         sortable: true,
 
         reorder: true,
@@ -86,28 +86,28 @@ const TagInventory = () => {
     },
     {
         name: "Tồn đầu kỳ",
-        selector: (row) => row.provider.name,
+        selector: (row) => row.TDK,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Nhập",
-        selector: (row) => row.user.name,
+        selector: (row) => row.N,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Xuất",
-        selector: (row) => row.user.name,
+        selector: (row) => row.X,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Tồn cuối kỳ",
-        selector: (row) => row.totalPrice,
+        selector: (row) => row.TCK,
         sortable: true,
         reorder: true,
         grow: 2
@@ -165,8 +165,10 @@ const customStyles = {
 
   useEffect(()=>{
     dispatch(listProduct())
-     // eslint-disable-next-line
-  },[dispatch])
+    if(keyword && data.from && data.to){
+      dispatch(tagInventory(keyword, data.from, data.to)) 
+    }
+  },[dispatch, keyword, data.from, data.to])
 
   return (
     <>
@@ -240,7 +242,7 @@ const customStyles = {
                   <DataTable
                       // theme="solarized"
                       columns={columns}
-                      data={[]}
+                      data={inventoryItem}
                       customStyles={customStyles}
                       defaultSortFieldId
                       pagination
