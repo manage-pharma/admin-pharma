@@ -50,7 +50,6 @@ export const tagInventory= ( keyword = "", from=' ', to = ' ') => async (dispatc
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    console.log(({keyword, from, to}));
     const { data } = await axios.get(`/api/inventory/tag/?keyword=${keyword}&from=${from}&to=${to}`, config);
     dispatch({ type: INVENTORY_TAG_SUCCESS, payload: data });
   } catch (error) {
