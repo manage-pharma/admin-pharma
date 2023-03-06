@@ -1,40 +1,40 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
-const OrderDetailProducts = (props) => {
-  const {order, loading} = props
-  
-  if(!loading){
-    const addDecimals = (num) =>{
-      return (Math.round(num*100) / 100).toFixed(2)
+const OrderDetailProducts=(props) => {
+  const {order,loading}=props
+
+  if(!loading) {
+    const addDecimals=(num) => {
+      return (Math.round(num*100)/100).toFixed(2)
     }
-    order.itemsPrice = addDecimals(
-      order.orderItems.reduce((acc, item)=> acc + item.price * item.qty, 0)
+    order.itemsPrice=addDecimals(
+      order.orderItems.reduce((acc,item) => acc+item.price*item.qty,0)
     )
   }
   return (
     <table className="table border table-lg">
       <thead>
         <tr>
-          <th style={{ width: "40%" }}>Product</th>
-          <th style={{ width: "20%" }}>Unit Price</th>
-          <th style={{ width: "20%" }}>Quantity</th>
-          <th style={{ width: "20%" }} className="text-end">
+          <th style={{width: "40%"}}>Product</th>
+          <th style={{width: "20%"}}>Unit Price</th>
+          <th style={{width: "20%"}}>Quantity</th>
+          <th style={{width: "20%"}} className="text-end">
             Total
           </th>
         </tr>
       </thead>
       <tbody>
         {
-          order.orderItems.map((item, index)=>(
+          order.orderItems.map((item,index) => (
             <tr key={index}>
               <td>
                 <Link className="itemside" to="#">
                   <div className="left">
                     <img
-                      src={item.image}
+                      src={item.image?.slice(0,0+1)[0]}
                       alt={item.name}
-                      style={{ width: "40px", height: "40px" }}
+                      style={{width: "40px",height: "40px"}}
                       className="img-xs"
                     />
                   </div>
@@ -45,7 +45,7 @@ const OrderDetailProducts = (props) => {
               </td>
               <td>{item.price}</td>
               <td>{item.qty}</td>
-              <td className="text-end">${item.price * item.qty}</td>
+              <td className="text-end">${item.price*item.qty}</td>
             </tr>
           ))
         }
@@ -68,11 +68,11 @@ const OrderDetailProducts = (props) => {
                 <dt className="text-muted">Status: </dt>
                 <dd>
                   {
-                    order.isPaid ? (
+                    order.isPaid? (
                       <span className="badge rounded-pill alert alert-success text-success">
                         Payment done
                       </span>
-                    ) : (
+                    ):(
                       <span className="badge rounded-pill alert alert-success text-danger">
                         Not paid
                       </span>

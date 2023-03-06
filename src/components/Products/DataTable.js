@@ -1,24 +1,24 @@
 import moment from 'moment/moment';
 import DataTable from "react-data-table-component";
-import { Link, useHistory } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import {Link,useHistory} from "react-router-dom";
+import React,{useEffect,useState} from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { useDispatch } from "react-redux";
-import { deleteProduct, listProduct } from "../../Redux/Actions/ProductActions";
-import { useSelector } from "react-redux";
-import { PRODUCT_DELETE_RESET } from "../../Redux/Constants/ProductConstants";
+import {useDispatch} from "react-redux";
+import {deleteProduct,listProduct} from "../../Redux/Actions/ProductActions";
+import {useSelector} from "react-redux";
+import {PRODUCT_DELETE_RESET} from "../../Redux/Constants/ProductConstants";
 import CustomLoader from './../../util/LoadingTable';
-const DataTableProduct = (props) => {
-    const { products, dessert, loading, loadingDelete } = props
-    const history = useHistory()
-    const dispatch = useDispatch()
-    const [modalShow, setModalShow] = useState(false);
-    const [dataModal, setDataModal] = useState();
-    const productDelete = useSelector(state => state.productDelete)
-    const { success: successDelete } = productDelete
+const DataTableProduct=(props) => {
+    const {products,dessert,loading,loadingDelete}=props
+    const history=useHistory()
+    const dispatch=useDispatch()
+    const [modalShow,setModalShow]=useState(false);
+    const [dataModal,setDataModal]=useState();
+    const productDelete=useSelector(state => state.productDelete)
+    const {success: successDelete}=productDelete
 
-    const MyVerticallyCenteredModal = (props) => {
+    const MyVerticallyCenteredModal=(props) => {
         return (
             <Modal
                 {...props}
@@ -45,8 +45,8 @@ const DataTableProduct = (props) => {
         );
     }
 
-    const CustomMaterialMenu = (props) => {
-        let { row } = props
+    const CustomMaterialMenu=(props) => {
+        let {row}=props
         return (
             <div className="dropdown">
                 <Link
@@ -59,7 +59,7 @@ const DataTableProduct = (props) => {
                 <div className="dropdown-menu">
                     <button className="dropdown-item" onClick={(e) => {
                         e.stopPropagation()
-                        let id = row._id
+                        let id=row._id
                         history.push(`/product/${id}`)
                     }}>
                         Edit info
@@ -76,7 +76,7 @@ const DataTableProduct = (props) => {
         )
     }
 
-    const columns = [
+    const columns=[
 
         {
             name: "Tên",
@@ -87,7 +87,7 @@ const DataTableProduct = (props) => {
         },
         {
             name: "Hình ảnh",
-            selector: (row) => <img className="mt-1 w-50 h-50" src={row.image} alt="ImageCategory" />,
+            selector: (row) => <img className="mt-1 w-50 h-50" src={row.image?.slice(0,0+1)[0]} alt="ImageCategory" />,
         },
         {
             name: "Nhóm hàng",
@@ -103,8 +103,8 @@ const DataTableProduct = (props) => {
         },
         {
             name: "Thuốc kê đơn",
-            selector: (row) => row.prescription ?
-                <span className="badge bg-success text-white p-2" style={{ minWidth: '45px' }}>Có</span> :
+            selector: (row) => row.prescription?
+                <span className="badge bg-success text-white p-2" style={{minWidth: '45px'}}>Có</span>:
                 <span className="badge bg-danger text-white p-2" >Không</span>,
             sortable: true,
             reorder: true,
@@ -138,8 +138,8 @@ const DataTableProduct = (props) => {
         },
         {
             name: "Thuốc bán",
-            selector: (row) => row.allowToSell ?
-                <span className="badge bg-success text-white p-2   " style={{ minWidth: '45px' }}>Có</span> :
+            selector: (row) => row.allowToSell?
+                <span className="badge bg-success text-white p-2   " style={{minWidth: '45px'}}>Có</span>:
                 <span className="badge bg-danger text-white p-2 " >Không</span>,
             sortable: true,
             reorder: true,
@@ -154,14 +154,14 @@ const DataTableProduct = (props) => {
         },
     ];
 
-    const paginationComponentOptions = {
+    const paginationComponentOptions={
         selectAllRowsItem: true,
         selectAllRowsItemText: "ALL"
     };
 
-    const conditionalRowStyles = [
+    const conditionalRowStyles=[
         {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") > 180,
+            when: row => (moment(row.expDrug)).diff(moment(Date.now()),"days")>180,
             style: {
                 backgroundColor: 'rgba(63, 195, 128, 0.9)',
                 color: 'white',
@@ -171,7 +171,7 @@ const DataTableProduct = (props) => {
             },
         },
         {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") >= 90 && (moment(row.expDrug)).diff(moment(Date.now()), "days") < 180,
+            when: row => (moment(row.expDrug)).diff(moment(Date.now()),"days")>=90&&(moment(row.expDrug)).diff(moment(Date.now()),"days")<180,
             style: {
                 backgroundColor: 'rgba(248, 148, 6, 0.9)',
                 color: 'white',
@@ -181,7 +181,7 @@ const DataTableProduct = (props) => {
             },
         },
         {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") < 90,
+            when: row => (moment(row.expDrug)).diff(moment(Date.now()),"days")<90,
             style: {
                 backgroundColor: 'rgba(242, 38, 19, 0.9)',
                 color: 'white',
@@ -196,7 +196,7 @@ const DataTableProduct = (props) => {
     // history.push(`/product/${row._id}`)
     // };
 
-    const customStyles = {
+    const customStyles={
         rows: {
             highlightOnHoverStyle: {
                 backgroundColor: 'rgb(230, 244, 244)',
@@ -239,11 +239,11 @@ const DataTableProduct = (props) => {
     };
 
     useEffect(() => {
-        if (successDelete) {
-            dispatch({ type: PRODUCT_DELETE_RESET });
+        if(successDelete) {
+            dispatch({type: PRODUCT_DELETE_RESET});
             dispatch(listProduct())
         }
-    }, [dispatch, successDelete])
+    },[dispatch,successDelete])
     return (
         <>
             <MyVerticallyCenteredModal
@@ -258,9 +258,9 @@ const DataTableProduct = (props) => {
                 defaultSortFieldId
                 pagination
                 // onRowClicked={handleRowClicked}
-                conditionalRowStyles={dessert ? conditionalRowStyles : ''}
+                conditionalRowStyles={dessert? conditionalRowStyles:''}
                 paginationComponentOptions={paginationComponentOptions}
-                progressPending={loading || loadingDelete}
+                progressPending={loading||loadingDelete}
                 progressComponent={<CustomLoader />}
                 highlightOnHover
                 pointerOnHover
