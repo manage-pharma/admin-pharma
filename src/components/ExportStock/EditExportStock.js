@@ -66,7 +66,6 @@ const EditImportStock = (props) => {
     note: "",
     exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
-
   var { customer, phone, address, note, user, exportedAt } = data;
 
   const { product, lotField } = field;
@@ -281,6 +280,17 @@ const EditImportStock = (props) => {
       };
     });
   };
+
+  const findByExpDrugAndLotNumber = (lot, tempLot) => {
+    const a = tempLot.filter((f) => {
+      return lot.expDrug === f.expDrug && lot.lotNumber === f.name;
+    });
+    return {
+      ...a[0],
+    };
+    
+  };
+
   const handleAddProduct = (e) => {
     e.preventDefault();
     let flag = false;
@@ -298,7 +308,6 @@ const EditImportStock = (props) => {
       );
       return;
     }
-
     const { isError, newData } = checkQtyLot();
     if (isError) {
       return;
@@ -339,10 +348,12 @@ const EditImportStock = (props) => {
         } else {
           flag = true;
 
-          let newLotfieldArray = item.lotField.map((f, index) => {
+          let newLotfieldArray = item.lotField.map((f) => {
             return {
               ...f,
-              count: f.count + (parseInt(qtyLot[index].value) || 0),
+              count:
+                f.count +
+                (parseInt(findByExpDrugAndLotNumber(f, qtyLot).value) || 0),
             };
           });
           if (newLotfieldArray.length !== qtyLot.length) {
@@ -363,7 +374,7 @@ const EditImportStock = (props) => {
                   );
                 });
               });
-            newLotfieldArray = [...newLotfieldArray, ...arrayNotExsistInNewLot ]
+            newLotfieldArray = [...newLotfieldArray, ...arrayNotExsistInNewLot];
           }
           itemProducts.splice(index, 1, {
             ...item,
