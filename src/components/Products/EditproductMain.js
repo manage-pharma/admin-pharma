@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React,{useState,useEffect} from "react";
+import {useHistory} from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch,useSelector} from "react-redux";
 import Toast from "./../LoadingError/Toast";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
 //! Modal
@@ -12,50 +12,51 @@ import MyVerticallyCenteredModalAPI from './Modal/ModalActivePharma';
 import MyVerticallyCenteredModalManufacturer from './Modal/ModalManufacturer';
 import MyVerticallyCenteredModalCountry from './Modal/ModalCountry';
 //! Action
-import { singleProduct, updateProduct } from "../../Redux/Actions/ProductActions";
-import { listCategory } from './../../Redux/Actions/CategoryAction';
-import { listCategoryDrug } from "../../Redux/Actions/CategoryDrugAction";
-import { listUnit } from './../../Redux/Actions/UnitAction';
-import { listCountry } from './../../Redux/Actions/CountryOfOriginAction';
-import { listAPI } from './../../Redux/Actions/ActivePharmaAction';
-import { listManufacturer } from './../../Redux/Actions/ManufacturerAction';
+import {singleProduct,updateProduct} from "../../Redux/Actions/ProductActions";
+import {listCategory} from './../../Redux/Actions/CategoryAction';
+import {listCategoryDrug} from "../../Redux/Actions/CategoryDrugAction";
+import {listUnit} from './../../Redux/Actions/UnitAction';
+import {listCountry} from './../../Redux/Actions/CountryOfOriginAction';
+import {listAPI} from './../../Redux/Actions/ActivePharmaAction';
+import {listManufacturer} from './../../Redux/Actions/ManufacturerAction';
 //! Constant
-import { PRODUCT_UPDATE_RESET } from "../../Redux/Constants/ProductConstants";
-import { UNIT_CREATE_RESET, UNIT_DELETE_RESET } from "../../Redux/Constants/UnitConstants";
+import {PRODUCT_UPDATE_RESET} from "../../Redux/Constants/ProductConstants";
+import {UNIT_CREATE_RESET,UNIT_DELETE_RESET} from "../../Redux/Constants/UnitConstants";
 import renderToast from "../../util/Toast";
-import { MANUFACTURER_CREATE_RESET, MANUFACTURER_DELETE_RESET } from "../../Redux/Constants/ManufacturerConstants";
-import { COUNTRY_CREATE_RESET, COUNTRY_DELETE_RESET } from "../../Redux/Constants/CountryOfOriginConstants";
-import { API_CREATE_RESET, API_DELETE_RESET } from "../../Redux/Constants/ActivePharmaConstants";
+import {MANUFACTURER_CREATE_RESET,MANUFACTURER_DELETE_RESET} from "../../Redux/Constants/ManufacturerConstants";
+import {COUNTRY_CREATE_RESET,COUNTRY_DELETE_RESET} from "../../Redux/Constants/CountryOfOriginConstants";
+import {API_CREATE_RESET,API_DELETE_RESET} from "../../Redux/Constants/ActivePharmaConstants";
 
 
 
-const ToastObjects = {
+const ToastObjects={
   pauseOnFocusLoss: false,
   draggable: false,
   pauseOnHover: false,
   autoClose: 2000,
 };
 
-const EditProductMain = (props) => {
-  const { productId } = props;
-  const dispatch = useDispatch();
-  const history = useHistory();
+const EditProductMain=(props) => {
+  const {productId}=props;
+  const dispatch=useDispatch();
+  const history=useHistory();
 
-  const [isStop, setIsStop] = useState(false)
-  const [isEdited, setIsEdited] = useState(false)
-  const [modalShowUnit, setModalShowUnit] = useState(false);
-  const [modalShowManufacturer, setModalShowManufacturer] = useState(false);
-  const [modalShowCountry, setModalShowCountry] = useState(false);
-  const [modalShowActivePharma, setModalShowActivePharma] = useState(false);
-  const [itemProducts, setItemProducts] = useState([]);
-  const [fieldAPI, setFieldAPI] = useState({
+  const [isStop,setIsStop]=useState(false)
+  const [isEdited,setIsEdited]=useState(false)
+  const [modalShowUnit,setModalShowUnit]=useState(false);
+  const [modalShowManufacturer,setModalShowManufacturer]=useState(false);
+  const [modalShowCountry,setModalShowCountry]=useState(false);
+  const [modalShowActivePharma,setModalShowActivePharma]=useState(false);
+  const [itemProducts,setItemProducts]=useState([]);
+  const [images,setImages]=useState([])
+  const [fieldAPI,setFieldAPI]=useState({
     API: '',
     content: 0,
   });
 
-  const [flag, setFlag] = useState(false);
-  const [file, setImg] = useState(null);
-  const [data, setData] = useState({
+  const [flag,setFlag]=useState(false);
+  const [file,setImg]=useState(null);
+  const [data,setData]=useState({
     name: '',
     regisId: '',
     unit: '',
@@ -67,132 +68,181 @@ const EditProductMain = (props) => {
     price: 0,
     prescription: true,
     description: '',
-    image: '',
+    image: [],
     allowToSell: true
   })
-  var { APIs = itemProducts ? [...itemProducts] : [] } = data
+  var {APIs=itemProducts? [...itemProducts]:[]}=data
 
-  const handleChange = e => {
+  const handleChange=e => {
     setData(prev => {
       return {
-        ...prev, [e.target.name]: e.target.value
+        ...prev,[e.target.name]: e.target.value
       }
     })
   }
 
-  const handleChangeAPI = e => {
-    if (!isEdited) {
+  const handleChangeAPI=e => {
+    if(!isEdited) {
       setIsEdited(true)
     }
     setFieldAPI(prev => {
       return {
-        ...prev, [e.target.name]: e.target.value
+        ...prev,[e.target.name]: e.target.value
       }
     })
   }
 
-  const handleAddAPI = e => {
+  const handleAddAPI=e => {
     e.preventDefault();
-    let flag = false;
+    let flag=false;
 
-    if (!fieldAPI.API) {
-      if (!isStop) {
-        renderToast('Hoạt chất chưa được chọn', 'error', setIsStop, isStop)
+    if(!fieldAPI.API) {
+      if(!isStop) {
+        renderToast('Hoạt chất chưa được chọn','error',setIsStop,isStop)
       }
       return;
     }
-    else if (fieldAPI.content <= 0) {
-      if (!isStop) {
-        renderToast('Hàm lượng phải lớn hơn 0', 'error', setIsStop, isStop)
+    else if(fieldAPI.content<=0) {
+      if(!isStop) {
+        renderToast('Hàm lượng phải lớn hơn 0','error',setIsStop,isStop)
       }
       return;
     }
-    itemProducts.forEach((item, index) => {
-      if (item.API === fieldAPI.API) {
-        flag = true
-        itemProducts.splice(index, 1, { ...item, content: item.content + parseInt(fieldAPI.content) })
+    itemProducts.forEach((item,index) => {
+      if(item.API===fieldAPI.API) {
+        flag=true
+        itemProducts.splice(index,1,{...item,content: item.content+parseInt(fieldAPI.content)})
         setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
       }
     })
-    if (!flag) {
+    if(!flag) {
       setItemProducts(prev =>
-        [...prev, { ...fieldAPI, content: parseInt(content) }]
+        [...prev,{...fieldAPI,content: parseInt(content)}]
       )
     }
   }
 
-  const handleDeleteAPI = (e, index) => {
+  const handleDeleteAPI=(e,index) => {
     e.preventDefault()
-    if (!isEdited) {
+    if(!isEdited) {
       setIsEdited(true)
     }
-    itemProducts.splice(index, 1)
+    itemProducts.splice(index,1)
     setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit=async (e) => {
     e.preventDefault();
-    if (file) {
-      const formData = new FormData();
-      formData.append('image', file);
-      const { data: dataUp } = await axios.post(`/api/products/single`, formData);
-      data.image = dataUp.filename
+    const imgNewFiles=images.filter(img => img.name)
+    const imgOldURL=images.filter(img => !img.name)
+    console.log({imgNewFiles: imgNewFiles});
+    console.log({imgOldURL: imgOldURL});
+    if(imgNewFiles) {
+      for(const image of imgNewFiles) {
+        const formData=new FormData();
+        formData.append('image',image);
+        const {data: dataUp}=await axios.post(`/api/products/single`,formData);
+
+
+        imgOldURL.push(dataUp.filename)
+      }
+
+      data.image=imgOldURL
     }
-    dispatch(updateProduct({ ...data, APIs: itemProducts, productId }));
+    dispatch(updateProduct({...data,APIs: itemProducts,productId}));
   }
-  const categoryList = useSelector((state) => state.categoryList)
-  const { categories } = categoryList
-  const categoryDrugList = useSelector((state) => state.categoryDrugList)
-  const { categoriesDrug } = categoryDrugList
+  const categoryList=useSelector((state) => state.categoryList)
+  const {categories}=categoryList
+  const categoryDrugList=useSelector((state) => state.categoryDrugList)
+  const {categoriesDrug}=categoryDrugList
 
-  const productEdit = useSelector((state) => state.productSingle);
-  const { loading, error, product } = productEdit;
+  const productEdit=useSelector((state) => state.productSingle);
+  const {loading,error,product}=productEdit;
 
-  const productUpdate = useSelector((state) => state.productUpdate);
-  const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = productUpdate;
+  const productUpdate=useSelector((state) => state.productUpdate);
+  const {loading: loadingUpdate,error: errorUpdate,success: successUpdate}=productUpdate;
 
-  const unitList = useSelector(state => state.unitList)
-  const { error: errorUnit, units } = unitList
+  const unitList=useSelector(state => state.unitList)
+  const {error: errorUnit,units}=unitList
 
-  const unitCreated = useSelector(state => state.unitCreate)
-  const { loading: loadingUnitCreate, error: errorUnitCreate, success: successUnitCreate } = unitCreated
+  const unitCreated=useSelector(state => state.unitCreate)
+  const {loading: loadingUnitCreate,error: errorUnitCreate,success: successUnitCreate}=unitCreated
 
-  const unitDeleted = useSelector(state => state.unitDelete)
-  const { loading: loadingUnitDelete, error: errorUnitDelete, success: successUnitDelete } = unitDeleted
+  const unitDeleted=useSelector(state => state.unitDelete)
+  const {loading: loadingUnitDelete,error: errorUnitDelete,success: successUnitDelete}=unitDeleted
 
 
   //! MANUFACTURER
-  const manufacturerList = useSelector(state => state.manufacturerList)
-  const { error: errorManufacturer, manufacturers } = manufacturerList
+  const manufacturerList=useSelector(state => state.manufacturerList)
+  const {error: errorManufacturer,manufacturers}=manufacturerList
 
-  const manufacturerCreated = useSelector(state => state.manufacturerCreate)
-  const { loading: loadingManufacturerCreate, error: errorManufacturerCreate, success: successManufacturerCreate } = manufacturerCreated
+  const manufacturerCreated=useSelector(state => state.manufacturerCreate)
+  const {loading: loadingManufacturerCreate,error: errorManufacturerCreate,success: successManufacturerCreate}=manufacturerCreated
 
-  const manufacturerDeleted = useSelector(state => state.manufacturerDelete)
-  const { loading: loadingManufacturerDelete, error: errorManufacturerDelete, success: successManufacturerDelete } = manufacturerDeleted
+  const manufacturerDeleted=useSelector(state => state.manufacturerDelete)
+  const {loading: loadingManufacturerDelete,error: errorManufacturerDelete,success: successManufacturerDelete}=manufacturerDeleted
 
   //! COUNTRY OF ORIGIN
-  const countryList = useSelector(state => state.countryList)
-  const { error: errorCountry, countries } = countryList
+  const countryList=useSelector(state => state.countryList)
+  const {error: errorCountry,countries}=countryList
 
-  const countryCreated = useSelector(state => state.countryCreate)
-  const { loading: loadingCountryCreate, error: errorCountryCreate, success: successCountryCreate } = countryCreated
+  const countryCreated=useSelector(state => state.countryCreate)
+  const {loading: loadingCountryCreate,error: errorCountryCreate,success: successCountryCreate}=countryCreated
 
-  const countryDeleted = useSelector(state => state.countryDelete)
-  const { loading: loadingCountryDelete, error: errorCountryDelete, success: successCountryDelete } = countryDeleted
+  const countryDeleted=useSelector(state => state.countryDelete)
+  const {loading: loadingCountryDelete,error: errorCountryDelete,success: successCountryDelete}=countryDeleted
 
   //! ACTIVE PHARMA INGREDIENT (API)
-  const APIList = useSelector(state => state.APIList)
-  const { error: errorAPI, API_item } = APIList
+  const APIList=useSelector(state => state.APIList)
+  const {error: errorAPI,API_item}=APIList
 
-  const APICreated = useSelector(state => state.APICreate)
-  const { loading: loadingAPICreate, error: errorAPICreate, success: successAPICreate } = APICreated
+  const APICreated=useSelector(state => state.APICreate)
+  const {loading: loadingAPICreate,error: errorAPICreate,success: successAPICreate}=APICreated
 
-  const APIDeleted = useSelector(state => state.APIDelete)
-  const { loading: loadingAPIDelete, error: errorAPIDelete, success: successAPIDelete } = APIDeleted
-  const { API, content } = fieldAPI
-  const { name, price, prescription, brandName, manufacturer, image, category, categoryDrug, countryOfOrigin, description, unit, regisId, packing, instruction, allowToSell } = data;
+  const APIDeleted=useSelector(state => state.APIDelete)
+  const {loading: loadingAPIDelete,error: errorAPIDelete,success: successAPIDelete}=APIDeleted
+  const {API,content}=fieldAPI
+  const {name,price,prescription,brandName,manufacturer,image,category,categoryDrug,countryOfOrigin,description,unit,regisId,packing,instruction,allowToSell}=data;
+  console.log(data)
+  const handleUploadInput=e => {
+    //dispatch({type: 'NOTIFY',payload: {}})
+    let newImages=[]
+    let num=0
+    //let err=''
+    const files=[...e.target.files]
 
+    //if(files.length===0)
+    //  return dispatch({type: 'NOTIFY',payload: {error: 'Files does not exist.'}})
+
+    files.forEach(file => {
+      //if(file.size>1024*1024)
+      //  return err='The largest image size is 1mb'
+
+      //if(file.type!=='image/jpeg'&&file.type!=='image/png')
+      //  return err='Image format is incorrect.'
+
+      num+=1;
+      if(num<=5) newImages.push(file)
+
+      return newImages;
+    })
+
+
+    //if(err) dispatch({type: 'NOTIFY',payload: {error: err}})
+
+    //const imgCount=images.length
+    //if(imgCount+newImages.length>5)
+    //  return dispatch({type: 'NOTIFY',payload: {error: 'Select up to 5 images.'}})
+    setImages([...images,...newImages])
+
+  }
+  const deleteImage=index => {
+    const newArr=[...images]
+    newArr.splice(index,1)
+    setImages(newArr)
+  }
+  console.log({imgs: images})
+  console.log({arr: data.image})
   useEffect(() => {
     dispatch(listUnit())
     dispatch(listCategory())
@@ -200,49 +250,51 @@ const EditProductMain = (props) => {
     dispatch(listManufacturer())
     dispatch(listCountry())
     dispatch(listAPI())
-    if (successUpdate) {
+    if(successUpdate) {
       dispatch({
         type: PRODUCT_UPDATE_RESET
       });
       dispatch(singleProduct(productId));
-      toast.success("Thuốc đẫ được cập nhật", ToastObjects);
+      toast.success("Thuốc đẫ được cập nhật",ToastObjects);
     }
-    if (successUnitCreate) {
-      toast.success("Đơn vị tính đã được thêm", ToastObjects);
-      dispatch({ type: UNIT_CREATE_RESET })
+    if(successUnitCreate) {
+      toast.success("Đơn vị tính đã được thêm",ToastObjects);
+      dispatch({type: UNIT_CREATE_RESET})
     }
-    if (successUnitDelete) {
-      toast.success("Đơn vị tính đã được xóa", ToastObjects);
-      dispatch({ type: UNIT_DELETE_RESET })
+    if(successUnitDelete) {
+      toast.success("Đơn vị tính đã được xóa",ToastObjects);
+      dispatch({type: UNIT_DELETE_RESET})
     }
-    if (successManufacturerCreate) {
-      toast.success("Nhà cung cấp đã được thêm", ToastObjects);
-      dispatch({ type: MANUFACTURER_CREATE_RESET })
+    if(successManufacturerCreate) {
+      toast.success("Nhà cung cấp đã được thêm",ToastObjects);
+      dispatch({type: MANUFACTURER_CREATE_RESET})
     }
-    if (successManufacturerDelete) {
-      toast.success("Nhà cung cấp đã được xóa", ToastObjects);
-      dispatch({ type: MANUFACTURER_DELETE_RESET })
+    if(successManufacturerDelete) {
+      toast.success("Nhà cung cấp đã được xóa",ToastObjects);
+      dispatch({type: MANUFACTURER_DELETE_RESET})
     }
-    if (successCountryCreate) {
-      toast.success("Nước sản xuất đẫ được thêm", ToastObjects);
-      dispatch({ type: COUNTRY_CREATE_RESET })
+    if(successCountryCreate) {
+      toast.success("Nước sản xuất đẫ được thêm",ToastObjects);
+      dispatch({type: COUNTRY_CREATE_RESET})
     }
-    if (successCountryDelete) {
-      toast.success("Nhà sản xuất đã được xóa", ToastObjects);
-      dispatch({ type: COUNTRY_DELETE_RESET })
+    if(successCountryDelete) {
+      toast.success("Nhà sản xuất đã được xóa",ToastObjects);
+      dispatch({type: COUNTRY_DELETE_RESET})
     }
-    if (successAPICreate) {
-      toast.success("Hoạt chất đã được thêm", ToastObjects);
-      dispatch({ type: API_CREATE_RESET })
+    if(successAPICreate) {
+      toast.success("Hoạt chất đã được thêm",ToastObjects);
+      dispatch({type: API_CREATE_RESET})
     }
-    if (successAPIDelete) {
-      toast.success("Hoạt chất đã được xóa", ToastObjects);
-      dispatch({ type: API_DELETE_RESET })
+    if(successAPIDelete) {
+      toast.success("Hoạt chất đã được xóa",ToastObjects);
+      dispatch({type: API_DELETE_RESET})
     }
-    if (product._id !== productId) {
+    if(product._id!==productId) {
       dispatch(singleProduct(productId));
+
     }
-    else if (product._id === productId && !flag && !isEdited) {
+
+    else if(product._id===productId&&!flag&&!isEdited) {
       setData({
         name: product.name,
         regisId: product.regisId,
@@ -265,41 +317,45 @@ const EditProductMain = (props) => {
         prescription: product.prescription,
         allowToSell: product.allowToSell
       })
-      if (itemProducts.length === 0 && !isEdited) {
+
+      if(itemProducts.length===0&&!isEdited) {
         setItemProducts(JSON.parse(JSON.stringify(APIs)))
       } else {
         setFlag(true)
       }
+      setImages(data.image)
+
     }// eslint-disable-next-line
-  }, [itemProducts, product, flag, dispatch, productId, isEdited, successUpdate, successUnitCreate, successUnitDelete, successManufacturerCreate, successManufacturerDelete, successCountryCreate, successCountryDelete, successAPICreate, successAPIDelete]);
+
+  },[itemProducts,product,flag,dispatch,productId,isEdited,successUpdate,successUnitCreate,successUnitDelete,successManufacturerCreate,successManufacturerDelete,successCountryCreate,successCountryDelete,successAPICreate,successAPIDelete]);
   return (
     <>
       <Toast />
       <MyVerticallyCenteredModalUnit
         data={units}
         show={modalShowUnit}
-        loading={loadingUnitCreate || loadingUnitDelete}
+        loading={loadingUnitCreate||loadingUnitDelete}
         onHide={() => setModalShowUnit(false)}
       />
 
       <MyVerticallyCenteredModalManufacturer
         data={manufacturers}
         show={modalShowManufacturer}
-        loading={loadingManufacturerCreate || loadingManufacturerDelete}
+        loading={loadingManufacturerCreate||loadingManufacturerDelete}
         onHide={() => setModalShowManufacturer(false)}
       />
 
       <MyVerticallyCenteredModalCountry
         data={countries}
         show={modalShowCountry}
-        loading={loadingCountryCreate || loadingCountryDelete}
+        loading={loadingCountryCreate||loadingCountryDelete}
         onHide={() => setModalShowCountry(false)}
       />
 
       <MyVerticallyCenteredModalAPI
         data={API_item}
         show={modalShowActivePharma}
-        loading={loadingAPICreate || loadingAPIDelete}
+        loading={loadingAPICreate||loadingAPIDelete}
         onHide={() => setModalShowActivePharma(false)}
       />
       <section className="content-main" >
@@ -319,9 +375,9 @@ const EditProductMain = (props) => {
               <div className="card card-custom mb-4">
                 <div className="card-body">
                   {
-                    loading || loadingUpdate ? (<Loading />) :
-                      error || errorUpdate || errorUnit || errorUnitCreate || errorUnitDelete || errorManufacturer || errorCountry || errorManufacturerCreate || errorManufacturerDelete || errorCountryCreate || errorCountryDelete || errorAPI || errorAPICreate || errorAPIDelete ?
-                        (<Message>{error || errorUnit || errorUnitCreate || errorUnitDelete}</Message>) : ''
+                    loading||loadingUpdate? (<Loading />):
+                      error||errorUpdate||errorUnit||errorUnitCreate||errorUnitDelete||errorManufacturer||errorCountry||errorManufacturerCreate||errorManufacturerDelete||errorCountryCreate||errorCountryDelete||errorAPI||errorAPICreate||errorAPIDelete?
+                        (<Message>{error||errorUnit||errorUnitCreate||errorUnitDelete}</Message>):''
                   }
                   {/* //! tên thuốc - tên biệt dược - số đăng ký */}
                   <div className="mb-4 form-divided-3">
@@ -381,7 +437,7 @@ const EditProductMain = (props) => {
                         className="form-control"
                         required >
                         <option value=''>Chọn nhóm hàng</option>
-                        {categories?.map((item, index) => (
+                        {categories?.map((item,index) => (
                           <option key={index} value={item._id}>{item.name}</option>
                         ))}
                       </select>
@@ -398,7 +454,7 @@ const EditProductMain = (props) => {
                         className="form-control"
                         required >
                         <option value=''>Chọn nhóm thuốc</option>
-                        {categoriesDrug?.map((item, index) => (
+                        {categoriesDrug?.map((item,index) => (
                           <option key={index} value={item._id}>{item.name}</option>
                         ))}
                       </select>
@@ -431,7 +487,7 @@ const EditProductMain = (props) => {
                 <div className="mb-4 form-divided-custom-2">
                   <div className="d-block">
                     <div className="d-flex align-items-end mb-4">
-                      <div style={{ flexGrow: '1' }}>
+                      <div style={{flexGrow: '1'}}>
                         <label htmlFor="unit" className="form-label">
                           Đơn vị tính
                         </label>
@@ -442,12 +498,12 @@ const EditProductMain = (props) => {
                           className="form-control"
                           required >
                           <option value=''>Chọn đơn vị tính</option>
-                          {units?.map((item, index) => (
+                          {units?.map((item,index) => (
                             <option key={index} value={item}>{item}</option>
                           ))}
                         </select>
                       </div>
-                      <div style={{ marginLeft: '10px', transform: 'translateY(-3px)' }}>
+                      <div style={{marginLeft: '10px',transform: 'translateY(-3px)'}}>
                         <button className="circle-btn" onClick={(e) => {
                           e.preventDefault();
                           setModalShowUnit(true)
@@ -486,9 +542,9 @@ const EditProductMain = (props) => {
                     </div>
                   </div>
                   <div className="d-flex flex-wrap">
-                    <div style={{ display: 'flex', gridGap: '30px', width: '-webkit-fill-available' }}>
+                    <div style={{display: 'flex',gridGap: '30px',width: '-webkit-fill-available'}}>
                       <div className="d-flex align-items-end w-50 mb-3">
-                        <div style={{ flexGrow: '1' }}>
+                        <div style={{flexGrow: '1'}}>
                           <label htmlFor="unit" className="form-label">
                             Hoạt chất
                           </label>
@@ -499,12 +555,12 @@ const EditProductMain = (props) => {
                             className="form-control"
                           >
                             <option value=''>Chọn hoạt chất</option>
-                            {API_item?.map((item, index) => (
+                            {API_item?.map((item,index) => (
                               <option key={index} value={item}>{item}</option>
                             ))}
                           </select>
                         </div>
-                        <div style={{ marginLeft: '10px', transform: 'translateY(-3px)' }}>
+                        <div style={{marginLeft: '10px',transform: 'translateY(-3px)'}}>
                           <button className="circle-btn" onClick={(e) => {
                             e.preventDefault();
                             setModalShowActivePharma(true)
@@ -512,7 +568,7 @@ const EditProductMain = (props) => {
                         </div>
                       </div>
                       <div className="d-flex align-items-end w-50 mb-3">
-                        <div style={{ flexGrow: '1' }}>
+                        <div style={{flexGrow: '1'}}>
                           <label htmlFor="product_packing" className="form-label">
                             Hàm lượng (g)
                           </label>
@@ -526,7 +582,7 @@ const EditProductMain = (props) => {
                             id="product_packing"
                           />
                         </div>
-                        <div style={{ marginLeft: '10px', transform: 'translateY(-3px)' }}>
+                        <div style={{marginLeft: '10px',transform: 'translateY(-3px)'}}>
                           <button className="btn btn-success" onClick={handleAddAPI}><i className="fas fa-plus"></i></button>
                         </div>
                       </div>
@@ -534,7 +590,7 @@ const EditProductMain = (props) => {
 
                     <div className="w-100">
                       <div className="card card-custom">
-                        <header className="card-header bg-white" style={{ height: '170px', overflowY: 'scroll' }}>
+                        <header className="card-header bg-white" style={{height: '170px',overflowY: 'scroll'}}>
                           <table className="table">
                             <thead>
                               <tr>
@@ -544,12 +600,12 @@ const EditProductMain = (props) => {
                               </tr>
                             </thead>
                             <tbody>
-                              {itemProducts?.map((item, index) => (
+                              {itemProducts?.map((item,index) => (
                                 <tr key={index}>
                                   <td>{item.API}</td>
                                   <td>{item.content}</td>
                                   <td>
-                                    <button className="dropdown-item text-danger" onClick={(e) => handleDeleteAPI(e, index)}>
+                                    <button className="dropdown-item text-danger" onClick={(e) => handleDeleteAPI(e,index)}>
                                       <i className="fas fa-trash"></i>
                                     </button>
                                   </td>
@@ -572,7 +628,7 @@ const EditProductMain = (props) => {
                 {/* // ! nhà sản xuất và nước sản xuất */}
                 <div className="mb-4 form-divided-2">
                   <div className="d-flex align-items-end">
-                    <div style={{ flexGrow: '1' }}>
+                    <div style={{flexGrow: '1'}}>
                       <label htmlFor="unit" className="form-label">
                         Nhà sản xuất
                       </label>
@@ -583,12 +639,12 @@ const EditProductMain = (props) => {
                         className="form-control"
                         required >
                         <option value=''>Chọn nhà sản xuất</option>
-                        {manufacturers?.map((item, index) => (
+                        {manufacturers?.map((item,index) => (
                           <option key={index} value={item}>{item}</option>
                         ))}
                       </select>
                     </div>
-                    <div style={{ marginLeft: '10px', transform: 'translateY(-3px)' }}>
+                    <div style={{marginLeft: '10px',transform: 'translateY(-3px)'}}>
                       <button className="circle-btn" onClick={(e) => {
                         e.preventDefault();
                         setModalShowManufacturer(true)
@@ -596,7 +652,7 @@ const EditProductMain = (props) => {
                     </div>
                   </div>
                   <div className="d-flex align-items-end">
-                    <div style={{ flexGrow: '1' }}>
+                    <div style={{flexGrow: '1'}}>
                       <label htmlFor="unit" className="form-label">
                         Nước sản xuất
                       </label>
@@ -607,12 +663,12 @@ const EditProductMain = (props) => {
                         className="form-control"
                         required >
                         <option value=''>Chọn nước sản xuất</option>
-                        {countries?.map((item, index) => (
+                        {countries?.map((item,index) => (
                           <option key={index} value={item}>{item}</option>
                         ))}
                       </select>
                     </div>
-                    <div style={{ marginLeft: '10px', transform: 'translateY(-3px)' }}>
+                    <div style={{marginLeft: '10px',transform: 'translateY(-3px)'}}>
                       <button className="circle-btn" onClick={(e) => {
                         e.preventDefault();
                         setModalShowCountry(true)
@@ -648,7 +704,7 @@ const EditProductMain = (props) => {
                   </div>
                 </div>
                 {/* // ! ảnh - cho phép bán */}
-                <div className="mb-4 form-divided-3">
+                {/*<div className="mb-4 form-divided-3">
                   <div>
                     <label className="form-label">Hình ảnh</label>
                     <input
@@ -697,15 +753,45 @@ const EditProductMain = (props) => {
                       })}
                     />
                   </div>
-                </div>
+                </div>*/}
               </div>
             </div>
           </div>
+          {/*  */}
+          <div className="col-md-6 my-4">
+            <div className="input-group mb-3">
+
+              <div className="custom-file border rounded">
+
+
+
+                <input type="file" className="form-control" id="uploadFile"
+                  onChange={handleUploadInput} multiple accept="image/*" />
+              </div>
+
+            </div>
+
+            <div className="row img-up mx-0">
+              {
+                images?.map((img,index) => (
+                  <div key={index} className="file_img my-1">
+                    <img src={img?.name? URL.createObjectURL(img):img}
+                      alt="" className="img-thumbnail rounded" />
+
+                    <span onClick={() => deleteImage(index)}>X</span>
+                  </div>
+                ))
+              }
+            </div>
+
+
+          </div>
+          {/*  */}
 
 
 
           <div>
-            <button type="submit" className="btn btn-primary mb-4" style={{ float: 'right' }}>
+            <button type="submit" className="btn btn-primary mb-4" style={{float: 'right'}}>
               Lưu lại
             </button>
           </div>

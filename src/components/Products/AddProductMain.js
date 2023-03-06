@@ -44,10 +44,12 @@ const AddProductMain=() => {
   const [modalShowCountry,setModalShowCountry]=useState(false);
   const [modalShowActivePharma,setModalShowActivePharma]=useState(false);
   const [images,setImages]=useState([])
-  console.log(images);
 
 
-  const [data,setData]=useState({name: '',regisId: '',unit: '',packing: '',branchName: '',manufacturer: '',countryOfOrigin: '',instruction: '',price: 0,prescription: true,description: '',image: '',allowToSell: true})
+
+
+
+  const [data,setData]=useState({name: '',regisId: '',unit: '',packing: '',brandName: '',manufacturer: '',countryOfOrigin: '',instruction: '',price: 0,prescription: true,description: '',image: [],allowToSell: true})
   var {APIs=itemAPI? [...itemAPI]:[]}=data
 
   const productCreate=useSelector(state => state.productCreate);
@@ -158,24 +160,31 @@ const AddProductMain=() => {
 
   const handleSubmit=async (e) => {
     e.preventDefault();
+    var arrImg=[];
+    if(images) {
+      for(const image of images) {
+        const formData=new FormData();
+        formData.append('image',image);
+        const {data: dataUp}=await axios.post(`/api/products/single`,formData);
 
-    if(file) {
-      const formData=new FormData();
-      formData.append('image',file);
-      const {data: dataUp}=await axios.post(`/api/products/single`,formData);
-      data.image=dataUp.filename
+
+        arrImg.push(dataUp.filename)
+      }
+
+      data.image=arrImg
       dispatch(createProduct({...data,APIs: APIs,}));
       setData({
-        name: '',regisId: '',unit: '',packing: '',branchName: '',manufacturer: '',countryOfOrigin: '',instruction: '',price: 0,prescription: true,description: '',image: '',allowToSell: true
+        name: '',regisId: '',unit: '',packing: '',brandName: '',manufacturer: '',countryOfOrigin: '',instruction: '',price: 0,prescription: true,description: '',image: [],allowToSell: true
       })
       setImg(null)
       document.getElementById('uploadFile').value="";
     }
+    console.log({post: data})
   }
 
   useEffect(() => {
     if(product) {
-      toast.success("Thuốc đã được cập nhật",ToastObjects);
+      toast.success("Thuốc đã được thêm",ToastObjects);
       dispatch({type: PRODUCT_CREATE_RESET})
     }
     if(successUnitCreate) {
@@ -218,7 +227,7 @@ const AddProductMain=() => {
     dispatch(listAPI())
   },[dispatch,product,successUnitCreate,successUnitDelete,successManufacturerCreate,successManufacturerDelete,successCountryCreate,successCountryDelete,successAPICreate,successAPIDelete])
   const {API,content}=fieldAPI
-  const {name,regisId,category,categoryDrug,unit,packing,branchName,manufacturer,countryOfOrigin,instruction,price,allowToSell,prescription,description}=data;
+  const {name,regisId,category,categoryDrug,unit,packing,brandName,manufacturer,countryOfOrigin,instruction,price,allowToSell,prescription,description}=data;
 
 
 
@@ -329,13 +338,13 @@ const AddProductMain=() => {
                       />
                     </div>
                     <div>
-                      <label htmlFor="branchName" className="form-label">
+                      <label htmlFor="brandName" className="form-label">
                         Tên biệt dược
                       </label>
                       <input
                         onChange={handleChange}
-                        value={branchName}
-                        name="branchName"
+                        value={brandName}
+                        name="brandName"
                         type="text"
                         placeholder="Nhập tên biệt dược"
                         className="form-control"
@@ -638,7 +647,7 @@ const AddProductMain=() => {
                   </div>
                 </div>
                 {/* // ! ảnh - cho phép bán */}
-                <div className="mb-4 form-divided-3">
+                {/*<div className="mb-4 form-divided-3">
                   <div>
                     <label className="form-label">Ảnh thuốc</label>
                     <input
@@ -681,7 +690,7 @@ const AddProductMain=() => {
                       })}
                     />
                   </div>
-                </div>
+                </div>*/}
               </div>
             </div>
           </div>
@@ -693,7 +702,7 @@ const AddProductMain=() => {
 
 
 
-                <input type="file" className="form-control"
+                <input type="file" className="form-control" id="uploadFile"
                   onChange={handleUploadInput} multiple accept="image/*" />
               </div>
 
