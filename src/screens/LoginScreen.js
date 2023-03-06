@@ -54,7 +54,7 @@ const Login = () => {
               <div className="mb-3">
                 <input onChange={e => setEmail(e.target.value)}
                   className="form-control"
-                  placeholder="Email"
+                  placeholder="Nhập email"
                   type="email"
                   value={email}
                 />
@@ -62,7 +62,7 @@ const Login = () => {
               <div className="mb-3">
                 <input onChange={e => setPassword(e.target.value)}
                   className="form-control"
-                  placeholder="Password"
+                  placeholder="Nhập mật khẩu"
                   type="password"
                   value={password}
                 />

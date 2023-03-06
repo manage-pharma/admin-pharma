@@ -30,7 +30,7 @@ const OrderDetailMain = (props) => {
     <section className="content-main">
       <div className="content-header">
         <Link to="/orders" className="btn btn-dark text-white">
-          Back To Orders
+          Quay về danh sách đơn đặt hàng
         </Link>
       </div>
       { loading ? <Loading/> : error ? <Message variant="alert-danger">{error}</Message> : (
@@ -46,7 +46,7 @@ const OrderDetailMain = (props) => {
               </span>
               <br />
               <small className="text-white mx-3 ">
-                Order ID: {orderItems._id}
+                ID đơn đặt hàng: {orderItems._id}
               </small>
             </div>
             <div className="col-lg-6 col-md-6 ms-auto d-flex justify-content-end align-items-center">
@@ -87,14 +87,14 @@ const OrderDetailMain = (props) => {
                   ) : !orderItems.isPaid ? (
                     <>
                       <div className="btn btn-danger col-12 pe-none"> 
-                        NOT PAID
+                        Chưa trả
                       </div>
                     </>
                   ) : (
                     <>
                       {loadingDelivered && <Loading/>}
                       <button onClick={deliveredHanlder} className="btn btn-dark col-12 user-select-none">
-                        MARK AS DELIVERED
+                        Đánh dấu đã vận chuyển
                       </button>
                     </>
                   )                

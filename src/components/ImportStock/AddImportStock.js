@@ -57,6 +57,9 @@ const AddImportStock = () => {
     const { name, product, lotNumber, expDrug, qty, price } = field
     totalPrice= importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
 
+
+    console.log(itemProducts)
+
     const handleChange = e =>{
         e.preventDefault();
         setData(prev => {
@@ -85,13 +88,13 @@ const AddImportStock = () => {
         
         if(!field.product){
             if(!isStop){
-                renderToast('The product has not been selected','error', setIsStop, isStop)
+                renderToast('Sản phẩm chưa được chọn','error', setIsStop, isStop)
             }
             return;
         }
         else if(field.price <= 0 || field.qty <= 0){
             if(!isStop){
-                renderToast('Price or Quantity have to greater 0','error', setIsStop, isStop)
+                renderToast('Giá nhập và số lượng nhập phải lớn hơn 0','error', setIsStop, isStop)
             }
             return;
         }
@@ -130,7 +133,7 @@ const AddImportStock = () => {
     
     useEffect(()=>{
         if(success){
-            toast.success(`Added successfully`, ToastObjects);
+            toast.success(`Tạo đơn nhập thành công`, ToastObjects);
             dispatch({type: IMPORT_STOCK_CREATE_RESET})
             setData({
                 totalPrice: 0,
@@ -163,11 +166,11 @@ const AddImportStock = () => {
                         history.push("/import-stock")
                     }}>
                         <h4 className="arrow-breadcrum"><i className="fas fa-arrow-left"></i></h4>
-                        <h3>Add import stock</h3>
+                        <h3>Tạo đơn nhập kho</h3>
                     </div>
                     <div>
                     <button type="submit" className="btn btn-primary">
-                        Publish now
+                        Tạo đơn
                     </button>
                     </div>
                 </div>
@@ -176,7 +179,7 @@ const AddImportStock = () => {
                         <div className="card-body">
                             <div className="mb-4">
                                 <label htmlFor="name_drug" className="form-label">
-                                    Provider
+                                    Nhà cung cấp
                                 </label>
                                 <select
                                 value={provider}
@@ -184,7 +187,7 @@ const AddImportStock = () => {
                                 onChange={handleChange}
                                 className="form-control"
                                 required >
-                                    <option value=''>Chosse Provider</option>
+                                    <option value=''>Chọn nhà cung cấp</option>
                                     {providers?.map((item, index)=>(
                                     <option key={index} value={item._id}>{item.name}</option>
                                     ))}
@@ -192,7 +195,7 @@ const AddImportStock = () => {
                             </div>
                             <div className="mb-4 form-divided-2">
                                 <div>
-                                    <label className="form-label">Imported At</label>
+                                    <label className="form-label">Ngày nhập</label>
                                     <input
                                         id="datePicker"
                                         name="importedAt"
@@ -206,7 +209,7 @@ const AddImportStock = () => {
                                 </div>
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
-                                        User
+                                        Người nhập
                                     </label>
                                     <select
                                     value={user}
@@ -214,7 +217,7 @@ const AddImportStock = () => {
                                     onChange={handleChange}
                                     className="form-control"
                                     required >
-                                        <option value=''>Chosse user</option>
+                                        <option value=''>Chọn người nhập</option>
                                         {users?.map((item, index)=>(
                                             <option key={index} value={item._id}>{item.name}</option>
                                         ))}
@@ -271,7 +274,7 @@ const AddImportStock = () => {
                             </div>
                             <div className="mb-4 form-divided-2">
                                 <div>
-                                    <label className="form-label">Price buy</label>
+                                    <label className="form-label">Giá nhập</label>
                                     <input
                                         name="price"
                                         value={price}
@@ -299,7 +302,7 @@ const AddImportStock = () => {
                                 </div>
                             </div>
                             <div className="mb-6 d-flex justify-content-end">
-                                <button className="btn btn-success" onClick={handleAddProduct}>Add Product</button>
+                                <button className="btn btn-success" onClick={handleAddProduct}>Thêm sản phẩm</button>
                             </div>   
                         </div>
                     </div>
@@ -316,10 +319,10 @@ const AddImportStock = () => {
                                 <th scope="col">STT</th>
                                 <th scope="col">Tên thuốc</th>
                                 <th scope="col">Số lô</th>
-                                <th scope="col">HSD</th>
+                                <th scope="col">Hạn sử dụng</th>
                                 <th scope="col">Giá nhập</th>
                                 <th scope='col'>Số lượng</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">Hành động</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -351,7 +354,7 @@ const AddImportStock = () => {
                                                 Edit info
                                             </button> */}
                                                 <button className="dropdown-item text-danger" onClick={(e)=>handleDeleteItem(e,index)}>
-                                                    Delete
+                                                    Xóa
                                                 </button>
                                             </div>
                                         </div>
@@ -361,7 +364,7 @@ const AddImportStock = () => {
                             </tbody>
                             </table>
                             <div className="mb-6 d-flex justify-content-end">
-                                {`Total Price: ${totalPrice}`}
+                                {`Tổng cộng: ${totalPrice}`}
                             </div>
                         </div>
                     </header>

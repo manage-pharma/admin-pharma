@@ -73,11 +73,11 @@ const CreateCategoryDrug = (props) => {
       <form>
         <div className="mb-4">
           <label htmlFor="product_name" className="form-label">
-            Name
+            Tên nhóm thuốc
           </label>
           <input
             type="text"
-            placeholder="Type here"
+            placeholder="Nhập tên nhóm thuốc"
             className="form-control py-3"
             id="category_name"
             required
@@ -87,7 +87,7 @@ const CreateCategoryDrug = (props) => {
           />
         </div>
         <div className="mb-4">
-          <label className="form-label">Description</label>
+          <label className="form-label">Mô tả</label>
           <textarea
             placeholder="Type here"
             className="form-control"
@@ -99,7 +99,7 @@ const CreateCategoryDrug = (props) => {
           ></textarea>
         </div>
         <div className="mb-4">
-          <label className="form-label">Active</label>
+          <label className="form-label">Trạng thái</label>
           <label className="switch" htmlFor="checkbox">
             <input 
               type="checkbox" 
@@ -118,10 +118,10 @@ const CreateCategoryDrug = (props) => {
         <div className="d-grid">
           {
             valueEdit ? (
-              <button className="btn btn-warning py-3" onClick={hanldeEdit}>Update category</button>
+              <button className="btn btn-warning py-3" onClick={hanldeEdit}><h5>Cập nhật</h5></button>
             ): 
             (
-              <button className="btn btn-primary py-3" onClick={handleSubmit}>Create category</button>
+              <button className="btn btn-primary py-3" onClick={handleSubmit}><h5>Tạo mới</h5></button>
             )
           }
         </div>

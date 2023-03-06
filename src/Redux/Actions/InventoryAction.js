@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { logout } from "./UserActions";
-import { INVENTORY_LIST_REQUEST, INVENTORY_LIST_RESET, INVENTORY_LIST_SUCCESS, INVENTORY_DETAILS_REQUEST, INVENTORY_DETAILS_SUCCESS, INVENTORY_DETAILS_FAIL, INVENTORY_DETAILS_RESET, INVENTORY_LIST_FAIL } from './../Constants/InventoryConstants';
+import { INVENTORY_LIST_REQUEST, INVENTORY_LIST_RESET, INVENTORY_LIST_SUCCESS,INVENTORY_TAG_FAIL, INVENTORY_TAG_REQUEST, INVENTORY_TAG_RESET, INVENTORY_TAG_SUCCESS, INVENTORY_LIST_FAIL } from './../Constants/InventoryConstants';
 
 export const listInventory= ( keyword = "", from=' ', to = ' ' ) => async (dispatch, getState) => {
   try {
@@ -36,10 +36,10 @@ export const listInventory= ( keyword = "", from=' ', to = ' ' ) => async (dispa
   }
 };
 
-//ADMIN PRODUCT SINGLE
-export const singleInventory= (id) => async (dispatch, getState) => {
+//ADMIN TAG INVENTORY
+export const tagInventory= ( keyword = "", from=' ', to = ' ') => async (dispatch, getState) => {
   try {
-    dispatch({ type: INVENTORY_DETAILS_REQUEST });
+    dispatch({ type: INVENTORY_TAG_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
     const {
       userLogin: { userInfo },
@@ -50,8 +50,8 @@ export const singleInventory= (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(`/api/inventory/${id}`, config);
-    dispatch({ type: INVENTORY_DETAILS_SUCCESS, payload: data });
+    const { data } = await axios.get(`/api/inventory/tag/?keyword=${keyword}&from=${from}&to=${to}`, config);
+    dispatch({ type: INVENTORY_TAG_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -61,11 +61,11 @@ export const singleInventory= (id) => async (dispatch, getState) => {
       dispatch(logout());
     }
     dispatch({
-      type: INVENTORY_DETAILS_FAIL,
+      type: INVENTORY_TAG_FAIL,
       payload: message,
     });
     setTimeout(() => {
-      dispatch({ type: INVENTORY_DETAILS_RESET });
+      dispatch({ type: INVENTORY_TAG_RESET });
     }, 3000);
   }
 };
