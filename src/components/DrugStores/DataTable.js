@@ -5,12 +5,11 @@ import React,{useEffect,useState} from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import {useDispatch} from "react-redux";
-import {deleteProduct,listProduct} from "../../Redux/Actions/ProductActions";
+import {listDrugStore} from "../../Redux/Actions/DrugStoreActions";
 import {useSelector} from "react-redux";
-import {PRODUCT_DELETE_RESET} from "../../Redux/Constants/ProductConstants";
 import CustomLoader from './../../util/LoadingTable';
 const DataTableProduct=(props) => {
-    const {products,loading,loadingDelete}=props
+    const {drugstores,loading,loadingDelete}=props
     const history=useHistory()
     const dispatch=useDispatch()
     const [modalShow,setModalShow]=useState(false);
@@ -18,32 +17,7 @@ const DataTableProduct=(props) => {
     const productDelete=useSelector(state => state.productDelete)
     const {success: successDelete}=productDelete
 
-    const MyVerticallyCenteredModal=(props) => {
-        return (
-            <Modal
-                {...props}
-                size="md"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                className="my-modal"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Delete
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Are you sure you want to delete <span className="text-danger">{dataModal?.name}</span> ?</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button className="btn-danger" onClick={() => {
-                        dispatch(deleteProduct(dataModal?._id))
-                        setModalShow(false)
-                    }}>OK</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
+
 
     const CustomMaterialMenu=(props) => {
         let {row}=props
@@ -60,17 +34,11 @@ const DataTableProduct=(props) => {
                     <button className="dropdown-item" onClick={(e) => {
                         e.stopPropagation()
                         let id=row._id
-                        history.push(`/product/${id}`)
+                        history.push(`/drugstore/${id}`)
                     }}>
                         Edit info
                     </button>
-                    <button className="dropdown-item text-danger" onClick={(e) => {
-                        e.preventDefault()
-                        setModalShow(true)
-                        setDataModal(row)
-                    }}>
-                        Delete
-                    </button>
+
                 </div>
             </div>
         )
@@ -80,30 +48,36 @@ const DataTableProduct=(props) => {
 
         {
             name: "Tên thuốc",
-            selector: (row) => row.name,
+            selector: (row) => row.product.name,
             sortable: true,
             reorder: true,
             minWidth: "180px",
         },
         {
             name: "Hình ảnh",
-            selector: (row) => <img className="mt-1 w-50 h-50" src={row.image?.slice(0,0+1)[0]} alt="ImageCategory" />,
+            selector: (row) => <img className="mt-1 w-80 h-80" src={row.product.image?.slice(0,0+1)[0]} alt="ImageCategory" />,
         },
         {
-            name: "Nhóm hàng",
-            selector: (row) => row?.category?.name,
+            name: "Số lượng",
+            selector: (row) => row.countInStock,
             sortable: true,
             minWidth: "180px",
         },
         {
-            name: "Nhóm thuốc",
-            selector: (row) => row?.categoryDrug?.name,
+            name: "Giá",
+            selector: (row) => row?.product.price,
             sortable: true,
             minWidth: "180px",
         },
         {
-            name: "Thuốc kê đơn",
-            selector: (row) => row.prescription?
+            name: "Giảm giá",
+            selector: (row) => row.discount,
+            sortable: true,
+            minWidth: "180px",
+        },
+        {
+            name: "Hiển thị",
+            selector: (row) => row.isActive?
                 <span className="badge bg-success text-white p-2" style={{minWidth: '45px'}}>Có</span>:
                 <span className="badge bg-danger text-white p-2" >Không</span>,
             sortable: true,
@@ -111,40 +85,22 @@ const DataTableProduct=(props) => {
 
             minWidth: "150px",
         },
-        {
-            name: "DVT",
-            selector: (row) => row.unit,
-            sortable: true,
-            reorder: true
-        },
-        {
-            name: "Giá",
-            selector: (row) => row.price,
-            sortable: true,
-            reorder: true
-        },
-        {
-            name: "NSX",
-            selector: (row) => row.manufacturer,
-            sortable: true,
-            reorder: true
-        },
+
+
         {
             name: "Nguồn gốc",
-            selector: (row) => row.countryOfOrigin,
+            selector: (row) => row.product.countryOfOrigin,
             sortable: true,
             reorder: true,
             minWidth: "130px",
         },
         {
-            name: "Thuốc bán",
-            selector: (row) => row.allowToSell?
-                <span className="badge bg-success text-white p-2   " style={{minWidth: '45px'}}>Có</span>:
-                <span className="badge bg-danger text-white p-2 " >Không</span>,
+            name: "Đánh giá",
+            selector: (row) => row.product.rating,
             sortable: true,
-            reorder: true,
-            minWidth: "120px",
+            minWidth: "180px",
         },
+
         {
             name: "Hành động",
             cell: row => <CustomMaterialMenu size="small" row={row} />,
@@ -192,9 +148,9 @@ const DataTableProduct=(props) => {
     //     },
     // ];
 
-    // const handleRowClicked = (row) => {
-    // history.push(`/product/${row._id}`)
-    // };
+    const handleRowClicked=(row) => {
+        history.push(`/drugstore/${row._id}`)
+    };
 
     const customStyles={
         rows: {
@@ -238,26 +194,18 @@ const DataTableProduct=(props) => {
         },
     };
 
-    useEffect(() => {
-        if(successDelete) {
-            dispatch({type: PRODUCT_DELETE_RESET});
-            dispatch(listProduct())
-        }
-    },[dispatch,successDelete])
+
     return (
         <>
-            <MyVerticallyCenteredModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-            />
+
             <DataTable
                 // theme="solarized"
                 columns={columns}
-                data={products}
+                data={drugstores}
                 customStyles={customStyles}
                 defaultSortFieldId
                 pagination
-                // onRowClicked={handleRowClicked}
+                onRowClicked={handleRowClicked}
                 // conditionalRowStyles={dessert ? conditionalRowStyles : ''}
                 paginationComponentOptions={paginationComponentOptions}
                 progressPending={loading||loadingDelete}
