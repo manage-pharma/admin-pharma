@@ -7,12 +7,15 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from "react-redux";
 import { listImportStock, statusImportStock } from "../../Redux/Actions/ImportStockAction";
 import { IMPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ImportStockConstant";
+import printReport from './PrintReport';
 import CustomLoader from './../../util/LoadingTable';
+
 const ImportStock = (props) =>{
     const {importStock, loading, loadingStatus} = props 
     const history = useHistory()
     const dispatch = useDispatch()
     const [modalShow, setModalShow] = useState(false);
+    const [reportShow, setReportShow] = useState(false);
     const [dataModal, setDataModal] = useState();
     const updateStatus = useSelector(state => state.importStockStatus)
     const {success} = updateStatus
@@ -58,24 +61,40 @@ const ImportStock = (props) =>{
                 <div className="dropdown-menu">
                   { row.status === false ?
                       <>
-                        <button className="dropdown-item bg-warning" onClick={(e)=>{
+                        <button className="dropdown-item active-menu" onClick={(e)=>{
                           e.stopPropagation()
                           setModalShow(true)
                           setDataModal(row)
                         }}>
-                          <span className="text-black">Xác nhận nhập</span>
+                          <i className="fas fa-clipboard-check"></i>
+                          <span> Xác nhận nhập</span>
                         </button>
-                        <button className="dropdown-item" onClick={(e)=>{
+
+                        <button className="dropdown-item active-menu" onClick={(e)=>{
                           e.preventDefault()
                           history.push(`/import-stock/${row._id}`)
-                        }}>Chỉnh sửa</button>
+                        }}>
+                          <i className="fas fa-pencil"></i>
+                          <span> Chỉnh sửa</span> 
+                        </button>
                       </>
                        :
-                       <button className="dropdown-item" onClick={(e)=>{
+                       <button className="dropdown-item active-menu" onClick={(e)=>{
                         e.preventDefault()
                         history.push(`/import-stock/${row._id}`)
-                      }}>Xem chi tiết</button>
+                      }}>
+                        <i className="fas fa-eye"></i>
+                        <span> Xem chi tiết</span>
+                      </button>
                   }
+                  <button className="dropdown-item active-menu" onClick={(e)=>{
+                      e.preventDefault()
+                      setReportShow(true)
+                      setDataModal(row)
+                    }}>
+                      <i className="fas fa-print"></i>
+                      <span> In phiếu nhập</span>
+                  </button>
                 </div>
             </div>
         )
@@ -210,7 +229,14 @@ const ImportStock = (props) =>{
         dispatch({ type: IMPORT_STOCK_STATUS_RESET});
         dispatch(listImportStock())
       }
-    },[dispatch, success])
+      if(reportShow){
+        printReport(dataModal)
+        setReportShow(false)
+        setDataModal(null)
+      }
+      // eslint-disable-next-line
+    },[dispatch, success, reportShow])
+
 
   return (
     <>
@@ -218,20 +244,23 @@ const ImportStock = (props) =>{
             show={modalShow}
             onHide={() => setModalShow(false)}
         />
-        <DataTable
-            // theme="solarized"
-            columns={columns}
-            data={importStock}
-            customStyles={customStyles}
-            defaultSortFieldId
-            pagination
-            // onRowClicked={handleRowClicked}
-            paginationComponentOptions={paginationComponentOptions}
-            progressPending={loading||loadingStatus}
-			      progressComponent={<CustomLoader />}
-            highlightOnHover
-            pointerOnHover
-        />
+
+        <div className='CHtfP'>
+          <DataTable
+              // theme="solarized"
+              columns={columns}
+              data={importStock}
+              customStyles={customStyles}
+              defaultSortFieldId
+              pagination
+              // onRowClicked={handleRowClicked}
+              paginationComponentOptions={paginationComponentOptions}
+              progressPending={loading||loadingStatus}
+              progressComponent={<CustomLoader />}
+              highlightOnHover
+              pointerOnHover
+          />
+        </div>
     </>
 
   )  

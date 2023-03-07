@@ -8,12 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { listExportStock, statusExportStock } from "../../Redux/Actions/ExportStockAction";
 import { EXPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ExportStockConstant";
 import CustomLoader from './../../util/LoadingTable';
-
+import printReport from './PrintReport';
 const ExportStock = (props) =>{
     const {exportStock, loading, loadingStatus} = props 
     const history = useHistory()
     const dispatch = useDispatch()
     const [modalShow, setModalShow] = useState(false);
+    const [reportShow, setReportShow] = useState(false);
     const [dataModal, setDataModal] = useState();
     const updateStatus = useSelector(state => state.exportStockStatus)
     const {success} = updateStatus
@@ -59,24 +60,39 @@ const ExportStock = (props) =>{
                 <div className="dropdown-menu">
                   { row.status === false ?
                       <>
-                        <button className="dropdown-item bg-warning" onClick={(e)=>{
+                        <button className="dropdown-item active-menu" onClick={(e)=>{
                           e.stopPropagation()
                           setModalShow(true)
                           setDataModal(row)
                         }}>
-                          <span className="text-black">Confirm export</span>
+                          <i className="fas fa-clipboard-check"></i>
+                          <span> Xác nhận xuất</span>
                         </button>
-                        <button className="dropdown-item" onClick={(e)=>{
+                        <button className="dropdown-item active-menu" onClick={(e)=>{
                           e.preventDefault()
                           history.push(`/export-stock/${row._id}`)
-                        }}>Edit info</button>
+                        }}>
+                          <i className="fas fa-pencil"></i>
+                          <span> Chỉnh sửa</span>
+                        </button>
                       </>
                        :
-                       <button className="dropdown-item" onClick={(e)=>{
+                       <button className="dropdown-item active-menu" onClick={(e)=>{
                         e.preventDefault()
                         history.push(`/export-stock/${row._id}`)
-                      }}>Detail info</button>
+                      }}>
+                         <i className="fas fa-eye"></i>
+                        <span> Chi tiết</span>
+                      </button>
                   }
+                  <button className="dropdown-item active-menu" onClick={(e)=>{
+                      e.preventDefault()
+                      setReportShow(true)
+                      setDataModal(row)
+                    }}>
+                      <i className="fas fa-print"></i>
+                      <span> In phiếu xuất</span>
+                  </button>
                 </div>
             </div>
         )
@@ -218,7 +234,12 @@ const ExportStock = (props) =>{
           dispatch({ type: EXPORT_STOCK_STATUS_RESET});
           dispatch(listExportStock())
         }
-      },[dispatch, success])
+        if(reportShow){
+          printReport(dataModal)
+          setReportShow(false)
+          setDataModal(null)
+        }// eslint-disable-next-line
+      },[dispatch, success, reportShow])
 
   return (
     <>
@@ -226,20 +247,23 @@ const ExportStock = (props) =>{
             show={modalShow}
             onHide={() => setModalShow(false)}
         />
-        <DataTable
-            // theme="solarized"
-            columns={columns}
-            data={exportStock}
-            customStyles={customStyles}
-            defaultSortFieldId
-            pagination
-            // onRowClicked={handleRowClicked}
-            paginationComponentOptions={paginationComponentOptions}
-            progressPending={loading||loadingStatus}
-			      progressComponent={<CustomLoader />}
-            highlightOnHover
-            pointerOnHover
-        />
+        <div className='CHtfP'>
+          <DataTable
+              // theme="solarized"
+              columns={columns}
+              data={exportStock}
+              customStyles={customStyles}
+              defaultSortFieldId
+              pagination
+              // onRowClicked={handleRowClicked}
+              paginationComponentOptions={paginationComponentOptions}
+              progressPending={loading||loadingStatus}
+              progressComponent={<CustomLoader />}
+              highlightOnHover
+              pointerOnHover
+          />
+        </div>
+
     </>
 
   )  

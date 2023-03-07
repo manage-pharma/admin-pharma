@@ -1127,3 +1127,13 @@ input:checked + .slider:before {
 .list-group-item .delete-btn {
   margin-left: 8px;
 }
+.active-menu:hover{
+  background-color: #b9e0f8;
+}
+.CHtfP{
+  min-height: 200px !important;
+  background-color: white;
+}
+.dOIzqm{
+  border-bottom: 1px rgba(0,0,0,.12) solid;
+}
