@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React,{useEffect} from "react";
 import "./App.css";
 import "./responsive.css";
 import "react-toastify/dist/ReactToastify.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {BrowserRouter as Router,Switch,Route} from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/productScreen";
 import CategoriesScreen from "./screens/CategoriesScreen";
@@ -22,36 +22,37 @@ import PrivateRouter from "./PrivateRouter";
 import CategoriesDetail from "./screens/CategoriesDetail";
 import CategoriesDrugDetail from "./screens/CategoriesDrugDetail";
 import ProductExcelCSV from "./screens/ProductExcelCSV";
-import { useDispatch, useSelector } from "react-redux";
-import { listProduct } from "./Redux/Actions/ProductActions";
-import { listOrder } from "./Redux/Actions/OrderActions";
+import {useDispatch,useSelector} from "react-redux";
+import {listProduct} from "./Redux/Actions/ProductActions";
+import {listOrder} from "./Redux/Actions/OrderActions";
 import ProviderScreen from './screens/ProviderScreen';
 import ImportStockScreen from "./screens/ImportStockScreen"
 import ExportStockScreen from "./screens/ExportStockScreen"
 import InventoryScreen from './screens/InventoryScreen';
 import DrugStoreScreen from './screens/DrugStoreScreen';
+import DrugStoreEditScreen from "./screens/DrugStoreEditScreen";
 import TagInventory from './screens/TagInventory';
 function App() {
-  const data = useSelector((state)=> state.theme)
-  if(data.theme === "dark"){
+  const data=useSelector((state) => state.theme)
+  if(data.theme==="dark") {
     document.body.classList.remove("bg-light")
     document.body.classList.add("bg-dark")
   }
-  else{
+  else {
     document.body.classList.remove("bg-dark")
     document.body.classList.add("bg-light")
   }
-  const dispatch = useDispatch();
-  const userLogin = useSelector(state => state.userLogin)
-  const {userInfo} = userLogin;
-  useEffect(() =>{
+  const dispatch=useDispatch();
+  const userLogin=useSelector(state => state.userLogin)
+  const {userInfo}=userLogin;
+  useEffect(() => {
     if(userInfo) {
       dispatch(listProduct());
       dispatch(listOrder())
     }
-  }, [dispatch, userInfo])
+  },[dispatch,userInfo])
 
-  
+
 
   return (
     <>
@@ -59,10 +60,10 @@ function App() {
         <Switch>
           <PrivateRouter path="/" component={HomeScreen} exact />
 
-          <PrivateRouter path="/products" component={ProductScreen} exact/>
+          <PrivateRouter path="/products" component={ProductScreen} exact />
           <PrivateRouter path="/product/add" component={AddProduct} />
-          <PrivateRouter path="/product/excel" component={ProductExcelCSV} exact/>
-          <PrivateRouter path="/product/:id" component={ProductEditScreen} exact/>
+          <PrivateRouter path="/product/excel" component={ProductExcelCSV} exact />
+          <PrivateRouter path="/product/:id" component={ProductEditScreen} exact />
 
           <PrivateRouter path="/categories" component={CategoriesScreen} />
           <PrivateRouter path="/category/:id" component={CategoriesDetail} />
@@ -73,20 +74,21 @@ function App() {
           <PrivateRouter path="/orders" component={OrderScreen} />
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
 
-          <PrivateRouter path="/import-stock" component={ImportStockScreen} exact/>
+          <PrivateRouter path="/import-stock" component={ImportStockScreen} exact />
           <PrivateRouter path="/import-stock/add" component={AddImport} />
           <PrivateRouter path="/import-stock/:id" component={EditImport} />
 
-          <PrivateRouter path="/export-stock" component={ExportStockScreen} exact/>
+          <PrivateRouter path="/export-stock" component={ExportStockScreen} exact />
           <PrivateRouter path="/export-stock/add" component={AddExport} />
           <PrivateRouter path="/export-stock/:id" component={EditExport} />
 
-          <PrivateRouter path="/providers" component={ProviderScreen} exact/>
+          <PrivateRouter path="/providers" component={ProviderScreen} exact />
 
-          <PrivateRouter path="/inventories" component={InventoryScreen} exact/>
-          <PrivateRouter path="/tag-inventory" component={TagInventory} exact/>
+          <PrivateRouter path="/inventories" component={InventoryScreen} exact />
+          <PrivateRouter path="/tag-inventory" component={TagInventory} exact />
 
-          <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact/>
+          <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact />
+          <PrivateRouter path="/drugstore/:id" component={DrugStoreEditScreen} exact />
 
           <PrivateRouter path="/users" component={UsersScreen} />
 

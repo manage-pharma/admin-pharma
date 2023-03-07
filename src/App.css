@@ -1274,3 +1274,11 @@ input:checked+.slider:before {
   font-weight: bolder;
   border: 1px solid crimson;
 }
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #b8bbc2;
+}

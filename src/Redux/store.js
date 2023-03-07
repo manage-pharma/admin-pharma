@@ -1,21 +1,22 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
+import {createStore,combineReducers,applyMiddleware} from "redux";
 import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { userLoginReducer, userListReducer, userCreateReducer, userSingleReducer, userUpdateReducer } from "./Reducers/UserReducers";
-import { productAllReducer, productCategoriesDrugReducer, productCategoriesReducer, productCreateReducer, productDeleteReducer, productImportReducer, productListReducer, productSingleReducer, productUpdateReducer } from "./Reducers/ProductReducers";
-import { orderDeliveredReducer, orderDetailReducer, orderListReducer } from "./Reducers/OrderReducers";
-import { categoryCreateReducer, categoryDeleteReducer, categoryListReducer, categoryUpdateReducer } from './Reducers/CategoryReducer';
-import { categoryDrugCreateReducer, categoryDrugDeleteReducer, categoryDrugListReducer, categoryDrugUpdateReducer } from './Reducers/CategoryDrugReducer';
-import { themeReducer } from './Reducers/ThemeReducer';
-import { ProviderCreateReducer, ProviderDeleteReducer, ProviderListReducer, ProviderSingleReducer, ProviderUpdateReducer } from "./Reducers/ProviderReducer";
-import { importStockCreateReducer, importStockDetailReducer, importStockListReducer, importStockStatusReducer, importStockUpdateReducer } from "./Reducers/ImportStockReducer";
-import { exportStockDetailReducer, exportStockListReducer, exportStockCreateReducer, exportStockStatusReducer, exportStockUpdateReducer } from './Reducers/ExportStockReducer';
-import { UnitCreateReducer, UnitDeleteReducer, UnitListReducer } from './Reducers/UnitReducer';
-import { ManufacturerCreateReducer, ManufacturerDeleteReducer, ManufacturerListReducer } from './Reducers/ManufacturerReducer';
-import { CountryCreateReducer, CountryDeleteReducer, CountryListReducer } from './Reducers/CountryOfOriginReducer';
-import { APICreateReducer, APIDeleteReducer, APIListReducer } from './Reducers/ActivePharmaReducer';
-import { inventoryListReducer, inventoryTagReducer } from './Reducers/InventoryReducer';
-const reducer = combineReducers({
+import {composeWithDevTools} from "redux-devtools-extension";
+import {userLoginReducer,userListReducer,userCreateReducer,userSingleReducer,userUpdateReducer} from "./Reducers/UserReducers";
+import {productAllReducer,dugstoreListReducer,productCategoriesDrugReducer,productCategoriesReducer,productCreateReducer,productDeleteReducer,productImportReducer,productListReducer,productSingleReducer,productUpdateReducer} from "./Reducers/ProductReducers";
+import {drugstoreAllReducer,drugstoreCategoriesDrugReducer,drugstoreCategoriesReducer,drugstoreImportReducer,drugstoreListReducer,drugstoreSingleReducer,drugstoreUpdateReducer} from "./Reducers/DrugStoreReducers";
+import {orderDeliveredReducer,orderDetailReducer,orderListReducer} from "./Reducers/OrderReducers";
+import {categoryCreateReducer,categoryDeleteReducer,categoryListReducer,categoryUpdateReducer} from './Reducers/CategoryReducer';
+import {categoryDrugCreateReducer,categoryDrugDeleteReducer,categoryDrugListReducer,categoryDrugUpdateReducer} from './Reducers/CategoryDrugReducer';
+import {themeReducer} from './Reducers/ThemeReducer';
+import {ProviderCreateReducer,ProviderDeleteReducer,ProviderListReducer,ProviderSingleReducer,ProviderUpdateReducer} from "./Reducers/ProviderReducer";
+import {importStockCreateReducer,importStockDetailReducer,importStockListReducer,importStockStatusReducer,importStockUpdateReducer} from "./Reducers/ImportStockReducer";
+import {exportStockDetailReducer,exportStockListReducer,exportStockCreateReducer,exportStockStatusReducer,exportStockUpdateReducer} from './Reducers/ExportStockReducer';
+import {UnitCreateReducer,UnitDeleteReducer,UnitListReducer} from './Reducers/UnitReducer';
+import {ManufacturerCreateReducer,ManufacturerDeleteReducer,ManufacturerListReducer} from './Reducers/ManufacturerReducer';
+import {CountryCreateReducer,CountryDeleteReducer,CountryListReducer} from './Reducers/CountryOfOriginReducer';
+import {APICreateReducer,APIDeleteReducer,APIListReducer} from './Reducers/ActivePharmaReducer';
+import {inventoryListReducer,inventoryTagReducer} from './Reducers/InventoryReducer';
+const reducer=combineReducers({
   theme: themeReducer,
 
   userLogin: userLoginReducer,
@@ -33,6 +34,15 @@ const reducer = combineReducers({
   productCategoriesDrug: productCategoriesDrugReducer,
   productUpdate: productUpdateReducer,
   productImport: productImportReducer,
+
+
+  drugstoreList: drugstoreListReducer,
+  drugstoreAll: drugstoreAllReducer,
+  drugstoreSingle: drugstoreSingleReducer,
+  drugstoreCategories: drugstoreCategoriesReducer,
+  drugstoreCategoriesDrug: drugstoreCategoriesDrugReducer,
+  drugstoreUpdate: drugstoreUpdateReducer,
+  drugstoreImport: drugstoreImportReducer,
 
   orderList: orderListReducer,
   orderDetail: orderDetailReducer,
@@ -87,15 +97,15 @@ const reducer = combineReducers({
 });
 
 
-const initialState = {
-  userLogin:{
-    userInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo")) : null
+const initialState={
+  userLogin: {
+    userInfo: localStorage.getItem("userInfo")? JSON.parse(localStorage.getItem("userInfo")):null
   }
 };
 
-const middleware = [thunk];
+const middleware=[thunk];
 
-const store = createStore(
+const store=createStore(
   reducer,
   initialState,
   composeWithDevTools(applyMiddleware(...middleware))
