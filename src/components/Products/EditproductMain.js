@@ -7,6 +7,8 @@ import {toast} from "react-toastify";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
 import renderToast from "../../util/Toast";
+import formatCurrency from './../../util/formatCurrency';
+
 //! Modal
 import MyVerticallyCenteredModalUnit from "./Modal/ModalUnit";
 import MyVerticallyCenteredModalAPI from './Modal/ModalActivePharma';
@@ -26,8 +28,6 @@ import {UNIT_CREATE_RESET,UNIT_DELETE_RESET} from "../../Redux/Constants/UnitCon
 import {MANUFACTURER_CREATE_RESET,MANUFACTURER_DELETE_RESET} from "../../Redux/Constants/ManufacturerConstants";
 import {COUNTRY_CREATE_RESET,COUNTRY_DELETE_RESET} from "../../Redux/Constants/CountryOfOriginConstants";
 import {API_CREATE_RESET,API_DELETE_RESET} from "../../Redux/Constants/ActivePharmaConstants";
-
-
 
 const ToastObjects={
   pauseOnFocusLoss: false,
@@ -64,7 +64,7 @@ const EditProductMain=(props) => {
     manufacturer: '',
     countryOfOrigin: '',
     instruction: '',
-    price: 0,
+    price: '',
     prescription: true,
     description: '',
     image: [],
@@ -73,9 +73,14 @@ const EditProductMain=(props) => {
   var { APIs = itemProducts ? [...itemProducts] : [] } = data
 
   const handleChange=e => {
+    let formattedPrice = price;
+    if (e.target.name === "price") {
+      formattedPrice = e.target.value.replace(/\D/g, '')
+    }
     setData(prev => {
       return {
-        ...prev,[e.target.name]: e.target.value
+        ...prev,[e.target.name]: e.target.value,
+        price: formattedPrice
       }
     })
   }
@@ -276,7 +281,7 @@ const EditProductMain=(props) => {
         categoryDrug: product?.categoryDrug?._id,
 
         brandName: product.brandName,
-        price: product.price,
+        price: product.price.toString(),
         unit: product.unit,
         packing: product.packing,
         APIs: product?.APIs,
@@ -491,8 +496,8 @@ const EditProductMain=(props) => {
                       <input
                         name="price"
                         onChange={handleChange}
-                        value={price}
-                        type="number"
+                        value={formatCurrency(price)}
+                        type="text"
                         placeholder="100.000"
                         className="form-control"
                         id="product_price"

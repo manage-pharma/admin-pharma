@@ -23,6 +23,7 @@ import {listAPI} from './../../Redux/Actions/ActivePharmaAction';
 import MyVerticallyCenteredModalAPI from './Modal/ModalActivePharma';
 import {API_CREATE_RESET,API_DELETE_RESET} from "../../Redux/Constants/ActivePharmaConstants";
 import renderToast from "../../util/Toast";
+import formatCurrency from './../../util/formatCurrency';
 const ToastObjects={
   pauseOnFocusLoss: false,
   draggable: false,
@@ -44,11 +45,7 @@ const AddProductMain=() => {
   const [modalShowActivePharma,setModalShowActivePharma]=useState(false);
   const [images,setImages]=useState([])
 
-
-
-
-
-  const [data,setData]=useState({name: '',regisId: '',unit: '',packing: '',brandName: '',manufacturer: '',countryOfOrigin: '',instruction: '',price: 0,prescription: true,description: '',image: [],allowToSell: true})
+  const [data,setData]=useState({name: '',regisId: '',unit: '',packing: '',brandName: '',manufacturer: '',countryOfOrigin: '',instruction: '', price: '', prescription: true, description: '', image: [], allowToSell: true})
   var {APIs=itemAPI? [...itemAPI]:[]}=data
 
   const productCreate=useSelector(state => state.productCreate);
@@ -59,7 +56,6 @@ const AddProductMain=() => {
 
   const categoryDrugList=useSelector((state) => state.categoryDrugList)
   const {categoriesDrug}=categoryDrugList
-
 
   //! UNIT
   const unitList=useSelector(state => state.unitList)
@@ -103,15 +99,19 @@ const AddProductMain=() => {
 
 
   //! Handler
-  const handleChange=e => {
-    setData(prev => {
-      return {
-        ...prev,[e.target.name]: e.target.value
-      }
-    })
-  }
+  const handleChange = e => {
+    let formattedPrice = price;
+    if (e.target.name === "price") {
+      formattedPrice = e.target.value.replace(/\D/g, '')
+    }
+    setData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+      price: formattedPrice
+    }));
+  };
 
-  const handleChangeAPI=e => {
+  const handleChangeAPI = e => {
     setFieldAPI(prev => {
       return {
         ...prev,[e.target.name]: e.target.value
@@ -119,7 +119,7 @@ const AddProductMain=() => {
     })
   }
 
-  const handleAddAPI=e => {
+  const handleAddAPI = e => {
     e.preventDefault();
     let flag=false;
 
@@ -151,13 +151,13 @@ const AddProductMain=() => {
     }
   }
 
-  const handleDeleteAPI=(e,index) => {
+  const handleDeleteAPI = (e,index) => {
     e.preventDefault()
     APIs.splice(index,1)
     setItemAPI(APIs)
   }
 
-  const handleSubmit=async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     var arrImg=[];
     if(images) {
@@ -173,7 +173,7 @@ const AddProductMain=() => {
       data.image=arrImg
       dispatch(createProduct({...data,APIs: APIs,}));
       setData({
-        name: '',regisId: '',unit: '',packing: '',brandName: '',manufacturer: '',countryOfOrigin: '',instruction: '',price: 0,prescription: true,description: '',image: [],allowToSell: true
+        name: '', regisId: '', unit: '', packing: '', brandName: '', manufacturer: '', countryOfOrigin: '', instruction: '', price: '', prescription: true, description: '', image: [], allowToSell: true
       })
       document.getElementById('uploadFile').value="";
     }
@@ -222,47 +222,24 @@ const AddProductMain=() => {
     dispatch(listManufacturer())
     dispatch(listCountry())
     dispatch(listAPI())
-  },[dispatch,product,successUnitCreate,successUnitDelete,successManufacturerCreate,successManufacturerDelete,successCountryCreate,successCountryDelete,successAPICreate,successAPIDelete])
-  const {API,content}=fieldAPI
-  const {name,regisId,category,categoryDrug,unit,packing,brandName,manufacturer,countryOfOrigin,instruction,price,allowToSell,prescription,description}=data;
+  },[dispatch, product, successUnitCreate, successUnitDelete, successManufacturerCreate, successManufacturerDelete, successCountryCreate, successCountryDelete, successAPICreate, successAPIDelete])
+  const {API,content} = fieldAPI
+  const {name, regisId, category, categoryDrug, unit, packing, brandName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description} = data;
 
-
-
-
-  const handleUploadInput=e => {
-    //dispatch({type: 'NOTIFY',payload: {}})
+  const handleUploadInput = e => {
     let newImages=[]
     let num=0
-    //let err=''
     const files=[...e.target.files]
-
-    //if(files.length===0)
-    //  return dispatch({type: 'NOTIFY',payload: {error: 'Files does not exist.'}})
-
     files.forEach(file => {
-      //if(file.size>1024*1024)
-      //  return err='The largest image size is 1mb'
-
-      //if(file.type!=='image/jpeg'&&file.type!=='image/png')
-      //  return err='Image format is incorrect.'
-
       num+=1;
       if(num<=5) newImages.push(file)
 
       return newImages;
     })
-
-
-    //if(err) dispatch({type: 'NOTIFY',payload: {error: err}})
-
-    //const imgCount=images.length
-    //if(imgCount+newImages.length>5)
-    //  return dispatch({type: 'NOTIFY',payload: {error: 'Select up to 5 images.'}})
     setImages([...images,...newImages])
-
   }
 
-  const deleteImage=index => {
+  const deleteImage = index => {
     const newArr=[...images]
     newArr.splice(index,1)
     setImages(newArr)
@@ -456,8 +433,8 @@ const AddProductMain=() => {
                       <input
                         name="price"
                         onChange={handleChange}
-                        value={price}
-                        type="number"
+                        value={formatCurrency(price)}
+                        type="text"
                         placeholder="100.000"
                         className="form-control"
                         id="product_price"

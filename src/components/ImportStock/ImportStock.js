@@ -9,6 +9,7 @@ import { listImportStock, statusImportStock } from "../../Redux/Actions/ImportSt
 import { IMPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ImportStockConstant";
 import printReport from './PrintReport';
 import CustomLoader from './../../util/LoadingTable';
+import formatCurrency from '../../util/formatCurrency';
 
 const ImportStock = (props) =>{
     const {importStock, loading, loadingStatus} = props 
@@ -138,7 +139,7 @@ const ImportStock = (props) =>{
         },
         {
             name: "Tổng cộng",
-            selector: (row) => row?.totalPrice,
+            selector: (row) => formatCurrency(row.totalPrice),
             sortable: true,
             reorder: true,
             grow: 2
