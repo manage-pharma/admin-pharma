@@ -10,6 +10,7 @@ import Toast from '../LoadingError/Toast';
 import { IMPORT_STOCK_DETAILS_RESET, IMPORT_STOCK_UPDATE_RESET } from "../../Redux/Constants/ImportStockConstant";
 import  moment  from 'moment';
 import renderToast from "../../util/Toast";
+import formatCurrency from './../../util/formatCurrency';
 const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
@@ -44,7 +45,7 @@ const EditImportStock = (props) => {
         product: '',
         lotNumber: '',
         expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
-        price: 1,
+        price: '',
         qty: 1,
     });
 
@@ -63,7 +64,7 @@ const EditImportStock = (props) => {
     
     // eslint-disable-next-line
     const { name, product, lotNumber, expDrug, qty, price } = field
-    totalPrice= itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+    totalPrice= itemProducts.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0)
 
     const handleChange = e =>{
         e.preventDefault();
@@ -75,6 +76,10 @@ const EditImportStock = (props) => {
     }
     const handleChangeProduct = e =>{
         e.preventDefault();
+        let formattedPrice = price;
+        if (e.target.name === "price") {
+          formattedPrice = e.target.value.replace(/\D/g, '')
+        }
         if(!isEdited){
             setIsEdited(true)
         }
@@ -85,7 +90,8 @@ const EditImportStock = (props) => {
             return {
                 ...prev,
                 name:c, 
-                [e.target.name]: e.target.value
+                [e.target.name]: e.target.value,
+                price: formattedPrice,
               }
         })
     }
@@ -98,7 +104,7 @@ const EditImportStock = (props) => {
             }
             return;
         }
-        else if(field.price <= 0 || field.qty <= 0){
+        else if((+field.price) <= 0 || field.qty <= 0){
             if(!isStop){
                 renderToast('Giá nhập và số lượng nhập phải lớn hơn 0','error', setIsStop, isStop)
             }
@@ -117,7 +123,7 @@ const EditImportStock = (props) => {
         })
         if(!flag){
             setItemProducts(prev => 
-                [...prev, {...field, qty: parseInt(qty)}]
+                [...prev, {...field, price: parseInt(field.price), qty: parseInt(qty)}]
             )
         }
 
@@ -127,7 +133,7 @@ const EditImportStock = (props) => {
         dispatch(updateImportStock({
            ...data,
            importItems: itemProducts,
-           totalPrice : itemProducts.reduce((sum, curr) => sum + curr.price * curr.qty, 0),
+           totalPrice : itemProducts.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0),
            importId
         }));
     }
@@ -289,9 +295,8 @@ const EditImportStock = (props) => {
                                     <label className="form-label">Giá nhập</label>
                                     <input
                                         name="price"
-                                        value={price}
-                                        type='number'
-                                        min="1"
+                                        value={formatCurrency(price)}
+                                        type='text'
                                         className="form-control"
                                         onChange={handleChangeProduct}
                                     ></input>
@@ -342,7 +347,7 @@ const EditImportStock = (props) => {
                                     <td>{ item?.product?.name || item?.name }</td>
                                     <td>{ item.lotNumber}</td>
                                     <td>{ moment(item.expDrug).format("DD-MM-YYYY")}</td>
-                                    <td>{ item?.price}</td>
+                                    <td>{ formatCurrency(item?.price)}</td>
                                     <td>{ item?.qty}</td>
                                     <td>
                                         <div 
@@ -373,7 +378,7 @@ const EditImportStock = (props) => {
                             </tbody>
                             </table>
                             <div className="mb-6 d-flex justify-content-end">
-                                {`Tổng cộng: ${totalPrice}`}
+                                {`Tổng cộng: ${formatCurrency(totalPrice)}`}
                             </div>
                         </div>
                     </header>
