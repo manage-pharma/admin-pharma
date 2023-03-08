@@ -6,6 +6,7 @@ import Toast from "./../LoadingError/Toast";
 import {toast} from "react-toastify";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
+import renderToast from "../../util/Toast";
 //! Modal
 import MyVerticallyCenteredModalUnit from "./Modal/ModalUnit";
 import MyVerticallyCenteredModalAPI from './Modal/ModalActivePharma';
@@ -22,7 +23,6 @@ import {listManufacturer} from './../../Redux/Actions/ManufacturerAction';
 //! Constant
 import {PRODUCT_UPDATE_RESET} from "../../Redux/Constants/ProductConstants";
 import {UNIT_CREATE_RESET,UNIT_DELETE_RESET} from "../../Redux/Constants/UnitConstants";
-import renderToast from "../../util/Toast";
 import {MANUFACTURER_CREATE_RESET,MANUFACTURER_DELETE_RESET} from "../../Redux/Constants/ManufacturerConstants";
 import {COUNTRY_CREATE_RESET,COUNTRY_DELETE_RESET} from "../../Redux/Constants/CountryOfOriginConstants";
 import {API_CREATE_RESET,API_DELETE_RESET} from "../../Redux/Constants/ActivePharmaConstants";
@@ -41,21 +41,20 @@ const EditProductMain=(props) => {
   const dispatch=useDispatch();
   const history=useHistory();
 
-  const [isStop,setIsStop]=useState(false)
-  const [isEdited,setIsEdited]=useState(false)
-  const [modalShowUnit,setModalShowUnit]=useState(false);
-  const [modalShowManufacturer,setModalShowManufacturer]=useState(false);
-  const [modalShowCountry,setModalShowCountry]=useState(false);
-  const [modalShowActivePharma,setModalShowActivePharma]=useState(false);
-  const [itemProducts,setItemProducts]=useState([]);
-  const [images,setImages]=useState([])
-  const [fieldAPI,setFieldAPI]=useState({
+  const [isStop, setIsStop]=useState(false)
+  const [isEdited, setIsEdited]=useState(false)
+  const [modalShowUnit, setModalShowUnit]=useState(false);
+  const [modalShowManufacturer, setModalShowManufacturer]=useState(false);
+  const [modalShowCountry, setModalShowCountry]=useState(false);
+  const [modalShowActivePharma, setModalShowActivePharma]=useState(false);
+  const [itemProducts, setItemProducts]=useState([]);
+  const [images, setImages]=useState([])
+  const [fieldAPI, setFieldAPI]=useState({
     API: '',
     content: 0,
   });
 
   const [flag,setFlag]=useState(false);
-  const [file,setImg]=useState(null);
   const [data,setData]=useState({
     name: '',
     regisId: '',
@@ -71,7 +70,7 @@ const EditProductMain=(props) => {
     image: [],
     allowToSell: true
   })
-  var {APIs=itemProducts? [...itemProducts]:[]}=data
+  var { APIs = itemProducts ? [...itemProducts] : [] } = data
 
   const handleChange=e => {
     setData(prev => {
@@ -87,7 +86,7 @@ const EditProductMain=(props) => {
     }
     setFieldAPI(prev => {
       return {
-        ...prev,[e.target.name]: e.target.value
+        ...prev, [e.target.name]: e.target.value
       }
     })
   }
@@ -98,141 +97,120 @@ const EditProductMain=(props) => {
 
     if(!fieldAPI.API) {
       if(!isStop) {
-        renderToast('Hoạt chất chưa được chọn','error',setIsStop,isStop)
+        renderToast('Hoạt chất chưa được chọn','error', setIsStop, isStop)
       }
       return;
     }
     else if(fieldAPI.content<=0) {
       if(!isStop) {
-        renderToast('Hàm lượng phải lớn hơn 0','error',setIsStop,isStop)
+        renderToast('Hàm lượng phải lớn hơn 0','error', setIsStop, isStop)
       }
       return;
     }
-    itemProducts.forEach((item,index) => {
-      if(item.API===fieldAPI.API) {
+    itemProducts.forEach((item, index) => {
+      if(item.API === fieldAPI.API) {
         flag=true
-        itemProducts.splice(index,1,{...item,content: item.content+parseInt(fieldAPI.content)})
+        itemProducts.splice(index,1,{...item, content: item.content+parseInt(fieldAPI.content)})
         setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
       }
     })
     if(!flag) {
       setItemProducts(prev =>
-        [...prev,{...fieldAPI,content: parseInt(content)}]
+        [...prev,{...fieldAPI, content: parseInt(content)}]
       )
     }
   }
 
-  const handleDeleteAPI=(e,index) => {
+  const handleDeleteAPI=(e, index) => {
     e.preventDefault()
     if(!isEdited) {
       setIsEdited(true)
     }
-    itemProducts.splice(index,1)
+    itemProducts.splice(index, 1)
     setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
   }
 
-  const handleSubmit=async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const imgNewFiles=images.filter(img => img.name)
     const imgOldURL=images.filter(img => !img.name)
-    console.log({imgNewFiles: imgNewFiles});
-    console.log({imgOldURL: imgOldURL});
+
     if(imgNewFiles) {
       for(const image of imgNewFiles) {
         const formData=new FormData();
         formData.append('image',image);
         const {data: dataUp}=await axios.post(`/api/products/single`,formData);
-
-
         imgOldURL.push(dataUp.filename)
       }
-
       data.image=imgOldURL
     }
     dispatch(updateProduct({...data,APIs: itemProducts,productId}));
   }
-  const categoryList=useSelector((state) => state.categoryList)
-  const {categories}=categoryList
-  const categoryDrugList=useSelector((state) => state.categoryDrugList)
-  const {categoriesDrug}=categoryDrugList
+  const categoryList = useSelector((state) => state.categoryList)
+  const {categories} = categoryList
+  const categoryDrugList = useSelector((state) => state.categoryDrugList)
+  const {categoriesDrug} = categoryDrugList
 
-  const productEdit=useSelector((state) => state.productSingle);
-  const {loading,error,product}=productEdit;
+  const productEdit = useSelector((state) => state.productSingle);
+  const {loading, error, product} = productEdit;
 
-  const productUpdate=useSelector((state) => state.productUpdate);
-  const {loading: loadingUpdate,error: errorUpdate,success: successUpdate}=productUpdate;
+  const productUpdate = useSelector((state) => state.productUpdate);
+  const {loading: loadingUpdate, error: errorUpdate, success: successUpdate} = productUpdate;
 
-  const unitList=useSelector(state => state.unitList)
-  const {error: errorUnit,units}=unitList
+  //! UNIT
+  const unitList = useSelector(state => state.unitList)
+  const {error: errorUnit, units} = unitList
 
-  const unitCreated=useSelector(state => state.unitCreate)
-  const {loading: loadingUnitCreate,error: errorUnitCreate,success: successUnitCreate}=unitCreated
+  const unitCreated = useSelector(state => state.unitCreate)
+  const {loading: loadingUnitCreate, error: errorUnitCreate, success: successUnitCreate} = unitCreated
 
-  const unitDeleted=useSelector(state => state.unitDelete)
-  const {loading: loadingUnitDelete,error: errorUnitDelete,success: successUnitDelete}=unitDeleted
+  const unitDeleted = useSelector(state => state.unitDelete)
+  const {loading: loadingUnitDelete, error: errorUnitDelete, success: successUnitDelete} = unitDeleted
 
 
   //! MANUFACTURER
-  const manufacturerList=useSelector(state => state.manufacturerList)
-  const {error: errorManufacturer,manufacturers}=manufacturerList
+  const manufacturerList = useSelector(state => state.manufacturerList)
+  const {error: errorManufacturer, manufacturers} = manufacturerList
 
-  const manufacturerCreated=useSelector(state => state.manufacturerCreate)
-  const {loading: loadingManufacturerCreate,error: errorManufacturerCreate,success: successManufacturerCreate}=manufacturerCreated
+  const manufacturerCreated = useSelector(state => state.manufacturerCreate)
+  const {loading: loadingManufacturerCreate, error: errorManufacturerCreate, success: successManufacturerCreate} = manufacturerCreated
 
-  const manufacturerDeleted=useSelector(state => state.manufacturerDelete)
-  const {loading: loadingManufacturerDelete,error: errorManufacturerDelete,success: successManufacturerDelete}=manufacturerDeleted
+  const manufacturerDeleted = useSelector(state => state.manufacturerDelete)
+  const {loading: loadingManufacturerDelete, error: errorManufacturerDelete, success: successManufacturerDelete} = manufacturerDeleted
 
   //! COUNTRY OF ORIGIN
-  const countryList=useSelector(state => state.countryList)
-  const {error: errorCountry,countries}=countryList
+  const countryList = useSelector(state => state.countryList)
+  const {error: errorCountry, countries} = countryList
 
-  const countryCreated=useSelector(state => state.countryCreate)
-  const {loading: loadingCountryCreate,error: errorCountryCreate,success: successCountryCreate}=countryCreated
+  const countryCreated = useSelector(state => state.countryCreate)
+  const {loading: loadingCountryCreate, error: errorCountryCreate, success: successCountryCreate} = countryCreated
 
-  const countryDeleted=useSelector(state => state.countryDelete)
-  const {loading: loadingCountryDelete,error: errorCountryDelete,success: successCountryDelete}=countryDeleted
+  const countryDeleted = useSelector(state => state.countryDelete)
+  const {loading: loadingCountryDelete, error: errorCountryDelete, success: successCountryDelete} = countryDeleted
 
   //! ACTIVE PHARMA INGREDIENT (API)
-  const APIList=useSelector(state => state.APIList)
-  const {error: errorAPI,API_item}=APIList
+  const APIList = useSelector(state => state.APIList)
+  const {error: errorAPI, API_item} = APIList
 
-  const APICreated=useSelector(state => state.APICreate)
-  const {loading: loadingAPICreate,error: errorAPICreate,success: successAPICreate}=APICreated
+  const APICreated = useSelector(state => state.APICreate)
+  const {loading: loadingAPICreate, error: errorAPICreate, success: successAPICreate} = APICreated
 
-  const APIDeleted=useSelector(state => state.APIDelete)
-  const {loading: loadingAPIDelete,error: errorAPIDelete,success: successAPIDelete}=APIDeleted
-  const {API,content}=fieldAPI
-  const {name,price,prescription,brandName,manufacturer,image,category,categoryDrug,countryOfOrigin,description,unit,regisId,packing,instruction,allowToSell}=data;
-  console.log(data)
+  const APIDeleted = useSelector(state => state.APIDelete)
+  const {loading: loadingAPIDelete, error: errorAPIDelete, success: successAPIDelete} = APIDeleted
+  const {API, content} = fieldAPI
+  const {name, price, prescription, brandName, manufacturer, category, categoryDrug, countryOfOrigin, description, unit, regisId, packing, instruction, allowToSell} = data;
   const handleUploadInput=e => {
-    //dispatch({type: 'NOTIFY',payload: {}})
+
     let newImages=[]
     let num=0
-    //let err=''
+
     const files=[...e.target.files]
-
-    //if(files.length===0)
-    //  return dispatch({type: 'NOTIFY',payload: {error: 'Files does not exist.'}})
-
     files.forEach(file => {
-      //if(file.size>1024*1024)
-      //  return err='The largest image size is 1mb'
-
-      //if(file.type!=='image/jpeg'&&file.type!=='image/png')
-      //  return err='Image format is incorrect.'
-
-      num+=1;
-      if(num<=5) newImages.push(file)
+      num += 1;
+      if(num <= 5) newImages.push(file)
 
       return newImages;
     })
-
-
-    //if(err) dispatch({type: 'NOTIFY',payload: {error: err}})
-
-    //const imgCount=images.length
-    //if(imgCount+newImages.length>5)
-    //  return dispatch({type: 'NOTIFY',payload: {error: 'Select up to 5 images.'}})
     setImages([...images,...newImages])
 
   }
@@ -241,8 +219,6 @@ const EditProductMain=(props) => {
     newArr.splice(index,1)
     setImages(newArr)
   }
-  console.log({imgs: images})
-  console.log({arr: data.image})
   useEffect(() => {
     dispatch(listUnit())
     dispatch(listCategory())
@@ -291,10 +267,8 @@ const EditProductMain=(props) => {
     }
     if(product._id!==productId) {
       dispatch(singleProduct(productId));
-
     }
-
-    else if(product._id===productId&&!flag&&!isEdited) {
+    else if(product._id===productId && !flag && !isEdited) {
       setData({
         name: product.name,
         regisId: product.regisId,
@@ -325,9 +299,9 @@ const EditProductMain=(props) => {
       }
       setImages(data.image)
 
-    }// eslint-disable-next-line
-
-  },[itemProducts,product,flag,dispatch,productId,isEdited,successUpdate,successUnitCreate,successUnitDelete,successManufacturerCreate,successManufacturerDelete,successCountryCreate,successCountryDelete,successAPICreate,successAPIDelete]);
+    }
+  // eslint-disable-next-line
+  },[itemProducts, product, flag, dispatch, productId, isEdited, successUpdate, successUnitCreate, successUnitDelete, successManufacturerCreate, successManufacturerDelete, successCountryCreate, successCountryDelete, successAPICreate, successAPIDelete]);
   return (
     <>
       <Toast />
@@ -704,35 +678,32 @@ const EditProductMain=(props) => {
                   </div>
                 </div>
                 {/* // ! ảnh - cho phép bán */}
-                {/*<div className="mb-4 form-divided-3">
-                  <div>
-                    <label className="form-label">Hình ảnh</label>
-                    <input
+                <div className="mb-4 form-divided-2">
+                <div>
+                  <div className="mb-3">
+                    <label className="form-label">Hình ảnh (tối đa 5 ảnh)</label>
+                    <input 
+                      type="file" 
+                      className="form-control" 
                       id="uploadFile"
-                      required={image ? false : true}
-                      onChange={e => {
-                        setData(prev => ({ ...prev, image: null }))
-                        setImg(e.target.files[0])
-                      }}
-                      className="form-control"
-                      type="file" />
-                    {(image || file) && (
-                      <div>
-                        <img src={(image ? product.image : URL.createObjectURL(file))}
-                          alt="Product"
-                          className="mt-3"
-                          style={{ width: '250px', marginTop: '5px' }} />
-                        <span
-                          className="delete-button"
-                          onClick={e => {
-                            setImg(null)
-                            setData(prev => ({ ...prev, image: null }))
-                            document.getElementById('uploadFile').value = "";
-                          }}
-                        >&times;</span>
-                      </div>
-                    )}
+                      onChange={handleUploadInput} 
+                      multiple 
+                      accept="image/*" 
+                    />
                   </div>
+                  <div className="row img-up">
+                    {
+                      images?.map((img,index) => (
+                        <div key={index} className="file_img my-1">
+                          <img src={img?.name? URL.createObjectURL(img):img}
+                            alt="" className="img-thumbnail rounded" />
+
+                          <span onClick={() => deleteImage(index)}>X</span>
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
                   <div className="form-check form-switch">
                     <label className="form-label d-flex">Thuốc được phép bán</label>
                     <input
@@ -753,42 +724,10 @@ const EditProductMain=(props) => {
                       })}
                     />
                   </div>
-                </div>*/}
+                </div>
               </div>
             </div>
           </div>
-          {/*  */}
-          <div className="col-md-6 my-4">
-            <div className="input-group mb-3">
-
-              <div className="custom-file border rounded">
-
-
-
-                <input type="file" className="form-control" id="uploadFile"
-                  onChange={handleUploadInput} multiple accept="image/*" />
-              </div>
-
-            </div>
-
-            <div className="row img-up mx-0">
-              {
-                images?.map((img,index) => (
-                  <div key={index} className="file_img my-1">
-                    <img src={img?.name? URL.createObjectURL(img):img}
-                      alt="" className="img-thumbnail rounded" />
-
-                    <span onClick={() => deleteImage(index)}>X</span>
-                  </div>
-                ))
-              }
-            </div>
-
-
-          </div>
-          {/*  */}
-
-
 
           <div>
             <button type="submit" className="btn btn-primary mb-4" style={{float: 'right'}}>

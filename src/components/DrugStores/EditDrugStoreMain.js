@@ -1,28 +1,14 @@
 import React,{useState,useEffect} from "react";
 import {useHistory} from "react-router-dom";
-import axios from "axios";
 import {useDispatch,useSelector} from "react-redux";
 import Toast from "../LoadingError/Toast";
 import {toast} from "react-toastify";
 import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
-//! Modal
-import MyVerticallyCenteredModalUnit from "./Modal/ModalUnit";
-import MyVerticallyCenteredModalAPI from './Modal/ModalActivePharma';
-import MyVerticallyCenteredModalManufacturer from './Modal/ModalManufacturer';
-import MyVerticallyCenteredModalCountry from './Modal/ModalCountry';
-//! Action
+
 import {singleDrugStore,updateDrugStore} from "../../Redux/Actions/DrugStoreActions";
-import {listCategory} from '../../Redux/Actions/CategoryAction';
-import {listCategoryDrug} from "../../Redux/Actions/CategoryDrugAction";
-
-//! Constant
 import {DRUGSTORE_UPDATE_RESET} from "../../Redux/Constants/DrugStoreConstants";
-import renderToast from "../../util/Toast";
 import {Carousel} from "react-bootstrap";
-
-
-
 
 const ToastObjects={
   pauseOnFocusLoss: false,
@@ -32,15 +18,13 @@ const ToastObjects={
 };
 
 const EditDrugStoreMain=(props) => {
+
   const {drugstoreId}=props;
   const dispatch=useDispatch();
   const history=useHistory();
 
-
-  const [isEdited,setIsEdited]=useState(false)
-
   const [flag,setFlag]=useState(false);
-
+  const [index,setIndex]=useState(0);
   const [data,setData]=useState({
     product: {},
     isActive: false,
@@ -60,44 +44,33 @@ const EditDrugStoreMain=(props) => {
 
   const handleSubmit=async (e) => {
     e.preventDefault();
-    console.log({data: data})
-    dispatch(updateDrugStore({...data,drugstoreId}));
+    dispatch(updateDrugStore({...data, drugstoreId}));
 
   }
 
-  const categoryList=useSelector((state) => state.categoryList)
-  const {categories}=categoryList
-
-  const categoryDrugList=useSelector((state) => state.categoryDrugList)
-  const {categoriesDrug}=categoryDrugList
-
-
   const drugstoreEdit=useSelector((state) => state.drugstoreSingle);
-  const {loading,error,drugstore}=drugstoreEdit;
+  const {loading, error, drugstore}=drugstoreEdit;
 
   const drugstoreUpdate=useSelector((state) => state.drugstoreUpdate);
-  const {loading: loadingUpdate,error: errorUpdate,success: successUpdate}=drugstoreUpdate;
+  const {loading: loadingUpdate, error: errorUpdate, success: successUpdate}=drugstoreUpdate;
 
+  const {isActive, countInStock, discount, refunded} = data;
 
+  const handleSelect=(selectedIndex) => {
+    setIndex(selectedIndex);
+  };
 
-  const {isActive,countInStock,discount,refunded}=data;
-  console.log(data)
   useEffect(() => {
-
     if(successUpdate) {
       dispatch({
         type: DRUGSTORE_UPDATE_RESET
       });
-      //dispatch(singleProduct(drugstoreId));
-      toast.success("Thuốc đẫ được cập nhật",ToastObjects);
+      toast.success("Thuốc đã được cập nhật",ToastObjects);
     }
     if(drugstore._id!==drugstoreId) {
       dispatch(singleDrugStore(drugstoreId));
-
     }
-
-
-    if(drugstore._id===drugstoreId&&!flag) {
+    if(drugstore._id===drugstoreId && !flag) {
       setData({
         product: drugstore.product,
         isActive: drugstore.isActive,
@@ -108,19 +81,12 @@ const EditDrugStoreMain=(props) => {
       setFlag(true)
     }
 
-    console.log(drugstoreId)
+  },[dispatch, drugstore, drugstoreId, flag, successUpdate]);
 
-  },[dispatch,drugstore,isActive,countInStock,discount,refunded]);
-
-  const [index,setIndex]=useState(0);
-
-  const handleSelect=(selectedIndex,e) => {
-    setIndex(selectedIndex);
-  };
   return (
     <>
       <Toast />
-
+      {loading || loadingUpdate ? (<Loading />) : error || errorUpdate ? (<Message>{error || errorUpdate}</Message>) : ''}
       <section className="content-main" >
         <form onSubmit={handleSubmit}>
           <div className="content-header">
@@ -136,12 +102,11 @@ const EditDrugStoreMain=(props) => {
           <div className="mb-4">
             <div className="">
 
-
               <div className="row p-3">
                 <div className="col-md-12 col-lg-8 card card-custom mb-4 pt-3">
                   <div>
                     <button type="button" className="btn btn-primary mb-4" style={{float: 'right'}}
-                      onClick={() => {history.push(`../product/${data.product._id}`)}}
+                      onClick={() => {history.push(`product/${data.product._id}`)}}
                     >
                       Cập nhật thông tin
                     </button>
@@ -165,7 +130,6 @@ const EditDrugStoreMain=(props) => {
                           )
                         })
                       }
-
                     </Carousel>
                   </div>
                   <div className="mb-4 form-divided-2 ">
@@ -279,7 +243,7 @@ const EditDrugStoreMain=(props) => {
                     </label>
                     <input
                       onChange={handleChange}
-                      value={data?.countInStock}
+                      value={countInStock}
                       name="countInStock"
                       type="number"
                       placeholder="Nhập số lượng"
@@ -293,7 +257,7 @@ const EditDrugStoreMain=(props) => {
                     </label>
                     <input
                       onChange={handleChange}
-                      value={data?.discount}
+                      value={discount}
                       name="discount"
                       type="number"
                       placeholder="Nhập % khuyến mãi"
@@ -307,7 +271,7 @@ const EditDrugStoreMain=(props) => {
                     </label>
                     <input
                       onChange={handleChange}
-                      value={data?.refunded}
+                      value={refunded}
                       name="refunded"
                       type="number"
                       placeholder="Nhập % hoàn trả"
@@ -321,7 +285,7 @@ const EditDrugStoreMain=(props) => {
                       <input
                         type="checkbox"
                         id="checkbox"
-                        checked={data.isActive}
+                        checked={isActive}
                         name="isActive"
                         onChange={() => setData(prev => {
                           return {
@@ -337,21 +301,10 @@ const EditDrugStoreMain=(props) => {
                       Cập nhật
                     </button>
                   </div>
-
-
                 </div>
-
               </div>
             </div>
           </div>
-
-
-
-
-
-
-
-
         </form>
       </section>
     </>

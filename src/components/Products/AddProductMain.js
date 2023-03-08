@@ -32,7 +32,6 @@ const ToastObjects={
 const AddProductMain=() => {
   const dispatch=useDispatch();
   const history=useHistory();
-  const [file,setImg]=useState(null);
   const [itemAPI,setItemAPI]=useState([]);
   const [fieldAPI,setFieldAPI]=useState({
     API: '',
@@ -176,10 +175,8 @@ const AddProductMain=() => {
       setData({
         name: '',regisId: '',unit: '',packing: '',brandName: '',manufacturer: '',countryOfOrigin: '',instruction: '',price: 0,prescription: true,description: '',image: [],allowToSell: true
       })
-      setImg(null)
       document.getElementById('uploadFile').value="";
     }
-    console.log({post: data})
   }
 
   useEffect(() => {
@@ -647,28 +644,30 @@ const AddProductMain=() => {
                   </div>
                 </div>
                 {/* // ! ảnh - cho phép bán */}
-                {/*<div className="mb-4 form-divided-3">
+                <div className="mb-4 form-divided-2">
                   <div>
-                    <label className="form-label">Ảnh thuốc</label>
-                    <input
-                      id="uploadFile"
-                      onChange={e => setImg(e.target.files[0])}
-                      className="form-control" type="file" />
-                    {file&&(
-                      <div>
-                        <img src={(file&&URL.createObjectURL(file))}
-                          alt="Product"
-                          className="mt-3"
-                          style={{width: '250px',marginTop: '5px'}} />
-                        <span
-                          className="delete-button"
-                          onClick={e => {
-                            setImg(null)
-                            document.getElementById('uploadFile').value="";
-                          }}
-                        >&times;</span>
-                      </div>
-                    )}
+                    <div className="mb-3">
+                      <label className="form-label">Hình ảnh (tối đa 5 ảnh)</label>
+                      <input 
+                        type="file" 
+                        className="form-control" 
+                        id="uploadFile"
+                        onChange={handleUploadInput} 
+                        multiple 
+                        accept="image/*" 
+                      />
+                    </div>
+                    <div className="row img-up">
+                      {
+                        images.map((img,index) => (
+                          <div key={index} className="file_img my-1">
+                            <img src={img.url? img.url:URL.createObjectURL(img)}
+                              alt="" className="img-thumbnail rounded" />
+                            <span onClick={() => deleteImage(index)}>X</span>
+                          </div>
+                        ))
+                      }
+                    </div>
                   </div>
                   <div className="form-check form-switch">
                     <label className="form-label d-flex">Thuốc được phép bán</label>
@@ -690,41 +689,10 @@ const AddProductMain=() => {
                       })}
                     />
                   </div>
-                </div>*/}
+                </div>
               </div>
             </div>
           </div>
-          {/*  */}
-          <div className="col-md-6 my-4">
-            <div className="input-group mb-3">
-
-              <div className="custom-file border rounded">
-
-
-
-                <input type="file" className="form-control" id="uploadFile"
-                  onChange={handleUploadInput} multiple accept="image/*" />
-              </div>
-
-            </div>
-
-            <div className="row img-up mx-0">
-              {
-                images.map((img,index) => (
-                  <div key={index} className="file_img my-1">
-                    <img src={img.url? img.url:URL.createObjectURL(img)}
-                      alt="" className="img-thumbnail rounded" />
-
-                    <span onClick={() => deleteImage(index)}>X</span>
-                  </div>
-                ))
-              }
-            </div>
-
-
-          </div>
-          {/*  */}
-
           <div>
             <button type="submit" className="btn btn-primary mb-4" style={{float: 'right'}}>
               Lưu lại

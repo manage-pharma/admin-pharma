@@ -1,23 +1,11 @@
 // import moment from 'moment/moment';
 import DataTable from "react-data-table-component";
 import {Link,useHistory} from "react-router-dom";
-import React,{useEffect,useState} from "react";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import {useDispatch} from "react-redux";
-import {listDrugStore} from "../../Redux/Actions/DrugStoreActions";
-import {useSelector} from "react-redux";
+import React from "react";
 import CustomLoader from './../../util/LoadingTable';
 const DataTableProduct=(props) => {
-    const {drugstores,loading,loadingDelete}=props
+    const {drugstores, loading, loadingDelete} = props
     const history=useHistory()
-    const dispatch=useDispatch()
-    const [modalShow,setModalShow]=useState(false);
-    const [dataModal,setDataModal]=useState();
-    const productDelete=useSelector(state => state.productDelete)
-    const {success: successDelete}=productDelete
-
-
 
     const CustomMaterialMenu=(props) => {
         let {row}=props
@@ -38,7 +26,6 @@ const DataTableProduct=(props) => {
                     }}>
                         Edit info
                     </button>
-
                 </div>
             </div>
         )
