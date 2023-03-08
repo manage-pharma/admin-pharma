@@ -2,83 +2,64 @@ import React,{useState,useEffect,useRef} from "react";
 import {useDispatch,useSelector} from "react-redux";
 import {Link,useHistory} from "react-router-dom";
 import Message from '../LoadingError/Error';
-import {listProduct} from "../../Redux/Actions/ProductActions";
 import debounce from "lodash.debounce";
 import Toast from '../LoadingError/Toast';
-import {toast} from "react-toastify";
-
 import DataTableProduct from "./DataTable";
 import {listDrugStore} from "../../Redux/Actions/DrugStoreActions";
-const ToastObjects={
-  pauseOnFocusLoss: false,
-  draggable: false,
-  pauseOnHover: false,
-  autoClose: 2000,
-};
-const MainProducts=(props) => {
-  const {pageNumber}=props
+
+const MainDrugStore =() => {
+
   const dispatch=useDispatch()
   const history=useHistory()
   const [keyword,setSearch]=useState()
-  const [sort,setSort]=useState()
-  // const [dessert, setDessert] = useState(false)
+  const [sort, setSort]=useState()
+
   const drugstoreList=useSelector((state) => state.drugstoreList)
-  const {loading,error,drugstores}=drugstoreList
+  const {loading, error, drugstores}=drugstoreList
 
-  const productDelete=useSelector(state => state.productDelete)
-  const {loading: loadingDelete,error: errorDelete,success: successDelete}=productDelete
-
-  const handleSelected=(e) => {
+  const handleSelected = (e) => {
     e.preventDefault();
-    let sortPrice=e.target.value
-    dispatch(listDrugStore(keyword,pageNumber,sortPrice))
+    let sortPrice = e.target.value
+    dispatch(listDrugStore(keyword, sortPrice))
     setSort(e.target.value)
   }
-  const callApiKeywordSearch=(keyword,pageNumber,sort) => {
-    if(keyword.trim()!=='') {
-      dispatch(listDrugStore(keyword,pageNumber,sort))
+  const callApiKeywordSearch = (keyword, sort) => {
+    if(keyword.trim() !== '') {
+      dispatch(listDrugStore(keyword, sort))
     }
     else {
       history.push('/drugstore');
     }
   }
-  const debounceDropDown=useRef(debounce((keyword,pageNumber,sort) => callApiKeywordSearch(keyword,pageNumber,sort),300)).current;
+  const debounceDropDown = useRef(debounce((keyword, sort) => callApiKeywordSearch(keyword, sort),300)).current;
 
-  const handleSubmitSearch=e => {
+  const handleSubmitSearch = e => {
     setSearch(e.target.value)
-    debounceDropDown(e.target.value,pageNumber,sort);
+    debounceDropDown(e.target.value, sort);
   }
 
   useEffect(() => {
-    if(successDelete) {
-      toast.success("Deleted successfully",ToastObjects);
+    if(keyword){
+      dispatch(listDrugStore(keyword))
     }
-    else {
-      dispatch(listDrugStore(keyword,pageNumber))
-    }// eslint-disable-next-line
-  },[dispatch,successDelete,pageNumber])
+    // eslint-disable-next-line
+  },[dispatch, keyword])
 
   return (
     <>
       <Toast />
+      {
+        error ? (<Message>{error}</Message>) : ''
+      }
       <section className="content-main">
         <div className="content-header">
           <h3 className="content-title">Danh sách dược phẩm</h3>
           <div className="d-flex">
             <div style={{marginRight: '10px'}}>
-              {/* <Link to="#" className="btn btn-primary" onClick={(e)=>{
-              e.preventDefault()
-              setDessert(prev => !prev)
-            }}>
-              Đổ màu
-            </Link> */}
-            </div>
-            <div style={{marginRight: '10px'}}>
               <Link to="/product/excel" className="btn btn-primary">
                 Excel & CSV
               </Link>
             </div>
-
           </div>
         </div>
 
@@ -94,14 +75,6 @@ const MainProducts=(props) => {
                   onChange={handleSubmitSearch}
                 />
               </div>
-              {/* <div className="col-lg-2 col-6 col-md-3">
-              <select className="form-select">
-                <option>All category</option>
-                <option>Electronics</option>
-                <option>Clothings</option>
-                <option>Something else</option>
-              </select>
-            </div> */}
               <div className="col-lg-2 col-6 col-md-3">
                 <select defaultValue="" className="form-select" onChange={handleSelected}>
                   <option value="">---Chọn giá--</option>
@@ -115,22 +88,13 @@ const MainProducts=(props) => {
           <div>
             <DataTableProduct
               drugstores={drugstores}
-              // dessert={dessert}
               loading={loading}
-              loadingDelete={loadingDelete}
             />
           </div>
-          {/* <Pagination 
-            totalPage={totalPage} 
-            currentPage={currentPage} 
-            keyword={keyword ? keyword : ""}
-            sort= {sort ? sort : ""}
-            handlePage={handlePaginate}
-          /> */}
         </div>
       </section>
     </>
   );
 };
 
-export default MainProducts;
+export default MainDrugStore;
