@@ -111,28 +111,28 @@ const ImportStock = (props) =>{
         },
         {
             name: "Mã hóa đơn",
-            selector: (row) => row.importCode,
+            selector: (row) => row?.importCode,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Nhà cung cấp",
-            selector: (row) => row.provider.name,
+            selector: (row) => row?.provider?.name,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Tạo bởi",
-            selector: (row) => row.user.name,
+            selector: (row) => row?.user?.name,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Ngày nhập",
-            selector: (row) => moment(row.importedAt).format("DD/MM/YYYY"),
+            selector: (row) => moment(row?.importedAt).format("DD/MM/YYYY"),
             sortable: true,
             reorder: true,
             grow: 2

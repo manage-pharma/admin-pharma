@@ -161,7 +161,7 @@ const Sidebar = () => {
                     <NavLink
                       activeClassName="active"
                       className="menu-link"
-                      to="/categories-drug"
+                      to="/inventory-check"
                     >
                       <i className="icon fab fa-dropbox"></i>
                       <span className="text">Kiểm kê tồn kho</span>
