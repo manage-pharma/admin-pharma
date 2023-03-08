@@ -11,7 +11,7 @@ const EditInventoryCheckScreen = () => {
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <EditInventoryCheck importId={id}/>
+        <EditInventoryCheck checkId={id}/>
       </main>
     </>
   );

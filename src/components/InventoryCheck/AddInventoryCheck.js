@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import {
-  createImportStock,
-  listImportStock,
-} from "../../Redux/Actions/ImportStockAction";
+
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { IMPORT_STOCK_CREATE_RESET } from "../../Redux/Constants/ImportStockConstant";
 import { listProvider } from "../../Redux/Actions/ProviderAction";
 import { listUser } from "../../Redux/Actions/UserActions";
-import { listProduct } from "../../Redux/Actions/ProductActions";
 import { Link, useHistory } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
 import moment from "moment";
 import renderToast from "../../util/Toast";
+import { listInventoryToCheck } from "../../Redux/Actions/InventoryAction";
+import { INVENTORY_CHECK_CREATE_RESET } from "../../Redux/Constants/InventoryCheckConstant";
+import { createInventoryCheck } from "../../Redux/Actions/InventoryCheckAction";
+
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -22,13 +21,13 @@ const ToastObjects = {
 const AddInventoryCheck = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const createImportStockStatus = useSelector(
-    (state) => state.importStockCreate
+  const createInventoryCheckStatus = useSelector(
+    (state) => state.inventoryCheckCreate
   );
-  const { success } = createImportStockStatus;
+  const { success } = createInventoryCheckStatus;
 
-  const productList = useSelector((state) => state.productList);
-  const { products } = productList;
+  const inventoryList = useSelector((state) => state.inventoryToCheckList);
+  const { inventories } = inventoryList;
 
   const userList = useSelector((state) => state.userList);
   const { users } = userList;
@@ -36,31 +35,27 @@ const AddInventoryCheck = () => {
   const [isStop, setIsStop] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
   const [field, setFieldProduct] = useState({
+    _id: "",
     name: "",
     product: "",
     lotNumber: "",
     expDrug: moment(new Date(Date.now())).format("YYYY-MM-DD"),
-    price: 1,
-    qty: 1,
+    count: 0,
+    realQty: 0,
+    unequal: 0,
   });
 
   const [data, setData] = useState({
-    importedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
+    checkedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
 
   var {
     note,
     importItems = itemProducts ? [...itemProducts] : [],
     user,
-    totalPrice,
-    importedAt,
+    checkedAt,
   } = data;
-  // eslint-disable-next-line
-  const { name, product, lotNumber, expDrug, qty, price } = field;
-  totalPrice = importItems.reduce(
-    (sum, curr) => sum + curr.price * curr.qty,
-    0
-  );
+  const { _id } = field;
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -71,16 +66,39 @@ const AddInventoryCheck = () => {
       };
     });
   };
+
+  const handleChangeRealQty = (e, id) => {
+    itemProducts.forEach((item, index) => {
+      if (item._id === id) {
+        let realQty = parseInt(e.target.value) || 0;
+
+        importItems.splice(index, 1, {
+          ...item,
+          realQty,
+          unequal: realQty - parseInt(item.count),
+        });
+        setItemProducts([...importItems]);
+      }
+    });
+  };
+
   const handleChangeProduct = (e) => {
     e.preventDefault();
-    setFieldProduct((prev) => {
+    setFieldProduct(() => {
       let a = document.getElementById("select-product");
       let b = a.options[a.selectedIndex];
-      let c = b.getAttribute("data-foo");
+      let c = b.getAttribute("data-inventory");
+
+      let data = c ? JSON.parse(c) : {};
       return {
-        ...prev,
-        name: c,
-        [e.target.name]: e.target.value,
+        _id: data._id,
+        name: data.idDrug.name,
+        product: data.idDrug._id,
+        lotNumber: data.lotNumber,
+        count: data.count,
+        expDrug: data.expDrug,
+        realQty: 0,
+        unequal: -data.count,
       };
     });
   };
@@ -94,45 +112,24 @@ const AddInventoryCheck = () => {
         renderToast("Sản phẩm chưa được chọn", "error", setIsStop, isStop);
       }
       return;
-    } else if (field.price <= 0 || field.qty <= 0) {
-      if (!isStop) {
-        renderToast(
-          "Giá nhập và số lượng nhập phải lớn hơn 0",
-          "error",
-          setIsStop,
-          isStop
-        );
-      }
-      return;
     } else {
-      importItems.forEach((item, index) => {
-        if (item.product === field.product) {
+      importItems.forEach((item) => {
+        if (item._id === field._id) {
           flag = true;
-          importItems.splice(index, 1, {
-            ...item,
-            lotNumber: field.lotNumber,
-            price: parseInt(field.price),
-            expDrug: field.expDrug,
-            qty: item.qty + parseInt(field.qty),
-          });
-          setItemProducts(importItems);
+          renderToast("Sản phẩm đã được chọn", "error", setIsStop, isStop);
         }
       });
       if (!flag) {
-        setItemProducts((prev) => [...prev, { ...field, qty: parseInt(qty) }]);
+        setItemProducts((prev) => [...prev, { ...field }]);
       }
     }
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(
-      createImportStock({
+      createInventoryCheck({
         ...data,
-        importItems: importItems,
-        totalPrice: importItems.reduce(
-          (sum, curr) => sum + curr.price * curr.qty,
-          0
-        ),
+        checkItems: [...importItems],
       })
     );
   };
@@ -144,25 +141,26 @@ const AddInventoryCheck = () => {
 
   useEffect(() => {
     if (success) {
-      toast.success(`Tạo đơn nhập thành công`, ToastObjects);
-      dispatch({ type: IMPORT_STOCK_CREATE_RESET });
+      toast.success(`Tạo biên bản kiểm kê thành công`, ToastObjects);
+      dispatch({ type: INVENTORY_CHECK_CREATE_RESET });
       setData({
-        totalPrice: 0,
-        importedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
+        note: '',
+        checkedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
       });
       setFieldProduct({
+        _id: "",
         name: "",
         product: "",
         lotNumber: "",
         expDrug: moment(new Date(Date.now())).format("YYYY-MM-DD"),
-        price: 0,
-        qty: 0,
+        count: 0,
+        realQty: 0,
+        unequal: 0,
       });
       setItemProducts([]);
-      dispatch(listImportStock());
     }
     dispatch(listProvider());
-    dispatch(listProduct());
+    dispatch(listInventoryToCheck());
     dispatch(listUser());
   }, [success, dispatch]);
 
@@ -218,12 +216,12 @@ const AddInventoryCheck = () => {
                       <label className="form-label">Ngày kiểm</label>
                       <input
                         id="datePicker"
-                        name="importedAt"
+                        name="checkedAt"
                         className="form-control"
                         type="date"
                         required
                         onChange={handleChange}
-                        value={importedAt}
+                        value={checkedAt}
                       ></input>
                     </div>
                   </div>
@@ -250,82 +248,32 @@ const AddInventoryCheck = () => {
           <div className="mb-4">
             <div className="card card-custom mb-4 shadow-sm">
               <div className="card-body">
-                <div className="mb-4 form-divided-3">
+                <div className="mb-4 form-divided-2">
                   <div>
                     <label htmlFor="product_category" className="form-label">
                       Tên thuốc
                     </label>
                     <select
                       id="select-product"
-                      value={product}
+                      value={_id}
                       name="product"
                       onChange={handleChangeProduct}
                       className="form-control"
-                      required
                     >
                       <option value="">Chọn thuốc</option>
-                      {products?.map((item, index) => (
+                      {inventories?.map((item, index) => (
                         <option
                           key={index}
                           value={item._id}
-                          data-foo={item.name}
+                          data-inventory={JSON.stringify(item)}
                         >
-                          {item.name}
+                          {item.idDrug.name} - (Số lô: {item.lotNumber})
                         </option>
                       ))}
                     </select>
                   </div>
-                  <div>
-                    <label className="form-label">Số lô</label>
-                    <input
-                      name="lotNumber"
-                      value={lotNumber}
-                      type="text"
-                      className="form-control"
-                      required
-                      onChange={handleChangeProduct}
-                    ></input>
-                  </div>
-                  <div>
-                    <label className="form-label">Hạn sử dụng</label>
-                    <input
-                      name="expDrug"
-                      value={expDrug}
-                      type="Date"
-                      className="form-control"
-                      required
-                      onChange={handleChangeProduct}
-                    ></input>
-                  </div>
                 </div>
-                <div className="mb-4 form-divided-2">
-                  <div>
-                    <label className="form-label">Giá nhập</label>
-                    <input
-                      name="price"
-                      value={price}
-                      type="number"
-                      min="1"
-                      className="form-control"
-                      required
-                      onChange={handleChangeProduct}
-                    ></input>
-                  </div>
-                  <div>
-                    <label htmlFor="qty" className="form-label">
-                      Số lượng
-                    </label>
-                    <input
-                      name="qty"
-                      value={qty}
-                      type="number"
-                      min="1"
-                      className="form-control"
-                      required
-                      onChange={handleChangeProduct}
-                    />
-                  </div>
-                </div>
+                <hr />
                 <div className="mb-6 d-flex justify-content-end">
                   <button
                     className="btn btn-success"
@@ -350,8 +298,9 @@ const AddInventoryCheck = () => {
                         <th scope="col">Tên thuốc</th>
                         <th scope="col">Số lô</th>
                         <th scope="col">Hạn sử dụng</th>
-                        <th scope="col">Giá nhập</th>
-                        <th scope="col">Số lượng</th>
+                        <th scope="col">Tồn kho</th>
+                        <th scope="col">Thực kiểm</th>
+                        <th scope="col">Chênh lệch</th>
                         <th scope="col">Hành động</th>
                       </tr>
                     </thead>
@@ -362,9 +311,19 @@ const AddInventoryCheck = () => {
                           <td>{item.name}</td>
                           <td>{item.lotNumber}</td>
                           <td>{moment(item.expDrug).format("DD-MM-YYYY")}</td>
-                          <td>{item.price}</td>
-                          <td>{item.qty}</td>
-
+                          <td>{item.count}</td>
+                          <td width="200px" colSpan="1">
+                            <input
+                              name="realQty"
+                              className="form-control"
+                              required
+                              onChange={(e) => handleChangeRealQty(e, item._id)}
+                              type="number"
+                              value={item.realQty}
+                              min={0}
+                            />
+                          </td>
+                          <td>{item.unequal}</td>
                           <td>
                             <div className="dropdown">
                               <Link
@@ -375,13 +334,6 @@ const AddInventoryCheck = () => {
                                 <i className="fas fa-ellipsis-h"></i>
                               </Link>
                               <div className="dropdown-menu">
-                                {/* <button className="dropdown-item" onClick={(e)=>{
-                                                e.stopPropagation()
-                                                dispatch(singleProvider(provider._id))
-                                                setShow(true)
-                                            }}>
-                                                Edit info
-                                            </button> */}
                                 <button
                                   className="dropdown-item text-danger"
                                   onClick={(e) => handleDeleteItem(e, index)}
@@ -396,7 +348,7 @@ const AddInventoryCheck = () => {
                     </tbody>
                   </table>
                   <div className="mb-6 d-flex justify-content-end">
-                    {`Tổng cộng: ${totalPrice}`}
+                    {`Tổng cộng: ${itemProducts.length} sản phẩm đang được kiểm`}
                   </div>
                 </div>
               </header>

@@ -33,8 +33,6 @@ import DrugStoreScreen from './screens/DrugStoreScreen';
 import DrugStoreEditScreen from "./screens/DrugStoreEditScreen";
 import TagInventory from './screens/TagInventory';
 import InventoryCheckScreen from "./screens/InventoryCheckScreen";
-import AddInventoryCheck from "./components/InventoryCheck/AddInventoryCheck";
-import EditInventoryCheck from "./components/InventoryCheck/EditInventoryCheck";
 import AddInventoryCheckScreen from "./screens/AddInventoryCheckScreen";
 import EditInventoryCheckScreen from "./screens/EditInventoryCheckScreen";
 function App() {
