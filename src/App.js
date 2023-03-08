@@ -32,6 +32,11 @@ import InventoryScreen from './screens/InventoryScreen';
 import DrugStoreScreen from './screens/DrugStoreScreen';
 import DrugStoreEditScreen from "./screens/DrugStoreEditScreen";
 import TagInventory from './screens/TagInventory';
+import InventoryCheckScreen from "./screens/InventoryCheckScreen";
+import AddInventoryCheck from "./components/InventoryCheck/AddInventoryCheck";
+import EditInventoryCheck from "./components/InventoryCheck/EditInventoryCheck";
+import AddInventoryCheckScreen from "./screens/AddInventoryCheckScreen";
+import EditInventoryCheckScreen from "./screens/EditInventoryCheckScreen";
 function App() {
   const data=useSelector((state) => state.theme)
   if(data.theme==="dark") {
@@ -81,6 +86,10 @@ function App() {
           <PrivateRouter path="/export-stock" component={ExportStockScreen} exact />
           <PrivateRouter path="/export-stock/add" component={AddExport} />
           <PrivateRouter path="/export-stock/:id" component={EditExport} />
+
+          <PrivateRouter path="/inventory-check" component={InventoryCheckScreen} exact />
+          <PrivateRouter path="/inventory-check/add" component={AddInventoryCheckScreen} />
+          <PrivateRouter path="/inventory-check/:id" component={EditInventoryCheckScreen} />
 
           <PrivateRouter path="/providers" component={ProviderScreen} exact />
 
