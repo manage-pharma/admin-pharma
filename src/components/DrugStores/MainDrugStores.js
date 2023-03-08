@@ -43,7 +43,7 @@ const MainDrugStore =() => {
       dispatch(listDrugStore(keyword))
     }
     // eslint-disable-next-line
-  },[dispatch, successDelete, keyword])
+  },[dispatch, keyword])
 
   return (
     <>
