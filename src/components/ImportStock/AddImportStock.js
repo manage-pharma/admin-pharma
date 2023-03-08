@@ -10,6 +10,8 @@ import { Link, useHistory } from 'react-router-dom';
 import Toast from './../LoadingError/Toast';
 import  moment  from 'moment';
 import renderToast from "../../util/Toast";
+import formatCurrency from './../../util/formatCurrency';
+
 const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
@@ -38,7 +40,7 @@ const AddImportStock = () => {
         product: '',
         lotNumber: '',
         expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
-        price: 1,
+        price: '',
         qty: 1,
     });
 
@@ -55,7 +57,7 @@ const AddImportStock = () => {
     } = data
     // eslint-disable-next-line
     const { name, product, lotNumber, expDrug, qty, price } = field
-    totalPrice= importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+    totalPrice= importItems.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0)
 
     const handleChange = e =>{
         e.preventDefault();
@@ -67,14 +69,19 @@ const AddImportStock = () => {
     }
     const handleChangeProduct = e =>{
         e.preventDefault();
+        let formattedPrice = price;
+        if (e.target.name === "price") {
+          formattedPrice = e.target.value.replace(/\D/g, '')
+        }
         setFieldProduct(prev => {
             let a = document.getElementById("select-product");
             let b = a.options[a.selectedIndex]
             let c = b.getAttribute('data-foo')
             return {
                 ...prev,
+                [e.target.name]: e.target.value,
                 name:c, 
-                [e.target.name]: e.target.value
+                price: formattedPrice,
               }
         })
     }
@@ -89,7 +96,7 @@ const AddImportStock = () => {
             }
             return;
         }
-        else if(field.price <= 0 || field.qty <= 0){
+        else if((+field.price) <= 0 || field.qty <= 0){
             if(!isStop){
                 renderToast('Giá nhập và số lượng nhập phải lớn hơn 0','error', setIsStop, isStop)
             }
@@ -109,17 +116,18 @@ const AddImportStock = () => {
             })
             if(!flag){
                 setItemProducts(prev => 
-                    [...prev, {...field, qty: parseInt(qty)}]
+                    [...prev, {...field, price: parseInt(price), qty: parseInt(qty)}]
                 )
             }
         }
     }
+    console.log(itemProducts);
     const handleSubmit = e => {
         e.preventDefault();
         dispatch(createImportStock({
            ...data,
            importItems: importItems,
-           totalPrice : importItems.reduce((sum, curr) => sum + curr.price * curr.qty, 0)
+           totalPrice : importItems.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0)
         }));
     }
     const handleDeleteItem = (e, index) =>{
@@ -141,7 +149,7 @@ const AddImportStock = () => {
                 product: '',
                 lotNumber: '',
                 expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
-                price: 0,
+                price: '',
                 qty: 0,
             })
             setItemProducts([])
@@ -202,6 +210,7 @@ const AddImportStock = () => {
                                         onChange={handleChange}
                                         value={importedAt}
                                     ></input>
+
 
                                 </div>
                                 <div>
@@ -274,9 +283,8 @@ const AddImportStock = () => {
                                     <label className="form-label">Giá nhập</label>
                                     <input
                                         name="price"
-                                        value={price}
-                                        type='number'
-                                        min="1"
+                                        value={formatCurrency(price)}
+                                        type='text'
                                         className="form-control"
                                         required
                                         onChange={handleChangeProduct}
@@ -329,7 +337,7 @@ const AddImportStock = () => {
                                     <td>{ item.name }</td>
                                     <td>{ item.lotNumber}</td>
                                     <td>{ moment(item.expDrug).format("DD-MM-YYYY")}</td>
-                                    <td>{ item.price}</td>
+                                    <td>{ formatCurrency(item.price)}</td>
                                     <td>{ item.qty}</td>
                                     
                                     <td>
@@ -361,7 +369,7 @@ const AddImportStock = () => {
                             </tbody>
                             </table>
                             <div className="mb-6 d-flex justify-content-end">
-                                {`Tổng cộng: ${totalPrice}`}
+                                {`Tổng cộng: ${formatCurrency(totalPrice)}`}
                             </div>
                         </div>
                     </header>

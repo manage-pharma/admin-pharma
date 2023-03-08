@@ -9,6 +9,7 @@ import {deleteProduct,listProduct} from "../../Redux/Actions/ProductActions";
 import {useSelector} from "react-redux";
 import {PRODUCT_DELETE_RESET} from "../../Redux/Constants/ProductConstants";
 import CustomLoader from './../../util/LoadingTable';
+import formatCurrency from './../../util/formatCurrency';
 const DataTableProduct=(props) => {
     const {products,loading,loadingDelete}=props
     const history=useHistory()
@@ -119,7 +120,7 @@ const DataTableProduct=(props) => {
         },
         {
             name: "Giá",
-            selector: (row) => row.price,
+            selector: (row) => formatCurrency(row.price),
             sortable: true,
             reorder: true
         },

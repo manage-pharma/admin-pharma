@@ -160,10 +160,9 @@ export const createProduct = ({ name, regisId, category, categoryDrug, unit, pac
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-
     const { data } = await axios.post(`/api/products/`,
       {
-        name, regisId, category, categoryDrug, unit, packing, APIs, brandName, manufacturer, countryOfOrigin, instruction, price, allowToSell, prescription, description, image
+        name, regisId, category, categoryDrug, unit, packing, APIs, brandName, manufacturer, countryOfOrigin, instruction, price: +price, allowToSell, prescription, description, image
       }
       , config);
     dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
@@ -302,11 +301,11 @@ export const updateProduct = ({ name, price, prescription, APIs, brandName, manu
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
-      },
+      },  
     };
     const { data } = await axios.put(`/api/products/${productId}`,
       {
-        name, price, APIs, prescription, brandName, manufacturer, image, category, categoryDrug, countryOfOrigin, description, unit, regisId, packing, instruction, allowToSell
+        name, price: +price, APIs, prescription, brandName, manufacturer, image, category, categoryDrug, countryOfOrigin, description, unit, regisId, packing, instruction, allowToSell
       }
       , config);
     dispatch({ type: PRODUCT_UPDATE_SUCCESS, payload: data });
