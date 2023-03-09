@@ -56,6 +56,7 @@ const AddExportStock = () => {
     phone: "",
     address: "",
     note: "",
+    reason: "",
     exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
   var {
@@ -63,6 +64,7 @@ const AddExportStock = () => {
     phone,
     address,
     note,
+    reason,
     exportItems = itemProducts ? [...itemProducts] : [],
     user,
     exportedAt,
@@ -119,7 +121,7 @@ const AddExportStock = () => {
           data.isError = true;
 
           toast.error(
-            `Quantity is greater than quantity of Lot ${lotNumberData} (${qtyLotData}) in stock`,
+            `Số lượng nhập đã vượt quá số lượng của lô ${lotNumberData} (${qtyLotData}) trong kho`,
             ToastObjects
           );
           return;
@@ -224,7 +226,7 @@ const AddExportStock = () => {
 
     if (parseInt(sumUserInput) > parseInt(field.countInStock)) {
       toast.error(
-        `Quantity is greater than quantity of ${field.name} (${field.countInStock}) in stock`,
+        `Số lượng nhập đã vượt quá số lượng của ${field.name} (${field.countInStock}) trong kho`,
         ToastObjects
       );
       return;
@@ -232,7 +234,7 @@ const AddExportStock = () => {
     if (!field.product) {
       if (!isStop) {
         renderToast(
-          "The product has not been selected",
+          "Chưa chọn sản phẩm",
           "error",
           setIsStop,
           isStop
@@ -241,7 +243,7 @@ const AddExportStock = () => {
       return;
     } else if (sumUserInput <= 0) {
       if (!isStop) {
-        renderToast("Quantity have to greater 0", "error", setIsStop, isStop);
+        renderToast("Số lượng phải lớn hơn 0", "error", setIsStop, isStop);
       }
       return;
     } else {
@@ -251,7 +253,7 @@ const AddExportStock = () => {
           if (parseInt(a) > parseInt(field.countInStock)) {
             flag = true;
             toast.error(
-              `Quantity is greater than quantity of ${field.name} (${field.countInStock}) in stock`,
+              `Số lượng nhập đã vượt quá số lượng của ${field.name} (${field.countInStock}) trong kho`,
               ToastObjects
             );
             return;
@@ -335,7 +337,7 @@ const AddExportStock = () => {
   };
   useEffect(() => {
     if (success) {
-      toast.success(`Added successfully`, ToastObjects);
+      toast.success(`Thêm thành công`, ToastObjects);
       dispatch({ type: EXPORT_STOCK_CREATE_RESET });
       setData({
         customer: "",
@@ -375,11 +377,11 @@ const AddExportStock = () => {
               <h4 className="arrow-breadcrum">
                 <i className="fas fa-arrow-left"></i>
               </h4>
-              <h3>Add export stock</h3>
+              <h3>Thêm phiếu xuất</h3>
             </div>
             <div>
               <button type="submit" className="btn btn-primary">
-                Publish now
+                Tạo đơn
               </button>
             </div>
           </div>
@@ -389,7 +391,7 @@ const AddExportStock = () => {
                 <div className="mb-4 form-divided-2">
                   <div>
                     <label htmlFor="customer" className="form-label">
-                      Customer name
+                      Tên khách hàng
                     </label>
                     <input
                       name="customer"
@@ -402,7 +404,7 @@ const AddExportStock = () => {
                   </div>
                   <div>
                     <label htmlFor="phone" className="form-label">
-                      Phone
+                      Điện thoại
                     </label>
                     <input
                       name="phone"
@@ -416,7 +418,7 @@ const AddExportStock = () => {
                 </div>
                 <div className="mb-4 form-divided-2">
                   <div>
-                    <label className="form-label">Exported At</label>
+                    <label className="form-label">Ngày xuất</label>
                     <input
                       id="datePicker"
                       name="exportedAt"
@@ -429,7 +431,7 @@ const AddExportStock = () => {
                   </div>
                   <div>
                     <label htmlFor="product_category" className="form-label">
-                      User
+                      Người lập
                     </label>
                     <select
                       value={user}
@@ -438,7 +440,7 @@ const AddExportStock = () => {
                       className="form-control"
                       required
                     >
-                      <option value="">Chosse user</option>
+                      <option value="">Chọn người lập</option>
                       {users?.map((item, index) => (
                         <option key={index} value={item._id}>
                           {item.name}
@@ -449,7 +451,7 @@ const AddExportStock = () => {
                 </div>
                 <div className="mb-4 form-divided-2">
                   <div>
-                    <label className="form-label">Address</label>
+                    <label className="form-label">Địa chỉ</label>
                     <textarea
                       name="address"
                       placeholder="Type here"
@@ -461,7 +463,7 @@ const AddExportStock = () => {
                     ></textarea>
                   </div>
                   <div>
-                    <label className="form-label">Note</label>
+                    <label className="form-label">Ghi chú</label>
                     <textarea
                       name="note"
                       placeholder="Type here"
@@ -470,6 +472,20 @@ const AddExportStock = () => {
                       required
                       onChange={handleChange}
                       value={note}
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="mb-4 form-divided-2">
+                  <div>
+                    <label className="form-label">Lý do xuất</label>
+                    <textarea
+                      name="reason"
+                      placeholder="Type here"
+                      className="form-control"
+                      rows="3"
+                      required
+                      onChange={handleChange}
+                      value={reason}
                     ></textarea>
                   </div>
                 </div>
@@ -491,7 +507,7 @@ const AddExportStock = () => {
                     className="form-control"
                     required
                   >
-                    <option value="">Chosse product</option>
+                    <option value="">Chọn sản phẩm</option>
                     {inventoriesClone?.map((item, index) => (
                       <option
                         key={index}
@@ -546,7 +562,7 @@ const AddExportStock = () => {
                     className="btn btn-success"
                     onClick={handleAddProduct}
                   >
-                    Add Product
+                    Thêm sản phẩm
                   </button>
                 </div>
               </div>

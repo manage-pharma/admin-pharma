@@ -9,12 +9,15 @@ import renderToast from "../../util/Toast";
 import { listInventoryToCheck } from "../../Redux/Actions/InventoryAction";
 import {
   INVENTORY_CHECK_DETAILS_RESET,
+  INVENTORY_CHECK_LIST_ITEM_RESET,
   INVENTORY_CHECK_UPDATE_RESET,
 } from "../../Redux/Constants/InventoryCheckConstant";
 import {
   singleInventoryCheck,
   updateInventoryCheck,
 } from "../../Redux/Actions/InventoryCheckAction";
+import { listCategory } from "../../Redux/Actions/CategoryAction";
+import MyVerticallyCenteredModalListCategory from "./ModalActivePharma";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -34,6 +37,12 @@ const EditInventoryCheck = (props) => {
   const inventoryList = useSelector((state) => state.inventoryToCheckList);
   const { inventories } = inventoryList;
 
+  const inventoryCheckListItem = useSelector(
+    (state) => state.inventoryCheckListItem
+  );
+  const { inventoryCheckItem: inventoryCheckItemCategory } =
+    inventoryCheckListItem;
+
   const userList = useSelector((state) => state.userList);
   const { users } = userList;
 
@@ -41,7 +50,8 @@ const EditInventoryCheck = (props) => {
     (state) => state.inventoryCheckUpdate
   );
   const { success } = inventoryCheckUpdate;
-
+  const categoryList = useSelector((state) => state.categoryList);
+  const [modalShowActivePharma, setModalShowActivePharma] = useState(false);
   const [isStop, setIsStop] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
@@ -52,7 +62,7 @@ const EditInventoryCheck = (props) => {
     lotNumber: "",
     expDrug: moment(new Date(Date.now())).format("YYYY-MM-DD"),
     count: 0,
-    realQty: 0,
+    realQty: "",
     unequal: 0,
   });
   const { _id } = field;
@@ -63,7 +73,6 @@ const EditInventoryCheck = (props) => {
 
   var {
     note,
-    importItems = itemProducts ? [...itemProducts] : [],
     user,
     checkedAt,
   } = data;
@@ -81,14 +90,14 @@ const EditInventoryCheck = (props) => {
   const handleChangeRealQty = (e, id) => {
     itemProducts.forEach((item, index) => {
       if (item._id === id) {
-        let realQty = parseInt(e.target.value) || 0;
+        let realQty = parseInt(e.target.value) || "";
 
-        importItems.splice(index, 1, {
+        itemProducts.splice(index, 1, {
           ...item,
           realQty,
           unequal: realQty - parseInt(item.count),
         });
-        setItemProducts([...importItems]);
+        setItemProducts([...itemProducts]);
       }
     });
   };
@@ -126,7 +135,7 @@ const EditInventoryCheck = (props) => {
       }
       return;
     } else {
-      importItems.forEach((item) => {
+      itemProducts.forEach((item) => {
         if (item._id === field._id) {
           flag = true;
           renderToast("Sản phẩm đã được chọn", "error", setIsStop, isStop);
@@ -155,15 +164,52 @@ const EditInventoryCheck = (props) => {
     itemProducts.splice(index, 1);
     setItemProducts(JSON.parse(JSON.stringify(itemProducts)));
   };
+  const checkExsistItem = (item) => {
+    let flag = false;
+    itemProducts.forEach((product) => {
+      if (product._id === item._id) {
+        flag = true;
+        return;
+      }
+    });
+    return flag;
+  };
+  useEffect(() => {
+    if (inventoryCheckItemCategory?.length > 0) {
+      const getList = inventoryCheckItemCategory?.map((item) => {
+        
+          return !checkExsistItem(item) && {
+            _id: item?._id,
+            name: item?.idDrug?.name,
+            product: item?.idDrug?._id,
+            lotNumber: item?.lotNumber,
+            count: item?.count,
+            expDrug: item?.expDrug,
+            realQty: "",
+            unequal: -item?.count,
+          };
+        
+      });
+      
+      setItemProducts((prev) => [...prev, ...getList.filter((item) => item !== false)]);
+    }
+     // eslint-disable-next-line
+  }, [inventoryCheckItemCategory,]);
   useEffect(() => {
     dispatch(listUser());
     dispatch(listInventoryToCheck());
-  }, [dispatch])
-  useEffect(() => { 
+    dispatch(listCategory());
+    return () =>{
+      dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
+    }
+  }, [dispatch]);
+  console.log(itemProducts)
+  useEffect(() => {
     if (success) {
       toast.success(`Cập nhập biên bản kiểm kê thành công`, ToastObjects);
       dispatch({ type: INVENTORY_CHECK_UPDATE_RESET });
       dispatch({ type: INVENTORY_CHECK_DETAILS_RESET });
+      dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
       dispatch(singleInventoryCheck(checkId));
     }
     if (checkId !== inventoryCheckItem?._id) {
@@ -171,18 +217,25 @@ const EditInventoryCheck = (props) => {
     } else if (checkId === inventoryCheckItem?._id && !isEdited) {
       setData({
         user: inventoryCheckItem?.user?._id,
-        importItems: inventoryCheckItem?.checkItems,
+        importItems: [...inventoryCheckItem?.checkItems],
         checkedAt: moment(inventoryCheckItem?.checkedAt).format("YYYY-MM-DD"),
         note: inventoryCheckItem?.note,
       });
       if (itemProducts?.length === 0 && !isEdited) {
-        setItemProducts(JSON.parse(JSON.stringify(importItems)));
+        setItemProducts([...inventoryCheckItem?.checkItems]);
       }
-    } // eslint-disable-next-line
-  }, [dispatch, inventoryCheckItem, checkId, itemProducts, isEdited, success]);
+    }
+    // eslint-disable-next-line
+  }, [dispatch, inventoryCheckItem, checkId, isEdited, success]);
+
   return (
     <>
       <Toast />
+      <MyVerticallyCenteredModalListCategory
+        data={categoryList}
+        show={modalShowActivePharma}
+        setModalShowActivePharma={setModalShowActivePharma}
+      />
       <section
         className={`content-main ${
           inventoryCheckItem?.status ? "disabled" : ""
@@ -305,6 +358,26 @@ const EditInventoryCheck = (props) => {
                       ))}
                     </select>
                   </div>
+                  <div>
+                    <label htmlFor="product_category" className="form-label">
+                      Chọn nhóm thuốc
+                    </label>
+                    <div>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setModalShowActivePharma(true);
+                        }}
+                      >
+                        {" "}
+                        <i
+                          style={{ fontSize: "30px" }}
+                          className="fa fa-list"
+                          aria-hidden="true"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <hr />
                 <div className="mb-6 d-flex justify-content-end">
@@ -352,7 +425,7 @@ const EditInventoryCheck = (props) => {
                               required
                               onChange={(e) => handleChangeRealQty(e, item._id)}
                               type="number"
-                              value={item.realQty}
+                              value={item.realQty || ""}
                               min={0}
                             />
                           </td>
@@ -381,7 +454,7 @@ const EditInventoryCheck = (props) => {
                     </tbody>
                   </table>
                   <div className="mb-6 d-flex justify-content-end">
-                    {`Tổng cộng: ${itemProducts.length} đang được kiểm`}
+                    {`Tổng cộng: ${itemProducts.length} sản phẩm đang được kiểm`}
                   </div>
                 </div>
               </header>

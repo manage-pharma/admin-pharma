@@ -92,7 +92,7 @@ const printReport = async(data) =>{
                 <div style="margin-top: 5px; font-size: 12px; text-align: center;"><strong>Mã phiếu:</strong>${data?.exportCode}</div>
                 <div style="margin-top: 5px; font-size: 12px; text-align: center;">Ngày lập: ${moment(data?.exportedAt).format("YYYY-MM-DD")}</div>
                 <div style="margin-top: 15px;">Xuất tại kho: Kho Dược</div>
-                <div style="margin-top: 5px;">Lý do xuất kho: Xuất bán lẻ</div>
+                <div style="margin-top: 5px;">Lý do xuất kho: ${data?.reason}</div>
                 <div style="margin-top: 5px;">Người lập: ${data?.user?.name}</div>
             
                 <section style="margin-top: 20px;">

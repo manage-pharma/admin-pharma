@@ -95,7 +95,9 @@ import {
 import {
   inventoryCheckCreateReducer,
   inventoryCheckDetailReducer,
+  inventoryCheckListItemReducer,
   inventoryCheckListReducer,
+  inventoryCheckStatusReducer,
   inventoryCheckUpdateReducer,
 } from "./Reducers/InventoryCheckReducer";
 
@@ -183,6 +185,8 @@ const reducer = combineReducers({
   inventoryCheckUpdate: inventoryCheckUpdateReducer,
 
   inventoryToCheckList: inventoryToCheckListReducer,
+  inventoryCheckListItem: inventoryCheckListItemReducer,
+  inventoryCheckStatus: inventoryCheckStatusReducer
 });
 
 const initialState = {

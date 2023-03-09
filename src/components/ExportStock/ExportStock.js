@@ -30,11 +30,11 @@ const ExportStock = (props) =>{
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter" style={{color: 'black'}}>
-                Update status 
+                Cập nhật trạng thái 
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <p>Are you sure want to set status <span className="text-warning">{dataModal?.exportCode}</span> ?</p>
+              <p>Bạn chắc chắn muốn cập nhật trang thái: <span className="text-warning">{dataModal?.exportCode}</span> ?</p>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="warning" style={{fontWeight:"600"}} onClick={()=>{
@@ -107,35 +107,35 @@ const ExportStock = (props) =>{
 
         },
         {
-            name: "EXPORT CODE",
+            name: "Mã phiếu xuất",
             selector: (row) => row.exportCode,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
-            name: "CUSTOMER",
+            name: "Khách hàng",
             selector: (row) => row.customer,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "PHONE",
+            name: "Điện thoại",
             selector: (row) => row.phone,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "CREATED BY",
+            name: "Người lập",
             selector: (row) => row.user.name,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "EXPORTED AT",
+            name: "Ngày xuất",
             selector: (row) => moment(row.exportedAt).format("DD/MM/YYYY"),
             sortable: true,
             reorder: true,
@@ -149,10 +149,10 @@ const ExportStock = (props) =>{
         //     grow: 2
         // },
         {
-            name: "STATUS",
+            name: "Trạng thái",
             selector: (rows) => rows.status === true ? 
-                (<span className="badge bg-success text-white">Completed</span>) : 
-                (<span className="badge bg-danger text-white">Incomplete</span>),
+                (<span className="badge bg-success text-white">Đã hoàn tất</span>) : 
+                (<span className="badge bg-danger text-white">Chưa duyệt</span>),
             sortable: true,
             reorder: true,
             sortFunction: (exportStock) => {
@@ -174,7 +174,7 @@ const ExportStock = (props) =>{
             },
             grow: 1
         },
-        {   name: "ACTION",
+        {   name: "Hành động",
             cell: row => <CustomMaterialMenu row={row} />,
             allowOverflow: true,
             button: true,

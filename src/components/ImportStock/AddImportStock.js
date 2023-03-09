@@ -121,7 +121,6 @@ const AddImportStock = () => {
             }
         }
     }
-    console.log(itemProducts);
     const handleSubmit = e => {
         e.preventDefault();
         dispatch(createImportStock({
