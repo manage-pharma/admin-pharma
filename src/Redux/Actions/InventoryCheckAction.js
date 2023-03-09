@@ -9,6 +9,11 @@ import {
   INVENTORY_CHECK_LIST_RESET,
   INVENTORY_CHECK_LIST_FAIL,
 
+  INVENTORY_CHECK_LIST_ITEM_REQUEST,
+  INVENTORY_CHECK_LIST_ITEM_SUCCESS,
+  INVENTORY_CHECK_LIST_ITEM_RESET,
+  INVENTORY_CHECK_LIST_ITEM_FAIL,
+
   INVENTORY_CHECK_DETAILS_SUCCESS,
   INVENTORY_CHECK_DETAILS_REQUEST,
   INVENTORY_CHECK_DETAILS_RESET,
@@ -17,7 +22,12 @@ import {
   INVENTORY_CHECK_UPDATE_SUCCESS,
   INVENTORY_CHECK_UPDATE_REQUEST,
   INVENTORY_CHECK_UPDATE_RESET,
-  INVENTORY_CHECK_UPDATE_FAIL
+  INVENTORY_CHECK_UPDATE_FAIL,
+
+  INVENTORY_CHECK_STATUS_SUCCESS,
+  INVENTORY_CHECK_STATUS_REQUEST,
+  INVENTORY_CHECK_STATUS_RESET,
+  INVENTORY_CHECK_STATUS_FAIL
 
 } from "../Constants/InventoryCheckConstant";
 import axios from "axios";
@@ -44,6 +54,32 @@ export const listInventoryCheck = ( keyword = " ", pageNumber = " ", from=' ', t
       dispatch({type: INVENTORY_CHECK_LIST_FAIL, payload: message});
       setTimeout(() => {
         dispatch({ type: INVENTORY_CHECK_LIST_RESET });
+      }, 3000);
+  }
+}
+// LIST ITEM
+
+export const listItemInventoryCheck = (id) => async(dispatch, getState) =>{
+  try {
+      dispatch({type: INVENTORY_CHECK_LIST_ITEM_REQUEST});
+      const { userLogin: {userInfo}} = getState();
+      const config = {
+          headers: {
+              Authorization: `Bearer ${userInfo.token}`
+          }
+      }
+      const {data} = await axios.get(`/api/inventory-check/category/${id}`, config)
+      dispatch({type: INVENTORY_CHECK_LIST_ITEM_SUCCESS, payload: data})
+  } catch (error) {
+      const message = error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      if(message === "Not authorized, token failed"){
+          dispatch(logout());
+      }
+      dispatch({type: INVENTORY_CHECK_LIST_ITEM_FAIL, payload: message});
+      setTimeout(() => {
+        dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
       }, 3000);
   }
 }
@@ -129,35 +165,35 @@ export const createInventoryCheck =
   };
 
 //ADMIN IMPORT STATUS
-// export const statusImportStock = (id) => async (dispatch, getState) => {
-//   try {
-//     dispatch({ type: IMPORT_STOCK_STATUS_REQUEST });
-//     // userInfo -> userLogin -> getState(){globalState}
-//     const { userLogin: {userInfo}} = getState();
-//     const config = {
-//         headers: {
-//             Authorization: `Bearer ${userInfo.token}`
-//         }
-//     }
-//     const { data } = await axios.put(`/api/import-stock/${id}/status`,{}, config);
-//     dispatch({ type: IMPORT_STOCK_STATUS_SUCCESS, payload: data });
-//   } catch (error) {
-//     const message =
-//       error.response && error.response.data.message
-//         ? error.response.data.message
-//         : error.message;
-//     if (message === "Not authorized, token failed") {
-//       dispatch(logout());
-//     }
-//     dispatch({
-//       type: IMPORT_STOCK_STATUS_FAIL,
-//       payload: message,
-//     });
-//     setTimeout(() => {
-//       dispatch({ type: IMPORT_STOCK_STATUS_RESET });
-//     }, 3000);
-//   }
-// };
+export const statusInventoryCheck = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: INVENTORY_CHECK_STATUS_REQUEST });
+    // userInfo -> userLogin -> getState(){globalState}
+    const { userLogin: {userInfo}} = getState();
+    const config = {
+        headers: {
+            Authorization: `Bearer ${userInfo.token}`
+        }
+    }
+    const { data } = await axios.put(`/api/inventory-check/${id}/status`,{}, config);
+    dispatch({ type: INVENTORY_CHECK_STATUS_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: INVENTORY_CHECK_STATUS_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: INVENTORY_CHECK_STATUS_RESET });
+    }, 3000);
+  }
+};
 
 //ADMIN UPDATE IMPORT
 export const updateInventoryCheck = ({ note, user, checkItems, checkedAt, checkId }) => async (dispatch, getState) => {

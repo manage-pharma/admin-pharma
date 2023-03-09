@@ -5,13 +5,10 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  listImportStock,
-  statusImportStock,
-} from "../../Redux/Actions/ImportStockAction";
-import { IMPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ImportStockConstant";
-import printReport from "./PrintReport";
+import printReport from "./PrintReportCheck";
 import CustomLoader from "../../util/LoadingTable";
+import { listInventoryCheck, statusInventoryCheck } from "../../Redux/Actions/InventoryCheckAction";
+import { INVENTORY_CHECK_STATUS_RESET } from "../../Redux/Constants/InventoryCheckConstant";
 
 const InventoryCheck = (props) => {
   const { inventoryCheck, loading, loadingStatus } = props;
@@ -20,8 +17,9 @@ const InventoryCheck = (props) => {
   const [modalShow, setModalShow] = useState(false);
   const [reportShow, setReportShow] = useState(false);
   const [dataModal, setDataModal] = useState();
-  const updateStatus = useSelector((state) => state.importStockStatus);
-  const { success } = updateStatus;
+  console.log(dataModal)
+  const inventoryCheckStatus = useSelector((state) => state.inventoryCheckStatus);
+  const { success } = inventoryCheckStatus;
   const MyVerticallyCenteredModal = (props) => {
     return (
       <Modal
@@ -42,7 +40,7 @@ const InventoryCheck = (props) => {
         <Modal.Body>
           <p>
             Bạn có chắc chắn duyệt biên bản kiểm kê{" "}
-            <span className="text-warning">{dataModal?.importCode}</span> ?
+            <span className="text-warning">{dataModal?.checkCode}</span> ?
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -50,7 +48,7 @@ const InventoryCheck = (props) => {
             variant="warning"
             style={{ fontWeight: "600" }}
             onClick={() => {
-              dispatch(statusImportStock(dataModal?._id));
+              dispatch(statusInventoryCheck(dataModal?._id));
               setModalShow(false);
             }}
           >
@@ -244,8 +242,8 @@ const InventoryCheck = (props) => {
 
   useEffect(() => {
     if (success) {
-      dispatch({ type: IMPORT_STOCK_STATUS_RESET });
-      dispatch(listImportStock());
+      dispatch({ type: INVENTORY_CHECK_STATUS_RESET });
+      dispatch(listInventoryCheck());
     }
     if (reportShow) {
       printReport(dataModal);

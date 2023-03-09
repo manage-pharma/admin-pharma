@@ -62,7 +62,7 @@ const MainExportStock = (props) => {
     if(!toggleSearch){
       if(!data.from || !data.to){
         if(!isStop){
-          renderToast('Date has not been selected','error', setIsStop, isStop)
+          renderToast('Chưa chọn ngày','error', setIsStop, isStop)
         }
         return;
       }
@@ -80,7 +80,7 @@ const MainExportStock = (props) => {
 
   useEffect(()=>{
     if(success){
-      toast.success(`Update status successfully`, ToastObjects)
+      toast.success(`Cập nhật thành công`, ToastObjects)
     }
     dispatch(listExportStock(keyword, pageNumber)) // eslint-disable-next-line
   },[dispatch, pageNumber, success])
@@ -91,10 +91,10 @@ const MainExportStock = (props) => {
     { error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
-        <h3 className="content-title">Export Stock List</h3>
+        <h3 className="content-title">Danh sách phiếu xuất</h3>
           <div>
             <button onClick={handleAdd} className="btn btn-primary">
-              Create new
+              Tạo mới
             </button>
           </div>
       </div>
@@ -105,7 +105,7 @@ const MainExportStock = (props) => {
             <div className="col-lg-4 col-md-6 me-auto ">
               <input
                 type="search"
-                placeholder="Search..."
+                placeholder="Tìm kiếm..."
                 className="form-control p-2"
                 value={keyword}
                 onChange={handleSubmitSearch}
@@ -113,7 +113,7 @@ const MainExportStock = (props) => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
-                <span className="label-date">From: </span>
+                <span className="label-date">Từ: </span>
                 <input
                     id="datePicker"
                     name="from"
@@ -126,7 +126,7 @@ const MainExportStock = (props) => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
-                <span className="label-date">To: </span>
+                <span className="label-date">Đến: </span>
                 <input
                     id="datePicker"
                     name="to"
@@ -139,9 +139,9 @@ const MainExportStock = (props) => {
             </div>
             <div className="col-lg-1">
               {toggleSearch ? 
-                <button className="btn btn-danger" onClick={handleSearchDate}>Cancel</button>
+                <button className="btn btn-danger" onClick={handleSearchDate}>Hủy</button>
               : 
-                <button className="btn btn-success" onClick={handleSearchDate}>Search</button>
+                <button className="btn btn-success" onClick={handleSearchDate}>Tìm kiếm</button>
               }
             </div>
           </div>
