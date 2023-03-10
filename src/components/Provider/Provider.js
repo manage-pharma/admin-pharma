@@ -55,20 +55,22 @@ const Provider = (props) =>{
                     <i className="fas fa-ellipsis-h"></i>
                 </Link>
                 <div className="dropdown-menu">
-                  <button className="dropdown-item" onClick={(e)=>{
+                  <button className="dropdown-item active-menu" onClick={(e)=>{
                     e.stopPropagation()
                     dispatch(singleProvider(row._id))
                     setShow(true)
                     setDataModal(row)
                   }}>
-                    Sửa
+                      <i className="fa fa-pencil"></i>
+                      <span style={{marginLeft: '15px'}}>Chỉnh sửa</span>
                   </button>
-                  <button className="dropdown-item text-danger" onClick={(e)=>{
+                  <button className="dropdown-item active-menu text-danger" onClick={(e)=>{
                     e.preventDefault()
                     setModalShow(true)
                     setDataModal(row)
                   }}>
-                    Xóa
+                      <i className="fa fa-trash"></i>    
+                      <span style={{marginLeft: '15px'}}>Xóa</span>
                   </button>
                 </div>
             </div>
@@ -103,6 +105,13 @@ const Provider = (props) =>{
             sortable: true,
             reorder: true,
             grow: 2
+        },
+        {
+          name: "Ký hiệu hóa đơn",
+          selector: (row) => row.invoiceSymbol,
+          sortable: true,
+          reorder: true,
+          grow: 2
         },
         {
             name: "Số điện thoại",

@@ -6,11 +6,12 @@ import { IMPORT_STOCK_CREATE_RESET } from '../../Redux/Constants/ImportStockCons
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
 import { listProduct } from './../../Redux/Actions/ProductActions';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Toast from './../LoadingError/Toast';
 import  moment  from 'moment';
 import renderToast from "../../util/Toast";
 import formatCurrency from './../../util/formatCurrency';
+import DataTable from "react-data-table-component";
 
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -41,29 +42,51 @@ const AddImportStock = () => {
         lotNumber: '',
         expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         price: '',
-        qty: 1,
+        VAT: 0,
+        discount: 0, 
+        qty: 0,
     });
 
     const [data, setData] = useState({
-        importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
+        importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD'),
+        invoiceNumber: '',
+        invoiceSymbol: '',
     })
       
     var { 
         provider, 
         importItems = itemProducts ? [...itemProducts] : [], 
         user,  
-        totalPrice, 
+        totalPrice,
+        totalVAT, 
+        totalDiscount,
+        invoiceNumber,
+        invoiceSymbol,
         importedAt
     } = data
     // eslint-disable-next-line
-    const { name, product, lotNumber, expDrug, qty, price } = field
+    const { name, product, lotNumber, expDrug, qty, VAT, discount, price } = field
     totalPrice= importItems.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0)
+    totalVAT = importItems.reduce((sum, curr) => sum + ( ((+curr.price) * (+curr.qty) * (1 - (+curr.discount/100))) *  (+curr.VAT/100) ) , 0)
+    totalDiscount = importItems.reduce((sum, curr) => sum + ( (((+curr.price) * (+curr.qty)) * (+curr.discount/100)) ), 0)
+
+    const handleFocus = (event) => {
+        // Xóa các ký tự 0 ở đầu nếu có
+        if (event.target.value.startsWith('0')) {
+          event.target.value = event.target.value.replace(/^0+/, '');
+        }
+      };
+    
 
     const handleChange = e =>{
         e.preventDefault();
+        let a = document.getElementById("select-provider");
+        let b = a.options[a.selectedIndex]
+        let c = b.getAttribute('data-foo')
         setData(prev => {
           return {
-            ...prev, [e.target.name]: e.target.value
+            ...prev, [e.target.name]: e.target.value,
+            invoiceSymbol: c
           }
         })
     }
@@ -104,19 +127,21 @@ const AddImportStock = () => {
         }
         else{
             importItems.forEach((item, index)=>{
-                if(item.product === field.product){
+                if(item.product === field.product && item.lotNumber === field.lotNumber){
                     flag = true
                     importItems.splice(index, 1, {...item, 
                         lotNumber: field.lotNumber,
+                        VAT: parseInt(field.VAT),
+                        discount: parseInt(field.discount),
                         price: parseInt(field.price),
                         expDrug: field.expDrug,
-                        qty:  item.qty + parseInt(field.qty)})
+                        qty: parseInt(field.qty)})
                     setItemProducts(importItems)
                  }
             })
             if(!flag){
                 setItemProducts(prev => 
-                    [...prev, {...field, price: parseInt(price), qty: parseInt(qty)}]
+                    [...prev, {...field, price: parseInt(price), qty: parseInt(qty), discount: parseInt(discount), VAT: parseInt(VAT)}]
                 )
             }
         }
@@ -126,9 +151,12 @@ const AddImportStock = () => {
         dispatch(createImportStock({
            ...data,
            importItems: importItems,
-           totalPrice : importItems.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0)
+           totalPrice : importItems.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0),
+           totalVAT : importItems.reduce((sum, curr) => sum + ( ((+curr.price) * (+curr.qty) * (1 - (+curr.discount/100))) *  (+curr.VAT/100) ) , 0),
+           totalDiscount : importItems.reduce((sum, curr) => sum + ( (((+curr.price) * (+curr.qty)) * (+curr.discount/100)) ), 0)
         }));
     }
+
     const handleDeleteItem = (e, index) =>{
         e.preventDefault()
         importItems.splice(index, 1)
@@ -141,7 +169,11 @@ const AddImportStock = () => {
             dispatch({type: IMPORT_STOCK_CREATE_RESET})
             setData({
                 totalPrice: 0,
-                importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD')
+                totalVAT: 0,
+                totalDiscount: 0,
+                importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD'),
+                invoiceNumber: '',
+                invoiceSymbol: '',
             })
             setFieldProduct({
                 name: '',
@@ -149,6 +181,8 @@ const AddImportStock = () => {
                 lotNumber: '',
                 expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
                 price: '',
+                VAT: 0,
+                discount: 0, 
                 qty: 0,
             })
             setItemProducts([])
@@ -159,11 +193,178 @@ const AddImportStock = () => {
         dispatch(listUser())
     }, [success, dispatch])
 
+
+    const customStyles = {
+        rows: {
+            highlightOnHoverStyle: {
+            backgroundColor: 'rgb(230, 244, 244)',
+            borderBottomColor: '#FFFFFF',
+            // borderRadius: '25px',
+            outline: '1px solid #FFFFFF',
+            },
+        },
+        header: {
+            style: {
+                minHeight: '56px',
+            },
+        },
+        headRow: {
+            style: {
+                fontSize: '16px',
+                borderTopStyle: 'solid',
+                borderTopWidth: '1px',
+                borderTopColor:'grey',
+            },
+        },
+        headCells: {
+            style: {
+            '&:not(:last-of-type)': {
+                borderRightStyle: 'solid',
+                borderRightWidth: '1px',
+                borderRightColor: 'grey',
+            },
+            },
+        },
+        cells: {
+            style: {
+                fontSize: '16px',
+            '&:not(:last-of-type)': {
+                borderRightStyle: 'solid',
+                borderRightWidth: '1px',
+                borderRightColor: 'grey',
+            },
+            },
+        },
+    };
+
+    const columns = [
+        {
+            name: "STT",
+            selector: (row, index) => <bold>{index+1}</bold>,
+            reorder: true,
+            width: '60px'
+
+        },
+        {
+            name: "Tên thuốc",
+            selector: (row) => row?.name,
+            sortable: true,
+            reorder: true,
+            grow: 3,
+            width:'200px'
+        },
+        {
+            name: "Số lô",
+            selector: (row) => row?.lotNumber,
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'150px'
+        },
+        {
+            name: "Hạn sử dụng",
+            selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {
+            name: "Giá nhập",
+            selector: (row) => formatCurrency(row?.price),
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {
+            name: "Số lượng",
+            selector: (row) => row?.qty,
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {
+            name: "Tổng cộng",
+            selector: (row) => formatCurrency(row?.price * row?.qty),
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {
+            name: "Chiết khấu",
+            selector: (row) => `${row?.discount}% (${formatCurrency((row?.price * row?.qty)*(+row?.discount)/100)})`,
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {
+            name: "Thành tiền trước VAT",
+            selector: (row) => formatCurrency(row?.price * row?.qty * (1 - (+row?.discount)/100)),
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'220px'
+        },
+        {
+            name: "VAT",
+            selector: (row) => `${row?.VAT}% (${formatCurrency(((row?.price * row?.qty) * (1 - (+row?.discount)/100)) * (+row?.VAT)/100)})`,
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {
+            name: "Thành tiền sau VAT",
+            selector: (row) => formatCurrency(row?.price * row?.qty * (1 + (row?.VAT/100)) * (1 - (+row?.discount/100))),
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {  
+            name: "Hành động",
+            selector: (row, index) => {
+              return (
+                <div>
+                  <button
+                    style={{fontSize: '18px'}}
+                    className="dropdown-item text-danger"
+                    onClick={(e) => handleDeleteItem(e, index, row?.product?._id || row?.product)}
+                  >
+                    <i className="fa fa-trash"></i>
+                  </button>
+                </div>
+              )
+            },
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+    ];
+
+    const handleRowClicked = (row) => {
+        setFieldProduct({
+            name: row?.name,
+            product: row?.product,
+            lotNumber: row?.lotNumber,
+            expDrug: moment(row?.expDrug).format('YYYY-MM-DD'),
+            price: row?.price,
+            VAT: row?.VAT,
+            discount: row?.discount, 
+            qty: row?.qty,
+        })
+    };
     return (
       <>
         <Toast/>
-        <section className="content-main" >
+        <section className="content-main" style={{display: 'grid'}} >
             <form onSubmit={handleSubmit}>
+
                 <div className="content-header">
                     <div className="content-title d-flex" onClick={e=>{
                         e.preventDefault()
@@ -178,24 +379,52 @@ const AddImportStock = () => {
                     </button>
                     </div>
                 </div>
+
                 <div className="mb-4">
                     <div className="card card-custom mb-4 shadow-sm">
                         <div className="card-body">
-                            <div className="mb-4">
-                                <label htmlFor="name_drug" className="form-label">
-                                    Nhà cung cấp
-                                </label>
-                                <select
-                                value={provider}
-                                name="provider"
-                                onChange={handleChange}
-                                className="form-control"
-                                required >
-                                    <option value=''>Chọn nhà cung cấp</option>
-                                    {providers?.map((item, index)=>(
-                                    <option key={index} value={item._id}>{item.name}</option>
-                                    ))}
-                                </select>
+                            <div className="mb-4 form-divided-2">
+                                <div>
+                                    <label htmlFor="name_drug" className="form-label">
+                                        Nhà cung cấp
+                                    </label>
+                                    <select
+                                    id="select-provider"
+                                    value={provider}
+                                    name="provider"
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    required >
+                                        <option value=''>Chọn nhà cung cấp</option>
+                                        {providers?.map((item, index)=>(
+                                        <option key={index} value={item._id} data-foo={item.invoiceSymbol}>{item.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-divided-2">
+                                    <div>
+                                        <label className="form-label">Số hóa đơn</label>
+                                        <input
+                                            name="invoiceNumber"
+                                            className="form-control"
+                                            type='text'
+                                            onChange={handleChange}
+                                            value={invoiceNumber}
+                                        ></input>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="product_category" className="form-label">
+                                            Ký hiệu hóa đơn
+                                        </label>
+                                        <input
+                                            name="invoiceSymbol"
+                                            className="form-control"
+                                            type='text'
+                                            onChange={handleChange}
+                                            value={invoiceSymbol}
+                                        ></input>
+                                    </div>
+                                </div>
                             </div>
                             <div className="mb-4 form-divided-2">
                                 <div>
@@ -209,8 +438,6 @@ const AddImportStock = () => {
                                         onChange={handleChange}
                                         value={importedAt}
                                     ></input>
-
-
                                 </div>
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
@@ -232,6 +459,7 @@ const AddImportStock = () => {
                         </div>
                     </div>
                 </div>
+
                 <div className="mb-4">
                     <div className="card card-custom mb-4 shadow-sm">
                         <div className="card-body">
@@ -278,31 +506,60 @@ const AddImportStock = () => {
                                 </div>
                             </div>
                             <div className="mb-4 form-divided-2">
-                                <div>
-                                    <label className="form-label">Giá nhập</label>
-                                    <input
-                                        name="price"
-                                        value={formatCurrency(price)}
-                                        type='text'
-                                        className="form-control"
-                                        required
-                                        onChange={handleChangeProduct}
-                                    ></input>
+                                <div className="form-divided-2">
+                                    <div>
+                                        <label className="form-label">Giá nhập</label>
+                                        <input
+                                            name="price"
+                                            value={formatCurrency(price)}
+                                            type='text'
+                                            className="form-control"
+                                            required
+                                            onChange={handleChangeProduct}
+                                            onFocus={handleFocus}
+                                        ></input>
 
+                                    </div>
+                                    <div>
+                                        <label htmlFor="qty" className="form-label">
+                                            Số lượng
+                                        </label>
+                                        <input
+                                            name="qty"
+                                            value={qty}
+                                            type="number"
+                                            className="form-control"
+                                            required
+                                            onChange={handleChangeProduct}
+                                            onFocus={handleFocus}
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label htmlFor="qty" className="form-label">
-                                        Số lượng
-                                    </label>
-                                    <input
-                                        name="qty"
-                                        value={qty}
-                                        type="number"
-                                        min="1"
-                                        className="form-control"
-                                        required
-                                        onChange={handleChangeProduct}
-                                    />
+                                <div className="mb-4 form-divided-2">
+                                    <div>
+                                        <label className="form-label">VAT(%)</label>
+                                        <input
+                                            name="VAT"
+                                            className="form-control"
+                                            type='number'
+                                            onChange={handleChangeProduct}
+                                            onFocus={handleFocus}
+                                            value={VAT}
+                                        ></input>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="product_category" className="form-label">
+                                            Chiết khấu(%)
+                                        </label>
+                                        <input
+                                            name="discount"
+                                            className="form-control"
+                                            type='number'
+                                            onChange={handleChangeProduct}
+                                            onFocus={handleFocus}
+                                            value={discount}
+                                        ></input>
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 d-flex justify-content-end">
@@ -311,69 +568,51 @@ const AddImportStock = () => {
                         </div>
                     </div>
                 </div> 
+
             </form>
-            <div className="card-body">
-                <div className="row">
-                    <div className="card card-custom mb-4 shadow-sm">
-                    <header className="card-header bg-white ">
-                        <div className="row gx-3 py-3">
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">STT</th>
-                                <th scope="col">Tên thuốc</th>
-                                <th scope="col">Số lô</th>
-                                <th scope="col">Hạn sử dụng</th>
-                                <th scope="col">Giá nhập</th>
-                                <th scope='col'>Số lượng</th>
-                                <th scope="col">Hành động</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {itemProducts?.map((item, index)=>(
-                                    <tr key={index}>
-                                    <th scope="row">{ index + 1 }</th>
-                                    <td>{ item.name }</td>
-                                    <td>{ item.lotNumber}</td>
-                                    <td>{ moment(item.expDrug).format("DD-MM-YYYY")}</td>
-                                    <td>{ formatCurrency(item.price)}</td>
-                                    <td>{ item.qty}</td>
-                                    
-                                    <td>
-                                        <div 
-                                            className="dropdown">
-                                            <Link
-                                            to="#"
-                                            data-bs-toggle="dropdown"
-                                            className="btn btn-light"
-                                            >
-                                            <i className="fas fa-ellipsis-h"></i>
-                                            </Link>
-                                            <div className="dropdown-menu">
-                                            {/* <button className="dropdown-item" onClick={(e)=>{
-                                                e.stopPropagation()
-                                                dispatch(singleProvider(provider._id))
-                                                setShow(true)
-                                            }}>
-                                                Edit info
-                                            </button> */}
-                                                <button className="dropdown-item text-danger" onClick={(e)=>handleDeleteItem(e,index)}>
-                                                    Xóa
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr> 
-                                ))}
-                            </tbody>
-                            </table>
-                            <div className="mb-6 d-flex justify-content-end">
-                                {`Tổng cộng: ${formatCurrency(totalPrice)}`}
-                            </div>
-                        </div>
-                    </header>
+            <div className="card card-custom mb-4 shadow-sm">
+                <header className="card-header bg-white ">
+                    <div className="row gx-3 pt-3">
+                        <DataTable
+                            // theme="solarized"
+                            columns={columns}
+                            data={itemProducts}
+                            customStyles={customStyles}
+                            onRowClicked={handleRowClicked}
+                            defaultSortFieldId
+                            highlightOnHover
+                            pointerOnHover
+                            noHeader
+                            subHeader
+                            subHeaderComponent={
+                                <div className="mt-4 d-flex justify-content-between align-items-center">
+                                    <table className="table table-bordered table-lg">
+                                    <thead>
+                                        <tr className="table-success">
+                                        <th className="text-left">Tổng tiền hàng:</th>
+                                        <th className="text-right">{formatCurrency(totalPrice)}</th>
+                                        </tr>
+                                        <tr className="table-success">
+                                        <th className="text-left">VAT:</th>
+                                        <th className="text-right">{formatCurrency(totalVAT)}</th>
+                                        </tr>
+                                        <tr className="table-success">
+                                        <th className="text-left">Chiết khấu:</th>
+                                        <th className="text-right">{formatCurrency(totalDiscount)}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr className="table-danger">
+                                        <td className="text-left h4 font-weight-bold">Thành tiền:</td>
+                                        <td className="text-right h4 font-weight-bold">{formatCurrency((totalPrice + totalVAT) - totalDiscount )}</td>
+                                        </tr>
+                                    </tbody>
+                                    </table>
+                                </div>
+                            }
+                        />    
                     </div>
-                </div>
+                </header>
             </div>
         </section>
       </>
