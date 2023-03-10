@@ -28,6 +28,7 @@ const AddProvider = (props) => {
         name: '',
         contactName: '',
         taxCode: '',
+        invoiceSymbol: '',
         phone: '',
         email: '',
         address: '',
@@ -86,6 +87,7 @@ const AddProvider = (props) => {
                 name: '',
                 contactName: '',
                 taxCode: '',
+                invoiceSymbol: '',
                 phone: '',
                 email: '',
                 address: '',
@@ -98,6 +100,7 @@ const AddProvider = (props) => {
                 name: providerEdit.name,
                 contactName: providerEdit.contactName,
                 taxCode: providerEdit.taxCode,
+                invoiceSymbol: providerEdit.invoiceSymbol,
                 phone: providerEdit.phone,
                 email: providerEdit.email,
                 address: providerEdit.address,
@@ -105,7 +108,7 @@ const AddProvider = (props) => {
         }
     }, [success, dispatch, setShow, successProviderSingle, successProviderUpdated, providerEdit, errorCreate, errorUpdate])
 
-    const { name, contactName, taxCode, phone, email, address } = dataModal
+    const { name, contactName, taxCode, invoiceSymbol, phone, email, address } = dataModal
 
     return (
       <>
@@ -162,22 +165,22 @@ const AddProvider = (props) => {
                                 />
                             </Form.Group>
                         </Col>
-                        <Col xs={6} md={6}>
+                        <Col xs={12} md={6}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Số điện thoại</Form.Label>
+                                <Form.Label>Ký hiệu hóa đơn</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    placeholder="Nhập số điện thoại"
+                                    placeholder="Nhập ký hiệu"
                                     onChange={handelChangeModal}
-                                    name="phone"
-                                    value={phone}
+                                    name="invoiceSymbol"
+                                    value={invoiceSymbol}
                                     required
                                 />
-                                </Form.Group>
+                            </Form.Group>
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12} md={12}>
+                        <Col xs={12} md={6}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control
@@ -189,6 +192,19 @@ const AddProvider = (props) => {
                                     required
                                 />
                             </Form.Group>
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                <Form.Label>Số điện thoại</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Nhập số điện thoại"
+                                    onChange={handelChangeModal}
+                                    name="phone"
+                                    value={phone}
+                                    required
+                                />
+                                </Form.Group>
                         </Col>
                     </Row>
                     <Row>

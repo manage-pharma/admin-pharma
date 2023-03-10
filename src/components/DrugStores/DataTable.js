@@ -18,13 +18,14 @@ const DataTableProduct=(props) => {
                 >
                     <i className="fas fa-ellipsis-h"></i>
                 </Link>
-                <div className="dropdown-menu">
+                <div className="dropdown-menu active-menu">
                     <button className="dropdown-item" onClick={(e) => {
                         e.stopPropagation()
                         let id=row._id
                         history.push(`/drugstore/${id}`)
                     }}>
-                        Edit info
+                        <i className="fas fa-pencil"></i>
+                        <span style={{marginLeft: '15px'}}>Chỉnh sửa</span>
                     </button>
                 </div>
             </div>

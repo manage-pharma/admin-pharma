@@ -73,7 +73,7 @@ export const singleProvider = (id) => async (dispatch, getState) => {
 };
 
 //ADMIN PROVIDER CREATE
-export const createProvider = ({ name, contactName, taxCode, phone, email, address}) => async (dispatch, getState) => {
+export const createProvider = ({ name, contactName, taxCode, invoiceSymbol, phone, email, address}) => async (dispatch, getState) => {
     try {
       dispatch({ type: PROVIDER_CREATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -89,7 +89,7 @@ export const createProvider = ({ name, contactName, taxCode, phone, email, addre
   
       const { data } = await axios.post(`/api/provider/`,
         {
-          name, contactName, taxCode, phone, email, address
+          name, contactName, taxCode, invoiceSymbol, phone, email, address
         }
         , config);
       dispatch({ type: PROVIDER_CREATE_SUCCESS, payload: data });
@@ -112,7 +112,7 @@ export const createProvider = ({ name, contactName, taxCode, phone, email, addre
   };
 
 //ADMIN UPDATE PROVIDER
-export const updateProvider = ({name, contactName, taxCode, phone, email, address, providerID}) => async(dispatch, getState)=>{
+export const updateProvider = ({name, contactName, taxCode, invoiceSymbol, phone, email, address, providerID}) => async(dispatch, getState)=>{
   try {
     dispatch({type: PROVIDER_UPDATE_REQUEST});
     const {
@@ -126,7 +126,7 @@ export const updateProvider = ({name, contactName, taxCode, phone, email, addres
       },
     };
     const { data } = await axios.put(`/api/provider/${providerID}`, {
-      name, contactName, taxCode, phone, email, address
+      name, contactName, taxCode, invoiceSymbol, phone, email, address
     }, config)
     dispatch({type: PROVIDER_UPDATE_SUCCESS, payload: data});
   } catch (error) {

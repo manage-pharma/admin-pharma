@@ -58,19 +58,21 @@ const DataTableProduct=(props) => {
                     <i className="fas fa-ellipsis-h"></i>
                 </Link>
                 <div className="dropdown-menu">
-                    <button className="dropdown-item" onClick={(e) => {
+                    <button className="dropdown-item active-menu" onClick={(e) => {
                         e.stopPropagation()
                         let id=row._id
                         history.push(`/product/${id}`)
                     }}>
-                        Edit info
+                        <i className="fa fa-pencil"></i>
+                       <span style={{marginLeft: '15px'}}>Chỉnh sửa</span>
                     </button>
-                    <button className="dropdown-item text-danger" onClick={(e) => {
+                    <button className="dropdown-item active-menu text-danger" onClick={(e) => {
                         e.preventDefault()
                         setModalShow(true)
                         setDataModal(row)
                     }}>
-                        Delete
+                        <i className="fa fa-trash"></i>    
+                        <span style={{marginLeft: '15px'}}>Xóa</span>
                     </button>
                 </div>
             </div>

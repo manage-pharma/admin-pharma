@@ -62,7 +62,7 @@ export const singleImportStock = (id) => async (dispatch, getState) => {
 };
 
 //ADMIN IMPORT CREATE
-export const createImportStock = ({ provider, user, importItems, totalPrice, importedAt }) => async (dispatch, getState) => {
+export const createImportStock = ({ provider, user, importItems, totalPrice, totalVAT, totalDiscount, invoiceNumber, invoiceSymbol, importedAt }) => async (dispatch, getState) => {
     try {
       dispatch({ type: IMPORT_STOCK_CREATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -77,7 +77,7 @@ export const createImportStock = ({ provider, user, importItems, totalPrice, imp
       };
       const { data } = await axios.post(`/api/import-stock/`,
         {
-          provider, user, importItems, totalPrice, importedAt
+          provider, user, importItems, totalPrice, totalVAT, totalDiscount, invoiceNumber, invoiceSymbol, importedAt
         }
 
         , config);
@@ -132,7 +132,7 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
 };
 
   //ADMIN UPDATE IMPORT
-  export const updateImportStock = ({ provider, user, importItems, status, totalPrice, importedAt, importId }) => async (dispatch, getState) => {
+  export const updateImportStock = ({ provider, user, importItems, status, totalPrice, totalVAT, totalDiscount, invoiceNumber, invoiceSymbol, importedAt, importId }) => async (dispatch, getState) => {
     try {
       dispatch({ type: IMPORT_STOCK_UPDATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -143,7 +143,7 @@ export const statusImportStock = (id) => async (dispatch, getState) => {
           }
       }
       const { data } = await axios.put(`/api/import-stock/${importId}`,
-      { provider, user, importItems, status, totalPrice, importedAt },
+      { provider, user, importItems, status, totalPrice, totalVAT, totalDiscount, invoiceNumber, invoiceSymbol, importedAt },
       config);
       dispatch({ type: IMPORT_STOCK_UPDATE_SUCCESS, payload: data });
     } catch (error) {

@@ -720,7 +720,7 @@ const EditProductMain=(props) => {
                       className="form-check-input"
                       type="checkbox"
                       id="flexSwitchCheckChecked"
-                      checked={data.allowToSell}
+                      checked={allowToSell}
                       name="allowToSell"
                       onChange={() => setData(prev => {
                         return {
