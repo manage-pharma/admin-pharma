@@ -135,7 +135,7 @@ const customStyles = {
     },
     headRow: {
         style: {
-            fontSize: '14px',
+            fontSize: '16px',
             borderTopStyle: 'solid',
             borderTopWidth: '1px',
             borderTopColor:'grey',
@@ -152,6 +152,7 @@ const customStyles = {
     },
     cells: {
         style: {
+          fontSize: '16px',
         '&:not(:last-of-type)': {
             borderRightStyle: 'solid',
             borderRightWidth: '1px',
@@ -184,7 +185,7 @@ const customStyles = {
         </div>
 
         <div className="card card-custom mb-4 shadow-sm">
-          <header className="card-header bg-white ">
+          <header className="card-header bg-aliceblue ">
             <div className="row gx-3 py-3">
               <div className="col-lg-4 col-md-6 me-auto ">
                 <select

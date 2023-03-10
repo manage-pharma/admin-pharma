@@ -80,8 +80,13 @@ const ExpandedComponent = (props) =>{
         },
         headRow: {
             style: {
-                fontSize: '14px',
+                fontSize: '16px',
                 minHeight: '40px',
+            },
+        },
+        cells: {
+            style: {
+                fontSize: '14px',
             },
         },
     };
@@ -91,7 +96,7 @@ const ExpandedComponent = (props) =>{
         <div style={{paddingBottom: '1rem'}}>
         <div className="row">
             <div className="card card-custom mb-4 shadow-sm">
-                <header className="card-header bg-white ">
+                <header className="card-header bg-aliceblue ">
                     <DataTable
                         // theme="solarized"
                         columns={columns}

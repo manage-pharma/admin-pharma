@@ -60,14 +60,11 @@ const EditImportStock = (props) => {
   });
 
   const [data, setData] = useState({
-    customer: "",
-    phone: "",
-    address: "",
     note: "",
     reason: "",
     exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
-  var { customer, phone, address, note, reason, user, exportedAt } = data;
+  var { note, reason, user, exportedAt } = data;
 
   const { product, lotField } = field;
 
@@ -472,9 +469,6 @@ const EditImportStock = (props) => {
       dispatch(singleExportStock(exportId));
     } else if (exportId === exportStockItem?._id && !isEdited) {
       setData({
-        customer: exportStockItem?.customer,
-        phone: exportStockItem?.phone,
-        address: exportStockItem?.address,
         note: exportStockItem?.note,
         reason: exportStockItem?.reason,
         user: exportStockItem?.user?._id,
@@ -534,34 +528,6 @@ const EditImportStock = (props) => {
               <div className="card-body">
                 <div className="mb-4 form-divided-2">
                   <div>
-                    <label htmlFor="customer" className="form-label">
-                      Tên khách hàng
-                    </label>
-                    <input
-                      name="customer"
-                      value={customer}
-                      type="text"
-                      className="form-control"
-                      required
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="form-label">
-                      Điện thoại
-                    </label>
-                    <input
-                      name="phone"
-                      value={phone}
-                      type="text"
-                      className="form-control"
-                      required
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="mb-4 form-divided-2">
-                  <div>
                     <label className="form-label">Ngày xuất</label>
                     <input
                       id="datePicker"
@@ -595,41 +561,27 @@ const EditImportStock = (props) => {
                 </div>
                 <div className="mb-4 form-divided-2">
                   <div>
-                    <label className="form-label">Địa chỉ</label>
+                    <label className="form-label">Lý do xuất</label>
                     <textarea
-                      name="address"
-                      placeholder="Type here"
+                      name="reason"
+                      placeholder="Lý do xuất: bán lẻ,..."
                       className="form-control"
                       rows="3"
                       required
                       onChange={handleChange}
-                      value={address}
+                      value={reason}
                     ></textarea>
                   </div>
                   <div>
                     <label className="form-label">Ghi chú</label>
                     <textarea
                       name="note"
-                      placeholder="Type here"
+                      placeholder="Thêm ghi chú, mô tả"
                       className="form-control"
                       rows="3"
                       required
                       onChange={handleChange}
                       value={note}
-                    ></textarea>
-                  </div>
-                </div>
-                <div className="mb-4 form-divided-2">
-                  <div>
-                    <label className="form-label">Lý do xuất</label>
-                    <textarea
-                      name="reason"
-                      placeholder="Type here"
-                      className="form-control"
-                      rows="3"
-                      required
-                      onChange={handleChange}
-                      value={reason}
                     ></textarea>
                   </div>
                 </div>
@@ -714,19 +666,15 @@ const EditImportStock = (props) => {
             </div>
           </div>
         </form>
-        <div className="card-body">
-          <div className="row">
-            <div className="card card-custom mb-4 shadow-sm">
-              <header className="card-header bg-white ">
-                <div className="row gx-3 py-3">
-                  <ExportTable
-                    itemProducts={itemProducts}
-                    handleDeleteItem={handleDeleteItem}
-                  />
-                </div>
-              </header>
+        <div className="card card-custom mb-4 shadow-sm">
+          <header className="card-header bg-white ">
+            <div className="row gx-3 py-3">
+              <ExportTable
+                itemProducts={itemProducts}
+                handleDeleteItem={handleDeleteItem}
+              />
             </div>
-          </div>
+          </header>
         </div>
       </section>
     </>

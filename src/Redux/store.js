@@ -54,6 +54,7 @@ import {
   ProviderUpdateReducer,
 } from "./Reducers/ProviderReducer";
 import {
+  importStockCancelReducer,
   importStockCreateReducer,
   importStockDetailReducer,
   importStockListReducer,
@@ -66,6 +67,7 @@ import {
   exportStockCreateReducer,
   exportStockStatusReducer,
   exportStockUpdateReducer,
+  exportStockCancelReducer,
 } from "./Reducers/ExportStockReducer";
 import {
   UnitCreateReducer,
@@ -152,12 +154,14 @@ const reducer = combineReducers({
   importStockDetail: importStockDetailReducer,
   importStockCreate: importStockCreateReducer,
   importStockStatus: importStockStatusReducer,
+  importStockCancel: importStockCancelReducer,
   importStockUpdate: importStockUpdateReducer,
 
   exportStockList: exportStockListReducer,
   exportStockDetail: exportStockDetailReducer,
   exportStockCreate: exportStockCreateReducer,
   exportStockStatus: exportStockStatusReducer,
+  exportStockCancel: exportStockCancelReducer,
   exportStockUpdate: exportStockUpdateReducer,
 
   unitList: UnitListReducer,

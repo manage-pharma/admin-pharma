@@ -237,7 +237,7 @@ const demo=() => {
 
                                         <div className="w-100">
                                             <div className="card card-custom">
-                                                <header className="card-header bg-white" style={{height: '170px',overflowY: 'scroll'}}>
+                                                <header className="card-header bg-aliceblue" style={{height: '170px',overflowY: 'scroll'}}>
                                                     <table className="table">
                                                         <thead>
                                                             <tr>

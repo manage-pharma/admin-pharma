@@ -5,10 +5,18 @@ import React, { useEffect, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from "react-redux";
-import { listExportStock, statusExportStock } from "../../Redux/Actions/ExportStockAction";
-import { EXPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ExportStockConstant";
+import { cancelExportStock, listExportStock, statusExportStock } from "../../Redux/Actions/ExportStockAction";
+import { EXPORT_STOCK_CANCEL_RESET, EXPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ExportStockConstant";
 import CustomLoader from './../../util/LoadingTable';
 import printReport from './PrintReport';
+import { toast } from "react-toastify";
+import Toast from "../LoadingError/Toast";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const ExportStock = (props) =>{
     const {exportStock, loading, loadingStatus} = props 
     const history = useHistory()
@@ -16,9 +24,15 @@ const ExportStock = (props) =>{
     const [modalShow, setModalShow] = useState(false);
     const [reportShow, setReportShow] = useState(false);
     const [dataModal, setDataModal] = useState();
+    const [dataModalCancel, setDataModalCancel] = useState();
+    const [modalCancel, setModalCancel] = useState(false);
+
     const updateStatus = useSelector(state => state.exportStockStatus)
     const {success} = updateStatus
   
+    const cancelExport = useSelector(state => state.exportStockCancel)
+    const {success: successCancel} = cancelExport
+
     const MyVerticallyCenteredModal = (props) =>{
         return (
           <Modal
@@ -45,7 +59,32 @@ const ExportStock = (props) =>{
           </Modal>
         );
     }
-
+    const MyVerticallyCenteredModalCancel=(props) => {
+      return (
+          <Modal
+              {...props}
+              size="md"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+              className="my-modal"
+          >
+              <Modal.Header closeButton>
+                  <Modal.Title id="contained-modal-title-vcenter">
+                      Hủy đơn nhập kho
+                  </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                  <p>Bạn có chắc chắn hủy đơn <span className="text-danger">{dataModalCancel?.exportCode}</span> ?</p>
+              </Modal.Body>
+              <Modal.Footer>
+                  <Button className="btn-danger" onClick={() => {
+                      dispatch(cancelExportStock(dataModalCancel?._id))
+                      setModalCancel(false)
+                  }}>OK</Button>
+              </Modal.Footer>
+          </Modal>
+      );
+    }
     const CustomMaterialMenu = (props) =>{
         let {row} = props
         return (
@@ -93,6 +132,17 @@ const ExportStock = (props) =>{
                       <i className="fas fa-print"></i>
                       <span> In phiếu xuất</span>
                   </button>
+                  { row.status === false ?
+                      <button className="dropdown-item active-menu text-danger" onClick={(e)=>{
+                        e.preventDefault()
+                        setModalCancel(true)
+                        setDataModalCancel(row)
+                      }}>
+                      <i className="fas fa-trash"></i>
+                      <span> Hủy phiếu xuất</span>
+                    </button>
+                    : ''
+                  }
                 </div>
             </div>
         )
@@ -114,20 +164,6 @@ const ExportStock = (props) =>{
             grow: 3
         },
         {
-            name: "Khách hàng",
-            selector: (row) => row.customer,
-            sortable: true,
-            reorder: true,
-            grow: 2
-        },
-        {
-            name: "Điện thoại",
-            selector: (row) => row.phone,
-            sortable: true,
-            reorder: true,
-            grow: 2
-        },
-        {
             name: "Người lập",
             selector: (row) => row.user.name,
             sortable: true,
@@ -141,13 +177,13 @@ const ExportStock = (props) =>{
             reorder: true,
             grow: 2
         },
-        // {
-        //     name: "TOTAL PRICE",
-        //     selector: (row) => row.totalPrice,
-        //     sortable: true,
-        //     reorder: true,
-        //     grow: 2
-        // },
+        {
+          name: "Lý do xuất",
+          selector: (row) => row?.reason,
+          sortable: true,
+          reorder: true,
+          grow: 2
+      },
         {
             name: "Trạng thái",
             selector: (rows) => rows.status === true ? 
@@ -203,7 +239,7 @@ const ExportStock = (props) =>{
         },
         headRow: {
             style: {
-                fontSize: '14px',
+                fontSize: '16px',
                 borderTopStyle: 'solid',
                 borderTopWidth: '1px',
                 borderTopColor:'grey',
@@ -220,6 +256,7 @@ const ExportStock = (props) =>{
         },
         cells: {
             style: {
+              fontSize: '16px',
             '&:not(:last-of-type)': {
                 borderRightStyle: 'solid',
                 borderRightWidth: '1px',
@@ -233,20 +270,34 @@ const ExportStock = (props) =>{
         if(success){
           dispatch({ type: EXPORT_STOCK_STATUS_RESET});
           dispatch(listExportStock())
+          toast.success("Duyệt đơn xuất thành công", ToastObjects);
+        }
+        if(successCancel){
+          dispatch({ type: EXPORT_STOCK_CANCEL_RESET});
+          dispatch(listExportStock())
+          toast.success("Hủy đơn xuất thành công", ToastObjects);
         }
         if(reportShow){
           printReport(dataModal)
           setReportShow(false)
           setDataModal(null)
         }// eslint-disable-next-line
-      },[dispatch, success, reportShow])
+      },[dispatch, success, reportShow, successCancel])
 
   return (
     <>
+        <Toast />
+        
         <MyVerticallyCenteredModal
-            show={modalShow}
-            onHide={() => setModalShow(false)}
+          show={modalShow}
+          onHide={() => setModalShow(false)}
         />
+
+        <MyVerticallyCenteredModalCancel
+          show={modalCancel}
+          onHide={() => setModalCancel(false)}
+        />
+        
         <div className='CHtfP'>
           <DataTable
               // theme="solarized"

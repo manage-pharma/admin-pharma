@@ -89,7 +89,7 @@ const CreateCategoryDrug = (props) => {
         <div className="mb-4">
           <label className="form-label">Mô tả</label>
           <textarea
-            placeholder="Type here"
+            placeholder="Nhập mô tả"
             className="form-control"
             rows="4"
             required

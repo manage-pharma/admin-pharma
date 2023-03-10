@@ -4,13 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { categoriesDrugProduct } from "../../Redux/Actions/ProductActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 // import moment from 'moment/moment';
 import DataTableProduct from './../Products/DataTable';
 const DetailCategoriesDrug = (props) => {
   const {categoryId} = props;
   const dispatch = useDispatch()
-  // const history = useHistory();
+  const history = useHistory();
   const productCategoryDrug = useSelector(state => state.productCategoriesDrug)
   const {loading, error, product} = productCategoryDrug;
   useEffect(()=>{
@@ -119,7 +119,13 @@ const DetailCategoriesDrug = (props) => {
   return (
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Nhóm thuốc</h2>
+      <div className="content-title d-flex" onClick={e => {
+              e.preventDefault()
+              history.push("/categories-drug")
+            }}>
+              <h4 className="arrow-breadcrum"><i className="fas fa-arrow-left"></i></h4>
+              <h4>Nhóm thuốc</h4>
+            </div>
       </div>
 
       <div className="card shadow-sm">

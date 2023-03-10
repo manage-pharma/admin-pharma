@@ -218,7 +218,8 @@ body.offcanvas-active {
   padding-left: 3%;
   padding-right: 3%;
   min-height: 72px;
-
+  /* background: aliceblue; */
+  background: #006399;
   border-bottom: 1px solid rgba(108, 117, 125, 0.25);
 }
 
@@ -359,7 +360,8 @@ body.aside-mini .menu-aside .menu-item.has-submenu .menu-link:after {
 }
 
 .menu-aside .active .icon {
-  color: #4fa607;
+  /* color: #4fa607; */
+  color: #006399;
 }
 
 .menu-aside .active {
@@ -604,7 +606,7 @@ a.itemside:hover .title {
 .card-user .card-header {
   position: relative;
   height: 100px;
-  background-color: #c3f19d !important;
+  background-color: #006399 !important;
   text-align: center;
 }
 
@@ -612,6 +614,7 @@ a.itemside:hover .title {
   position: absolute;
   transform: translate(-50%, -50%);
   top: 100%;
+  border: 2px solid #006399
 }
 
 .card-user .card-body {
@@ -1244,7 +1247,7 @@ input:checked+.slider:before {
   background-color: #b9e0f8;
 }
 .CHtfP{
-  min-height: 200px !important;
+  min-height: 300px !important;
   background-color: white;
 }
 .kDEcCH{
@@ -1294,4 +1297,8 @@ input:checked+.slider:before {
   height: 40px;
   border-radius: 50%;
   background-color: #b8bbc2;
+}
+
+.bg-aliceblue{
+  background: aliceblue;
 }

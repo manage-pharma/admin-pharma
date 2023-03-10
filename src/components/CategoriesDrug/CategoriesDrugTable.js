@@ -121,7 +121,7 @@ const CategoriesTable = (props) => {
     },
     headRow: {
         style: {
-            fontSize: '14px',
+            fontSize: '16px',
             borderTopStyle: 'solid',
             borderTopWidth: '1px',
             borderTopColor:'grey',
@@ -138,6 +138,7 @@ const CategoriesTable = (props) => {
     },
     cells: {
         style: {
+          fontSize: '16px',
         '&:not(:last-of-type)': {
             borderRightStyle: 'solid',
             borderRightWidth: '1px',
