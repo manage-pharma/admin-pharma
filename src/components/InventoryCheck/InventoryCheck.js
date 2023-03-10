@@ -17,7 +17,6 @@ const InventoryCheck = (props) => {
   const [modalShow, setModalShow] = useState(false);
   const [reportShow, setReportShow] = useState(false);
   const [dataModal, setDataModal] = useState();
-  console.log(dataModal)
   const inventoryCheckStatus = useSelector((state) => state.inventoryCheckStatus);
   const { success } = inventoryCheckStatus;
   const MyVerticallyCenteredModal = (props) => {
@@ -214,7 +213,7 @@ const InventoryCheck = (props) => {
     },
     headRow: {
       style: {
-        fontSize: "14px",
+        fontSize: "16px",
         borderTopStyle: "solid",
         borderTopWidth: "1px",
         borderTopColor: "grey",
@@ -231,6 +230,7 @@ const InventoryCheck = (props) => {
     },
     cells: {
       style: {
+        fontSize: '16px',
         "&:not(:last-of-type)": {
           borderRightStyle: "solid",
           borderRightWidth: "1px",

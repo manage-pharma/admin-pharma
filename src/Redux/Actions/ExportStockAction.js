@@ -1,4 +1,4 @@
-import { EXPORT_STOCK_CREATE_FAIL, EXPORT_STOCK_CREATE_REQUEST, EXPORT_STOCK_CREATE_RESET, EXPORT_STOCK_CREATE_SUCCESS, EXPORT_STOCK_DETAILS_FAIL, EXPORT_STOCK_DETAILS_REQUEST, EXPORT_STOCK_DETAILS_RESET, EXPORT_STOCK_DETAILS_SUCCESS, EXPORT_STOCK_LIST_FAIL, EXPORT_STOCK_LIST_REQUEST, EXPORT_STOCK_LIST_RESET, EXPORT_STOCK_LIST_SUCCESS, EXPORT_STOCK_STATUS_FAIL, EXPORT_STOCK_STATUS_REQUEST, EXPORT_STOCK_STATUS_RESET, EXPORT_STOCK_STATUS_SUCCESS, EXPORT_STOCK_UPDATE_FAIL, EXPORT_STOCK_UPDATE_REQUEST, EXPORT_STOCK_UPDATE_RESET, EXPORT_STOCK_UPDATE_SUCCESS } from '../Constants/ExportStockConstant';
+import { EXPORT_STOCK_CANCEL_FAIL, EXPORT_STOCK_CANCEL_REQUEST, EXPORT_STOCK_CANCEL_RESET, EXPORT_STOCK_CANCEL_SUCCESS, EXPORT_STOCK_CREATE_FAIL, EXPORT_STOCK_CREATE_REQUEST, EXPORT_STOCK_CREATE_RESET, EXPORT_STOCK_CREATE_SUCCESS, EXPORT_STOCK_DETAILS_FAIL, EXPORT_STOCK_DETAILS_REQUEST, EXPORT_STOCK_DETAILS_RESET, EXPORT_STOCK_DETAILS_SUCCESS, EXPORT_STOCK_LIST_FAIL, EXPORT_STOCK_LIST_REQUEST, EXPORT_STOCK_LIST_RESET, EXPORT_STOCK_LIST_SUCCESS, EXPORT_STOCK_STATUS_FAIL, EXPORT_STOCK_STATUS_REQUEST, EXPORT_STOCK_STATUS_RESET, EXPORT_STOCK_STATUS_SUCCESS, EXPORT_STOCK_UPDATE_FAIL, EXPORT_STOCK_UPDATE_REQUEST, EXPORT_STOCK_UPDATE_RESET, EXPORT_STOCK_UPDATE_SUCCESS } from '../Constants/ExportStockConstant';
 import axios from 'axios';
 import { logout } from "./UserActions";
 
@@ -63,7 +63,7 @@ export const singleExportStock = (id) => async (dispatch, getState) => {
 };
 
 //ADMIN EXPORT CREATE
-export const createExportStock = ({ customer, phone, address, note, reason, user, exportItems, totalPrice, exportedAt }) => async (dispatch, getState) => {
+export const createExportStock = ({ note, reason, user, exportItems, totalPrice, exportedAt }) => async (dispatch, getState) => {
     try {
       dispatch({ type: EXPORT_STOCK_CREATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -78,7 +78,7 @@ export const createExportStock = ({ customer, phone, address, note, reason, user
       };
       const { data } = await axios.post(`/api/export-stock/`,
         {
-          customer, phone, address, note, reason, user, exportItems, totalPrice, exportedAt
+          note, reason, user, exportItems, totalPrice, exportedAt
         }
 
         , config);
@@ -133,7 +133,7 @@ export const statusExportStock = (id) => async (dispatch, getState) => {
 };
 
   //ADMIN UPDATE EXPORT
-  export const updateExportStock = ({ customer, phone, address, note, reason, user, exportItems, totalPrice, exportedAt, exportId }) => async (dispatch, getState) => {
+  export const updateExportStock = ({ note, reason, user, exportItems, totalPrice, exportedAt, exportId }) => async (dispatch, getState) => {
     try {
       dispatch({ type: EXPORT_STOCK_UPDATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -144,7 +144,7 @@ export const statusExportStock = (id) => async (dispatch, getState) => {
           }
       }
       const { data } = await axios.put(`/api/export-stock/${exportId}`,
-      { customer, phone, address, note, reason, user, exportItems, totalPrice, exportedAt, },
+      { note, reason, user, exportItems, totalPrice, exportedAt, },
       config);
       dispatch({ type: EXPORT_STOCK_UPDATE_SUCCESS, payload: data });
     } catch (error) {
@@ -165,3 +165,33 @@ export const statusExportStock = (id) => async (dispatch, getState) => {
     }
   };
 
+  //ADMIN EXPORT CANCEL
+  export const cancelExportStock = (id) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: EXPORT_STOCK_CANCEL_REQUEST });
+      // userInfo -> userLogin -> getState(){globalState}
+      const { userLogin: {userInfo}} = getState();
+      const config = {
+          headers: {
+              Authorization: `Bearer ${userInfo.token}`
+          }
+      }
+      const { data } = await axios.put(`/api/export-stock/${id}/cancel`,{}, config);
+      dispatch({ type: EXPORT_STOCK_CANCEL_SUCCESS, payload: data });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: EXPORT_STOCK_CANCEL_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: EXPORT_STOCK_CANCEL_RESET });
+      }, 3000);
+    }
+  };

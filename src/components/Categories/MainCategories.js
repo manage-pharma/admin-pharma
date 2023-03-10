@@ -71,18 +71,18 @@ const MainCategories = () => {
   const { loading: loadingDelete, error: errorDelete, success: successDelete} = deleteCategorySelector
   useEffect(()=>{
     if(createCallback){
-      toast.success("Category Added", ToastObjects);
+      toast.success("Thêm nhóm sản phẩm thành công", ToastObjects);
       dispatch({ type: CATEGORY_CREATE_RESET })
       setCreateCallback(null)
     }
     if(updateCallback){
-      toast.success("Category Updated", ToastObjects);
+      toast.success("Nhóm sản phẩm đã được cập nhật", ToastObjects);
       dispatch({ type: CATEGORY_UPDATE_RESET })
       setUpdatecallback(null)
       setEditcallback("")
     }
     if(successDelete){
-      toast.success("Category Deleted", ToastObjects);
+      toast.success("Nhóm sản phẩm đã xóa", ToastObjects);
       dispatch({ type: CATEGORY_DELETE_RESET })
       setDeletecallback("")
       setUpdatecallback(null)

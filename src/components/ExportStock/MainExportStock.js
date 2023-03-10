@@ -100,7 +100,7 @@ const MainExportStock = (props) => {
       </div>
 
       <div className="card card-custom mb-4 shadow-sm">
-        <header className="card-header bg-white ">
+        <header className="card-header bg-aliceblue ">
           <div className="row gx-3 py-3">
             <div className="col-lg-4 col-md-6 me-auto ">
               <input

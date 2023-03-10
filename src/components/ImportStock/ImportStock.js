@@ -5,12 +5,19 @@ import React, { useEffect, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from "react-redux";
-import { listImportStock, statusImportStock } from "../../Redux/Actions/ImportStockAction";
-import { IMPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ImportStockConstant";
+import { cancelImportStock, listImportStock, statusImportStock } from "../../Redux/Actions/ImportStockAction";
+import { IMPORT_STOCK_CANCEL_RESET, IMPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ImportStockConstant";
 import printReport from './PrintReport';
 import CustomLoader from './../../util/LoadingTable';
 import formatCurrency from '../../util/formatCurrency';
-
+import { toast } from "react-toastify";
+import Toast from "../LoadingError/Toast";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const ImportStock = (props) =>{
     const {importStock, loading, loadingStatus} = props 
     const history = useHistory()
@@ -18,8 +25,14 @@ const ImportStock = (props) =>{
     const [modalShow, setModalShow] = useState(false);
     const [reportShow, setReportShow] = useState(false);
     const [dataModal, setDataModal] = useState();
+    const [dataModalCancel, setDataModalCancel] = useState();
+    const [modalCancel, setModalCancel] = useState(false);
+
     const updateStatus = useSelector(state => state.importStockStatus)
     const {success} = updateStatus
+
+    const cancelImport = useSelector(state => state.importStockCancel)
+    const {success: successCancel} = cancelImport
 
     const MyVerticallyCenteredModal = (props) =>{
         return (
@@ -48,6 +61,32 @@ const ImportStock = (props) =>{
         );
     }
 
+    const MyVerticallyCenteredModalCancel=(props) => {
+      return (
+          <Modal
+              {...props}
+              size="md"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered
+              className="my-modal"
+          >
+              <Modal.Header closeButton>
+                  <Modal.Title id="contained-modal-title-vcenter">
+                      Hủy đơn nhập kho
+                  </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                  <p>Bạn có chắc chắn hủy đơn <span className="text-danger">{dataModalCancel?.importCode}</span> ?</p>
+              </Modal.Body>
+              <Modal.Footer>
+                  <Button className="btn-danger" onClick={() => {
+                      dispatch(cancelImportStock(dataModalCancel?._id))
+                      setModalCancel(false)
+                  }}>OK</Button>
+              </Modal.Footer>
+          </Modal>
+      );
+    }
     const CustomMaterialMenu = (props) =>{
         let {row} = props
         return (
@@ -96,6 +135,17 @@ const ImportStock = (props) =>{
                       <i className="fas fa-print"></i>
                       <span> In phiếu nhập</span>
                   </button>
+                  { row.status === false ?
+                      <button className="dropdown-item active-menu text-danger" onClick={(e)=>{
+                        e.preventDefault()
+                        setModalCancel(true)
+                        setDataModalCancel(row)
+                      }}>
+                      <i className="fas fa-trash"></i>
+                      <span> Hủy phiếu nhập</span>
+                    </button>
+                    : ''
+                  }
                 </div>
             </div>
         )
@@ -121,7 +171,8 @@ const ImportStock = (props) =>{
             selector: (row) => row?.provider?.name,
             sortable: true,
             reorder: true,
-            grow: 2
+            grow: 2,
+            width: '350px'
         },
         {
             name: "Tạo bởi",
@@ -168,7 +219,8 @@ const ImportStock = (props) =>{
                   return comparison
                 });
             },
-            grow: 1
+            grow: 2,
+            width: '150px'
         },
         {   name: "Hành động",
             cell: row => <CustomMaterialMenu row={row} />,
@@ -199,7 +251,7 @@ const ImportStock = (props) =>{
         },
         headRow: {
             style: {
-                fontSize: '14px',
+                fontSize: '16px',
                 borderTopStyle: 'solid',
                 borderTopWidth: '1px',
                 borderTopColor:'grey',
@@ -216,6 +268,7 @@ const ImportStock = (props) =>{
         },
         cells: {
             style: {
+              fontSize: '16px',
             '&:not(:last-of-type)': {
                 borderRightStyle: 'solid',
                 borderRightWidth: '1px',
@@ -229,6 +282,12 @@ const ImportStock = (props) =>{
       if(success){
         dispatch({ type: IMPORT_STOCK_STATUS_RESET});
         dispatch(listImportStock())
+        toast.success("Duyệt đơn nhập thành công", ToastObjects);
+      }
+      if(successCancel){
+        dispatch({ type: IMPORT_STOCK_CANCEL_RESET});
+        dispatch(listImportStock())
+        toast.success("Hủy đơn nhập thành công", ToastObjects);
       }
       if(reportShow){
         printReport(dataModal)
@@ -236,16 +295,23 @@ const ImportStock = (props) =>{
         setDataModal(null)
       }
       // eslint-disable-next-line
-    },[dispatch, success, reportShow])
+    },[dispatch, success, reportShow, successCancel])
 
 
   return (
     <>
+        <Toast />
+        
         <MyVerticallyCenteredModal
-            show={modalShow}
-            onHide={() => setModalShow(false)}
+          show={modalShow}
+          onHide={() => setModalShow(false)}
         />
 
+        <MyVerticallyCenteredModalCancel
+          show={modalCancel}
+          onHide={() => setModalCancel(false)}
+        />
+        
         <div className='CHtfP'>
           <DataTable
               // theme="solarized"

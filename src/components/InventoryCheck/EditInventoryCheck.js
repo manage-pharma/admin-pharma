@@ -203,7 +203,6 @@ const EditInventoryCheck = (props) => {
       dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
     }
   }, [dispatch]);
-  console.log(itemProducts)
   useEffect(() => {
     if (success) {
       toast.success(`Cập nhập biên bản kiểm kê thành công`, ToastObjects);
@@ -395,7 +394,7 @@ const EditInventoryCheck = (props) => {
         <div className="card-body">
           <div className="row">
             <div className="card card-custom mb-4 shadow-sm">
-              <header className="card-header bg-white ">
+              <header className="card-header bg-aliceblue ">
                 <div className="row gx-3 py-3">
                   <table className="table">
                     <thead>

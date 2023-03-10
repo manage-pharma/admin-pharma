@@ -71,18 +71,18 @@ const MainCategoriesDrug = () => {
   const { loading: loadingDelete, error: errorDelete, success: successDelete} = deleteCategorySelector
   useEffect(()=>{
     if(createCallback){
-      toast.success("Category Drug Added", ToastObjects);
+      toast.success("Thêm nhóm thuốc thành công", ToastObjects);
       dispatch({ type: CATEGORY_DRUG_CREATE_RESET })
       setCreateCallback(null)
     }
     if(updateCallback){
-      toast.success("Category Drug Updated", ToastObjects);
+      toast.success("Nhóm thuốc đã được cập nhật", ToastObjects);
       dispatch({ type: CATEGORY_DRUG_UPDATE_RESET })
       setUpdatecallback(null)
       setEditcallback("")
     }
     if(successDelete){
-      toast.success("Category Drug Deleted", ToastObjects);
+      toast.success("Nhóm thuốc đã được xóa", ToastObjects);
       dispatch({ type: CATEGORY_DRUG_DELETE_RESET })
       setDeletecallback("")
       setUpdatecallback(null)

@@ -168,7 +168,7 @@ const EditDrugStoreMain=(props) => {
                   </div>
                   <div className="w-100 mb-4"  >
                     <div className="card card-custom">
-                      <header className="card-header bg-white" style={{height: '150px',overflowY: 'scroll'}}>
+                      <header className="card-header bg-aliceblue" style={{height: '150px',overflowY: 'scroll'}}>
                         <table className="table" >
                           <thead>
                             <tr>

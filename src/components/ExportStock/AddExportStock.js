@@ -52,17 +52,11 @@ const AddExportStock = () => {
   });
   const [qtyLot, setqtyLost] = useState([]);
   const [data, setData] = useState({
-    customer: "",
-    phone: "",
-    address: "",
     note: "",
     reason: "",
     exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
   var {
-    customer,
-    phone,
-    address,
     note,
     reason,
     exportItems = itemProducts ? [...itemProducts] : [],
@@ -340,9 +334,6 @@ const AddExportStock = () => {
       toast.success(`Thêm thành công`, ToastObjects);
       dispatch({ type: EXPORT_STOCK_CREATE_RESET });
       setData({
-        customer: "",
-        phone: "",
-        address: "",
         note: "",
         totalPrice: 0,
         exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
@@ -390,34 +381,6 @@ const AddExportStock = () => {
               <div className="card-body">
                 <div className="mb-4 form-divided-2">
                   <div>
-                    <label htmlFor="customer" className="form-label">
-                      Tên khách hàng
-                    </label>
-                    <input
-                      name="customer"
-                      value={customer}
-                      type="text"
-                      className="form-control"
-                      required
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="form-label">
-                      Điện thoại
-                    </label>
-                    <input
-                      name="phone"
-                      value={phone}
-                      type="text"
-                      className="form-control"
-                      required
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="mb-4 form-divided-2">
-                  <div>
                     <label className="form-label">Ngày xuất</label>
                     <input
                       id="datePicker"
@@ -450,42 +413,28 @@ const AddExportStock = () => {
                   </div>
                 </div>
                 <div className="mb-4 form-divided-2">
-                  <div>
-                    <label className="form-label">Địa chỉ</label>
+                <div>
+                    <label className="form-label">Lý do xuất</label>
                     <textarea
-                      name="address"
-                      placeholder="Type here"
+                      name="reason"
+                      placeholder="Lý do xuất: bán lẻ,..."
                       className="form-control"
                       rows="3"
                       required
                       onChange={handleChange}
-                      value={address}
+                      value={reason}
                     ></textarea>
                   </div>
                   <div>
                     <label className="form-label">Ghi chú</label>
                     <textarea
                       name="note"
-                      placeholder="Type here"
+                      placeholder="Nhập ghi chú"
                       className="form-control"
                       rows="3"
                       required
                       onChange={handleChange}
                       value={note}
-                    ></textarea>
-                  </div>
-                </div>
-                <div className="mb-4 form-divided-2">
-                  <div>
-                    <label className="form-label">Lý do xuất</label>
-                    <textarea
-                      name="reason"
-                      placeholder="Type here"
-                      className="form-control"
-                      rows="3"
-                      required
-                      onChange={handleChange}
-                      value={reason}
                     ></textarea>
                   </div>
                 </div>
@@ -497,7 +446,7 @@ const AddExportStock = () => {
               <div className="card-body">
                 <div className="mb-4">
                   <label htmlFor="product_category" className="form-label">
-                    Product
+                    Sản phẩm
                   </label>
                   <select
                     id="select-product"
@@ -569,21 +518,18 @@ const AddExportStock = () => {
             </div>
           </div>
         </form>
-        <div className="card-body">
-          <div className="row">
-            <div className="card card-custom mb-4 shadow-sm">
-              <header className="card-header bg-white ">
-                <div className="row gx-3 py-3">
-                  <div>
-                    <ExportTable
-                      itemProducts={itemProducts}
-                      handleDeleteItem={handleDeleteItem}
-                    />
-                  </div>
-                </div>
-              </header>
+
+        <div className="card card-custom mb-4 shadow-sm">
+          <header className="card-header bg-white ">
+            <div className="row gx-3 py-3">
+              <div>
+                <ExportTable
+                  itemProducts={itemProducts}
+                  handleDeleteItem={handleDeleteItem}
+                />
+              </div>
             </div>
-          </div>
+          </header>
         </div>
       </section>
     </>

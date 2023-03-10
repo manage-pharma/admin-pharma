@@ -129,14 +129,14 @@ const Header = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="#">
-                English
+                <span style={{color: "white"}}>English</span>
               </Link>
             </li>
             <li className="dropdown nav-item">
               <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
                 <img
                   className="img-xs rounded-circle"
-                  src="/images/favicon.png"
+                  src="/images/tpone.png"
                   alt="User"
                 />
               </Link>

@@ -1,4 +1,5 @@
 import moment from "moment";
+import formatCurrency from '../../util/formatCurrency';
 const printReport = async(data) =>{
     const importedItem = JSON.parse(JSON.stringify(data?.importItems))
     const contentPrint = `
@@ -118,27 +119,31 @@ const printReport = async(data) =>{
                                     <td>${item?.name}</td>
                                     <td>${item?.lotNumber}</td>
                                     <td>${item?.qty}</td>
-                                    <td>${item?.price}</td>
-                                    <td>0</td>
-                                    <td>0</td>
+                                    <td>${formatCurrency(item?.price)}</td>
+                                    <td>${item?.discount}%</td>
+                                    <td>${item?.VAT}%</td>
                                     <td>${item.price * item.qty}</td>
                                 </tr>
                             `)}
                         </tbody>
                     </table>
                 </section>
-                <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
+                <div style="margin-top: 20px; display: flex; align-items: center; width: 100%;">
                     <div style="width: 60%; text-align: right;">Tổng tiền hàng:</div>
-                    <div style="width: 40%; text-align: right;">${data?.totalPrice}</div>
+                    <div style="width: 40%; text-align: right;">${formatCurrency(data?.totalPrice)}</div>
                 </div>
                 <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
                     <div style="width: 60%; text-align: right;">Chiết khấu:</div>
-                    <div style="width: 40%; text-align: right;">0</div>
+                    <div style="width: 40%; text-align: right;">${formatCurrency(data?.totalDiscount)}</div>
                 </div>
                 <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
-                    <div style="width: 60%; text-align: right;">Tiền cần trả NCC:</div>
-                    <div style="width: 40%; text-align: right;">${data?.totalPrice}</div>
+                    <div style="width: 60%; text-align: right;">Tiền thuế:</div>
+                    <div style="width: 40%; text-align: right;">${formatCurrency(data?.totalVAT)}</div>
                 </div>
+                <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
+                <div style="width: 60%; text-align: right;">Thành tiền:</div>
+                <div style="width: 40%; text-align: right;">${formatCurrency(((data?.totalPrice) + (data?.totalVAT)) - (data?.totalDiscount))}</div>
+            </div>
 
                 <div style="margin-top: 8px;">Ghi chú:</div>
 
