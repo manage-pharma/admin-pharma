@@ -1,11 +1,11 @@
 import moment from "moment";
-const printReport = async(data) =>{
-    const importedItem = JSON.parse(JSON.stringify(data?.importItems))
-    const contentPrint = `
+const printReport = async (data) => {
+  const exportedItem = JSON.parse(JSON.stringify(data?.checkItems));
+  const contentPrint = `
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>inphieunhaphang</title>
+        <title>inbienbankiemkehang</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -87,16 +87,20 @@ const printReport = async(data) =>{
                     </div>
                 </div>
                 <div class="title" style="text-align: center; text-transform: uppercase; font-weight: bold; color: #000000; font-size: 14px;">
-                    <h2>PHIẾU NHẬP KHO</h2>
+                    <h2>BIÊN BẢN KIỂM KÊ KHO HÀNG</h2>
                 </div>
-                <div style="margin-top: 5px; font-size: 12px; text-align: center;"><strong>Mã phiếu:</strong>${data?.importCode}</div>
-                <div style="margin-top: 5px; font-size: 12px; text-align: center;">Ngày lập: ${moment(data?.importedAt).format("YYYY-MM-DD")}</div>
-                <div style="margin-top: 15px;">Nơi nhập: Kho Dược</div>
-                <div style="margin-top: 5px;">Người lập: ${data?.user?.name}</div>
-                <div style="margin-top: 5px;">Nhà cung cấp: ${data?.provider?.name}</div>
-                <div style="margin-top: 5px;">Địa chỉ: ${data?.provider?.address}</div>
-                <div style="margin-top: 5px;">Số điện thoại: ${data?.provider?.phone}</div>
-
+                <div style="margin-top: 5px; font-size: 12px; text-align: center;"><strong>Mã phiếu:</strong>${
+                  data?.checkCode
+                }</div>
+                <div style="margin-top: 5px; font-size: 12px; text-align: center;">Ngày lập: ${moment(
+                  data?.checkedAt
+                ).format("YYYY-MM-DD")}</div>
+                <div style="margin-top: 15px;">Xuất tại kho: Kho Dược</div>
+                <div style="margin-top: 5px;">Người lập: ${
+                  data?.user?.name
+                }</div>
+                <div style="margin-top: 5px;">Lý do xuất: ${data?.note}</div>
+            
                 <section style="margin-top: 20px;">
                     <table>
                         <thead>
@@ -104,41 +108,32 @@ const printReport = async(data) =>{
                                 <th>STT</th>
                                 <th>Tên hàng</th>
                                 <th>Số lô hàng</th>
-                                <th>Số lượng</th>
-                                <th>Đơn giá</th>
-                                <th>Chiết khấu</th>
-                                <th>Thuế GTGT</th>
-                                <th>Thành tiền</th>
+                                <th>Hạn sử dụng</th>
+                                <th>Tồn kho</th>
+                                <th>Thực kiểm</th>
+                                <th>Chênh lệch</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${importedItem?.map((item, index)=>`
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${item?.name}</td>
-                                    <td>${item?.lotNumber}</td>
-                                    <td>${item?.qty}</td>
-                                    <td>${item?.price}</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>${item.price * item.qty}</td>
-                                </tr>
-                            `)}
+                        ${exportedItem?.map(
+                          (item, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item?.name}</td>
+                            <td>${item?.lotNumber}</td>
+                            <td>${moment(
+                                item?.expDrug
+                              ).format("YYYY-MM-DD")}</td>
+                            <td>${item?.count}</td>
+                            <td>${item?.realQty}</td>
+                            <td>${item?.unequal}</td>
+                        </tr>
+                    `
+                        )}
                         </tbody>
                     </table>
                 </section>
-                <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
-                    <div style="width: 60%; text-align: right;">Tổng tiền hàng:</div>
-                    <div style="width: 40%; text-align: right;">${data?.totalPrice}</div>
-                </div>
-                <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
-                    <div style="width: 60%; text-align: right;">Chiết khấu:</div>
-                    <div style="width: 40%; text-align: right;">0</div>
-                </div>
-                <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
-                    <div style="width: 60%; text-align: right;">Tiền cần trả NCC:</div>
-                    <div style="width: 40%; text-align: right;">${data?.totalPrice}</div>
-                </div>
+
 
                 <div style="margin-top: 8px;">Ghi chú:</div>
 
@@ -147,7 +142,11 @@ const printReport = async(data) =>{
                         &nbsp;
                     </div>
                     <div style="text-align: center; width: 100%;">
-                        An Giang, ngày ${moment().format('DD')} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}
+                        An Giang, ngày ${moment().format(
+                          "DD"
+                        )} tháng ${moment().format("MM")} năm ${moment().format(
+    "YYYY"
+  )}
                         <div style="height: 100px; font-weight: bold; margin-top: 5px">Người lập</div>
                         <div>${data.user?.name}</div>
                     </div>
@@ -157,22 +156,21 @@ const printReport = async(data) =>{
     </body>
 </html>
 
-    `
+    `;
 
-
-    const iframe = document.createElement('iframe')
-    const div = document.createElement('div')
-    div.id = 'printIF'
-    iframe.srcdoc = contentPrint
-    iframe.name = 'printIF'
-    div.appendChild(iframe)
-    document.querySelector('body').appendChild(div)
-    setTimeout(() => {
-      window.frames['printIF'].focus()
-      window.frames['printIF'].print()
-    }, 500)
-    window.frames['printIF'].onafterprint = () =>
-      document.querySelector('#printIF').remove()
-    return true
-}
-export default printReport
+  const iframe = document.createElement("iframe");
+  const div = document.createElement("div");
+  div.id = "printIF";
+  iframe.srcdoc = contentPrint;
+  iframe.name = "printIF";
+  div.appendChild(iframe);
+  document.querySelector("body").appendChild(div);
+  setTimeout(() => {
+    window.frames["printIF"].focus();
+    window.frames["printIF"].print();
+  }, 500);
+  window.frames["printIF"].onafterprint = () =>
+    document.querySelector("#printIF").remove();
+  return true;
+};
+export default printReport;

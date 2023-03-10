@@ -29,8 +29,8 @@ const MainInventoryCheck = (props) => {
 
   const inventoryCheckList = useSelector((state) => state.inventoryCheckList);
   const { loading, error, inventoryCheck } = inventoryCheckList;
-  const updateStatus = useSelector((state) => state.importStockStatus);
-  const { loading: loadingStatus, error: errorStatus, success } = updateStatus;
+  const inventoryCheckStatus = useSelector((state) => state.inventoryCheckStatus);
+  const { loading: loadingStatus, error: errorStatus, success } = inventoryCheckStatus;
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) => {
     dispatch(listInventoryCheck(keyword, pageNumber, from, to));
@@ -68,7 +68,7 @@ const MainInventoryCheck = (props) => {
     if (!toggleSearch) {
       if (!data.from || !data.to) {
         if (!isStop) {
-          renderToast("Date has not been selected", "error", setIsStop, isStop);
+          renderToast("Chưa chọn ngày", "error", setIsStop, isStop);
         }
         return;
       }

@@ -17,10 +17,16 @@ import {
   INVENTORY_CHECK_STATUS_SUCCESS,
   INVENTORY_CHECK_STATUS_RESET,
   INVENTORY_CHECK_STATUS_FAIL,
+
+  INVENTORY_CHECK_LIST_ITEM_REQUEST,
+  INVENTORY_CHECK_LIST_ITEM_SUCCESS,
+  INVENTORY_CHECK_LIST_ITEM_FAIL,
+  INVENTORY_CHECK_LIST_ITEM_RESET,
+  INVENTORY_CHECK_DETAILS_RESET,
 } from "../Constants/InventoryCheckConstant";
 // IMPORT_STOCK LIST
 export const inventoryCheckListReducer = (
-  state = { stockImported: [] },
+  state = { inventoryCheck: [] },
   action
 ) => {
   switch (action.type) {
@@ -53,6 +59,8 @@ export const inventoryCheckDetailReducer = (state = {}, action) => {
       };
     case INVENTORY_CHECK_DETAILS_FAIL:
       return { loading: false, error: action.payload };
+    case INVENTORY_CHECK_DETAILS_RESET:
+        return {};
     default:
       return state;
   }
@@ -112,6 +120,30 @@ export const inventoryCheckUpdateReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case INVENTORY_CHECK_UPDATE_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+// GET LIST ITEMPRODUCT IN INVENTORY BY CATEGORY
+export const inventoryCheckListItemReducer = (
+  state = { inventoryCheckItem: [] },
+  action
+) => {
+  switch (action.type) {
+    case INVENTORY_CHECK_LIST_ITEM_REQUEST:
+      return { loading: true, inventoryCheckItem: [] };
+    case INVENTORY_CHECK_LIST_ITEM_SUCCESS:
+      return {
+        loading: false,
+        totalPage: action.payload.totalPage,
+        currentPage: action.payload.currentPage,
+        inventoryCheckItem: action.payload,
+      };
+    case INVENTORY_CHECK_LIST_ITEM_FAIL:
+      return { loading: false, error: action.payload };
+    case INVENTORY_CHECK_LIST_ITEM_RESET:
+      return {}
     default:
       return state;
   }

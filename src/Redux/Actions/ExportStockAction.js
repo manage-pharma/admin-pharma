@@ -63,7 +63,7 @@ export const singleExportStock = (id) => async (dispatch, getState) => {
 };
 
 //ADMIN EXPORT CREATE
-export const createExportStock = ({ customer, phone, address, note, user, exportItems, totalPrice, exportedAt }) => async (dispatch, getState) => {
+export const createExportStock = ({ customer, phone, address, note, reason, user, exportItems, totalPrice, exportedAt }) => async (dispatch, getState) => {
     try {
       dispatch({ type: EXPORT_STOCK_CREATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -78,7 +78,7 @@ export const createExportStock = ({ customer, phone, address, note, user, export
       };
       const { data } = await axios.post(`/api/export-stock/`,
         {
-          customer, phone, address, note, user, exportItems, totalPrice, exportedAt
+          customer, phone, address, note, reason, user, exportItems, totalPrice, exportedAt
         }
 
         , config);
@@ -133,7 +133,7 @@ export const statusExportStock = (id) => async (dispatch, getState) => {
 };
 
   //ADMIN UPDATE EXPORT
-  export const updateExportStock = ({ customer, phone, address, note,  user, exportItems, totalPrice, exportedAt, exportId }) => async (dispatch, getState) => {
+  export const updateExportStock = ({ customer, phone, address, note, reason, user, exportItems, totalPrice, exportedAt, exportId }) => async (dispatch, getState) => {
     try {
       dispatch({ type: EXPORT_STOCK_UPDATE_REQUEST });
       // userInfo -> userLogin -> getState(){globalState}
@@ -144,7 +144,7 @@ export const statusExportStock = (id) => async (dispatch, getState) => {
           }
       }
       const { data } = await axios.put(`/api/export-stock/${exportId}`,
-      { customer, phone, address, note, user, exportItems, totalPrice, exportedAt, },
+      { customer, phone, address, note, reason, user, exportItems, totalPrice, exportedAt, },
       config);
       dispatch({ type: EXPORT_STOCK_UPDATE_SUCCESS, payload: data });
     } catch (error) {

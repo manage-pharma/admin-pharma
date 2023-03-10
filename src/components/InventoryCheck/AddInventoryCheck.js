@@ -2,15 +2,19 @@ import React, { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { listProvider } from "../../Redux/Actions/ProviderAction";
 import { listUser } from "../../Redux/Actions/UserActions";
 import { Link, useHistory } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
 import moment from "moment";
 import renderToast from "../../util/Toast";
 import { listInventoryToCheck } from "../../Redux/Actions/InventoryAction";
-import { INVENTORY_CHECK_CREATE_RESET } from "../../Redux/Constants/InventoryCheckConstant";
+import {
+  INVENTORY_CHECK_CREATE_RESET,
+  INVENTORY_CHECK_LIST_ITEM_RESET,
+} from "../../Redux/Constants/InventoryCheckConstant";
 import { createInventoryCheck } from "../../Redux/Actions/InventoryCheckAction";
+import MyVerticallyCenteredModalListCategory from "./ModalActivePharma";
+import { listCategory } from "../../Redux/Actions/CategoryAction";
 
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -29,11 +33,17 @@ const AddInventoryCheck = () => {
   const inventoryList = useSelector((state) => state.inventoryToCheckList);
   const { inventories } = inventoryList;
 
+  const inventoryCheckListItem = useSelector(
+    (state) => state.inventoryCheckListItem
+  );
+  const { inventoryCheckItem } = inventoryCheckListItem;
+  const categoryList = useSelector((state) => state.categoryList);
   const userList = useSelector((state) => state.userList);
   const { users } = userList;
 
   const [isStop, setIsStop] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
+  const [modalShowActivePharma, setModalShowActivePharma] = useState(false);
   const [field, setFieldProduct] = useState({
     _id: "",
     name: "",
@@ -41,7 +51,7 @@ const AddInventoryCheck = () => {
     lotNumber: "",
     expDrug: moment(new Date(Date.now())).format("YYYY-MM-DD"),
     count: 0,
-    realQty: 0,
+    realQty: "",
     unequal: 0,
   });
 
@@ -70,7 +80,7 @@ const AddInventoryCheck = () => {
   const handleChangeRealQty = (e, id) => {
     itemProducts.forEach((item, index) => {
       if (item._id === id) {
-        let realQty = parseInt(e.target.value) || 0;
+        let realQty = parseInt(e.target.value) || "";
 
         importItems.splice(index, 1, {
           ...item,
@@ -97,7 +107,7 @@ const AddInventoryCheck = () => {
         lotNumber: data.lotNumber,
         count: data.count,
         expDrug: data.expDrug,
-        realQty: 0,
+        realQty: "",
         unequal: -data.count,
       };
     });
@@ -138,13 +148,42 @@ const AddInventoryCheck = () => {
     importItems.splice(index, 1);
     setItemProducts(importItems);
   };
+  const checkExsistItem = (item) => {
+    let flag = false;
+    itemProducts.forEach((product) => {
+      if (product._id === item._id) {
+        flag = true;
+        return;
+      }
+    });
+    return flag;
+  };
+  useEffect(() => {
+    if (inventoryCheckItem?.length > 0) {
+      const getList = inventoryCheckItem?.map((item, index) => {
+        return !checkExsistItem(item) && {
+          _id: item?._id,
+          name: item?.idDrug?.name,
+          product: item?.idDrug?._id,
+          lotNumber: item?.lotNumber,
+          count: item?.count,
+          expDrug: item?.expDrug,
+          realQty: "",
+          unequal: -item?.count,
+        };
+      });
+      setItemProducts((prev) => [...prev, ...getList.filter((item) => item !== false)]);
+    }
+    // eslint-disable-next-line
+  }, [inventoryCheckItem]);
 
   useEffect(() => {
     if (success) {
       toast.success(`Tạo biên bản kiểm kê thành công`, ToastObjects);
       dispatch({ type: INVENTORY_CHECK_CREATE_RESET });
+      dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
       setData({
-        note: '',
+        note: "",
         checkedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
       });
       setFieldProduct({
@@ -159,14 +198,23 @@ const AddInventoryCheck = () => {
       });
       setItemProducts([]);
     }
-    dispatch(listProvider());
+    
     dispatch(listInventoryToCheck());
     dispatch(listUser());
+    dispatch(listCategory());
+    return () => {
+      dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
+    }
   }, [success, dispatch]);
 
   return (
     <>
       <Toast />
+      <MyVerticallyCenteredModalListCategory
+        data={categoryList}
+        show={modalShowActivePharma}
+        setModalShowActivePharma={setModalShowActivePharma}
+      />
       <section className="content-main">
         <form onSubmit={handleSubmit}>
           <div className="content-header">
@@ -271,6 +319,26 @@ const AddInventoryCheck = () => {
                         </option>
                       ))}
                     </select>
+                  </div>
+                  <div>
+                    <label htmlFor="product_category" className="form-label">
+                      Chọn nhóm thuốc
+                    </label>
+                    <div>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setModalShowActivePharma(true);
+                        }}
+                      >
+                        {" "}
+                        <i
+                          style={{ fontSize: "30px" }}
+                          className="fa fa-list"
+                          aria-hidden="true"
+                        ></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <hr />

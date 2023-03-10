@@ -64,9 +64,10 @@ const EditImportStock = (props) => {
     phone: "",
     address: "",
     note: "",
+    reason: "",
     exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
-  var { customer, phone, address, note, user, exportedAt } = data;
+  var { customer, phone, address, note, reason, user, exportedAt } = data;
 
   const { product, lotField } = field;
 
@@ -121,7 +122,7 @@ const EditImportStock = (props) => {
           data.isError = true;
 
           toast.error(
-            `Quantity is greater than quantity of Lot ${lotNumberData} (${qtyLotData}) in stock`,
+            `Số lượng nhập đã vượt quá số lượng của lô ${lotNumberData} (${qtyLotData}) trong kho`,
             ToastObjects
           );
           return;
@@ -288,7 +289,6 @@ const EditImportStock = (props) => {
     return {
       ...a[0],
     };
-    
   };
 
   const handleAddProduct = (e) => {
@@ -314,24 +314,19 @@ const EditImportStock = (props) => {
     }
     if (parseInt(sumUserInput) > parseInt(field.countInStock)) {
       toast.error(
-        `Quantity is greater than quantity of ${field.name} (${field.countInStock}) in stock`,
+        `Số lượng nhập đã vượt quá số lượng của ${field.name} (${field.countInStock}) trong kho`,
         ToastObjects
       );
       return;
     }
     if (!field.product) {
       if (!isStop) {
-        renderToast(
-          "The product has not been selected",
-          "error",
-          setIsStop,
-          isStop
-        );
+        renderToast("Chưa chọn sản phẩm", "error", setIsStop, isStop);
       }
       return;
     } else if (sumUserInput <= 0) {
       if (!isStop) {
-        renderToast("Quantity have to greater 0", "error", setIsStop, isStop);
+        renderToast("Số lượng phải lớn hơn 0", "error", setIsStop, isStop);
       }
       return;
     }
@@ -341,7 +336,7 @@ const EditImportStock = (props) => {
         if (parseInt(a) > parseInt(field.countInStock)) {
           flag = true;
           toast.error(
-            `Quantity is greater than quantity of ${field.name} (${field.countInStock}) in stock`,
+            `Số lượng nhập đã vượt quá số lượng của ${field.name} (${field.countInStock}) trong kho`,
             ToastObjects
           );
           return;
@@ -468,7 +463,7 @@ const EditImportStock = (props) => {
     dispatch(listProduct());
     dispatch(listInventory());
     if (success) {
-      toast.success(`Updated successfully`, ToastObjects);
+      toast.success(`Cập nhật thành công`, ToastObjects);
       dispatch({ type: EXPORT_STOCK_UPDATE_RESET });
       dispatch({ type: EXPORT_STOCK_DETAILS_RESET });
       dispatch(singleExportStock(exportId));
@@ -481,6 +476,7 @@ const EditImportStock = (props) => {
         phone: exportStockItem?.phone,
         address: exportStockItem?.address,
         note: exportStockItem?.note,
+        reason: exportStockItem?.reason,
         user: exportStockItem?.user?._id,
         exportItems: exportStockItem?.exportItems,
         totalPrice: exportStockItem.totalPrice,
@@ -513,7 +509,7 @@ const EditImportStock = (props) => {
                 <i className="fas fa-arrow-left"></i>
               </h4>
               <h3 className="content-title">
-                Export code:{" "}
+                Mã phiếu xuất:{" "}
                 <span className="text-danger">
                   {exportStockItem?.exportCode}
                 </span>
@@ -523,12 +519,12 @@ const EditImportStock = (props) => {
               {exportStockItem?.status ? (
                 <h4>
                   <span className="badge bg-danger text-white">
-                    This export is complete, you cannot edit
+                    Phiếu xuất đã hoàn thành, không thể chỉnh sửa
                   </span>
                 </h4>
               ) : (
                 <button type="submit" className="btn btn-primary">
-                  Update now
+                  Cập nhật
                 </button>
               )}
             </div>
@@ -539,7 +535,7 @@ const EditImportStock = (props) => {
                 <div className="mb-4 form-divided-2">
                   <div>
                     <label htmlFor="customer" className="form-label">
-                      Customer name
+                      Tên khách hàng
                     </label>
                     <input
                       name="customer"
@@ -552,7 +548,7 @@ const EditImportStock = (props) => {
                   </div>
                   <div>
                     <label htmlFor="phone" className="form-label">
-                      Phone
+                      Điện thoại
                     </label>
                     <input
                       name="phone"
@@ -566,7 +562,7 @@ const EditImportStock = (props) => {
                 </div>
                 <div className="mb-4 form-divided-2">
                   <div>
-                    <label className="form-label">Exported At</label>
+                    <label className="form-label">Ngày xuất</label>
                     <input
                       id="datePicker"
                       name="exportedAt"
@@ -579,7 +575,7 @@ const EditImportStock = (props) => {
                   </div>
                   <div>
                     <label htmlFor="product_category" className="form-label">
-                      User
+                      Người lập
                     </label>
                     <select
                       value={user}
@@ -588,7 +584,7 @@ const EditImportStock = (props) => {
                       className="form-control"
                       required
                     >
-                      <option value="">Chosse user</option>
+                      <option value="">Chọn người lập</option>
                       {users?.map((item, index) => (
                         <option key={index} value={item._id}>
                           {item.name}
@@ -599,7 +595,7 @@ const EditImportStock = (props) => {
                 </div>
                 <div className="mb-4 form-divided-2">
                   <div>
-                    <label className="form-label">Address</label>
+                    <label className="form-label">Địa chỉ</label>
                     <textarea
                       name="address"
                       placeholder="Type here"
@@ -611,7 +607,7 @@ const EditImportStock = (props) => {
                     ></textarea>
                   </div>
                   <div>
-                    <label className="form-label">Note</label>
+                    <label className="form-label">Ghi chú</label>
                     <textarea
                       name="note"
                       placeholder="Type here"
@@ -623,6 +619,20 @@ const EditImportStock = (props) => {
                     ></textarea>
                   </div>
                 </div>
+                <div className="mb-4 form-divided-2">
+                  <div>
+                    <label className="form-label">Lý do xuất</label>
+                    <textarea
+                      name="reason"
+                      placeholder="Type here"
+                      className="form-control"
+                      rows="3"
+                      required
+                      onChange={handleChange}
+                      value={reason}
+                    ></textarea>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -631,7 +641,7 @@ const EditImportStock = (props) => {
               <div className="card-body">
                 <div className="mb-4">
                   <label htmlFor="product_category" className="form-label">
-                    Product
+                    Sản phẩm
                   </label>
                   <select
                     id="select-product"
@@ -640,7 +650,7 @@ const EditImportStock = (props) => {
                     onChange={handleChangeProduct}
                     className="form-control"
                   >
-                    <option value="">Chosse product</option>
+                    <option value="">Chọn sản phẩm</option>
                     {inventoriesClone?.map((item, index) => (
                       <option
                         key={index}
@@ -696,7 +706,7 @@ const EditImportStock = (props) => {
                       className="btn btn-success"
                       onClick={handleAddProduct}
                     >
-                      Add Product
+                      Thêm sản phẩm
                     </button>
                   )}
                 </div>
