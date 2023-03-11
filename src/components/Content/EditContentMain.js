@@ -41,8 +41,7 @@ const EditContentMain = () => {
   });
   const [isStop, setIsStop] = useState(false);
 
-  const [flag, setFlag] = useState(false);
-  const [isEdited, setIsEdited] = useState(false);
+  // const [isEdited, setIsEdited] = useState(false);
 
   const [images, setImages] = useState([]);
   const [imageLogo, setImageLogo] = useState("");
@@ -60,34 +59,29 @@ const EditContentMain = () => {
   });
 
   const contentUpdate = useSelector((state) => state.contentSingle);
-  const { error: errorContent, contentUp } = contentUpdate;
+  const {  contentUp } = contentUpdate;
   const contentUpdated = useSelector((state) => state.contentUpdate);
   const { success } = contentUpdated;
   const pageCreated = useSelector((state) => state.pageCreate);
   const {
-    loading: loadingPageCreate,
-    error: errorPageCreate,
     success: successPageCreate,
   } = pageCreated;
 
   const pageDeleted = useSelector((state) => state.pageDelete);
   const {
-    loading: loadingPageDelete,
-    error: errorPageDelete,
+ 
     success: successPageDelete,
   } = pageDeleted;
 
   const contactCreated = useSelector((state) => state.contactCreate);
   const {
-    loading: loadingContactCreate,
-    error: errorContactCreate,
+   
     success: successContactCreate,
   } = contactCreated;
 
   const contactDeleted = useSelector((state) => state.contactDelete);
   const {
-    loading: loadingContactDelete,
-    error: errorContactDelete,
+  
     success: successContactDelete,
   } = contactDeleted;
 
@@ -191,7 +185,6 @@ const EditContentMain = () => {
     newArr.splice(index, 1);
     setItemContact(newArr);
   };
-
   const handleEditContact = (e, item) => {
     e.preventDefault();
 
@@ -208,9 +201,9 @@ const EditContentMain = () => {
     let qrNew = "";
     if (imgNewFiles) {
       for (const image of imgNewFiles) {
-        var formData = new FormData();
+        let formData = new FormData();
         formData.append("image", image.image);
-        var { data: dataUpdate } = await axios.post(
+        let { data: dataUpdate } = await axios.post(
           `/api/products/single`,
           formData
         );
@@ -221,24 +214,21 @@ const EditContentMain = () => {
       }
       bannerNew = imgOldURL;
     }
-    console.log(imageLogo, imageQR);
 
     //upload logo
     if (imageLogo?.name) {
-      var formData = new FormData();
+      let formData = new FormData();
       formData.append("image", imageLogo);
-      var { data: dataUpdate } = await axios.post(
+      let { data: dataUpdate } = await axios.post(
         `/api/products/single`,
         formData
       );
-      console.log(dataUpdate);
       const imglogoUrl = dataUpdate.filename;
       logoNew = imglogoUrl;
     }
 
     //upload qrCode
     if (imageQR?.name) {
-      console.log(imageQR?.name);
       var formData = new FormData();
       formData.append("image", imageQR);
       var { data: dataUpdate } = await axios.post(
@@ -257,11 +247,9 @@ const EditContentMain = () => {
       links: [...itemPage],
       contacts: [...itemContact],
     };
-    console.log(dataPost)
     dispatch(
       updateContent({
         ...dataPost,
-        contentId: "640c2267bc8e56d1fdcb8f56",
       })
     );
   };
@@ -299,9 +287,9 @@ const EditContentMain = () => {
 
   useEffect(() => {
    
-    if (contentUp?._id !== "640c2267bc8e56d1fdcb8f56") {
+    if (!contentUp?._id) {
       dispatch(singleContent());
-    } else if (contentUp?._id === "640c2267bc8e56d1fdcb8f56" && !isEdited) {
+    } else if (contentUp?._id) {
       setData({
         logo: contentUp.logo,
         phone: contentUp.phone,
@@ -321,10 +309,9 @@ const EditContentMain = () => {
     // eslint-disable-next-line
   }, [dispatch, contentUp?._id]);
 
-  const { name, link } = fieldPage;
-  const { type, phoneNum } = fieldContact;
+  
 
-  const { logo, phone, companyName, companyAddress, fbUrl, zaloUrl, qrCode } =
+  const {  phone, companyName, companyAddress, fbUrl, zaloUrl } =
     data;
 
   const handleUploadInputLogo = (e) => {
@@ -371,35 +358,35 @@ const EditContentMain = () => {
     });
   };
 
-  const handleUploadInput = (e) => {
-    let newImages = [];
-    let num = 0;
-    const files = [...e.target.files];
+  // const handleUploadInput = (e) => {
+  //   let newImages = [];
+  //   let num = 0;
+  //   const files = [...e.target.files];
 
-    if (files.length === 0)
-      toast.error("Bạn chưa chọn bất kì file nào.", ToastObjects);
+  //   if (files.length === 0)
+  //     toast.error("Bạn chưa chọn bất kì file nào.", ToastObjects);
 
-    files.forEach((file) => {
-      if (file.size > 1024 * 1024) {
-        toast.error("Kích thước ảnh tối đa là 1M.", ToastObjects);
-        return;
-      }
+  //   files.forEach((file) => {
+  //     if (file.size > 1024 * 1024) {
+  //       toast.error("Kích thước ảnh tối đa là 1M.", ToastObjects);
+  //       return;
+  //     }
 
-      if (file.type !== "image/jpeg" && file.type !== "image/png") {
-        toast.error("Định dạng ảnh không đúng.", ToastObjects);
-        return;
-      }
-      //console.log({imgs_num:images.length})
+  //     if (file.type !== "image/jpeg" && file.type !== "image/png") {
+  //       toast.error("Định dạng ảnh không đúng.", ToastObjects);
+  //       return;
+  //     }
+  //     //console.log({imgs_num:images.length})
 
-      num += 1;
-      if (images.length < 6) newImages.push(file);
-      else toast.error("Vượt quá số lượng cho phép.", ToastObjects);
+  //     num += 1;
+  //     if (images.length < 6) newImages.push(file);
+  //     else toast.error("Vượt quá số lượng cho phép.", ToastObjects);
 
-      //return newImages;
-      setImages([...images, ...newImages]);
-    });
-    setImages([...images, ...newImages]);
-  };
+  //     //return newImages;
+  //     setImages([...images, ...newImages]);
+  //   });
+  //   setImages([...images, ...newImages]);
+  // };
 
   const deleteImage = (index) => {
     const newArr = [...images];
@@ -560,6 +547,7 @@ const EditContentMain = () => {
                                 <tr key={index}>
                                   <td>
                                     <img
+                                    alt="banner"
                                       src={
                                         item?.image?.name
                                           ? URL.createObjectURL(item.image)

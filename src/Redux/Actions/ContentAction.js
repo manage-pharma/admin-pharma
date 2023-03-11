@@ -17,7 +17,7 @@ export const singleContent = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/content/640c2267bc8e56d1fdcb8f56`, config);
+    const { data } = await axios.get(`/api/content/`, config);
     dispatch({ type: CONTENT_SINGLE_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -38,7 +38,7 @@ export const singleContent = () => async (dispatch, getState) => {
 };
 
 //ADMIN UPDATE CATEGORY
-export const updateContent = ({contentId,logo, qrCode, phone,banners,companyName,companyAddress,links,contacs, zaloUrl, fbUrl}) => async(dispatch, getState)=>{
+export const updateContent = ({logo, qrCode, phone,banners,companyName,companyAddress,links,contacs, zaloUrl, fbUrl}) => async(dispatch, getState)=>{
   try {
     dispatch({type: CONTENT_UPDATE_REQUEST});
     const {
@@ -51,7 +51,7 @@ export const updateContent = ({contentId,logo, qrCode, phone,banners,companyName
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.put(`/api/content/${contentId}`, {
+    const { data } = await axios.put(`/api/content/`, {
       logo, qrCode, phone,banners,companyName,companyAddress,links,contacs, zaloUrl, fbUrl
     }, config)
     dispatch({type: CONTENT_UPDATE_SUCCESS, payload: data});

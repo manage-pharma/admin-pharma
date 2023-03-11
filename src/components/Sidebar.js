@@ -129,7 +129,7 @@ const Sidebar = () => {
               <NavLink
                 activeClassName="active"
                 className="menu-link"
-                to="/content/640c2267bc8e56d1fdcb8f56"
+                to="/content/"
               >
                 <i className="icon fas fa-clinic-medical"></i>
                 <span className="text">Nội dung</span>
