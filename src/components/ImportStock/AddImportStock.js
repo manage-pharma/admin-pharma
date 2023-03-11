@@ -45,6 +45,7 @@ const AddImportStock = () => {
         VAT: 0,
         discount: 0, 
         qty: 0,
+        expProduct: 0
     });
 
     const [data, setData] = useState({
@@ -100,15 +101,16 @@ const AddImportStock = () => {
             let a = document.getElementById("select-product");
             let b = a.options[a.selectedIndex]
             let c = b.getAttribute('data-foo')
+            let d = b.getAttribute('data-expproduct')
             return {
                 ...prev,
                 [e.target.name]: e.target.value,
                 name:c, 
                 price: formattedPrice,
+                expProduct: d
               }
         })
     }
-
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
@@ -123,6 +125,10 @@ const AddImportStock = () => {
             if(!isStop){
                 renderToast('Giá nhập và số lượng nhập phải lớn hơn 0','error', setIsStop, isStop)
             }
+            return;
+        }
+        else if((+field.expProduct) > +(moment(field.expDrug)).diff(moment(Date.now()), "days")){
+            renderToast(`Hạn sử dụng của thuốc phải lớn hơn ${+field.expProduct} tháng `,'error', setIsStop, isStop)
             return;
         }
         else{
@@ -156,13 +162,11 @@ const AddImportStock = () => {
            totalDiscount : importItems.reduce((sum, curr) => sum + ( (((+curr.price) * (+curr.qty)) * (+curr.discount/100)) ), 0)
         }));
     }
-
     const handleDeleteItem = (e, index) =>{
         e.preventDefault()
         importItems.splice(index, 1)
         setItemProducts(importItems)
     }
-    
     useEffect(()=>{
         if(success){
             toast.success(`Tạo đơn nhập thành công`, ToastObjects);
@@ -477,7 +481,7 @@ const AddImportStock = () => {
                                     required >
                                         <option value=''>Chọn thuốc</option>
                                         {products?.map((item, index)=>(
-                                            <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
+                                            <option key={index} value={item._id} data-foo={item.name} data-expproduct={item.expDrug}>{item.name}</option>
                                         ))}
                                     </select>
                                 </div>
