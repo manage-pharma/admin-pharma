@@ -51,6 +51,7 @@ const EditImportStock = (props) => {
         VAT: 0,
         discount: 0, 
         qty: 0,
+        expProduct: 0
     });
 
     const [data, setData] = useState({
@@ -109,11 +110,13 @@ const EditImportStock = (props) => {
             let a = document.getElementById("select-product");
             let b = a.options[a.selectedIndex]
             let c = b.getAttribute('data-foo')
+            let d = b.getAttribute('data-expproduct')
             return {
                 ...prev,
                 name:c, 
                 [e.target.name]: e.target.value,
                 price: formattedPrice,
+                expProduct: d
               }
         })
     }
@@ -130,6 +133,10 @@ const EditImportStock = (props) => {
             if(!isStop){
                 renderToast('Giá nhập và số lượng nhập phải lớn hơn 0','error', setIsStop, isStop)
             }
+            return;
+        }
+        else if((+field.expProduct) > +(moment(field.expDrug)).diff(moment(Date.now()), "days")){
+            renderToast(`Hạn sử dụng của thuốc phải lớn hơn ${+field.expProduct} tháng `,'error', setIsStop, isStop)
             return;
         }
         itemProducts.forEach((item, index)=>{
@@ -489,7 +496,7 @@ const EditImportStock = (props) => {
                                     >
                                         <option value=''>Chọn thuốc</option>
                                         {products?.map((item, index)=>(
-                                            <option key={index} value={item._id} data-foo={item.name}>{item.name}</option>
+                                            <option key={index} value={item._id} data-foo={item.name} data-expproduct={item.expDrug}>{item.name}</option>
                                         ))}
                                     </select>
                                 </div>

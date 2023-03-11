@@ -102,7 +102,9 @@ import {
   inventoryCheckStatusReducer,
   inventoryCheckUpdateReducer,
 } from "./Reducers/InventoryCheckReducer";
-
+import {PageCreateReducer, PageDeleteReducer, PageListReducer} from './Reducers/PageReducer';
+import {ContactCreateReducer, ContactDeleteReducer, ContactListReducer} from './Reducers/ContactReducer';
+import {contentSingleReducer,contentUpdateReducer} from './Reducers/ContentReducer';
 const reducer = combineReducers({
   theme: themeReducer,
 
@@ -190,7 +192,18 @@ const reducer = combineReducers({
 
   inventoryToCheckList: inventoryToCheckListReducer,
   inventoryCheckListItem: inventoryCheckListItemReducer,
-  inventoryCheckStatus: inventoryCheckStatusReducer
+  inventoryCheckStatus: inventoryCheckStatusReducer,
+
+  pageList: PageListReducer,
+  pageCreate: PageCreateReducer,
+  pageDelete: PageDeleteReducer,
+
+  contactList: ContactListReducer,
+  contactCreate: ContactCreateReducer,
+  contactDelete: ContactDeleteReducer,
+
+  contentSingle: contentSingleReducer,
+  contentUpdate: contentUpdateReducer,
 });
 
 const initialState = {
