@@ -79,7 +79,7 @@ const UserComponent = () => {
                             )
                           }
                           <h6 className="mt-2 card-title">{user.phone}</h6>
-                          <p>
+                          <p style={{fontWeight: "bold"}}>
                             <a href={`mailto:${user.email}`}>{user.email}</a>
                           </p>
                         </div>

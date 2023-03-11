@@ -607,6 +607,7 @@ a.itemside:hover .title {
   position: relative;
   height: 100px;
   background-color: #006399 !important;
+  color: white;
   text-align: center;
 }
 

@@ -10,7 +10,7 @@ const Orders = (props) => {
         <tr>
           <th scope="col">Tên</th>
           <th scope="col">Email</th>
-          <th scope="col">Tổng côgnj</th>
+          <th scope="col">Tổng cộng</th>
           <th scope="col">Trạng thái</th>
           <th scope="col">Ngày đặt</th>
           <th>Trạng thái</th>

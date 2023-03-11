@@ -96,7 +96,7 @@ const ExpandedComponent = (props) =>{
         <div style={{paddingBottom: '1rem'}}>
         <div className="row">
             <div className="card card-custom mb-4 shadow-sm">
-                <header className="card-header bg-aliceblue ">
+                <header className="card-header bg-white ">
                     <DataTable
                         // theme="solarized"
                         columns={columns}
