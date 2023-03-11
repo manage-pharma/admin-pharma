@@ -97,7 +97,7 @@ function App() {
 
           <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact />
           <PrivateRouter path="/drugstore/:id" component={DrugStoreEditScreen} exact />
-          <PrivateRouter path="/content/:id" component={ContentEditScreen} exact />
+          <PrivateRouter path="/content" component={ContentEditScreen} exact />
           <PrivateRouter path="/users" component={UsersScreen} />
 
           <Route path="/login" component={Login} />
