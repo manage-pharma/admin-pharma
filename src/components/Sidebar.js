@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 const Sidebar = () => {
 
   return (
-    <div>
+    <div style={{fontSize: "19px"}}>
       <aside className="navbar-aside" id="offcanvas_aside">
         <div className="aside-top">
           <Link to="/" className="brand-wrap">
