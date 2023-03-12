@@ -27,7 +27,11 @@ import {
   INVENTORY_CHECK_STATUS_SUCCESS,
   INVENTORY_CHECK_STATUS_REQUEST,
   INVENTORY_CHECK_STATUS_RESET,
-  INVENTORY_CHECK_STATUS_FAIL
+  INVENTORY_CHECK_STATUS_FAIL,
+  INVENTORY_CHECK_CANCEL_REQUEST,
+  INVENTORY_CHECK_CANCEL_SUCCESS,
+  INVENTORY_CHECK_CANCEL_FAIL,
+  INVENTORY_CHECK_CANCEL_RESET
 
 } from "../Constants/InventoryCheckConstant";
 import axios from "axios";
@@ -224,6 +228,36 @@ export const updateInventoryCheck = ({ note, user, checkItems, checkedAt, checkI
     });
     setTimeout(() => {
       dispatch({ type: INVENTORY_CHECK_UPDATE_RESET });
+    }, 3000);
+  }
+};
+//cancel
+export const cancelInventoryCheck = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: INVENTORY_CHECK_CANCEL_REQUEST });
+    // userInfo -> userLogin -> getState(){globalState}
+    const { userLogin: {userInfo}} = getState();
+    const config = {
+        headers: {
+            Authorization: `Bearer ${userInfo.token}`
+        }
+    }
+    const { data } = await axios.put(`/api/inventory-check/${id}/cancel`,{}, config);
+    dispatch({ type: INVENTORY_CHECK_CANCEL_SUCCESS, payload: data });
+  } catch (error) { 
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: INVENTORY_CHECK_CANCEL_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: INVENTORY_CHECK_CANCEL_RESET });
     }, 3000);
   }
 };

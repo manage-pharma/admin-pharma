@@ -101,7 +101,7 @@ const MainInventoryCheck = (props) => {
       )}
       <section className="content-main">
         <div className="content-header">
-          <h2 className="content-title">Danh sách kiểm kê kho</h2>
+          <h2 className="content-title">Danh sách phiếu kiểm kê kho</h2>
           <div>
             <button onClick={handleAdd} className="btn btn-primary">
               Tạo mới
@@ -115,7 +115,7 @@ const MainInventoryCheck = (props) => {
               <div className="col-lg-4 col-md-6 me-auto ">
                 <input
                   type="search"
-                  placeholder="Tìm kiếm đơn nhập kho..."
+                  placeholder="Tìm kiếm phiếu kiểm..."
                   className="form-control p-2"
                   value={keyword}
                   onChange={handleSubmitSearch}

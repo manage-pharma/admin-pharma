@@ -23,6 +23,10 @@ import {
   INVENTORY_CHECK_LIST_ITEM_FAIL,
   INVENTORY_CHECK_LIST_ITEM_RESET,
   INVENTORY_CHECK_DETAILS_RESET,
+  INVENTORY_CHECK_CANCEL_REQUEST,
+  INVENTORY_CHECK_CANCEL_SUCCESS,
+  INVENTORY_CHECK_CANCEL_FAIL,
+  INVENTORY_CHECK_CANCEL_RESET,
 } from "../Constants/InventoryCheckConstant";
 // IMPORT_STOCK LIST
 export const inventoryCheckListReducer = (
@@ -143,6 +147,28 @@ export const inventoryCheckListItemReducer = (
     case INVENTORY_CHECK_LIST_ITEM_FAIL:
       return { loading: false, error: action.payload };
     case INVENTORY_CHECK_LIST_ITEM_RESET:
+      return {}
+    default:
+      return state;
+  }
+};
+// cancel
+export const inventoryCheckCancelReducer = (
+  state = { inventoryCheckCancel: {} },
+  action
+) => {
+  switch (action.type) {
+    case INVENTORY_CHECK_CANCEL_REQUEST:
+      return { loading: true, inventoryCheckCancel: {} };
+    case INVENTORY_CHECK_CANCEL_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        inventoryCheckCancel: action.payload,
+      };
+    case INVENTORY_CHECK_CANCEL_FAIL:
+      return { loading: false, error: action.payload };
+    case INVENTORY_CHECK_CANCEL_RESET:
       return {}
     default:
       return state;

@@ -179,7 +179,7 @@ const AddInventoryCheck = () => {
 
   useEffect(() => {
     if (success) {
-      toast.success(`Tạo biên bản kiểm kê thành công`, ToastObjects);
+      toast.success(`Tạo phiếu kiểm thành công`, ToastObjects);
       dispatch({ type: INVENTORY_CHECK_CREATE_RESET });
       dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
       setData({
@@ -228,11 +228,11 @@ const AddInventoryCheck = () => {
               <h4 className="arrow-breadcrum">
                 <i className="fas fa-arrow-left"></i>
               </h4>
-              <h3>Tạo biên bản kiểm kê kho</h3>
+              <h3>Tạo phiếu kiểm kê kho</h3>
             </div>
             <div>
               <button type="submit" className="btn btn-primary">
-                Tạo biên bản
+                Tạo phiếu
               </button>
             </div>
           </div>
