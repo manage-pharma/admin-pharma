@@ -22,13 +22,12 @@ const EditDrugStoreMain=(props) => {
   const {drugstoreId}=props;
   const dispatch=useDispatch();
   const history=useHistory();
-
   const [flag,setFlag]=useState(false);
   const [index,setIndex]=useState(0);
   const [data,setData]=useState({
     product: {},
     isActive: false,
-    countInStock: 0,
+    stock: [],
     discount: 0.0,
     refunded: 0.0
   })
@@ -45,16 +44,14 @@ const EditDrugStoreMain=(props) => {
   const handleSubmit=async (e) => {
     e.preventDefault();
     dispatch(updateDrugStore({...data, drugstoreId}));
-
   }
 
   const drugstoreEdit=useSelector((state) => state.drugstoreSingle);
   const {loading, error, drugstore}=drugstoreEdit;
-
   const drugstoreUpdate=useSelector((state) => state.drugstoreUpdate);
   const {loading: loadingUpdate, error: errorUpdate, success: successUpdate}=drugstoreUpdate;
+  const {isActive,stock, discount, refunded} = data;
 
-  const {isActive, countInStock, discount, refunded} = data;
 
   const handleSelect=(selectedIndex) => {
     setIndex(selectedIndex);
@@ -74,7 +71,7 @@ const EditDrugStoreMain=(props) => {
       setData({
         product: drugstore.product,
         isActive: drugstore.isActive,
-        countInStock: drugstore.countInStock,
+        stock: drugstore.stock,
         discount: drugstore.discount,
         refunded: drugstore.refunded,
       })
@@ -111,27 +108,7 @@ const EditDrugStoreMain=(props) => {
                       Cập nhật thông tin
                     </button>
                   </div>
-                  <div className="p-5">
-                    <Carousel activeIndex={index} onSelect={handleSelect}>
-                      {
-                        data?.product?.image?.map((item,index) => {
-                          return (
-                            <Carousel.Item>
-                              <img
-                                className="d-block w-100"
-                                src={item}
-                                alt="First slide"
-                              />
-                              <Carousel.Caption>
-                                <h3>{index+1}</h3>
-
-                              </Carousel.Caption>
-                            </Carousel.Item>
-                          )
-                        })
-                      }
-                    </Carousel>
-                  </div>
+                  
                   <div className="mb-4 form-divided-2 ">
                     <div>
                       <label htmlFor="name_drug" className="form-label">
@@ -161,34 +138,8 @@ const EditDrugStoreMain=(props) => {
                         disabled
                       />
                     </div>
-                    {/* hàm lượng  */}
-
-
-                    {/*  */}
-                  </div>
-                  <div className="w-100 mb-4"  >
-                    <div className="card card-custom">
-                      <header className="card-header bg-aliceblue" style={{height: '150px',overflowY: 'scroll'}}>
-                        <table className="table" >
-                          <thead>
-                            <tr>
-                              <th scope="col">Hoạt chất</th>
-                              <th scope="col">hàm lượng</th>
-
-                            </tr>
-                          </thead>
-                          <tbody >
-                            {data?.product?.APIs?.map((item,index) => (
-                              <tr key={index}>
-                                <td>{item.API}</td>
-                                <td>{item.content}</td>
-
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </header>
-                    </div>
+                    
+                    
                   </div>
                   <div className="mb-4 form-divided-3 ">
                     <div>
@@ -234,21 +185,102 @@ const EditDrugStoreMain=(props) => {
                       />
                     </div>
                   </div>
+                  <div className="w-100 mb-4"  >
+                      <label htmlFor="product_regisId" className="form-label">
+                        Các hoạt chất
+                      </label>
+                    <div className="card card-custom">
+                      
+                      <header className="card-header bg-aliceblue" style={{height: '150px',overflowY: 'scroll'}}>
+                        <table className="table" >
+                          <thead>
+                            <tr>
+                              <th scope="col">Hoạt chất</th>
+                              <th scope="col">Hàm lượng</th>
+
+                            </tr>
+                          </thead>
+                          <tbody >
+                            {data?.product?.APIs?.map((item,index) => (
+                              <tr key={index}>
+                                <td>{item.API}</td>
+                                <td>{item.content}</td>
+
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </header>
+                    </div>
+                  </div>
+                  <div className="w-100 mb-4"  >
+                      <label htmlFor="product_regisId" className="form-label">
+                        Số lượng chi tiết
+                      </label>
+                    <div className="card card-custom">
+                      <header className="card-header bg-aliceblue" style={{height: '150px',overflowY: 'scroll'}}>
+                        <table className="table" >
+                          <thead>
+                            <tr>
+                              <th scope="col">STT</th>
+                              <th scope="col">Số lô</th>
+                              <th scope="col">Số lượng</th>
+                              <th scope="col">Hạn sử dụng</th>
+                            </tr>
+                          </thead>
+                          <tbody >
+                            {stock?.map((item,index) => (
+                              <tr key={index}>
+                                <td>{index+1}</td>
+                                <td>{item.lotNumber}</td>
+                                <td>{item.count}</td>
+                                <td>{item.expDrug}</td>
+
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </header>
+                    </div>
+                  </div>                  
+                  <div className="p-5">
+                    <Carousel activeIndex={index} onSelect={handleSelect}>
+                      {
+                        data?.product?.image?.map((item,index) => {
+                          return (
+                            <Carousel.Item>
+                              <img
+                                className="d-block w-100"
+                                src={item}
+                                alt="First slide"
+                              />
+                              <Carousel.Caption>
+                                <h3>{index+1}</h3>
+
+                              </Carousel.Caption>
+                            </Carousel.Item>
+                          )
+                        })
+                      }
+                    </Carousel>
+                  </div>
 
                 </div>
                 <div className="col-md-12 col-lg-4  pt-3">
                   <div className="mb-4">
                     <label htmlFor="product_regisId" className="form-label">
-                      Số lượng
+                      Số lượng tổng
                     </label>
                     <input
-                      onChange={handleChange}
-                      value={countInStock}
-                      name="countInStock"
+                      //onChange={handleChange}
+                      value={stock?.reduce((sum,item)=>{
+                        return sum+item.count
+                      },0)}
+                      name=""
                       type="number"
                       placeholder="Nhập số lượng"
                       className="form-control"
-                      required
+                      disabled
                     />
                   </div>
                   <div className="mb-4">
