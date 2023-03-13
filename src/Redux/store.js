@@ -95,6 +95,7 @@ import {
   inventoryToCheckListReducer,
 } from "./Reducers/InventoryReducer";
 import {
+  inventoryCheckCancelReducer,
   inventoryCheckCreateReducer,
   inventoryCheckDetailReducer,
   inventoryCheckListItemReducer,
@@ -193,6 +194,7 @@ const reducer = combineReducers({
   inventoryToCheckList: inventoryToCheckListReducer,
   inventoryCheckListItem: inventoryCheckListItemReducer,
   inventoryCheckStatus: inventoryCheckStatusReducer,
+  inventoryCheckCancel: inventoryCheckCancelReducer,
 
   pageList: PageListReducer,
   pageCreate: PageCreateReducer,

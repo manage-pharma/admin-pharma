@@ -205,7 +205,7 @@ const EditInventoryCheck = (props) => {
   }, [dispatch]);
   useEffect(() => {
     if (success) {
-      toast.success(`Cập nhập biên bản kiểm kê thành công`, ToastObjects);
+      toast.success(`Cập nhập phiếu kiểm thành công`, ToastObjects);
       dispatch({ type: INVENTORY_CHECK_UPDATE_RESET });
       dispatch({ type: INVENTORY_CHECK_DETAILS_RESET });
       dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
@@ -253,7 +253,7 @@ const EditInventoryCheck = (props) => {
                 <i className="fas fa-arrow-left"></i>
               </h4>
               <h3 className="content-title">
-                Mã biên bản:{" "}
+                Mã phiếu:{" "}
                 <span className="text-danger">
                   {inventoryCheckItem?.checkCode}
                 </span>
@@ -263,12 +263,12 @@ const EditInventoryCheck = (props) => {
               {inventoryCheckItem?.status ? (
                 <h4>
                   <span className="badge bg-danger text-white">
-                    Biên bản này đã hoàn tất, bạn không thể chỉnh sửa
+                    Phiếu kiểm này đã hoàn tất, bạn không thể chỉnh sửa
                   </span>
                 </h4>
               ) : (
                 <button type="submit" className="btn btn-primary">
-                  Cập nhật đơn
+                  Cập nhật
                 </button>
               )}
             </div>

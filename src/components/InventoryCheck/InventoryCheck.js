@@ -7,9 +7,23 @@ import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import printReport from "./PrintReportCheck";
 import CustomLoader from "../../util/LoadingTable";
-import { listInventoryCheck, statusInventoryCheck } from "../../Redux/Actions/InventoryCheckAction";
-import { INVENTORY_CHECK_STATUS_RESET } from "../../Redux/Constants/InventoryCheckConstant";
-
+import {
+  cancelInventoryCheck,
+  listInventoryCheck,
+  statusInventoryCheck,
+} from "../../Redux/Actions/InventoryCheckAction";
+import {
+  INVENTORY_CHECK_CANCEL_RESET,
+  INVENTORY_CHECK_STATUS_RESET,
+} from "../../Redux/Constants/InventoryCheckConstant";
+import { toast } from "react-toastify";
+import Toast from "../LoadingError/Toast";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const InventoryCheck = (props) => {
   const { inventoryCheck, loading, loadingStatus } = props;
   const history = useHistory();
@@ -17,8 +31,18 @@ const InventoryCheck = (props) => {
   const [modalShow, setModalShow] = useState(false);
   const [reportShow, setReportShow] = useState(false);
   const [dataModal, setDataModal] = useState();
-  const inventoryCheckStatus = useSelector((state) => state.inventoryCheckStatus);
+  const [modalCancel, setModalCancel] = useState(false);
+  const [dataModalCancel, setDataModalCancel] = useState();
+  const inventoryCheckStatus = useSelector(
+    (state) => state.inventoryCheckStatus
+  );
   const { success } = inventoryCheckStatus;
+
+  const inventoryCheckCancel = useSelector(
+    (state) => state.inventoryCheckCancel
+  );
+  const { success: successCancel } = inventoryCheckCancel;
+
   const MyVerticallyCenteredModal = (props) => {
     return (
       <Modal
@@ -38,7 +62,7 @@ const InventoryCheck = (props) => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Bạn có chắc chắn duyệt biên bản kiểm kê{" "}
+            Bạn có chắc chắn duyệt phiếu kiểm{" "}
             <span className="text-warning">{dataModal?.checkCode}</span> ?
           </p>
         </Modal.Body>
@@ -57,7 +81,40 @@ const InventoryCheck = (props) => {
       </Modal>
     );
   };
-
+  const MyVerticallyCenteredModalCancel = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        className="my-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Hủy phiếu kiểm
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Bạn có chắc chắn hủy phiếu kiểm{" "}
+            <span className="text-danger">{dataModalCancel?.checkCode}</span> ?
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            className="btn-danger"
+            onClick={() => {
+              dispatch(cancelInventoryCheck(dataModalCancel?._id));
+              setModalCancel(false);
+            }}
+          >
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
   const CustomMaterialMenu = (props) => {
     let { row } = props;
     return (
@@ -114,6 +171,21 @@ const InventoryCheck = (props) => {
             <i className="fas fa-print"></i>
             <span> In phiếu</span>
           </button>
+          {row.status === false ? (
+            <button
+              className="dropdown-item active-menu text-danger"
+              onClick={(e) => {
+                e.preventDefault();
+                setModalCancel(true);
+                setDataModalCancel(row);
+              }}
+            >
+              <i className="fas fa-trash"></i>
+              <span> Hủy phiếu kiểm</span>
+            </button>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );
@@ -127,7 +199,7 @@ const InventoryCheck = (props) => {
       width: "60px",
     },
     {
-      name: "Mã hóa đơn",
+      name: "Mã phiếu kiểm",
       selector: (row) => row?.checkCode,
       sortable: true,
       reorder: true,
@@ -230,7 +302,7 @@ const InventoryCheck = (props) => {
     },
     cells: {
       style: {
-        fontSize: '16px',
+        fontSize: "16px",
         "&:not(:last-of-type)": {
           borderRightStyle: "solid",
           borderRightWidth: "1px",
@@ -245,21 +317,30 @@ const InventoryCheck = (props) => {
       dispatch({ type: INVENTORY_CHECK_STATUS_RESET });
       dispatch(listInventoryCheck());
     }
+    if (successCancel) {
+      dispatch({ type: INVENTORY_CHECK_CANCEL_RESET });
+      dispatch(listInventoryCheck());
+      toast.success("Hủy phiếu kiểm thành công", ToastObjects);
+    }
     if (reportShow) {
       printReport(dataModal);
       setReportShow(false);
       setDataModal(null);
     }
     // eslint-disable-next-line
-  }, [dispatch, success, reportShow]);
+  }, [dispatch, success, reportShow, successCancel]);
 
   return (
     <>
+      <Toast />
       <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}
       />
-
+      <MyVerticallyCenteredModalCancel
+        show={modalCancel}
+        onHide={() => setModalCancel(false)}
+      />
       <div className="CHtfP">
         <DataTable
           // theme="solarized"
