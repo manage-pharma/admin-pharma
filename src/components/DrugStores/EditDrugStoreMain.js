@@ -103,7 +103,7 @@ const EditDrugStoreMain=(props) => {
                 <div className="col-md-12 col-lg-8 card card-custom mb-4 pt-3">
                   <div>
                     <button type="button" className="btn btn-primary mb-4" style={{float: 'right'}}
-                      onClick={() => {history.push(`product/${data.product._id}`)}}
+                      onClick={() => {history.push(`/product/${data.product._id}`)}}
                     >
                       Cập nhật thông tin
                     </button>
@@ -218,7 +218,7 @@ const EditDrugStoreMain=(props) => {
                         Số lượng chi tiết
                       </label>
                     <div className="card card-custom">
-                      <header className="card-header bg-aliceblue" style={{height: '150px',overflowY: 'scroll'}}>
+                      <header className="card-header bg-aliceblue" style={{height: '200px',overflowY: 'scroll'}}>
                         <table className="table" >
                           <thead>
                             <tr>

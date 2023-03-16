@@ -54,18 +54,26 @@ const DrugStoreTable = (props) =>{
             minWidth: "150px",
         },
         {
+            name: "Giá bán",
+            selector: (row) => row.product.price.toLocaleString('vi-VN').replace(/\./g, ',')+" vnđ",
+            sortable: true,
+            minWidth: "150px",
+        },
+        {
+            name: "Số lượng",
+            selector: (row) => row?.stock.reduce((sum,item)=>{
+                return sum+item.count
+            },0),
+            sortable: true,
+            minWidth: "150px",
+        },
+        {
             name: "Đơn vị tính",
             selector: (row) => row.product.unit,
             sortable: true,
             reorder: true,
             minWidth: "140px",
             grow: 2
-        },
-        {
-            name: "Giá bán",
-            selector: (row) => `${row?.product.price} vnd`,
-            sortable: true,
-            minWidth: "150px",
         },
         {
             name: "Giảm giá",
@@ -147,6 +155,11 @@ const DrugStoreTable = (props) =>{
     },[expanded])
 
 
+    const handleRowClicked = (row) => {
+        history.push(`/drugstore/${row._id}`)
+      };
+
+
   return (
     <>
 
@@ -157,7 +170,7 @@ const DrugStoreTable = (props) =>{
             customStyles={customStyles}
             defaultSortFieldId
             pagination
-            // onRowClicked={handleRowClicked}
+            onRowClicked={handleRowClicked}
             paginationComponentOptions={paginationComponentOptions}
             progressPending={loading}
             expandableRows
