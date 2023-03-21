@@ -11,7 +11,7 @@ const ExpandedExportComponent = (props) => {
     },
     {
       name: "Số lô",
-      selector: (row) => row.lotNumber,
+      selector: (row) => row?.lotNumber,
       sortable: true,
       reorder: true,
     },
@@ -22,7 +22,7 @@ const ExpandedExportComponent = (props) => {
     },
     {
       name: "Hạn sử dụng",
-      selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
+      selector: (row) => moment(row?.expDrug).format("DD-MM-YYYY"),
       sortable: true,
       minWidth: "180px",
     },
@@ -30,7 +30,7 @@ const ExpandedExportComponent = (props) => {
 
   const conditionalRowStyles = [
     {
-      when: (row) => moment(row.expDrug).diff(moment(Date.now()), "days") > 180,
+      when: (row) => moment(row?.expDrug).diff(moment(Date.now()), "days") > 180,
       style: {
         backgroundColor: "rgba(63, 195, 128, 0.9)",
         color: "white",
@@ -41,8 +41,8 @@ const ExpandedExportComponent = (props) => {
     },
     {
       when: (row) =>
-        moment(row.expDrug).diff(moment(Date.now()), "days") >= 90 &&
-        moment(row.expDrug).diff(moment(Date.now()), "days") < 180,
+        moment(row?.expDrug).diff(moment(Date.now()), "days") >= 90 &&
+        moment(row?.expDrug).diff(moment(Date.now()), "days") < 180,
       style: {
         backgroundColor: "rgba(248, 148, 6, 0.9)",
         color: "white",
@@ -52,7 +52,7 @@ const ExpandedExportComponent = (props) => {
       },
     },
     {
-      when: (row) => moment(row.expDrug).diff(moment(Date.now()), "days") < 90,
+      when: (row) => moment(row?.expDrug).diff(moment(Date.now()), "days") < 90,
       style: {
         backgroundColor: "rgba(242, 38, 19, 0.9)",
         color: "white",

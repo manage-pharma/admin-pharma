@@ -118,7 +118,7 @@ const AddProvider = (props) => {
             <Modal.Title  id="contained-modal-title-vcenter">Thêm nhà cung cấp</Modal.Title>
           </Modal.Header>
           <Modal.Body  className="show-grid">
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Container>
                     <Row>
                         <Col xs={12} md={12}>
@@ -224,16 +224,16 @@ const AddProvider = (props) => {
                         </Col>
                     </Row>
                 </Container>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                         Đóng
+                    </Button>
+                    <Button type='submit' variant="primary">
+                        {successProviderSingle ? 'Cập nhật' : 'Thêm'}
+                    </Button>
+          </Modal.Footer>
             </Form>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Đóng
-            </Button>
-            <Button variant="primary" onClick={handleSubmit}>
-              {successProviderSingle ? 'Cập nhật' : 'Thêm'}
-            </Button>
-          </Modal.Footer>
         </Modal>
       </>
     );

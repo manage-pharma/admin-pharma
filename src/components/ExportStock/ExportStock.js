@@ -158,21 +158,21 @@ const ExportStock = (props) =>{
         },
         {
             name: "Mã phiếu xuất",
-            selector: (row) => row.exportCode,
+            selector: (row) => row?.exportCode,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Người lập",
-            selector: (row) => row.user.name,
+            selector: (row) => row?.user?.name,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Ngày xuất",
-            selector: (row) => moment(row.exportedAt).format("DD/MM/YYYY"),
+            selector: (row) => moment(row?.exportedAt).format("DD/MM/YYYY"),
             sortable: true,
             reorder: true,
             grow: 2
@@ -186,15 +186,15 @@ const ExportStock = (props) =>{
       },
         {
             name: "Trạng thái",
-            selector: (rows) => rows.status === true ? 
+            selector: (rows) => rows?.status === true ? 
                 (<span className="badge bg-success text-white">Đã hoàn tất</span>) : 
                 (<span className="badge bg-danger text-white">Chưa duyệt</span>),
             sortable: true,
             reorder: true,
             sortFunction: (exportStock) => {
                 return [exportStock].map((a, b) => {
-                  const fieldA = a.status;
-                  const fieldB = b.status;
+                  const fieldA = a?.status;
+                  const fieldB = b?.status;
                   let comparison = 0;
               
                   if (fieldA === fieldB) {

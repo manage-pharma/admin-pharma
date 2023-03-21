@@ -281,7 +281,7 @@ const EditImportStock = (props) => {
         },
         {
             name: "Hạn sử dụng",
-            selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
+            selector: (row) => moment(row?.expDrug).format("DD-MM-YYYY"),
             sortable: true,
             reorder: true,
             grow: 2,

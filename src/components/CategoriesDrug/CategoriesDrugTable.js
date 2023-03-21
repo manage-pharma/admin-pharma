@@ -20,29 +20,29 @@ const CategoriesTable = (props) => {
     },
     {
         name: "Tên nhóm thuốc",
-        selector: (row) => row.name,
+        selector: (row) => row?.name,
         sortable: true,
         reorder: true,
         grow: 3
     },
     {
         name: "Mô tả",
-        selector: (row) => row.description,
+        selector: (row) => row?.description,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
       name: "Trạng thái",
-      selector: (rows) => rows.isActive === true ? 
-          (<input className="form-check-input"  type="checkbox" defaultChecked={rows.isActive}/>) : 
+      selector: (rows) => rows?.isActive === true ? 
+          (<input className="form-check-input"  type="checkbox" defaultChecked={rows?.isActive}/>) : 
           (<input className="form-check-input"  type="checkbox" />),
       sortable: true,
       reorder: true,
       sortFunction: (categoriesDrug) => {
           return [categoriesDrug].map((a, b) => {
-            const fieldA = a.isActive;
-            const fieldB = b.isActive;
+            const fieldA = a?.isActive;
+            const fieldB = b?.isActive;
             let comparison = 0;
         
             if (fieldA === fieldB) {

@@ -1,14 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { listUser, singleUser } from "../../Redux/Actions/UserActions";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import AddUser from "./AddUserModal";
-const UserComponent = () => {
+import debounce from 'lodash.debounce';
+import { useHistory } from 'react-router-dom';
+const UserComponent = (props) => {
   const dispatch = useDispatch();
   const userList = useSelector(state => state.userList);
   const { loading, error, users } = userList 
   const [show, setShow] = useState(false);
+  const { pageNumber } = props
+    const [keyword, setSearch] = useState()
+    const history = useHistory()
+    const callApiKeywordSearch = (keyword, pageNumber) =>{
+        if( keyword.trim() !== ''){
+          dispatch(listUser(keyword, pageNumber))
+        }
+        else{
+          history.push('/users');
+        }
+      }
+    const debounceDropDown = useRef(debounce((keyword, pageNumber) => callApiKeywordSearch(keyword, pageNumber) , 300)).current;
+    const handleSubmitSearch = e =>{
+        setSearch(e.target.value)
+        debounceDropDown(e.target.value, pageNumber);
+      }
   const handleAdd = (e) =>{
     setShow(true)
   }
@@ -40,6 +58,8 @@ const UserComponent = () => {
                 type="text"
                 placeholder="Tìm kiếm..."
                 className="form-control"
+                value={keyword}
+                onChange={handleSubmitSearch}
               />
             </div>
           </div>

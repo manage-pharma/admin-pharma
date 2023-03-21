@@ -52,7 +52,7 @@ const TagInventory = () => {
     if(!toggleSearch){
       if(!data.from || !data.to){
         if(!isStop){
-          renderToast('Date has not been selected','error', setIsStop, isStop)
+          renderToast('Chưa chọn ngày','error', setIsStop, isStop)
         }
         return;
       }
@@ -78,7 +78,7 @@ const TagInventory = () => {
     },
     {
         name: "Số lô",
-        selector: (row) => row.lotNumber,
+        selector: (row) => row?.lotNumber,
         sortable: true,
 
         reorder: true,
@@ -86,28 +86,28 @@ const TagInventory = () => {
     },
     {
         name: "Tồn đầu kỳ",
-        selector: (row) => row.TDK,
+        selector: (row) => row?.TDK,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Nhập",
-        selector: (row) => row.N,
+        selector: (row) => row?.N,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Xuất",
-        selector: (row) => row.X,
+        selector: (row) => row?.X,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Tồn cuối kỳ",
-        selector: (row) => row.TCK,
+        selector: (row) => row?.TCK,
         sortable: true,
         reorder: true,
         grow: 2
@@ -227,7 +227,7 @@ const customStyles = {
                   ></input>
                 </div>
               </div>
-              <div className="col-lg-1">
+              <div style={{display: 'none'}} className="col-lg-1">
                 {toggleSearch ? 
                   <button className="btn btn-danger" onClick={handleSearchDate}>Hủy tìm kiếm</button>
                 : 
