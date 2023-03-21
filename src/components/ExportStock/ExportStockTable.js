@@ -22,7 +22,7 @@ const ExportTable = (props) => {
     {
       name: "Tổng số lượng",
       selector: (row) =>
-        row.lotField.reduce((accumulator, currentValue) => {
+        row?.lotField?.reduce((accumulator, currentValue) => {
           return accumulator + parseInt(currentValue.count);
         }, 0),
       sortable: true,
@@ -109,7 +109,7 @@ const ExportTable = (props) => {
         expandableRows
         expandableRowExpanded={isExpanded}
         expandableRowsComponent={(data) => (
-          <ExpandedExportComponent data={data?.data?.lotField.filter((row) => row.count > 0)} dessert={dessert} />
+          <ExpandedExportComponent data={data?.data?.lotField.filter((row) => row?.count > 0)} dessert={dessert} />
         )}
         progressComponent={<CustomLoader />}
         highlightOnHover

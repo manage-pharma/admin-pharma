@@ -50,7 +50,7 @@ const MainProducts = (props) => {
 
   useEffect(()=>{
     if(successDelete){
-      toast.success("Deleted successfully", ToastObjects);
+      toast.success("Xóa thành công", ToastObjects);
     }
     else{
       dispatch(listProduct(keyword, pageNumber)) 
@@ -109,8 +109,8 @@ const MainProducts = (props) => {
             <div className="col-lg-2 col-6 col-md-3">
               <select  defaultValue="" className="form-select" onChange={handleSelected}>
                 <option value="">---Chọn giá--</option>
-                <option value="cheap">(1$ - 100$)</option>
-                <option value="expensive">(101$ - 1000$)</option>
+                <option value="cheap">(10.000 vnđ - 100.000 vnđ)</option>
+                <option value="expensive">(100.000 vnđ - 100.000 vnđ)</option>
               </select>
             </div>
           </div>

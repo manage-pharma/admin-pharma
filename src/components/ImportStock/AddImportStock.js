@@ -115,6 +115,25 @@ const AddImportStock = () => {
         e.preventDefault();
         let flag = false;
         
+        if((+VAT) < 0){
+            if(!isStop){
+                renderToast('VAT phải lớn hơn hoặc bằng 0','error', setIsStop, isStop)
+            }
+            return;
+        }
+        if((+discount) < 0){
+            if(!isStop){
+                renderToast('Chiết khấu phải lớn hơn hoặc bằng 0','error', setIsStop, isStop)
+            }
+            return;
+        }
+        if(!field.product){
+            if(!isStop){
+                renderToast('Sản phẩm chưa được chọn','error', setIsStop, isStop)
+            }
+            return;
+        }
+
         if(!field.product){
             if(!isStop){
                 renderToast('Sản phẩm chưa được chọn','error', setIsStop, isStop)
@@ -267,7 +286,7 @@ const AddImportStock = () => {
         },
         {
             name: "Hạn sử dụng",
-            selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
+            selector: (row) => moment(row?.expDrug).format("DD-MM-YYYY"),
             sortable: true,
             reorder: true,
             grow: 2,
@@ -412,6 +431,7 @@ const AddImportStock = () => {
                                             name="invoiceNumber"
                                             className="form-control"
                                             type='text'
+                                            required
                                             onChange={handleChange}
                                             value={invoiceNumber}
                                         ></input>
@@ -549,6 +569,7 @@ const AddImportStock = () => {
                                             onChange={handleChangeProduct}
                                             onFocus={handleFocus}
                                             value={VAT}
+                                            min={0}
                                         ></input>
                                     </div>
                                     <div>
@@ -562,6 +583,7 @@ const AddImportStock = () => {
                                             onChange={handleChangeProduct}
                                             onFocus={handleFocus}
                                             value={discount}
+                                            min={0}
                                         ></input>
                                     </div>
                                 </div>

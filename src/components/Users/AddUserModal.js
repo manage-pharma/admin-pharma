@@ -117,10 +117,10 @@ const AddUser = (props) => {
         <Toast />
         <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter">
           <Modal.Header closeButton>
-            <Modal.Title  id="contained-modal-title-vcenter">{successUserSingle ? `Update ${name}` : 'Add User'}</Modal.Title>
+            <Modal.Title  id="contained-modal-title-vcenter">{successUserSingle ? `Cập nhật ${name}` : 'Thêm người dùng'}</Modal.Title>
           </Modal.Header>
           <Modal.Body  className="show-grid">
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Container>
                     <Row>
                         <Col xs={12} md={12}>
@@ -160,7 +160,7 @@ const AddUser = (props) => {
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
                                 <Form.Label>Số điện thoại</Form.Label>
                                 <Form.Control
-                                    type="email"
+                                    type="text"
                                     autoComplete="off"
                                     placeholder="Nhập số điện thoại"
                                     onChange={handelChangeModal}
@@ -181,7 +181,7 @@ const AddUser = (props) => {
                                     onChange={handelChangeModal}
                                     name="password"
                                     value={password}
-                                    required
+                                    required={successUserSingle ? false : true}
                                 />
                             </Form.Group>
                         </Col>
@@ -196,22 +196,23 @@ const AddUser = (props) => {
                                         onChange={handelChangeModal}
                                         name="passwordAgain"
                                         value={passwordAgain}
-                                        required
+                                        required={successUserSingle ? false : true}
                                     />
                                 </Form.Group>
                             </Col>
                         </Row> 
-                </Container>
+                </Container>       
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Đóng
+                </Button>
+                <Button type='submit' variant="primary">
+                    {successUserSingle ? 'Cập nhật' : 'Thêm'}
+                </Button>
+                </Modal.Footer>     
             </Form>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Đóng
-            </Button>
-            <Button variant="primary" onClick={handleSubmit}>
-              {successUserSingle ? 'Cập nhật' : 'Thêm'}
-            </Button>
-          </Modal.Footer>
+       
         </Modal>
       </>
     );

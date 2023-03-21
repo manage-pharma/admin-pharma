@@ -229,7 +229,7 @@ const InventoryCheck = (props) => {
     {
       name: "Trạng thái",
       selector: (rows) =>
-        rows.status === true ? (
+        rows?.status === true ? (
           <span className="badge bg-success text-white">Đã hoàn tất</span>
         ) : (
           <span className="badge bg-danger text-white">Chưa duyệt</span>
@@ -238,8 +238,8 @@ const InventoryCheck = (props) => {
       reorder: true,
       sortFunction: (importStock) => {
         return [importStock].map((a, b) => {
-          const fieldA = a.status;
-          const fieldB = b.status;
+          const fieldA = a?.status;
+          const fieldB = b?.status;
           let comparison = 0;
 
           if (fieldA === fieldB) {

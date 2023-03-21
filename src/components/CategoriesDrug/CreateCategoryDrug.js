@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { createCategoryDrug, updateCategoryDrug } from "../../Redux/Actions/CategoryDrugAction";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
-
+import { toast } from "react-toastify";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const CreateCategoryDrug = (props) => {
   const {valueEdit} = props
   const categoryId = valueEdit._id
@@ -24,6 +30,15 @@ const CreateCategoryDrug = (props) => {
   }
   const handleSubmit = async(e) => {
     e.preventDefault();
+    if (!name) {
+      toast.error("Tên không được bỏ trống", ToastObjects);
+      return;
+    }
+    if (!description) {
+      toast.error("Mô tả không được bỏ trống", ToastObjects);
+      return;
+    }
+   
     dispatch(createCategoryDrug({ ...data }));
     setData({
       name: '',
@@ -34,6 +49,14 @@ const CreateCategoryDrug = (props) => {
 
   const hanldeEdit = async(e) => {
     e.preventDefault();
+    if (!name) {
+      toast.error("Tên không được bỏ trống", ToastObjects);
+      return;
+    }
+    if (!description) {
+      toast.error("Mô tả không được bỏ trống", ToastObjects);
+      return;
+    }
     dispatch(updateCategoryDrug({ ...data, categoryId }));
     setData({
       name: '',

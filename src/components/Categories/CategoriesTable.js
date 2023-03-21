@@ -20,33 +20,33 @@ const CategoriesTable = (props) => {
     },
     {
         name: "Tên nhóm hàng",
-        selector: (row) => row.name,
+        selector: (row) => row?.name,
         sortable: true,
         reorder: true,
         grow: 3
     },
     {
         name: "	Mô tả",
-        selector: (row) => row.description,
+        selector: (row) => row?.description,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Ảnh",
-        selector: (row) => <img className="mt-1 w-50 h-50" src={row.image} alt="ImageCategory" />,
+        selector: (row) => <img className="mt-1 w-50 h-50" src={row?.image} alt="ImageCategory" />,
     },
     {
       name: "Trạng thái",
-      selector: (rows) => rows.isActive === true ? 
-          (<input className="form-check-input"  type="checkbox" defaultChecked={rows.isActive}/>) : 
+      selector: (rows) => rows?.isActive === true ? 
+          (<input className="form-check-input"  type="checkbox" defaultChecked={rows?.isActive}/>) : 
           (<input className="form-check-input"  type="checkbox" />),
       sortable: true,
       reorder: true,
       sortFunction: (categories) => {
           return [categories].map((a, b) => {
-            const fieldA = a.isActive;
-            const fieldB = b.isActive;
+            const fieldA = a?.isActive;
+            const fieldB = b?.isActive;
             let comparison = 0;
         
             if (fieldA === fieldB) {

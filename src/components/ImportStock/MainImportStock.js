@@ -63,7 +63,7 @@ const MainImportStock = (props) => {
     if(!toggleSearch){
       if(!data.from || !data.to){
         if(!isStop){
-          renderToast('Date has not been selected','error', setIsStop, isStop)
+          renderToast('Chưa chọn ngày','error', setIsStop, isStop)
         }
         return;
       }

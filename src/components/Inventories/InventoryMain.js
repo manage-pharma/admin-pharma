@@ -48,7 +48,7 @@ const MainInventory = () => {
     if(!toggleSearch){
       if(!data.from || !data.to){
         if(!isStop){
-          renderToast('Date has not been selected','error', setIsStop, isStop)
+          renderToast('Chưa chọn ngày','error', setIsStop, isStop)
         }
         return;
       }
@@ -106,7 +106,7 @@ const MainInventory = () => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
-                <span className="label-date">From: </span>
+                <span className="label-date">Từ: </span>
                 <input
                     id="datePicker"
                     name="from"
@@ -119,7 +119,7 @@ const MainInventory = () => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
-                <span className="label-date">To: </span>
+                <span className="label-date">Đến: </span>
                 <input
                     id="datePicker"
                     name="to"

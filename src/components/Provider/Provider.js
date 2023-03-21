@@ -87,49 +87,49 @@ const Provider = (props) =>{
         },
         {
             name: "Tên nhà cung cấp",
-            selector: (row) => row.name,
+            selector: (row) => row?.name,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Người liên hệ",
-            selector: (row) => row.contactName,
+            selector: (row) => row?.contactName,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Mã số thuế",
-            selector: (row) => row.taxCode,
+            selector: (row) => row?.taxCode,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
           name: "Ký hiệu hóa đơn",
-          selector: (row) => row.invoiceSymbol,
+          selector: (row) => row?.invoiceSymbol,
           sortable: true,
           reorder: true,
           grow: 2
         },
         {
             name: "Số điện thoại",
-            selector: (row) => row.phone,
+            selector: (row) => row?.phone,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Email",
-            selector: (row) => row.email,
+            selector: (row) => row?.email,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Địa chỉ",
-            selector: (row) => row.address,
+            selector: (row) => row?.address,
             sortable: true,
             reorder: true,
             grow: 2

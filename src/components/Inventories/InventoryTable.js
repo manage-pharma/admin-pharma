@@ -14,35 +14,35 @@ const InventoryTable = (props) =>{
         },
         {
             name: "Tên sản phẩm",
-            selector: (row) => row.name,
+            selector: (row) => row?.name,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Nhóm sản phẩm",
-            selector: (row) => row.category.join(', '),
+            selector: (row) => row?.category.join(', '),
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Nhóm thuốc",
-            selector: (row) => row.categoryDrug.join(', '),
+            selector: (row) => row?.categoryDrug.join(', '),
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Tổng tồn",
-            selector: (row) => row.total_count,
+            selector: (row) => row?.total_count,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Đơn vị tính",
-            selector: (row) => row.unit,
+            selector: (row) => row?.unit,
             sortable: true,
             reorder: true,
             grow: 2

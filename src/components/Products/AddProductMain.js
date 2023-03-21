@@ -220,6 +220,13 @@ const AddProductMain = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(itemAPI.length < 1){
+      toast.error("Chưa chọn hoạt chất", ToastObjects);
+      return;
+    }
+    if (images.length === 0){
+      return toast.error("Chưa chọn ảnh.",ToastObjects)
+    }   
     var arrImg = [];
     if (images) {
       for (const image of images) {
@@ -229,8 +236,9 @@ const AddProductMain = () => {
           `/api/products/single`,
           formData
         );
-
-        arrImg.push(dataUp.filename);
+        if(dataUp.filename){
+          arrImg.push(dataUp.filename);
+        }   
       }
 
       data.image = arrImg;
@@ -334,27 +342,28 @@ const AddProductMain = () => {
     let newImages = [];
     let num = 0;
     const files = [...e.target.files];
-    
-    if (files.length === 0)
-    return toast.error("Chưa chọn file.",ToastObjects)
-    
+
     files.forEach((file) => {
-      if (file.size > 1024 * 1024)
-       toast.error("File có kích thước quá 1MB.",ToastObjects)
-
-      if (file.type !== 'image/jpeg' && file.type !== 'image/png')
-       toast.error("File không đúng định dạng.",ToastObjects)
-      num += 1;
-      if (num <= 5) newImages.push(file)
-      else  toast.error("Chỉ chọn tối đa 5 ảnh.",ToastObjects)
-
-      return newImages;
+      if (file.size > 1024 * 1024){
+        toast.error("File có kích thước quá 1MB.",ToastObjects);
+        return
+      }
+      else if (file.type !== 'image/jpeg' && file.type !== 'image/png'){
+        toast.error("File không đúng định dạng.",ToastObjects);
+        return   
+      }
+      else{
+        num += 1;
+        if (num <= 5) newImages.push(file)
+        else  toast.error("Chỉ chọn tối đa 5 ảnh.",ToastObjects)
+        return newImages;
+      }
     });
     if(images.length+newImages.length<=5)
       setImages([...images, ...newImages]);
     else  toast.error("Chỉ chọn tối đa 5 ảnh.",ToastObjects)
   };
-
+  
   const deleteImage = (index) => {
     const newArr = [...images];
     newArr.splice(index, 1);

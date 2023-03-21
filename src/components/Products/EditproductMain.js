@@ -158,6 +158,17 @@ const EditProductMain = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(itemProducts.length < 1){
+      toast.error("Chưa chọn hoạt chất", ToastObjects);
+      return;
+    }
+    if (images.length === 0){
+      return toast.error("Chưa chọn file.",ToastObjects)
+    }
+    if (product?.image.length < 1 && images.length < 1) {
+      toast.error("Hình ảnh không được bỏ trống", ToastObjects);
+      return;
+    }
     const imgNewFiles = images.filter((img) => img.name);
     const imgOldURL = images.filter((img) => !img.name);
 
@@ -284,20 +295,18 @@ const EditProductMain = (props) => {
     let num = 0;
     const files = [...e.target.files];
 
-    if (files.length === 0)
-    return toast.error("Chưa chọn file.",ToastObjects)
-
     files.forEach((file) => {
       if (file.size > 1024 * 1024)
-       toast.error("File có kích thước quá 1MB.",ToastObjects)
+        return toast.error("File có kích thước quá 1MB.",ToastObjects)
 
       if (file.type !== 'image/jpeg' && file.type !== 'image/png')
-       toast.error("File không đúng định dạng.",ToastObjects)
-      num += 1;
-      if (num <= 5) newImages.push(file);
-      else  toast.error("Chỉ chọn tối đa 5 ảnh.",ToastObjects)
-
-      return newImages;
+        return toast.error("File không đúng định dạng.",ToastObjects)
+      else{
+        num += 1;
+        if (num <= 5) newImages.push(file);
+        else  toast.error("Chỉ chọn tối đa 5 ảnh.",ToastObjects)
+        return newImages;
+      }
     });
     if(images.length+newImages.length<=5)
       setImages([...images, ...newImages]);
