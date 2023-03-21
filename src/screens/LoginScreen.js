@@ -49,7 +49,7 @@ const Login = () => {
             {
               loading && <Loading />
             }
-            <h4 className="card-title mb-4 text-center text-dark">Sign in</h4>
+            <h4 className="card-title mb-4 text-center text-dark">Đăng nhập</h4>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <input onChange={e => setEmail(e.target.value)}

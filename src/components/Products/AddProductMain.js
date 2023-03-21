@@ -738,8 +738,8 @@ const AddProductMain = () => {
                             <thead>
                               <tr>
                                 <th scope="col">Hoạt chất</th>
-                                <th scope="col">hàm lượng</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">Hàm lượng</th>
+                                <th scope="col">Xóa</th>
                               </tr>
                             </thead>
                             <tbody>

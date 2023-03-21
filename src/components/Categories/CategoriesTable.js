@@ -4,6 +4,7 @@ import Message from "../LoadingError/Error";
 import { Link, useHistory } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import CustomLoader from "../../util/LoadingTable";
+import NoRecords from './../../util/noData';
 
 const CategoriesTable = (props) => {
   const {categoryList} = props
@@ -13,7 +14,7 @@ const CategoriesTable = (props) => {
   const columns = [
     {
         name: "STT",
-        selector: (row, index) => <bold>{index+1}</bold>,
+        selector: (row, index) => <b>{index+1}</b>,
         reorder: true,
         width: '60px'
 
@@ -162,6 +163,7 @@ const CategoriesTable = (props) => {
           // theme="solarized"
           columns={columns}
           data={categories}
+          noDataComponent={NoRecords()}
           customStyles={customStyles}
           defaultSortFieldId
           pagination
