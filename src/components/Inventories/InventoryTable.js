@@ -2,12 +2,13 @@ import DataTable from "react-data-table-component";
 import React, {useEffect} from "react";
 import CustomLoader from '../../util/LoadingTable';
 import ExpandedComponent from './ExpandedComponent'
+import NoRecords from "../../util/noData";
 const InventoryTable = (props) =>{
     const {inventory, dessert, expanded, loading} = props 
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
@@ -110,6 +111,7 @@ const InventoryTable = (props) =>{
             // theme="solarized"
             columns={columns}
             data={inventory}
+            noDataComponent={NoRecords()}
             customStyles={customStyles}
             defaultSortFieldId
             pagination

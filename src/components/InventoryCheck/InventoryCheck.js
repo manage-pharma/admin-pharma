@@ -18,6 +18,7 @@ import {
 } from "../../Redux/Constants/InventoryCheckConstant";
 import { toast } from "react-toastify";
 import Toast from "../LoadingError/Toast";
+import NoRecords from "../../util/noData";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -194,7 +195,7 @@ const InventoryCheck = (props) => {
   const columns = [
     {
       name: "STT",
-      selector: (row, index) => <bold>{index + 1}</bold>,
+      selector: (row, index) => <b>{index + 1}</b>,
       reorder: true,
       width: "60px",
     },
@@ -346,6 +347,7 @@ const InventoryCheck = (props) => {
           // theme="solarized"
           columns={columns}
           data={inventoryCheck}
+          noDataComponent={NoRecords()}
           customStyles={customStyles}
           defaultSortFieldId
           pagination

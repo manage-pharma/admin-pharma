@@ -10,6 +10,7 @@ import {useSelector} from "react-redux";
 import {PRODUCT_DELETE_RESET} from "../../Redux/Constants/ProductConstants";
 import CustomLoader from './../../util/LoadingTable';
 import formatCurrency from './../../util/formatCurrency';
+import NoRecords from "../../util/noData";
 const DataTableProduct=(props) => {
     const {products,loading,loadingDelete}=props
     const history=useHistory()
@@ -258,6 +259,7 @@ const DataTableProduct=(props) => {
                 // theme="solarized"
                 columns={columns}
                 data={products}
+                noDataComponent={NoRecords()}
                 customStyles={customStyles}
                 defaultSortFieldId
                 pagination

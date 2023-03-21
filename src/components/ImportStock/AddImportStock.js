@@ -12,6 +12,7 @@ import  moment  from 'moment';
 import renderToast from "../../util/Toast";
 import formatCurrency from './../../util/formatCurrency';
 import DataTable from "react-data-table-component";
+import NoRecords from "../../util/noData";
 
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -263,7 +264,7 @@ const AddImportStock = () => {
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
@@ -603,6 +604,7 @@ const AddImportStock = () => {
                             // theme="solarized"
                             columns={columns}
                             data={itemProducts}
+                            noDataComponent={NoRecords()}
                             customStyles={customStyles}
                             onRowClicked={handleRowClicked}
                             defaultSortFieldId

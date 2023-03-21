@@ -1,12 +1,13 @@
 import React from "react";
 import moment from "moment";
 import DataTable from "react-data-table-component";
+import NoRecords from "../../util/noData";
 const ExpandedExportComponent = (props) => {
   const { data, dessert } = props;
   const columns = [
     {
       name: "STT",
-      selector: (row, index) => <bold>{index + 1}</bold>,
+      selector: (row, index) => <b>{index + 1}</b>,
       reorder: true,
     },
     {
@@ -102,6 +103,7 @@ const ExpandedExportComponent = (props) => {
               // theme="solarized"
               columns={columns}
               data={data}
+              noDataComponent={NoRecords()}
               customStyles={customStyles}
               defaultSortFieldId
               // onRowClicked={handleRowClicked}

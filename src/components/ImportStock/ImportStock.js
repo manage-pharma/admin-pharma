@@ -12,6 +12,7 @@ import CustomLoader from './../../util/LoadingTable';
 import formatCurrency from '../../util/formatCurrency';
 import { toast } from "react-toastify";
 import Toast from "../LoadingError/Toast";
+import NoRecords from '../../util/noData';
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -154,7 +155,7 @@ const ImportStock = (props) =>{
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
@@ -316,6 +317,7 @@ const ImportStock = (props) =>{
           <DataTable
               // theme="solarized"
               columns={columns}
+              noDataComponent={NoRecords()}
               data={importStock}
               customStyles={customStyles}
               defaultSortFieldId

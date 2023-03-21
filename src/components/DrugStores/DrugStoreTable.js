@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import {Link,useHistory} from "react-router-dom";
 import CustomLoader from '../../util/LoadingTable';
 import ExpandedComponent from './ExpandedComponent'
+import NoRecords from "../../util/noData";
 
 const DrugStoreTable = (props) =>{
     const {drugstores, dessert, expanded, loading} = props 
@@ -35,7 +36,7 @@ const DrugStoreTable = (props) =>{
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
@@ -167,6 +168,7 @@ const DrugStoreTable = (props) =>{
             // theme="solarized"
             columns={columns}
             data={drugstores}
+            noDataComponent={NoRecords()}
             customStyles={customStyles}
             defaultSortFieldId
             pagination

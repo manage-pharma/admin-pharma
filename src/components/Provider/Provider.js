@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PROVIDER_DELETE_RESET } from "../../Redux/Constants/ProviderConstants";
 import { deleteProvider, listProvider, singleProvider } from "../../Redux/Actions/ProviderAction";
 import CustomLoader from './../../util/LoadingTable';
+import NoRecords from "../../util/noData";
 
 const Provider = (props) =>{
     const { provider, setShow, loading, loadingDelete } = props;
@@ -80,7 +81,7 @@ const Provider = (props) =>{
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
@@ -207,6 +208,7 @@ const Provider = (props) =>{
             // theme="solarized"
             columns={columns}
             data={provider}
+            noDataComponent={NoRecords()}
             customStyles={customStyles}
             defaultSortFieldId
             pagination

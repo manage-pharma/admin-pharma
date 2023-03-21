@@ -10,8 +10,10 @@ import CustomLoader from "../util/LoadingTable";
 import DataTable from "react-data-table-component";
 import { listProduct } from "../Redux/Actions/ProductActions";
 import { tagInventory } from "../Redux/Actions/InventoryAction";
+import NoRecords from "../util/noData";
 
 const TagInventory = () => {
+  const textNoRecord = "vui lòng chọn thông tin để thống kê"
   const dispatch = useDispatch()
   const [ isStop , setIsStop ] = useState(false)
   const [keyword, setSearch] = useState()
@@ -71,7 +73,7 @@ const TagInventory = () => {
   const columns = [
     {
         name: "STT",
-        selector: (row, index) => <bold>{index+1}</bold>,
+        selector: (row, index) => <b>{index+1}</b>,
         reorder: true,
         width: '60px'
 
@@ -238,25 +240,21 @@ const customStyles = {
           </header>
 
           <div>
-            {inventoryItem ?
-              (
-                  <DataTable
-                      // theme="solarized"
-                      columns={columns}
-                      data={inventoryItem}
-                      customStyles={customStyles}
-                      defaultSortFieldId
-                      pagination
-                      // onRowClicked={handleRowClicked}
-                      paginationComponentOptions={paginationComponentOptions}
-                      progressPending={loading}
-                      progressComponent={<CustomLoader />}
-                      highlightOnHover
-                      pointerOnHover
-                  />
-              ) : 
-              <div>Không có dữ liệu</div>
-            }
+            <DataTable
+              // theme="solarized"
+              columns={columns}
+              noDataComponent={NoRecords(textNoRecord)}
+              data={inventoryItem}
+              customStyles={customStyles}
+              defaultSortFieldId
+              pagination
+              // onRowClicked={handleRowClicked}
+              paginationComponentOptions={paginationComponentOptions}
+              progressPending={loading}
+              progressComponent={<CustomLoader />}
+              highlightOnHover
+              pointerOnHover
+            />
           </div>
         </div>
       </section>
