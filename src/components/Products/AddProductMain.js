@@ -242,7 +242,6 @@ const AddProductMain = () => {
       }
 
       data.image = arrImg;
-      console.log({ ...data });
       dispatch(createProduct({ ...data, APIs: APIs }));
       setData({
         name: "",

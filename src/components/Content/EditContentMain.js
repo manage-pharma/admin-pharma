@@ -358,36 +358,6 @@ const EditContentMain = () => {
     });
   };
 
-  // const handleUploadInput = (e) => {
-  //   let newImages = [];
-  //   let num = 0;
-  //   const files = [...e.target.files];
-
-  //   if (files.length === 0)
-  //     toast.error("Bạn chưa chọn bất kì file nào.", ToastObjects);
-
-  //   files.forEach((file) => {
-  //     if (file.size > 1024 * 1024) {
-  //       toast.error("Kích thước ảnh tối đa là 1M.", ToastObjects);
-  //       return;
-  //     }
-
-  //     if (file.type !== "image/jpeg" && file.type !== "image/png") {
-  //       toast.error("Định dạng ảnh không đúng.", ToastObjects);
-  //       return;
-  //     }
-  //     //console.log({imgs_num:images.length})
-
-  //     num += 1;
-  //     if (images.length < 6) newImages.push(file);
-  //     else toast.error("Vượt quá số lượng cho phép.", ToastObjects);
-
-  //     //return newImages;
-  //     setImages([...images, ...newImages]);
-  //   });
-  //   setImages([...images, ...newImages]);
-  // };
-
   const deleteImage = (index) => {
     const newArr = [...images];
     newArr.splice(index, 1);
