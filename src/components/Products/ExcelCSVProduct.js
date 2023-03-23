@@ -196,6 +196,7 @@ const ExcelCSVProductComponent = () => {
 
         const cloneData = JSON.parse(JSON.stringify(productall))
         cloneData.map(item=>{      
+            delete item?._id
             item.category = item?.category && JSON.stringify(item?.category)
             item.categoryDrug = item?.categoryDrug && JSON.stringify(item?.categoryDrug)
             item.APIs = item?.APIs && JSON.stringify(item?.APIs)
