@@ -12,7 +12,7 @@ import CustomLoader from './../../util/LoadingTable';
 import formatCurrency from './../../util/formatCurrency';
 import NoRecords from "../../util/noData";
 const DataTableProduct=(props) => {
-    const {products,loading,loadingDelete}=props
+    const {products,loading,loadingDelete, errors, unShowSetting}=props
     const history=useHistory()
     const dispatch=useDispatch()
     const [modalShow,setModalShow]=useState(false);
@@ -79,7 +79,6 @@ const DataTableProduct=(props) => {
             </div>
         )
     }
-
     const columns=[
 
         {
@@ -149,7 +148,7 @@ const DataTableProduct=(props) => {
             reorder: true,
             minWidth: "120px",
         },
-        {
+        !unShowSetting && {
             name: "Hành động",
             cell: row => <CustomMaterialMenu size="small" row={row} />,
             allowOverflow: true,
@@ -157,7 +156,28 @@ const DataTableProduct=(props) => {
             width: '100px',
         },
     ];
-
+    const columsErrors = [
+        // {
+        //     name: "Hàng",
+        //     selector: (row, index) => <b>{index+2}</b> ,
+        //     sortable: true,
+        //     reorder: true,
+        //     minWidth: "180px",
+        // },
+        {
+            name: "Thứ tự",
+            selector: (row, index) => <p>{row?.name}</p> ,
+            sortable: true,
+            reorder: true,
+            minWidth: "180px",
+        },
+        {
+            name: "Lỗi",
+            selector: (row) => <div style={{color: 'red'}}>{
+                row?.errors.map((error) => <p>{error}</p>)
+            }</div>,
+        },
+    ]
     const paginationComponentOptions={
         selectAllRowsItem: true,
         selectAllRowsItemText: "ALL"
@@ -257,8 +277,8 @@ const DataTableProduct=(props) => {
             />
             <DataTable
                 // theme="solarized"
-                columns={columns}
-                data={products}
+                columns={products ? columns : columsErrors}
+                data={products || errors}
                 noDataComponent={NoRecords()}
                 customStyles={customStyles}
                 defaultSortFieldId
