@@ -1,12 +1,11 @@
 import moment from "moment";
-import formatCurrency from '../../util/formatCurrency';
 const printReport = async(data) =>{
-    const importedItem = JSON.parse(JSON.stringify(data?.importItems))
+    const reqItem = JSON.parse(JSON.stringify(data?.requestItems))
     const contentPrint = `
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>inphieunhaphang</title>
+        <title>inphieuyeucauhang</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -88,65 +87,45 @@ const printReport = async(data) =>{
                     </div>
                 </div>
                 <div class="title" style="text-align: center; text-transform: uppercase; font-weight: bold; color: #000000; font-size: 14px;">
-                    <h2>PHIẾU NHẬP KHO</h2>
+                    <h2>PHIẾU YÊU CẦU ĐẶT HÀNG</h2>
                 </div>
-                <div style="margin-top: 5px; font-size: 12px; text-align: center;"><strong>Mã phiếu:</strong>${data?.importCode}</div>
-                <div style="margin-top: 5px; font-size: 12px; text-align: center;">Ngày lập: ${moment(data?.importedAt).format("YYYY-MM-DD")}</div>
-                <div style="margin-top: 15px;">Nơi nhập: Kho Dược</div>
-                <div style="margin-top: 5px;">Người lập: ${data?.user?.name}</div>
-                <div style="margin-top: 5px;">Nhà cung cấp: ${data?.provider?.name}</div>
+                <div style="margin-top: 5px; font-size: 12px; text-align: center;"><strong>Mã phiếu:</strong>${data?.requestCode}</div>
+                <div style="margin-top: 5px; font-size: 12px; text-align: center;">Ngày lập: ${moment(data?.requestedAt).format("YYYY-MM-DD")}</div>
+                <div style="margin-top: 5px;">Người đề nghị: ${data?.user?.name}</div>
                 <div style="margin-top: 5px;">Địa chỉ: ${data?.provider?.address}</div>
                 <div style="margin-top: 5px;">Số điện thoại: ${data?.provider?.phone}</div>
 
+                <div style="margin-top: 10px;">Công ty TNHH TPONE có nhu cầu đặt hàng tại <span style="font-weight: bold">${data?.provider?.name}</span> theo mẫu yêu cầu</div>
+                <div style="margin-top: 5px; font-weight: bold">Nội dung đặt hàng như sau: </div>
                 <section style="margin-top: 20px;">
                     <table>
                         <thead>
                             <tr>
                                 <th>STT</th>
                                 <th>Tên hàng</th>
-                                <th>Số lô hàng</th>
+                                <th>Đơn vị tính</th>
                                 <th>Số lượng</th>
-                                <th>Đơn giá</th>
-                                <th>Chiết khấu</th>
-                                <th>Thuế GTGT</th>
-                                <th>Thành tiền</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${importedItem?.map((item, index)=>`
+                            ${reqItem?.map((item, index)=>`
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>${item?.name}</td>
-                                    <td>${item?.lotNumber}</td>
+                                    <td>${item?.unit}</td>
                                     <td>${item?.qty}</td>
-                                    <td>${formatCurrency(item?.price)}</td>
-                                    <td>${item?.discount}%</td>
-                                    <td>${item?.VAT}%</td>
-                                    <td>${item.price * item.qty}</td>
                                 </tr>
                             `)}
                         </tbody>
                     </table>
                 </section>
-                <div style="margin-top: 20px; display: flex; align-items: center; width: 100%;">
-                    <div style="width: 60%; text-align: right;">Tổng tiền hàng:</div>
-                    <div style="width: 40%; text-align: right;">${formatCurrency(data?.totalPrice)}</div>
-                </div>
-                <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
-                    <div style="width: 60%; text-align: right;">Chiết khấu:</div>
-                    <div style="width: 40%; text-align: right;">${formatCurrency(data?.totalDiscount)}</div>
-                </div>
-                <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
-                    <div style="width: 60%; text-align: right;">Tiền thuế:</div>
-                    <div style="width: 40%; text-align: right;">${formatCurrency(data?.totalVAT)}</div>
-                </div>
-                <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
-                <div style="width: 60%; text-align: right;">Thành tiền:</div>
-                <div style="width: 40%; text-align: right;">${formatCurrency(((data?.totalPrice) + (data?.totalVAT)) - (data?.totalDiscount))}</div>
             </div>
 
-                <div style="margin-top: 8px;">Ghi chú:</div>
-
+                <div style="margin-top: 8px;">Ghi chú: ${data?.note}</div>
+                <div style="margin-top: 10px;font-weight: bold">Thời gian giao hàng: <span style="font-weight: normal"> ............................................................................................................................................................</span></div>
+                <div style="margin-top: 10px;font-weight: bold">Địa chỉ giao hàng: <span style="font-weight: normal">................................................................................................................................................................</span></div>
+                <div style="margin-top: 10px;">................................................................................................................................................................................................</div>
+                
                 <div class="footer" style="display: grid; grid-template-columns: 60% 40%; margin-top: 15px; max-width: 100%; page-break-inside: avoid;">
                     <div style="text-align: center; font-weight: 600;">
                         &nbsp;
