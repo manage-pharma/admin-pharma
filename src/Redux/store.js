@@ -27,11 +27,16 @@ import {
   drugstoreSingleReducer,
   drugstoreUpdateReducer,
   drugstoreListReducer,
+  drugstoreUpdateReviewReducer,
 } from "./Reducers/DrugStoreReducers";
 import {
   orderDeliveredReducer,
   orderDetailReducer,
   orderListReducer,
+  orderCanceledReducer,
+  orderConformReducer,
+  orderReceivedReducer
+
 } from "./Reducers/OrderReducers";
 import {
   categoryCreateReducer,
@@ -133,10 +138,14 @@ const reducer = combineReducers({
   drugstoreCategoriesDrug: drugstoreCategoriesDrugReducer,
   drugstoreUpdate: drugstoreUpdateReducer,
   drugstoreImport: drugstoreImportReducer,
+  drugstoreUpdateReview:  drugstoreUpdateReviewReducer,
 
   orderList: orderListReducer,
   orderDetail: orderDetailReducer,
   orderDelivered: orderDeliveredReducer,
+  orderCanceled:orderCanceledReducer,
+  orderConform :orderConformReducer,
+  orderReceived:orderReceivedReducer,
 
   categoryList: categoryListReducer,
   categoryCreate: categoryCreateReducer,

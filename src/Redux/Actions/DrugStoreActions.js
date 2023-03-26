@@ -23,6 +23,11 @@ import {
   DRUGSTORE_UPDATE_REQUEST,
   DRUGSTORE_UPDATE_RESET,
   DRUGSTORE_UPDATE_SUCCESS,
+
+  DRUGSTORE_UPDATE_REVIEW_FAIL,
+  DRUGSTORE_UPDATE_REVIEW_REQUEST,
+  DRUGSTORE_UPDATE_REVIEW_RESET,
+  DRUGSTORE_UPDATE_REVIEW_SUCCESS,
 } from '../Constants/DrugStoreConstants';
 import {logout} from './UserActions';
 import axios from 'axios';
@@ -242,6 +247,44 @@ export const updateDrugStore=({countInStock,isActive,discount,refunded,drugstore
     });
     setTimeout(() => {
       dispatch({type: DRUGSTORE_UPDATE_RESET});
+    },3000);
+  }
+};
+
+export const updateDrugStoreReview=({productId,reviewId,status}) => async (dispatch,getState) => {
+  try {
+    dispatch({type: DRUGSTORE_UPDATE_REVIEW_REQUEST});
+    const {
+      userLogin: {userInfo},
+    }=getState();
+
+    const config={
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const {data}=await axios.put(`/api/products/${productId}/update-review`,
+      {
+        reviewId,status
+      }
+      ,config);
+    dispatch({type: DRUGSTORE_UPDATE_REVIEW_SUCCESS,payload: data});
+    dispatch({type: DRUGSTORE_SINGLE_SUCCESS,payload: data});
+  } catch(error) {
+    const message=
+      error.response&&error.response.data.message
+        ? error.response.data.message
+        :error.message;
+    if(message==="Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: DRUGSTORE_UPDATE_REVIEW_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({type: DRUGSTORE_UPDATE_REVIEW_RESET});
     },3000);
   }
 };

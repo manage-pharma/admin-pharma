@@ -36,6 +36,7 @@ import InventoryCheckScreen from "./screens/InventoryCheckScreen";
 import AddInventoryCheckScreen from "./screens/AddInventoryCheckScreen";
 import EditInventoryCheckScreen from "./screens/EditInventoryCheckScreen";
 import ContentEditScreen from "./screens/ContentEditScreen";
+import ReviewScreen from "./screens/ReviewScreen"
 import ReqInventoryScreen from "./screens/ReqInventoryScreen";
 import AddRequestInventory from "./screens/AddReqInventory";
 import EditRequestInventory from "./screens/EditReqInventory";
@@ -103,6 +104,7 @@ function App() {
           <PrivateRouter path="/req-inventory/:id" component={EditRequestInventory} />
 
           <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact />
+          <PrivateRouter path="/review" component={ReviewScreen} exact />
           <PrivateRouter path="/drugstore/:id" component={DrugStoreEditScreen} exact />
           <PrivateRouter path="/content" component={ContentEditScreen} exact />
           <PrivateRouter path="/users" component={UsersScreen} />

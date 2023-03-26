@@ -1,5 +1,10 @@
 import axios from "axios";
-import { ORDER_DELIVERED_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS, ORDER_LIST_FAIL, ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS } from "../Constants/OrderConstants";
+import { ORDER_DELIVERED_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS, ORDER_LIST_FAIL, ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS ,
+
+    ORDER_CANCELED_FAIL, ORDER_CANCELED_SUCCESS, ORDER_CANCELED_REQUEST,
+    ORDER_RECEIVED_FAIL, ORDER_RECEIVED_SUCCESS, ORDER_RECEIVED_REQUEST,
+    ORDER_CONFORM_FAIL, ORDER_CONFORM_SUCCESS, ORDER_CONFORM_REQUEST,
+} from "../Constants/OrderConstants";
 import { logout } from "./UserActions";
 import { ORDER_DELIVERED_REQUEST, ORDER_DELIVERED_FAIL } from './../Constants/OrderConstants';
 
@@ -67,6 +72,42 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
     }
 };
 
+//ORDER CONFORM
+export const getOrderConform = (orderItems) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_CONFORM_REQUEST });
+        // userInfo -> userLogin -> getState(){globalState}
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+        // api not transmiss any params because it just change state of deliverd 
+        const { data } = await axios.get(`/api/orders/${orderItems._id}/conform`, config);
+        dispatch({ type: ORDER_CONFORM_SUCCESS, payload: data });
+
+    
+        
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        if (message === "Not authorized, token failed") {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_CONFORM_FAIL,
+            payload: message,
+        });
+    }
+};
+
+
 //ORDER DELIVERED
 export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
     try {
@@ -81,9 +122,49 @@ export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
                 Authorization: `Bearer ${userInfo.token}`,
             },
         };
-        // api not transmiss any params because it just change state of deliverd 
-        const { data } = await axios.put(`/api/orders/${orderItems._id}/delivered`, {}, config);
+        //kt stock
+        let checkStock=true;
+
+        const check= async()=>{
+            console.log("GD1");
+            orderItems.orderItems.map( async  (item)=>{
+                const {data}=await axios.get(`/api/drugstore/${item.drugstoreId}/check-stock?num=${item.qty}`, config)
+                
+                 console.log(data.result)
+                 if(!data.result) checkStock=false;
+             })
+        }
+        const update=async()=>{
+            console.log("GD2");
+            if(checkStock){
+                console.log("TRUE");
+                
+                // api not transmiss any params because it just change state of deliverd 
+                const { data } = await axios.put(`/api/orders/${orderItems._id}/delivered`, {}, config);
+                dispatch({ type: ORDER_DELIVERED_SUCCESS, payload: data });
+
+                
+                orderItems.orderItems.map( async  (item)=>{
+                    await axios.get(`/api/drugstore/${item.drugstoreId}/update-stock?num=${item.qty}`, config);
+                })
+               
+            }else{
+                console.log("FALSE");
+                dispatch({
+                    type: ORDER_DELIVERED_FAIL,
+                    payload: "Số lượng không thỏa",
+                });
+            }
+        }
+
+        await check()
+        await update()
+        //await upadteCoin()
+        const { data } = await axios.get(`/api/orders/${orderItems._id}/deliverd`, config);
         dispatch({ type: ORDER_DELIVERED_SUCCESS, payload: data });
+
+    
+        
     } catch (error) {
         const message =
             error.response && error.response.data.message
@@ -98,3 +179,82 @@ export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
         });
     }
 };
+
+
+
+
+
+//ORDER CANCELED for Admin
+export const getOrderCanceled = (orderItems) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_CANCELED_REQUEST });
+        // userInfo -> userLogin -> getState(){globalState}
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+        orderItems.orderItems.map(async(item)=>{
+            await axios.get(`/api/drugstore/${item.drugstoreId}/update-stock?num=${(item.qty)*(-1)}`, config);
+        })
+        
+        // api not transmiss any params because it just change state of deliverd 
+        const { data } = await axios.get(`/api/orders/${orderItems._id}/canceled`, config);
+        dispatch({ type: ORDER_CANCELED_SUCCESS, payload: data });
+
+    
+        
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        if (message === "Not authorized, token failed") {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_CANCELED_FAIL,
+            payload: message,
+        });
+    }
+};
+
+//ORDER RECEIVED  for User
+export const getOrderReceived  = (orderItems) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_RECEIVED_REQUEST });
+        // userInfo -> userLogin -> getState(){globalState}
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+        // api not transmiss any params because it just change state of deliverd 
+        const { data } = await axios.get(`/api/orders/${orderItems._id}/received`, config);
+        dispatch({ type: ORDER_RECEIVED_SUCCESS, payload: data });
+
+    
+        
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        if (message === "Not authorized, token failed") {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_RECEIVED_FAIL,
+            payload: message,
+        });
+    }
+};
+
