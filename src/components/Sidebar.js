@@ -131,8 +131,18 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/content/"
               >
-                <i className="icon fas fa-clinic-medical"></i>
+                <i className="icon fas fa-server"></i>
                 <span className="text">Nội dung</span>
+              </NavLink>
+            </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/review/"
+              >
+                <i className="icon fas fa-comment-alt" style={{color:"#ADB5BD"}}></i>
+                <span className="text">Bình luận</span>
               </NavLink>
             </li>
             {/* //! Kho dược */}

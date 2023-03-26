@@ -36,6 +36,7 @@ import InventoryCheckScreen from "./screens/InventoryCheckScreen";
 import AddInventoryCheckScreen from "./screens/AddInventoryCheckScreen";
 import EditInventoryCheckScreen from "./screens/EditInventoryCheckScreen";
 import ContentEditScreen from "./screens/ContentEditScreen";
+import ReviewScreen from "./screens/ReviewScreen"
 function App() {
   const data=useSelector((state) => state.theme)
   if(data.theme==="dark") {
@@ -96,6 +97,7 @@ function App() {
           <PrivateRouter path="/tag-inventory" component={TagInventory} exact />
 
           <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact />
+          <PrivateRouter path="/review" component={ReviewScreen} exact />
           <PrivateRouter path="/drugstore/:id" component={DrugStoreEditScreen} exact />
           <PrivateRouter path="/content" component={ContentEditScreen} exact />
           <PrivateRouter path="/users" component={UsersScreen} />

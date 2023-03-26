@@ -11,6 +11,8 @@ const Main = () => {
 
   const productList = useSelector(state => state.productList)
   const { products} = productList
+
+  
   return (
     <>
       <section className="content-main">
