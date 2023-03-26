@@ -30,6 +30,7 @@ import ImportStockScreen from "./screens/ImportStockScreen"
 import ExportStockScreen from "./screens/ExportStockScreen"
 import InventoryScreen from './screens/InventoryScreen';
 import DrugStoreScreen from './screens/DrugStoreScreen';
+import PromotionScreen from './screens/PromotionScreen';
 import DrugStoreEditScreen from "./screens/DrugStoreEditScreen";
 import TagInventory from './screens/TagInventory';
 import InventoryCheckScreen from "./screens/InventoryCheckScreen";
@@ -107,6 +108,7 @@ function App() {
           <PrivateRouter path="/review" component={ReviewScreen} exact />
           <PrivateRouter path="/drugstore/:id" component={DrugStoreEditScreen} exact />
           <PrivateRouter path="/content" component={ContentEditScreen} exact />
+          <PrivateRouter path="/promotion" component={PromotionScreen} exact />
           <PrivateRouter path="/users" component={UsersScreen} />
 
           <Route path="/login" component={Login} />

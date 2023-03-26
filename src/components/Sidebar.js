@@ -141,8 +141,18 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/review/"
               >
-                <i className="icon fas fa-comment-alt" style={{color:"#ADB5BD"}}></i>
+                <i className="icon fas fa-comment-alt" ></i>
                 <span className="text">Bình luận</span>
+              </NavLink>
+            </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/promotion/"
+              >
+                <i className="icon fas fa-tags" ></i>
+                <span className="text">Khuyến mãi</span>
               </NavLink>
             </li>
             <li className="menu-item">

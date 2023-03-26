@@ -111,6 +111,7 @@ import {
 import {PageCreateReducer, PageDeleteReducer, PageListReducer} from './Reducers/PageReducer';
 import {ContactCreateReducer, ContactDeleteReducer, ContactListReducer} from './Reducers/ContactReducer';
 import {contentSingleReducer,contentUpdateReducer} from './Reducers/ContentReducer';
+import {promotionCreateReducer,promotionUpdateReducer,promotionDeleteReducer,promotionListReducer} from "./Reducers/PromotionReducer"
 import { reqInventoryCancelReducer, reqInventoryCreateReducer, reqInventoryDetailReducer, reqInventoryListReducer, reqInventoryStatusReducer, reqInventoryUpdateReducer } from "./Reducers/RequestInventoryReducer";
 const reducer = combineReducers({
   theme: themeReducer,
@@ -223,6 +224,11 @@ const reducer = combineReducers({
 
   contentSingle: contentSingleReducer,
   contentUpdate: contentUpdateReducer,
+
+  promotionList:promotionListReducer,
+  promotionCreate:promotionCreateReducer,
+  promotionUpdate:promotionUpdateReducer,
+  promotionDelete:promotionDeleteReducer,
 });
 
 const initialState = {
