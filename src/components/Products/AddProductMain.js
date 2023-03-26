@@ -36,6 +36,7 @@ import {
 } from "../../Redux/Constants/ActivePharmaConstants";
 import renderToast from "../../util/Toast";
 import formatCurrency from "./../../util/formatCurrency";
+import { backendUrlFile } from "../../util/fileUploader";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -237,7 +238,7 @@ const AddProductMain = () => {
           formData
         );
         if(dataUp.filename){
-          arrImg.push(dataUp.filename);
+          arrImg.push(`${backendUrlFile.image}/${dataUp.filename}`);
         }   
       }
 

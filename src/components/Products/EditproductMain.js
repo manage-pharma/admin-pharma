@@ -43,6 +43,7 @@ import {
   API_CREATE_RESET,
   API_DELETE_RESET,
 } from "../../Redux/Constants/ActivePharmaConstants";
+import { backendUrlFile } from "../../util/fileUploader";
 
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -180,7 +181,7 @@ const EditProductMain = (props) => {
           `/api/products/single`,
           formData
         );
-        imgOldURL.push(dataUp.filename);
+        imgOldURL.push(`${backendUrlFile.image}/${dataUp.filename}`);
       }
       data.image = imgOldURL;
     }
