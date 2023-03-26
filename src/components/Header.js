@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {logout} from '../Redux/Actions/UserActions';
-import { changeTheme } from './../Redux/Actions/ThemeAction';
+// import { changeTheme } from './../Redux/Actions/ThemeAction';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 const Header = () => {
@@ -59,16 +59,16 @@ const Header = () => {
     })
   }, []);
 
-  const data = useSelector((state)=> state.theme)
+  // const data = useSelector((state)=> state.theme)
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const handleChangeTheme = (e) =>{
-    e.preventDefault();
-    dispatch(changeTheme(data.theme === 'light' ? 'dark' : 'light'))
-    var element = document.getElementById("radio-inner");
-    element.classList.toggle("active");
-  }
+  // const handleChangeTheme = (e) =>{
+  //   e.preventDefault();
+  //   dispatch(changeTheme(data.theme === 'light' ? 'dark' : 'light'))
+  //   var element = document.getElementById("radio-inner");
+  //   element.classList.toggle("active");
+  // }
 
   const handleLogout = (e) =>{
     e.preventDefault();
@@ -110,28 +110,29 @@ const Header = () => {
             <i className="md-28 fas fa-bars"></i>
           </button>
           <ul className="nav">
-            <li className="nav-item me-4">
+            <li className="nav-item me-3">
               <Badge pill bg={userInfo.isAdmin ? 'danger' : 'primary'} >
                 <Link className={`dropdown-item text-white fw-bold ${userInfo.isAdmin ? 'bg-danger' : 'bg-primary'}`} to="#" onClick={handleMyProfile}>
-                  {userInfo.name}
+                  <span style={{fontSize:"16px"}}>{userInfo.name}</span>
                 </Link>
                 </Badge>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <div className="radio-btn nav-link btn-icon" onClick={handleChangeTheme}>
                 <div id="radio-inner"><i className="fas fa-moon"></i></div>
               </div>
-            </li>
-            <li className="nav-item">
+            </li> */}
+            {/* <li className="nav-item">
               <Link className="nav-link btn-icon" to="#">
                 <i className="fas fa-bell"></i>
               </Link>
-            </li>
-            <li className="nav-item">
+            </li> */}
+            {/* <li className="nav-item">
               <Link className="nav-link" to="#">
                 <span style={{color: "white"}}>English</span>
               </Link>
-            </li>
+            </li> */}
+
             <li className="dropdown nav-item">
               <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
                 <img
@@ -144,9 +145,9 @@ const Header = () => {
                 <Link className="dropdown-item" to="#" onClick={handleMyProfile}>
                   Thông tin người dùng
                 </Link>
-                <Link className="dropdown-item" to="#">
+                {/* <Link className="dropdown-item" to="#">
                   Cài đặt
-                </Link>
+                </Link> */}
                 <Link className="dropdown-item text-danger" to='#' onClick={handleLogout}>
                   Đăng xuất
                 </Link>

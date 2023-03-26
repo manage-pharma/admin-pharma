@@ -145,6 +145,38 @@ const Sidebar = () => {
                 <span className="text">Bình luận</span>
               </NavLink>
             </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+
+                to="/import-stock"
+              >
+                <i className="icon fas fa-sign-in-alt"></i>
+                <span className="text">Nhập kho</span>
+              </NavLink>
+            </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/export-stock"
+              >
+                <i className="icon fas fa-sign-out-alt"></i>
+                <span className="text">Xuất kho</span>
+              </NavLink>
+            </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/req-inventory"
+              >
+                <i className="icon fas fa-sign-out-alt"></i>
+                <span className="text">Yêu cầu đặt hàng</span>
+              </NavLink>
+            </li>
+
             {/* //! Kho dược */}
             <li className="menu-item lv1 arrow down">
               <NavLink
@@ -188,39 +220,7 @@ const Sidebar = () => {
                 </li>
               </ul>
             </li>
-            {/* //! Giao dịch */}
-            <li className="menu-item lv1 arrow down">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
-                to="/import-stock"
-              >
-                <i className="icon fas fa-usd-circle"></i>
-                <span className="text">Nhập xuất</span>
-              </NavLink>
-              <ul className="menu-aside lv2">
-                <li className="menu-item">
-                  <NavLink
-                    activeClassName="active"
-                    className="menu-link"
-                    to="/import-stock"
-                  >
-                    <i className="icon fas fa-sign-in-alt"></i>
-                    <span className="text">Nhập kho</span>
-                  </NavLink>
-                </li>
-                <li className="menu-item">
-                  <NavLink
-                    activeClassName="active"
-                    className="menu-link"
-                    to="/export-stock"
-                  >
-                    <i className="icon fas fa-sign-out-alt"></i>
-                    <span className="text">Xuất kho</span>
-                  </NavLink>
-                </li>
-              </ul>
-            </li>
+
           </ul>
           <br />
           <br />

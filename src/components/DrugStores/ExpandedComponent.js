@@ -1,17 +1,18 @@
 import React from 'react'
 import  moment  from 'moment';
 import DataTable from "react-data-table-component";
+import NoRecords from '../../util/noData';
 const ExpandedComponent = (props) =>{
     const {data, dessert} = props
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
         },
         {
             name: "Số lô",
-            selector: (row) => row.lotNumber,
+            selector: (row) => row?.lotNumber,
             sortable: true,
             reorder: true,
         },
@@ -22,7 +23,7 @@ const ExpandedComponent = (props) =>{
         },
         {
             name: "Hạn sử dụng",
-            selector: (row) => moment(row.expDrug).format("DD-MM-YYYY"),
+            selector: (row) => moment(row?.expDrug).format("DD-MM-YYYY"),
             sortable: true,
             minWidth: "180px",
         }
@@ -30,7 +31,7 @@ const ExpandedComponent = (props) =>{
 
     const conditionalRowStyles = [
         {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") > 180,
+            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") > 180,
             style: {
                 backgroundColor: 'rgba(63, 195, 128, 0.9)',
                 color: 'white',
@@ -40,7 +41,7 @@ const ExpandedComponent = (props) =>{
             },
         },
         {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") >= 90 && (moment(row.expDrug)).diff(moment(Date.now()), "days") < 180,
+            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") >= 90 && (moment(row?.expDrug)).diff(moment(Date.now()), "days") < 180,
             style: {
                 backgroundColor: 'rgba(248, 148, 6, 0.9)',
                 color: 'white',
@@ -50,7 +51,7 @@ const ExpandedComponent = (props) =>{
             },
         },
         {
-            when: row => (moment(row.expDrug)).diff(moment(Date.now()), "days") < 90,
+            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") < 90,
             style: {
                 backgroundColor: 'rgba(242, 38, 19, 0.9)',
                 color: 'white',
@@ -101,6 +102,7 @@ const ExpandedComponent = (props) =>{
                         // theme="solarized"
                         columns={columns}
                         data={data?.data?.stock}
+                        noDataComponent={NoRecords()}
                         customStyles={customStyles}
                         defaultSortFieldId
                         // onRowClicked={handleRowClicked}

@@ -5,10 +5,10 @@ import React, { useEffect, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from "react-redux";
-import { cancelExportStock, listExportStock, statusExportStock } from "../../Redux/Actions/ExportStockAction";
-import { EXPORT_STOCK_CANCEL_RESET, EXPORT_STOCK_STATUS_RESET } from "../../Redux/Constants/ExportStockConstant";
-import CustomLoader from './../../util/LoadingTable';
+import { cancelReqInventory, listReqInventory, statusReqInventory } from "../../Redux/Actions/RequestInventoryAction";
+import { REQ_INVENTORY_CANCEL_RESET, REQ_INVENTORY_STATUS_RESET } from "../../Redux/Constants/RequestInventoryConstant";
 import printReport from './PrintReport';
+import CustomLoader from '../../util/LoadingTable';
 import { toast } from "react-toastify";
 import Toast from "../LoadingError/Toast";
 import NoRecords from '../../util/noData';
@@ -18,8 +18,8 @@ const ToastObjects = {
   pauseOnHover: false,
   autoClose: 2000,
 };
-const ExportStock = (props) =>{
-    const {exportStock, loading, loadingStatus} = props 
+const ReqInventory = (props) =>{
+    const {reqInventory, loading, loadingStatus} = props 
     const history = useHistory()
     const dispatch = useDispatch()
     const [modalShow, setModalShow] = useState(false);
@@ -28,11 +28,11 @@ const ExportStock = (props) =>{
     const [dataModalCancel, setDataModalCancel] = useState();
     const [modalCancel, setModalCancel] = useState(false);
 
-    const updateStatus = useSelector(state => state.exportStockStatus)
+    const updateStatus = useSelector(state => state.reqInventoryStatus)
     const {success} = updateStatus
-  
-    const cancelExport = useSelector(state => state.exportStockCancel)
-    const {success: successCancel} = cancelExport
+
+    const cancelReq = useSelector(state => state.reqInventoryCancel)
+    const {success: successCancel} = cancelReq
 
     const MyVerticallyCenteredModal = (props) =>{
         return (
@@ -49,17 +49,18 @@ const ExportStock = (props) =>{
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <p>Bạn chắc chắn muốn cập nhật trang thái: <span className="text-warning">{dataModal?.exportCode}</span> ?</p>
+              <p>Bạn có chắc chắn duyệt đơn <span className="text-warning">{dataModal?.importCode}</span> ?</p>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="warning" style={{fontWeight:"600"}} onClick={()=>{
-                dispatch(statusExportStock(dataModal?._id))
+                dispatch(statusReqInventory(dataModal?._id))
                 setModalShow(false)
-              }}>OK</Button>
+              }}>Đồng ý</Button>
             </Modal.Footer>
           </Modal>
         );
     }
+
     const MyVerticallyCenteredModalCancel=(props) => {
       return (
           <Modal
@@ -71,15 +72,15 @@ const ExportStock = (props) =>{
           >
               <Modal.Header closeButton>
                   <Modal.Title id="contained-modal-title-vcenter">
-                      Hủy đơn nhập kho
+                      Hủy yêu cầu đặt hàng
                   </Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                  <p>Bạn có chắc chắn hủy đơn <span className="text-danger">{dataModalCancel?.exportCode}</span> ?</p>
+                  <p>Bạn có chắc chắn hủy đơn <span className="text-danger">{dataModalCancel?.importCode}</span> ?</p>
               </Modal.Body>
               <Modal.Footer>
                   <Button className="btn-danger" onClick={() => {
-                      dispatch(cancelExportStock(dataModalCancel?._id))
+                      dispatch(cancelReqInventory(dataModalCancel?._id))
                       setModalCancel(false)
                   }}>OK</Button>
               </Modal.Footer>
@@ -106,23 +107,24 @@ const ExportStock = (props) =>{
                           setDataModal(row)
                         }}>
                           <i className="fas fa-clipboard-check"></i>
-                          <span> Xác nhận xuất</span>
+                          <span> Xác nhận nhập</span>
                         </button>
+
                         <button className="dropdown-item active-menu" onClick={(e)=>{
                           e.preventDefault()
-                          history.push(`/export-stock/${row._id}`)
+                          history.push(`/req-inventory/${row._id}`)
                         }}>
                           <i className="fas fa-pencil"></i>
-                          <span> Chỉnh sửa</span>
+                          <span> Chỉnh sửa</span> 
                         </button>
                       </>
                        :
                        <button className="dropdown-item active-menu" onClick={(e)=>{
                         e.preventDefault()
-                        history.push(`/export-stock/${row._id}`)
+                        history.push(`/req-inventory/${row._id}`)
                       }}>
-                         <i className="fas fa-eye"></i>
-                        <span> Chi tiết</span>
+                        <i className="fas fa-eye"></i>
+                        <span> Xem chi tiết</span>
                       </button>
                   }
                   <button className="dropdown-item active-menu" onClick={(e)=>{
@@ -131,7 +133,7 @@ const ExportStock = (props) =>{
                       setDataModal(row)
                     }}>
                       <i className="fas fa-print"></i>
-                      <span> In phiếu xuất</span>
+                      <span> In phiếu nhập</span>
                   </button>
                   { row.status === false ?
                       <button className="dropdown-item active-menu text-danger" onClick={(e)=>{
@@ -140,7 +142,7 @@ const ExportStock = (props) =>{
                         setDataModalCancel(row)
                       }}>
                       <i className="fas fa-trash"></i>
-                      <span> Hủy phiếu xuất</span>
+                      <span> Hủy phiếu nhập</span>
                     </button>
                     : ''
                   }
@@ -158,33 +160,34 @@ const ExportStock = (props) =>{
 
         },
         {
-            name: "Mã phiếu xuất",
-            selector: (row) => row?.exportCode,
+            name: "Mã hóa đơn",
+            selector: (row) => row?.requestCode,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
-            name: "Người lập",
+            name: "Nhà cung cấp",
+            selector: (row) => row?.provider?.name,
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width: '350px'
+        },
+        {
+            name: "Tạo bởi",
             selector: (row) => row?.user?.name,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
-            name: "Ngày xuất",
-            selector: (row) => moment(row?.exportedAt).format("DD/MM/YYYY"),
+            name: "Ngày nhập",
+            selector: (row) => moment(row?.requestedAt).format("DD/MM/YYYY"),
             sortable: true,
             reorder: true,
             grow: 2
         },
-        {
-          name: "Lý do xuất",
-          selector: (row) => row?.reason,
-          sortable: true,
-          reorder: true,
-          grow: 2
-      },
         {
             name: "Trạng thái",
             selector: (rows) => rows?.status === true ? 
@@ -192,8 +195,8 @@ const ExportStock = (props) =>{
                 (<span className="badge bg-danger text-white">Chưa duyệt</span>),
             sortable: true,
             reorder: true,
-            sortFunction: (exportStock) => {
-                return [exportStock].map((a, b) => {
+            sortFunction: (reqInventory) => {
+                return [reqInventory].map((a, b) => {
                   const fieldA = a?.status;
                   const fieldB = b?.status;
                   let comparison = 0;
@@ -209,7 +212,8 @@ const ExportStock = (props) =>{
                   return comparison
                 });
             },
-            grow: 1
+            grow: 2,
+            width: '150px'
         },
         {   name: "Hành động",
             cell: row => <CustomMaterialMenu row={row} />,
@@ -268,22 +272,24 @@ const ExportStock = (props) =>{
     };
   
     useEffect(()=>{
-        if(success){
-          dispatch({ type: EXPORT_STOCK_STATUS_RESET});
-          dispatch(listExportStock())
-          toast.success("Duyệt đơn xuất thành công", ToastObjects);
-        }
-        if(successCancel){
-          dispatch({ type: EXPORT_STOCK_CANCEL_RESET});
-          dispatch(listExportStock())
-          toast.success("Hủy đơn xuất thành công", ToastObjects);
-        }
-        if(reportShow){
-          printReport(dataModal)
-          setReportShow(false)
-          setDataModal(null)
-        }// eslint-disable-next-line
-      },[dispatch, success, reportShow, successCancel])
+      if(success){
+        dispatch({ type: REQ_INVENTORY_STATUS_RESET});
+        dispatch(listReqInventory())
+        toast.success("Duyệt đơn nhập thành công", ToastObjects);
+      }
+      if(successCancel){
+        dispatch({ type: REQ_INVENTORY_CANCEL_RESET});
+        dispatch(listReqInventory())
+        toast.success("Hủy đơn nhập thành công", ToastObjects);
+      }
+      if(reportShow){
+        printReport(dataModal)
+        setReportShow(false)
+        setDataModal(null)
+      }
+      // eslint-disable-next-line
+    },[dispatch, success, reportShow, successCancel])
+
 
   return (
     <>
@@ -303,8 +309,8 @@ const ExportStock = (props) =>{
           <DataTable
               // theme="solarized"
               columns={columns}
-              data={exportStock}
               noDataComponent={NoRecords()}
+              data={reqInventory}
               customStyles={customStyles}
               defaultSortFieldId
               pagination
@@ -316,9 +322,8 @@ const ExportStock = (props) =>{
               pointerOnHover
           />
         </div>
-
     </>
 
   )  
 }
-export default ExportStock;
+export default ReqInventory;

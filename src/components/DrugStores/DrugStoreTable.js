@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import {Link,useHistory} from "react-router-dom";
 import CustomLoader from '../../util/LoadingTable';
 import ExpandedComponent from './ExpandedComponent'
+import NoRecords from "../../util/noData";
 
 const DrugStoreTable = (props) =>{
     const {drugstores, dessert, expanded, loading} = props 
@@ -35,14 +36,14 @@ const DrugStoreTable = (props) =>{
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
         },
         {
             name: "Tên sản phẩm",
-            selector: (row) => row.product.name,
+            selector: (row) => row?.product?.name,
             sortable: true,
             reorder: true,
             minWidth: "150px",
@@ -50,18 +51,18 @@ const DrugStoreTable = (props) =>{
         },
         {
             name: "Hình ảnh",
-            selector: (row) => <img className="mt-1 w-80 h-80" style={{width:"100px",height:"100px"}} src={row.product.image?.slice(0,0+1)} alt="ImageCategory" />,
+            selector: (row) => <img className="mt-1 w-80 h-80" style={{width:"100px",height:"100px"}} src={row?.product?.image?.slice(0,0+1)} alt="ImageCategory" />,
             minWidth: "150px",
         },
         {
             name: "Giá bán",
-            selector: (row) => row.product.price.toLocaleString('vi-VN').replace(/\./g, ',')+" vnđ",
+            selector: (row) => row?.product?.price.toLocaleString('vi-VN').replace(/\./g, ',')+" vnđ",
             sortable: true,
             minWidth: "150px",
         },
         {
             name: "Số lượng",
-            selector: (row) => row?.stock.reduce((sum,item)=>{
+            selector: (row) => row?.stock?.reduce((sum,item)=>{
                 return sum+item.count
             },0),
             sortable: true,
@@ -69,7 +70,7 @@ const DrugStoreTable = (props) =>{
         },
         {
             name: "Đơn vị tính",
-            selector: (row) => row.product.unit,
+            selector: (row) => row?.product?.unit,
             sortable: true,
             reorder: true,
             minWidth: "140px",
@@ -77,13 +78,13 @@ const DrugStoreTable = (props) =>{
         },
         {
             name: "Giảm giá",
-            selector: (row) => row.discount,
+            selector: (row) => row?.discount,
             sortable: true,
             minWidth: "130px",
         },
         {
             name: "Hiển thị",
-            selector: (row) => row.isActive?
+            selector: (row) => row?.isActive?
                 <span className="badge bg-success text-white p-2" style={{minWidth: '45px'}}>Có</span>:
                 <span className="badge bg-danger text-white p-2" >Không</span>,
             sortable: true,
@@ -167,6 +168,7 @@ const DrugStoreTable = (props) =>{
             // theme="solarized"
             columns={columns}
             data={drugstores}
+            noDataComponent={NoRecords()}
             customStyles={customStyles}
             defaultSortFieldId
             pagination

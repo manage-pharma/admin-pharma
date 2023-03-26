@@ -2,47 +2,48 @@ import DataTable from "react-data-table-component";
 import React, {useEffect} from "react";
 import CustomLoader from '../../util/LoadingTable';
 import ExpandedComponent from './ExpandedComponent'
+import NoRecords from "../../util/noData";
 const InventoryTable = (props) =>{
     const {inventory, dessert, expanded, loading} = props 
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
         },
         {
             name: "Tên sản phẩm",
-            selector: (row) => row.name,
+            selector: (row) => row?.name,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Nhóm sản phẩm",
-            selector: (row) => row.category.join(', '),
+            selector: (row) => row?.category.join(', '),
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Nhóm thuốc",
-            selector: (row) => row.categoryDrug.join(', '),
+            selector: (row) => row?.categoryDrug.join(', '),
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Tổng tồn",
-            selector: (row) => row.total_count,
+            selector: (row) => row?.total_count,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Đơn vị tính",
-            selector: (row) => row.unit,
+            selector: (row) => row?.unit,
             sortable: true,
             reorder: true,
             grow: 2
@@ -110,6 +111,7 @@ const InventoryTable = (props) =>{
             // theme="solarized"
             columns={columns}
             data={inventory}
+            noDataComponent={NoRecords()}
             customStyles={customStyles}
             defaultSortFieldId
             pagination

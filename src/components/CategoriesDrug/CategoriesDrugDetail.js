@@ -42,7 +42,7 @@ const DetailCategoriesDrug = (props) => {
 //   const columns = [
 //     {
 //       name: "ID",
-//       selector: (row, index) => <bold>{index+1}</bold>,
+//       selector: (row, index) => <b>{index+1}</b>,
 //       sortable: true,
 //       reorder: true
 //     },

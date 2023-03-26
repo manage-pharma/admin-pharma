@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Message from '../LoadingError/Error';
 import debounce from "lodash.debounce";
-import ImportStock from "./ImportStock";
-import { listImportStock } from "../../Redux/Actions/ImportStockAction";
+import ReqInventory from "./ReqInventory";
+import { listReqInventory } from "../../Redux/Actions/RequestInventoryAction";
 import Toast from './../LoadingError/Toast';
 import { toast } from "react-toastify";
 import renderToast from "../../util/Toast";
@@ -14,7 +14,7 @@ const ToastObjects = {
   pauseOnHover: false,
   autoClose: 2000,
 };
-const MainImportStock = (props) => {
+const MainReqInventory = (props) => {
   const { pageNumber } = props
   const dispatch = useDispatch()
   const history = useHistory()
@@ -27,15 +27,15 @@ const MainImportStock = (props) => {
   })
   const {from,to} = data
   
-  const importedStockList = useSelector(state=> state.importStockList)
-  const { loading, error, stockImported } = importedStockList
+  const reqInventoryList = useSelector(state=> state.reqInventoryList)
+  const { loading, error, reqInventory } = reqInventoryList
 
-  const updateStatus = useSelector(state => state.importStockStatus)
+  const updateStatus = useSelector(state => state.reqInventoryStatus)
   const {loading: loadingStatus, error: errorStatus, success} = updateStatus
 
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
-      dispatch(listImportStock(keyword, pageNumber, from, to))
+      dispatch(listReqInventory(keyword, pageNumber, from, to))
   }
   const debounceDropDown = useRef(debounce((keyword, pageNumber, from, to) => callApiKeywordSearch(keyword, pageNumber, from, to) , 300)).current;
 
@@ -47,7 +47,7 @@ const MainImportStock = (props) => {
 
   const handleAdd = (e) =>{
     e.preventDefault();
-    history.push('/import-stock/add');
+    history.push('/req-inventory/add');
   }
 
   const handleChange = e =>{
@@ -67,14 +67,14 @@ const MainImportStock = (props) => {
         }
         return;
       }
-      dispatch(listImportStock(keyword, pageNumber, data.from, data.to)) 
+      dispatch(listReqInventory(keyword, pageNumber, data.from, data.to)) 
     }
     else{
       setData({
         from: '',
         to: ''
       })
-      dispatch(listImportStock(keyword, pageNumber)) 
+      dispatch(listReqInventory(keyword, pageNumber)) 
     }
     setToggleSearch(!toggleSearch)
   }
@@ -84,7 +84,7 @@ const MainImportStock = (props) => {
       toast.success(`Cập nhật đơn thành công`, ToastObjects)
     }
     else{
-      dispatch(listImportStock(keyword, pageNumber)) 
+      dispatch(listReqInventory(keyword, pageNumber)) 
     } // eslint-disable-next-line
   },[dispatch, pageNumber, success])
 
@@ -94,7 +94,7 @@ const MainImportStock = (props) => {
     { error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Danh sách nhập kho</h2>
+        <h2 className="content-title">Danh sách yêu cầu đặt hàng</h2>
           <div>
             <button onClick={handleAdd} className="btn btn-primary">
               Tạo mới
@@ -108,7 +108,7 @@ const MainImportStock = (props) => {
             <div className="col-lg-4 col-md-6 me-auto ">
               <input
                 type="search"
-                placeholder="Tìm kiếm đơn nhập kho..."
+                placeholder="Tìm kiếm yêu cầu đặt hàng..."
                 className="form-control p-2"
                 value={keyword}
                 onChange={handleSubmitSearch}
@@ -151,14 +151,11 @@ const MainImportStock = (props) => {
         </header>
 
         <div>
-          {stockImported ?
-            <ImportStock 
-              importStock={stockImported}
-              loading={loading}
-              loadingStatus={loadingStatus}
-            /> : 
-            <div>Không có dữ liệu</div>
-          }
+          <ReqInventory 
+            reqInventory={reqInventory}
+            loading={loading}
+            loadingStatus={loadingStatus}
+          />
         </div>
       </div>
     </section>
@@ -166,4 +163,4 @@ const MainImportStock = (props) => {
   );
 };
 
-export default MainImportStock;
+export default MainReqInventory;

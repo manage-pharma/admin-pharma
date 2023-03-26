@@ -123,7 +123,7 @@ export const logout = () => (dispatch) => {
 };
 
 // ADMIN ALL USER
-export const listUser = () => async (dispatch, getState) => {
+export const listUser = (keyword = " ", pageNumber = " ") => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_LIST_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
@@ -137,7 +137,7 @@ export const listUser = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users`, config);
+    const { data } = await axios.get(`/api/users/?keyword=${keyword}&pageNumber=${pageNumber}`, config);
 
     dispatch({ type: USER_LIST_SUCCESS, payload: data });
   } catch (error) {

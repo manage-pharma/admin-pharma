@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PROVIDER_DELETE_RESET } from "../../Redux/Constants/ProviderConstants";
 import { deleteProvider, listProvider, singleProvider } from "../../Redux/Actions/ProviderAction";
 import CustomLoader from './../../util/LoadingTable';
+import NoRecords from "../../util/noData";
 
 const Provider = (props) =>{
     const { provider, setShow, loading, loadingDelete } = props;
@@ -80,56 +81,56 @@ const Provider = (props) =>{
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
         },
         {
             name: "Tên nhà cung cấp",
-            selector: (row) => row.name,
+            selector: (row) => row?.name,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Người liên hệ",
-            selector: (row) => row.contactName,
+            selector: (row) => row?.contactName,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Mã số thuế",
-            selector: (row) => row.taxCode,
+            selector: (row) => row?.taxCode,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
           name: "Ký hiệu hóa đơn",
-          selector: (row) => row.invoiceSymbol,
+          selector: (row) => row?.invoiceSymbol,
           sortable: true,
           reorder: true,
           grow: 2
         },
         {
             name: "Số điện thoại",
-            selector: (row) => row.phone,
+            selector: (row) => row?.phone,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Email",
-            selector: (row) => row.email,
+            selector: (row) => row?.email,
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Địa chỉ",
-            selector: (row) => row.address,
+            selector: (row) => row?.address,
             sortable: true,
             reorder: true,
             grow: 2
@@ -207,6 +208,7 @@ const Provider = (props) =>{
             // theme="solarized"
             columns={columns}
             data={provider}
+            noDataComponent={NoRecords()}
             customStyles={customStyles}
             defaultSortFieldId
             pagination

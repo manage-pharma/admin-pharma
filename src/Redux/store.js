@@ -111,6 +111,7 @@ import {
 import {PageCreateReducer, PageDeleteReducer, PageListReducer} from './Reducers/PageReducer';
 import {ContactCreateReducer, ContactDeleteReducer, ContactListReducer} from './Reducers/ContactReducer';
 import {contentSingleReducer,contentUpdateReducer} from './Reducers/ContentReducer';
+import { reqInventoryCancelReducer, reqInventoryCreateReducer, reqInventoryDetailReducer, reqInventoryListReducer, reqInventoryStatusReducer, reqInventoryUpdateReducer } from "./Reducers/RequestInventoryReducer";
 const reducer = combineReducers({
   theme: themeReducer,
 
@@ -204,6 +205,13 @@ const reducer = combineReducers({
   inventoryCheckListItem: inventoryCheckListItemReducer,
   inventoryCheckStatus: inventoryCheckStatusReducer,
   inventoryCheckCancel: inventoryCheckCancelReducer,
+
+  reqInventoryList: reqInventoryListReducer,
+  reqInventoryDetail: reqInventoryDetailReducer,
+  reqInventoryCreate: reqInventoryCreateReducer,
+  reqInventoryStatus: reqInventoryStatusReducer,
+  reqInventoryCancel: reqInventoryCancelReducer,
+  reqInventoryUpdate: reqInventoryUpdateReducer,
 
   pageList: PageListReducer,
   pageCreate: PageCreateReducer,

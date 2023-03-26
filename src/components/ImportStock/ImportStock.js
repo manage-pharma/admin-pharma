@@ -12,6 +12,7 @@ import CustomLoader from './../../util/LoadingTable';
 import formatCurrency from '../../util/formatCurrency';
 import { toast } from "react-toastify";
 import Toast from "../LoadingError/Toast";
+import NoRecords from '../../util/noData';
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -154,7 +155,7 @@ const ImportStock = (props) =>{
     const columns = [
         {
             name: "STT",
-            selector: (row, index) => <bold>{index+1}</bold>,
+            selector: (row, index) => <b>{index+1}</b>,
             reorder: true,
             width: '60px'
 
@@ -190,22 +191,22 @@ const ImportStock = (props) =>{
         },
         {
             name: "Tổng cộng",
-            selector: (row) => formatCurrency(row.totalPrice),
+            selector: (row) => formatCurrency(row?.totalPrice),
             sortable: true,
             reorder: true,
             grow: 2
         },
         {
             name: "Trạng thái",
-            selector: (rows) => rows.status === true ? 
+            selector: (rows) => rows?.status === true ? 
                 (<span className="badge bg-success text-white">Đã hoàn tất</span>) : 
                 (<span className="badge bg-danger text-white">Chưa duyệt</span>),
             sortable: true,
             reorder: true,
             sortFunction: (importStock) => {
                 return [importStock].map((a, b) => {
-                  const fieldA = a.status;
-                  const fieldB = b.status;
+                  const fieldA = a?.status;
+                  const fieldB = b?.status;
                   let comparison = 0;
               
                   if (fieldA === fieldB) {
@@ -316,6 +317,7 @@ const ImportStock = (props) =>{
           <DataTable
               // theme="solarized"
               columns={columns}
+              noDataComponent={NoRecords()}
               data={importStock}
               customStyles={customStyles}
               defaultSortFieldId

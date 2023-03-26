@@ -8,6 +8,7 @@ import Message from "../LoadingError/Error";
 import Toast from "../LoadingError/Toast";
 import { toast } from "react-toastify";
 import DataTableProduct from "./DataTable";
+
 const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
@@ -17,6 +18,7 @@ const ToastObjects = {
 const ExcelCSVProductComponent = () => {
     const dispatch = useDispatch()
     const [data, setData] = useState(null);
+    const [errors, setErrors] = useState(null);
     const importProducts = useSelector(state=> state.productImport)
     const {loading, error, success} = importProducts
     const productAll = useSelector((state)=> state.productAll)
@@ -41,10 +43,126 @@ const ExcelCSVProductComponent = () => {
             reader.onload = (event) => {
                 const wb = read(event.target.result);
                 const sheets = wb.SheetNames;
-
+                const rowErrors = []
+                const dataNew = []
+                let rowIndex = 2
                 if (sheets.length) {
                     const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-                    setData(rows)
+                    const cloneData = JSON.parse(JSON.stringify(rows))
+                    for (const item of cloneData) {
+                        const d = {
+                            name: item?.name?.trim(),
+                            errors: []
+                          }
+                          if (!d.name) {
+                            d.errors.push('Tên không được để trống')
+                          }
+              
+                          const isDuplicate = dataNew.some((item) => item?.name === d?.name)
+                          if (isDuplicate) {
+                            d.errors.push('Tên sản phẩm bị trùng')
+                          }
+                          const isDuplicateName = productall.some(
+                            (item) => item?.name === d?.name
+                          )
+                          if (isDuplicateName) {
+                            d.errors.push('Tên sản phẩm đã tồn tại')
+                          }
+                          if (!d.name) {
+                            d.errors.push('Tên không được để trống')
+                          }
+                          if(!item?.regisId){
+                            d.errors.push('Số đăng ký không được để trống')
+                          }
+                          if(!item?.category){
+                            d.errors.push('Danh mục không được để trống')
+                          }
+                        
+                          if(!item?.category.match(/"_id":"([^"]+)","name":"([^"]+)"/)){
+                            d.errors.push('Danh mục không đúng định dạng')
+                          }
+                          if(!item?.categoryDrug){
+                            d.errors.push('Danh mục thuốc không được để trống')
+                          }
+                        
+                          if(!item?.categoryDrug.match(/"_id":"([^"]+)","name":"([^"]+)"/)){
+                            d.errors.push('Danh mục thuốc không đúng định dạng')
+                          }
+
+                          if(!item?.expDrug){
+                            d.errors.push('Hạn sử dụng không được để trống')
+                          }
+                        
+                          if(isNaN(item?.expDrug)){
+                            d.errors.push('Hạn sử dụng phải là số')
+                          }
+                          
+                          if(!item?.unit){
+                            d.errors.push('Đơn vị tính không được để trống')
+                          }
+                          if(!item?.packing){
+                            d.errors.push('Quy cách đóng gói không được để trống')
+                          }
+                          if(!item?.APIs){
+                            d.errors.push('Hoạt chất không được để trống')
+                          }
+                        if(!item?.brandName){
+                            d.errors.push('Tên biệt dược không được để trống')
+                        }
+                        if(!item?.manufacturer){
+                            d.errors.push('Tên nhà sản xuất không được để trống')
+                        }
+                        if(!item?.countryOfOrigin){
+                            d.errors.push('Tên nước sản xuất không được để trống')
+                        }
+                        if(!item?.instruction){
+                            d.errors.push('Chỉ dẫn không được để trống')
+                        }
+                        if(!item?.price){
+                            d.errors.push('Giá không được để trống')
+                        }
+                        if(isNaN(item?.price)){
+                            d.errors.push('Giá phải là số')
+                        }
+                        if(!item?.allowToSell){
+                            d.errors.push('Được phép bán không được để trống')
+                        }
+                        if( typeof item?.allowToSell !== 'boolean'){
+                            d.errors.push('Được phép bán không đúng định dạng')
+                        }
+
+                        if(!item?.prescription){
+                            d.errors.push('Thuốc kê đơn không được để trống')
+                        }
+                        if( typeof item?.prescription !== 'boolean'){
+                            d.errors.push('Thuốc kê đơn không đúng định dạng')
+                        }
+                        if(!item?.description){
+                            d.errors.push('Mô tả không được để trống')
+                        }
+                        if(!d.errors.length){
+                            item.category = item?.category && JSON.parse(item?.category)
+                            item.categoryDrug = item?.categoryDrug && JSON.parse(item?.categoryDrug)
+                            item.APIs = item?.APIs?.length > 0 ? JSON.parse(item?.APIs) : []
+                            item.image = item?.image?.length > 0 ? item?.image?.split(";") : []
+                            dataNew.push(item)
+                        }
+                        else{
+                            rowErrors.push({
+                                name: `Sản phẩm tại dòng ${rowIndex}`,
+                                errors: d.errors
+                            })
+                        }
+                        rowIndex++
+                        
+                    }
+                    if(rowErrors.length > 0){
+                        setErrors(rowErrors)
+                    }
+                    else{
+                        setData(cloneData)
+                    }
+                    
                 }
             }
             reader.readAsArrayBuffer(file);
@@ -56,29 +174,34 @@ const ExcelCSVProductComponent = () => {
     }
     const handleExport = () => {
         const headings = [[
-            'ID',
-            'Tên thuốc',
-            'Số đăng ký',
-            'Nhóm hàng',
-            'Nhóm thuốc',
-            'Đơn vị tính',
-            'Quy cách đóng gói',
-            'Hoạt chất',
-            'Tên biệt dược',
-            'Nhà cung cấp',
-            'Nước sản xuất',
-            'Lời chỉ dẫn',
-            'Giá',
-            'Thuốc bán',
-            'Thuốc kê đơn',
-            'Ngày tạo'
+            'name',
+            'regisId',
+            'category',
+            'categoryDrug',
+            'expDrug',
+            'unit',
+            'packing',
+            'APIs',
+            'brandName',
+            'manufacturer',
+            'countryOfOrigin',
+            'instruction',
+            'price',
+            'allowToSell',            
+            'prescription',
+            'description',
+            'image',
+            'createdAt'
         ]];
 
         const cloneData = JSON.parse(JSON.stringify(productall))
-        cloneData.map(item=>{
-            let tmp = item.category.name
-            delete item.category.name
-            return item.category = tmp
+        cloneData.map(item=>{      
+            delete item?._id
+            item.category = item?.category && JSON.stringify(item?.category)
+            item.categoryDrug = item?.categoryDrug && JSON.stringify(item?.categoryDrug)
+            item.APIs = item?.APIs && JSON.stringify(item?.APIs)
+            item.image = item?.image?.join(";")
+            return item
         })
         const wb = utils.book_new();
         const ws = utils.json_to_sheet([]);
@@ -134,14 +257,20 @@ const ExcelCSVProductComponent = () => {
                             loading ? (<Loading />) : error ? (<Message>{error}</Message>) : ''
                         }
                         {
-                            data?.length
-                            ?
+                            errors?.length? 
+                            <DataTableProduct 
+                                errors={errors}
+                                unShowSetting={true}
+                                />
+                            : data?.length ?
                                 <DataTableProduct 
                                     products={data}
+                                    unShowSetting={true}
                                 />
                             :
                                 <DataTableProduct 
                                     products={productall}
+                                    unShowSetting={true}
                                 />
                         }
                         </div>

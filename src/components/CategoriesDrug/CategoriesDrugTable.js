@@ -4,6 +4,7 @@ import Message from "../LoadingError/Error";
 import { Link, useHistory } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import CustomLoader from "../../util/LoadingTable";
+import NoRecords from "../../util/noData";
 
 const CategoriesTable = (props) => {
   const {categoryDrugList} = props
@@ -13,36 +14,36 @@ const CategoriesTable = (props) => {
   const columns = [
     {
         name: "STT",
-        selector: (row, index) => <bold>{index+1}</bold>,
+        selector: (row, index) => <b>{index+1}</b>,
         reorder: true,
         width: '60px'
 
     },
     {
         name: "Tên nhóm thuốc",
-        selector: (row) => row.name,
+        selector: (row) => row?.name,
         sortable: true,
         reorder: true,
         grow: 3
     },
     {
         name: "Mô tả",
-        selector: (row) => row.description,
+        selector: (row) => row?.description,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
       name: "Trạng thái",
-      selector: (rows) => rows.isActive === true ? 
-          (<input className="form-check-input"  type="checkbox" defaultChecked={rows.isActive}/>) : 
+      selector: (rows) => rows?.isActive === true ? 
+          (<input className="form-check-input"  type="checkbox" defaultChecked={rows?.isActive}/>) : 
           (<input className="form-check-input"  type="checkbox" />),
       sortable: true,
       reorder: true,
       sortFunction: (categoriesDrug) => {
           return [categoriesDrug].map((a, b) => {
-            const fieldA = a.isActive;
-            const fieldB = b.isActive;
+            const fieldA = a?.isActive;
+            const fieldB = b?.isActive;
             let comparison = 0;
         
             if (fieldA === fieldB) {
@@ -158,6 +159,7 @@ const CategoriesTable = (props) => {
           // theme="solarized"
           columns={columns}
           data={categoriesDrug}
+          noDataComponent={NoRecords()}
           customStyles={customStyles}
           defaultSortFieldId
           pagination

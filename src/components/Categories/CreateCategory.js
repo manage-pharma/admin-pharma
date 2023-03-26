@@ -4,6 +4,13 @@ import { createCategory, updateCategory } from "../../Redux/Actions/CategoryActi
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import axios from "axios";
+import { toast } from "react-toastify";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const CreateCategory = (props) => {
   const {valueEdit} = props
   const categoryId = valueEdit._id
@@ -25,6 +32,18 @@ const CreateCategory = (props) => {
   }
   const handleSubmit = async(e) => {
     e.preventDefault();
+    if (!name) {
+      toast.error("Tên không được bỏ trống", ToastObjects);
+      return;
+    }
+    if (!description) {
+      toast.error("Mô tả không được bỏ trống", ToastObjects);
+      return;
+    }
+    if (!file) {
+      toast.error("Hình ảnh không được bỏ trống", ToastObjects);
+      return;
+    }
     if(file){
       const formData = new FormData();
       formData.append('image', file);
@@ -45,6 +64,18 @@ const CreateCategory = (props) => {
 
   const hanldeEdit = async(e) => {
     e.preventDefault();
+    if (!name) {
+      toast.error("Tên không được bỏ trống", ToastObjects);
+      return;
+    }
+    if (!description) {
+      toast.error("Mô tả không được bỏ trống", ToastObjects);
+      return;
+    }
+    if (!data.image && !file) {
+      toast.error("Hình ảnh không được bỏ trống", ToastObjects);
+      return;
+    }
     if(file){
       const formData = new FormData();
       formData.append('image', file);
@@ -127,6 +158,15 @@ const CreateCategory = (props) => {
           required={image ? false : true} 
           onChange={e => {
             setData(prev => ({ ...prev, image: null }))
+            
+            if (e.target.files[0].size > 1024 * 1024){
+              toast.error("File có kích thước quá 1MB.",ToastObjects);
+              return
+            }
+            else if (e.target.files[0].type !== 'image/jpeg' && e.target.files[0].type !== 'image/png'){
+              toast.error("File không đúng định dạng.",ToastObjects);
+              return   
+            }
             setImg(e.target.files[0])
           }}
           className="form-control" 
@@ -168,10 +208,10 @@ const CreateCategory = (props) => {
         <div className="d-grid">
           {
             valueEdit ? (
-              <button className="btn btn-warning py-3" onClick={hanldeEdit}><h5>Cập nhật</h5></button>
+              <button type="submit" className="btn btn-warning py-3" onClick={hanldeEdit}><h5>Cập nhật</h5></button>
             ): 
             (
-              <button className="btn btn-primary py-3" onClick={handleSubmit}><h5>Tạo mới </h5></button>
+              <button type="submit" className="btn btn-primary py-3" onClick={handleSubmit}><h5>Tạo mới </h5></button>
             )
           }
         </div>

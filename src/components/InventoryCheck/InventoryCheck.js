@@ -18,6 +18,7 @@ import {
 } from "../../Redux/Constants/InventoryCheckConstant";
 import { toast } from "react-toastify";
 import Toast from "../LoadingError/Toast";
+import NoRecords from "../../util/noData";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -194,7 +195,7 @@ const InventoryCheck = (props) => {
   const columns = [
     {
       name: "STT",
-      selector: (row, index) => <bold>{index + 1}</bold>,
+      selector: (row, index) => <b>{index + 1}</b>,
       reorder: true,
       width: "60px",
     },
@@ -229,7 +230,7 @@ const InventoryCheck = (props) => {
     {
       name: "Trạng thái",
       selector: (rows) =>
-        rows.status === true ? (
+        rows?.status === true ? (
           <span className="badge bg-success text-white">Đã hoàn tất</span>
         ) : (
           <span className="badge bg-danger text-white">Chưa duyệt</span>
@@ -238,8 +239,8 @@ const InventoryCheck = (props) => {
       reorder: true,
       sortFunction: (importStock) => {
         return [importStock].map((a, b) => {
-          const fieldA = a.status;
-          const fieldB = b.status;
+          const fieldA = a?.status;
+          const fieldB = b?.status;
           let comparison = 0;
 
           if (fieldA === fieldB) {
@@ -346,6 +347,7 @@ const InventoryCheck = (props) => {
           // theme="solarized"
           columns={columns}
           data={inventoryCheck}
+          noDataComponent={NoRecords()}
           customStyles={customStyles}
           defaultSortFieldId
           pagination

@@ -10,8 +10,10 @@ import CustomLoader from "../util/LoadingTable";
 import DataTable from "react-data-table-component";
 import { listProduct } from "../Redux/Actions/ProductActions";
 import { tagInventory } from "../Redux/Actions/InventoryAction";
+import NoRecords from "../util/noData";
 
 const TagInventory = () => {
+  const textNoRecord = "vui lòng chọn thông tin để thống kê"
   const dispatch = useDispatch()
   const [ isStop , setIsStop ] = useState(false)
   const [keyword, setSearch] = useState()
@@ -52,7 +54,7 @@ const TagInventory = () => {
     if(!toggleSearch){
       if(!data.from || !data.to){
         if(!isStop){
-          renderToast('Date has not been selected','error', setIsStop, isStop)
+          renderToast('Chưa chọn ngày','error', setIsStop, isStop)
         }
         return;
       }
@@ -71,14 +73,14 @@ const TagInventory = () => {
   const columns = [
     {
         name: "STT",
-        selector: (row, index) => <bold>{index+1}</bold>,
+        selector: (row, index) => <b>{index+1}</b>,
         reorder: true,
         width: '60px'
 
     },
     {
         name: "Số lô",
-        selector: (row) => row.lotNumber,
+        selector: (row) => row?.lotNumber,
         sortable: true,
 
         reorder: true,
@@ -86,28 +88,28 @@ const TagInventory = () => {
     },
     {
         name: "Tồn đầu kỳ",
-        selector: (row) => row.TDK,
+        selector: (row) => row?.TDK,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Nhập",
-        selector: (row) => row.N,
+        selector: (row) => row?.N,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Xuất",
-        selector: (row) => row.X,
+        selector: (row) => row?.X,
         sortable: true,
         reorder: true,
         grow: 2
     },
     {
         name: "Tồn cuối kỳ",
-        selector: (row) => row.TCK,
+        selector: (row) => row?.TCK,
         sortable: true,
         reorder: true,
         grow: 2
@@ -227,7 +229,7 @@ const customStyles = {
                   ></input>
                 </div>
               </div>
-              <div className="col-lg-1">
+              <div style={{display: 'none'}} className="col-lg-1">
                 {toggleSearch ? 
                   <button className="btn btn-danger" onClick={handleSearchDate}>Hủy tìm kiếm</button>
                 : 
@@ -238,25 +240,21 @@ const customStyles = {
           </header>
 
           <div>
-            {inventoryItem ?
-              (
-                  <DataTable
-                      // theme="solarized"
-                      columns={columns}
-                      data={inventoryItem}
-                      customStyles={customStyles}
-                      defaultSortFieldId
-                      pagination
-                      // onRowClicked={handleRowClicked}
-                      paginationComponentOptions={paginationComponentOptions}
-                      progressPending={loading}
-                      progressComponent={<CustomLoader />}
-                      highlightOnHover
-                      pointerOnHover
-                  />
-              ) : 
-              <div>Không có dữ liệu</div>
-            }
+            <DataTable
+              // theme="solarized"
+              columns={columns}
+              noDataComponent={NoRecords(textNoRecord)}
+              data={inventoryItem}
+              customStyles={customStyles}
+              defaultSortFieldId
+              pagination
+              // onRowClicked={handleRowClicked}
+              paginationComponentOptions={paginationComponentOptions}
+              progressPending={loading}
+              progressComponent={<CustomLoader />}
+              highlightOnHover
+              pointerOnHover
+            />
           </div>
         </div>
       </section>

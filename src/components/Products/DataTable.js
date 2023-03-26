@@ -10,8 +10,9 @@ import {useSelector} from "react-redux";
 import {PRODUCT_DELETE_RESET} from "../../Redux/Constants/ProductConstants";
 import CustomLoader from './../../util/LoadingTable';
 import formatCurrency from './../../util/formatCurrency';
+import NoRecords from "../../util/noData";
 const DataTableProduct=(props) => {
-    const {products,loading,loadingDelete}=props
+    const {products,loading,loadingDelete, errors, unShowSetting}=props
     const history=useHistory()
     const dispatch=useDispatch()
     const [modalShow,setModalShow]=useState(false);
@@ -78,19 +79,18 @@ const DataTableProduct=(props) => {
             </div>
         )
     }
-
     const columns=[
 
         {
             name: "Tên thuốc",
-            selector: (row) => row.name,
+            selector: (row) => row?.name,
             sortable: true,
             reorder: true,
             minWidth: "180px",
         },
         {
             name: "Hình ảnh",
-            selector: (row) => <img className="mt-1 w-50 h-50" src={row.image?.slice(0,0+1)[0]} alt="ImageCategory" />,
+            selector: (row) => <img className="mt-1 w-50 h-50" src={row?.image?.slice(0,0+1)[0]} alt="ImageCategory" />,
         },
         {
             name: "Nhóm hàng",
@@ -106,7 +106,7 @@ const DataTableProduct=(props) => {
         },
         {
             name: "Thuốc kê đơn",
-            selector: (row) => row.prescription?
+            selector: (row) => row?.prescription?
                 <span className="badge bg-success text-white p-2" style={{minWidth: '45px'}}>Có</span>:
                 <span className="badge bg-danger text-white p-2" >Không</span>,
             sortable: true,
@@ -116,39 +116,39 @@ const DataTableProduct=(props) => {
         },
         {
             name: "DVT",
-            selector: (row) => row.unit,
+            selector: (row) => row?.unit,
             sortable: true,
             reorder: true
         },
         {
             name: "Giá",
-            selector: (row) => formatCurrency(row.price),
+            selector: (row) => formatCurrency(row?.price),
             sortable: true,
             reorder: true
         },
         {
             name: "NSX",
-            selector: (row) => row.manufacturer,
+            selector: (row) => row?.manufacturer,
             sortable: true,
             reorder: true
         },
         {
             name: "Nguồn gốc",
-            selector: (row) => row.countryOfOrigin,
+            selector: (row) => row?.countryOfOrigin,
             sortable: true,
             reorder: true,
             minWidth: "130px",
         },
         {
             name: "Thuốc bán",
-            selector: (row) => row.allowToSell?
+            selector: (row) => row?.allowToSell?
                 <span className="badge bg-success text-white p-2   " style={{minWidth: '45px'}}>Có</span>:
                 <span className="badge bg-danger text-white p-2 " >Không</span>,
             sortable: true,
             reorder: true,
             minWidth: "120px",
         },
-        {
+        !unShowSetting && {
             name: "Hành động",
             cell: row => <CustomMaterialMenu size="small" row={row} />,
             allowOverflow: true,
@@ -156,7 +156,28 @@ const DataTableProduct=(props) => {
             width: '100px',
         },
     ];
-
+    const columsErrors = [
+        // {
+        //     name: "Hàng",
+        //     selector: (row, index) => <b>{index+2}</b> ,
+        //     sortable: true,
+        //     reorder: true,
+        //     minWidth: "180px",
+        // },
+        {
+            name: "Thứ tự",
+            selector: (row, index) => <p>{row?.name}</p> ,
+            sortable: true,
+            reorder: true,
+            minWidth: "180px",
+        },
+        {
+            name: "Lỗi",
+            selector: (row) => <div style={{color: 'red'}}>{
+                row?.errors.map((error) => <p>{error}</p>)
+            }</div>,
+        },
+    ]
     const paginationComponentOptions={
         selectAllRowsItem: true,
         selectAllRowsItemText: "ALL"
@@ -256,8 +277,9 @@ const DataTableProduct=(props) => {
             />
             <DataTable
                 // theme="solarized"
-                columns={columns}
-                data={products}
+                columns={products ? columns : columsErrors}
+                data={products || errors}
+                noDataComponent={NoRecords()}
                 customStyles={customStyles}
                 defaultSortFieldId
                 pagination
