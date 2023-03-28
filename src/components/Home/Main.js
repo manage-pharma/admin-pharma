@@ -17,7 +17,7 @@ const Main = () => {
     <>
       <section className="content-main">
         <div className="content-header">
-          <h2 className="content-title">Trang chủ</h2>
+          <h2 className="content-title"><span className="u-text-mark">Trang chủ</span></h2>
         </div>
         {/* Top Total */}
         <TopTotal orders= {orders} products={products}/>
