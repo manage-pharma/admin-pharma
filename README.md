@@ -19,6 +19,8 @@ To run this project with webpack:
 
 ## Documents helps to dev
 
+https://react.dev/
+
 https://jbetancur.github.io/react-data-table-component/?path=/story/custom-styles-compact-grid--compact-grid
 
 https://www.educative.io/answers/how-to-create-a-react-application-with-webpack
