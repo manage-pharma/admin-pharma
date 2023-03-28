@@ -5,6 +5,7 @@ import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { backendUrlFile } from "../../util/fileUploader";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -48,7 +49,7 @@ const CreateCategory = (props) => {
       const formData = new FormData();
       formData.append('image', file);
       const { data: dataUp } = await axios.post(`/api/category/single`, formData);
-      data.image = dataUp.filename
+      data.image = `${backendUrlFile.image}/${dataUp.filename}`
       dispatch(createCategory({ ...data }));
       setData({
         name: '',
@@ -80,7 +81,7 @@ const CreateCategory = (props) => {
       const formData = new FormData();
       formData.append('image', file);
       const { data: dataUp } = await axios.post(`/api/category/single`, formData);
-      data.image = dataUp.filename
+      data.image = `${backendUrlFile.image}/${dataUp.filename}`
     }
     dispatch(updateCategory({ ...data, categoryId }));
     setData({
