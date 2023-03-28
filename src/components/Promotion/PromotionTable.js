@@ -29,10 +29,22 @@ const PromotionTable = (props) => {
     },
     {
         name: "% Giảm giá",
-        selector: (row) => row?.discount,
+        selector: (row) =>row?.discount,
         sortable: true,
         reorder: true,
         grow: 2
+    },
+    {
+      name: "Trạng thái",
+      selector: (row) =>(new Date().getTime()>new Date(row?.endOn).getTime())?
+      <p className="text-warning fw-bold fw-light" style={{opacity:"60%"}}>Ngưng áp dụng</p>:
+        (new Date().getTime()<new Date(row?.startOn).getTime())?
+        <p className="text-info fw-bold fw-light" style={{opacity:"60%"}}>Sắp diễn ra</p>:
+        <p className="text-success fw-bold fw-light" style={{opacity:"60%"}}>Đang diễn ra</p>
+      ,//row?.discount,
+      sortable: true,
+      reorder: true,
+      grow: 2
     },
     {
       name: "Ngày bắt đầu",

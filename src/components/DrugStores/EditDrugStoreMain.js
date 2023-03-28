@@ -8,6 +8,7 @@ import Loading from "../LoadingError/Loading";
 
 import {singleDrugStore,updateDrugStore} from "../../Redux/Actions/DrugStoreActions";
 import {DRUGSTORE_UPDATE_RESET} from "../../Redux/Constants/DrugStoreConstants";
+import {listPromotion} from "../../Redux/Actions/PromotionAction";
 import {Carousel} from "react-bootstrap";
 
 const ToastObjects={
@@ -24,6 +25,9 @@ const EditDrugStoreMain=(props) => {
   const history=useHistory();
   const [flag,setFlag]=useState(false);
   const [index,setIndex]=useState(0);
+  const [discountArr,setDiscountArr]=useState([])
+  const [discountValueArr,setDiscountValueArr]=useState([])
+  const [discountItem,setDiscountItem]=useState('')
   const [data,setData]=useState({
     product: {},
     isActive: false,
@@ -31,6 +35,10 @@ const EditDrugStoreMain=(props) => {
     discount: 0.0,
     refunded: 0.0
   })
+  const promotionList = useSelector((state)=> state.promotionList)
+  const {promotions}=promotionList
+
+
 
   const handleChange=e => {
     setData(prev => {
@@ -40,10 +48,14 @@ const EditDrugStoreMain=(props) => {
     })
 
   }
+  const handleSelectDiscount=(e)=>{
+    setDiscountItem(JSON.parse(e.target.value))
+  }
 
   const handleSubmit=async (e) => {
     e.preventDefault();
-    dispatch(updateDrugStore({...data, drugstoreId}));
+    dispatch(updateDrugStore({...data,discountDetail:discountArr.map((item)=>item._id), drugstoreId}));
+    //console.log("data",{...data,discountDetail:discountArr.map((item)=>item._id), drugstoreId});
   }
 
   const drugstoreEdit=useSelector((state) => state.drugstoreSingle);
@@ -57,7 +69,14 @@ const EditDrugStoreMain=(props) => {
     setIndex(selectedIndex);
   };
 
+  const handelREmoveDiscount=(e)=>{
+    e.preventDefault()
+    discountArr.splice(index, 1)
+    setDiscountArr(discountArr)
+  }
+
   useEffect(() => {
+    dispatch(listPromotion())
     if(successUpdate) {
       dispatch({
         type: DRUGSTORE_UPDATE_RESET
@@ -68,18 +87,26 @@ const EditDrugStoreMain=(props) => {
       dispatch(singleDrugStore(drugstoreId));
     }
     if(drugstore._id===drugstoreId && !flag) {
+      setDiscountArr(promotions.filter(itemA => drugstore.discountDetail.some(itemB => itemB === itemA._id)))
       setData({
         product: drugstore.product,
         isActive: drugstore.isActive,
         stock: drugstore.stock,
-        discount: drugstore.discount,
+        discount: drugstore.discount,//discountArr.reduce((sum,item)=>sum+item.discount,0),
+        
         refunded: drugstore.refunded,
       })
+      
       setFlag(true)
     }
+    
+  },[dispatch, drugstore, drugstoreId, flag, successUpdate,discountArr]);
+  console.log({data,discountItem,discountArr,promotions});
 
-  },[dispatch, drugstore, drugstoreId, flag, successUpdate]);
-
+  var sum = promotions.filter(itemA => discountArr.some(itemB => itemB._id === itemA._id))
+               //.map(item => item.discount)
+               //.reduce((total, value) => total + value, 0);
+               console.log(sum);
   return (
     <>
       <Toast />
@@ -100,7 +127,7 @@ const EditDrugStoreMain=(props) => {
             <div className="">
 
               <div className="row p-3">
-                <div className="col-md-12 col-lg-8 card card-custom mb-4 pt-3">
+                <div className="col-md-12 col-lg-6 card card-custom mb-4 pt-3">
                   <div>
                     <button type="button" className="btn btn-primary mb-4" style={{float: 'right'}}
                       onClick={() => {history.push(`/product/${data.product._id}`)}}
@@ -243,12 +270,15 @@ const EditDrugStoreMain=(props) => {
                       </header>
                     </div>
                   </div>                  
-                  <div className="p-5">
-                    <Carousel activeIndex={index} onSelect={handleSelect}>
+
+                </div>
+                <div className="col-md-12 col-lg-6  pt-3">
+                  <div className="p-0">
+                    <Carousel activeIndex={index} onSelect={handleSelect} pause={false} interval={null} >
                       {
                         data?.product?.image?.map((item,index) => {
                           return (
-                            <Carousel.Item>
+                            <Carousel.Item key={index}>
                               <img
                                 className="d-block w-100"
                                 src={item}
@@ -264,10 +294,12 @@ const EditDrugStoreMain=(props) => {
                       }
                     </Carousel>
                   </div>
+                  
+
 
                 </div>
-                <div className="col-md-12 col-lg-4  pt-3">
-                  <div className="mb-4">
+                <div className="row p-0">
+                  <div className="mb-4 col-lg-4 col-sm-12">
                     <label htmlFor="product_regisId" className="form-label">
                       Số lượng tổng
                     </label>
@@ -283,7 +315,7 @@ const EditDrugStoreMain=(props) => {
                       disabled
                     />
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-4 col-lg-4 col-sm-12">
                     <label htmlFor="product_regisId" className="form-label">
                       Giảm giá
                     </label>
@@ -294,10 +326,11 @@ const EditDrugStoreMain=(props) => {
                       type="number"
                       placeholder="Nhập % khuyến mãi"
                       className="form-control"
+                      
                       required
                     />
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-4 col-lg-4 col-sm-12">
                     <label htmlFor="product_regisId" className="form-label">
                       Hoàn trả
                     </label>
@@ -328,7 +361,143 @@ const EditDrugStoreMain=(props) => {
                       <div className="slider round"></div>
                     </label>
                   </div>
-                  <div>
+                  <div className="d-flex flex-wrap">
+                    <div
+                      style={{
+                        display: "flex",
+                        gridGap: "30px",
+                        width: "-webkit-fill-available",
+                      }}
+                    >
+                      <div className="d-flex align-items-end w-75 mb-3">
+                        <div style={{ flexGrow: "1" }}>
+                          <label htmlFor="unit" className="form-label">
+                            Khuyến mãi
+                          </label>
+                          <select
+                            //value={discountItem}
+                            name="API"
+                            onChange={handleSelectDiscount}
+                            className="form-control"
+                          >
+                            {/*<option value="">{discountItem.name?discountItem.name:"Chọn khuyến mãi"}</option>*/}
+                            <option value="0"  key="111" >{"Chọn khuyến mãi"}</option>
+                            {promotions?.map((item, index) => (
+                              discountArr.map((item=>item._id)).includes(item._id)?'':
+                              <option key={index-1}  value={JSON.stringify(item)} selected={false}>
+                                {item?.name+" - khuyến mãi: "+item?.discount+"% key "+(index)}
+                              </option>
+                              
+                            ))}
+                            
+                          </select>
+                        </div>
+                        <div
+                          style={{
+                            marginLeft: "10px",
+                            transform: "translateY(-3px)",
+                          }}
+                        >
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-end w-25 mb-3">
+                       
+                        <div
+                          style={{
+                            marginLeft: "10px",
+                            transform: "translateY(-3px)",
+                          }}
+                        >
+                          <button
+                            className="btn btn-success" 
+                            onClick={(e)=>{
+                              e.preventDefault()
+                              if(discountArr.length<5){
+                                setDiscountArr([...discountArr, discountItem])
+                                setData({...data,discount: Number(data.discount+discountItem.discount)})
+                              }
+                              
+                            }}
+                          >
+                            <i className="fas fa-plus"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="w-100">
+                      <div className="card card-custom">
+                        <header
+                          className="card-header bg-aliceblue"
+                          style={{ height: "200px", overflowY: "scroll" }}
+                        >
+                          <table className="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Tên khuyến mãi</th>
+                                <th scope="col">Giảm giá</th>
+                                <th scope="col">Ngày bắt đầu</th>
+                                <th scope="col">Ngày kết thúc</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Hành động</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {
+                                discountArr?.map((itemDis, index)=>
+                                  promotions?.map(itemPro=>
+                                        itemDis._id === itemPro?._id ? 
+                                        <>
+                                        <tr key={index}>
+                                          <td>{itemPro.name}</td>
+                                          <td>{itemPro.discount}</td>
+                                          <td>{itemPro.startOn}</td>
+                                          <td>{itemPro.endOn}</td>
+                                          <td>
+                                            {
+
+                                          (new Date().getTime()>new Date(itemPro?.endOn).getTime())?
+                                            <p className="text-warning fw-bold fw-light" style={{opacity:"60%"}}>Ngưng áp dụng</p>:
+                                              (new Date().getTime()<new Date(itemPro?.startOn).getTime())?
+                                                <p className="text-info fw-bold fw-light" style={{opacity:"60%"}}>Sắp diễn ra</p>
+                                                :
+                                                <p className="text-success fw-bold fw-light" style={{opacity:"60%"}}>Đang diễn ra</p>
+                                            }
+
+                                         
+                                            
+                                          </td>
+                                          <td>
+                                            <button
+                                              className="dropdown-item text-danger"
+                                              onClick={(e)=>{
+                                                e.preventDefault()
+                                                console.log(index);
+                                                setData({...data,discount: Number(data.discount-itemPro.discount)})
+                                                discountArr.splice(index, 1)
+                                                setDiscountArr([...discountArr])
+                                              }}
+                                            >
+                                              <i className="fas fa-trash"></i>
+                                            </button>
+                                          </td>
+                                        </tr>
+                                      </>
+                                      :                                    
+                                      ''
+                                    
+                                  )
+                                  )
+      
+                                }
+
+                            </tbody>
+                          </table>
+                        </header>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-2">
                     <button type="submit" className="btn btn-primary mb-4" style={{float: 'right'}}>
                       Cập nhật
                     </button>

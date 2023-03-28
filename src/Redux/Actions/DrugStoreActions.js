@@ -213,7 +213,7 @@ export const singleDrugStore=(id) => async (dispatch,getState) => {
 
 // ADMIN UPDATEDRUGSTORE
 
-export const updateDrugStore=({countInStock,isActive,discount,refunded,drugstoreId}) => async (dispatch,getState) => {
+export const updateDrugStore=({countInStock,isActive,discount,refunded,discountDetail,drugstoreId}) => async (dispatch,getState) => {
   try {
     dispatch({type: DRUGSTORE_UPDATE_REQUEST});
     const {
@@ -228,7 +228,7 @@ export const updateDrugStore=({countInStock,isActive,discount,refunded,drugstore
     };
     const {data}=await axios.put(`/api/drugstore/${drugstoreId}`,
       {
-        countInStock,isActive,discount,refunded
+        countInStock,isActive,discount,refunded,discountDetail
       }
       ,config);
     dispatch({type: DRUGSTORE_UPDATE_SUCCESS,payload: data});

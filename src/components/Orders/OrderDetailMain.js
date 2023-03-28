@@ -121,24 +121,36 @@ const OrderDetailMain = (props) => {
                         </>        
                     }
                     {
-                      orderItems.isDelivered && orderItems.isPaid ? (
+                      (orderItems.isDelivered && orderItems.isPaid)||(orderItems.isDelivered && orderItems.paymentMethod=="COD") ? (
                         <button className="btn btn-success col-12 mt-2">
                           {`ĐÃ GIAO ${moment(orderItems.isDeliveredAt).format("MMM Do YY")}`}
                         </button>
-                      ) : !orderItems.isPaid ? (
+                      ) : !orderItems.isPaid&& orderItems.paymentMethod=="COD"?
+                          <>
+                            <div className="btn btn-success col-12 pe-none mt-2"> 
+                              TRẢ SAU
+                            </div>
+                          </>
+                          :
+                          !orderItems.isPaid&& orderItems.paymentMethod=="Paypal" ? (
                             <>
                               <div className="btn btn-danger col-12 pe-none mt-2"> 
-                                Chưa trả
+                                CHƯA TRẢ
                               </div>
                             </>
-                          ) : (
-                            <>
-                              {loadingDelivered && <Loading/>}
-                              <button onClick={deliveredHanlder} className="btn btn-dark col-12 user-select-none mt-2">
-                                VẬN CHUYỂN
-                              </button>
-                            </>
-                          )                
+                          ) : ""
+                                         
+                    }
+                    {
+                      orderItems.isComformed&&orderItems.isPaid&&!orderItems.isDelivered||
+                      orderItems.isComformed&&!orderItems.isPaid&&orderItems.paymentMethod=="COD"&&!orderItems.isDelivered?
+                        <>
+                          {loadingDelivered && <Loading/>}
+                          <button onClick={deliveredHanlder} className="btn btn-dark col-12 user-select-none mt-2">
+                            VẬN CHUYỂN
+                          </button>
+                        </>
+                        :""
                     }
                     {
                       orderItems.isReceived?""

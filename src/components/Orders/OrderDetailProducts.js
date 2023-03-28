@@ -3,7 +3,8 @@ import {Link} from "react-router-dom";
 
 const OrderDetailProducts=(props) => {
   const {order,loading}=props
-
+  const {status}=order
+  console.log(status[(status.length-1)].level);
   if(!loading) {
     const addDecimals=(num) => {
       return (Math.round(num*100)/100).toFixed(2)
@@ -71,15 +72,22 @@ const OrderDetailProducts=(props) => {
                 <dt className="text-muted">Trạng thái: </dt>
                 <dd>
                   {
-                    order.isPaid? (
+                    status[(status.length-1)].level==5? (
                       <span className="badge rounded-pill alert alert-success text-success">
-                        Hoàn tất
+                        {status[(status.length-1)].status}
                       </span>
-                    ):(
-                      <span className="badge rounded-pill alert alert-success text-danger">
-                        Chưa trả
-                      </span>
-                    )
+                    ):status[(status.length-1)].level==0?
+                      (
+                        <span className="badge rounded-pill alert alert-success text-dark">
+                          {status[(status.length-1)].status}
+                        </span>
+                      )
+                      :
+                      (
+                        <span className="badge rounded-pill alert alert-success text-danger">
+                          {status[(status.length-1)].status}
+                        </span>
+                      )
                   }
                 </dd>
               </dl>
