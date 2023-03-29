@@ -102,7 +102,7 @@ export const drugstoreSingleReducer=(state={drugstore: {}},action) => {
     case DRUGSTORE_SINGLE_REQUEST:
       return {...state,loading: true};
     case DRUGSTORE_SINGLE_SUCCESS:
-      return {loading: false,drugstore: action.payload};
+      return {loading: false,drugstore: action.payload,success:true};
     case DRUGSTORE_SINGLE_FAIL:
       return {loading: false,error: action.payload};
     case DRUGSTORE_SINGLE_RESET:

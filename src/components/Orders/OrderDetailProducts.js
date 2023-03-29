@@ -10,7 +10,7 @@ const OrderDetailProducts=(props) => {
       return (Math.round(num*100)/100).toFixed(2)
     }
     order.itemsPrice=addDecimals(
-      order.orderItems.reduce((acc,item) => acc+item.price*item.qty,0)
+      order.orderItems.reduce((acc,item) => acc+item.price*item.qty*(1-item.discount/100),0)
     )
   }
   return (
@@ -44,9 +44,9 @@ const OrderDetailProducts=(props) => {
                   </div>
                 </Link>
               </td>
-              <td>{item.price}</td>
+              <td>{(item.price*(1-item.discount/100)).toFixed(2)}</td>
               <td>{item.qty}</td>
-              <td className="text-end">${item.price*item.qty}</td>
+              <td className="text-end">${(item.price*item.qty*(1-item.discount/100)).toFixed(2)}</td>
             </tr>
           ))
         }
@@ -58,6 +58,9 @@ const OrderDetailProducts=(props) => {
               </dl>
               <dl className="dlist">
                 <dt>Phí vận chuyển:</dt> <dd>${order.shippingPrice}</dd>
+              </dl>
+              <dl className="dlist">
+                <dt>Vouncher:</dt> <dd>${order.taxPrice}</dd>
               </dl>
               <dl className="dlist">
                 <dt>Vouncher:</dt> <dd>$0</dd>
@@ -72,7 +75,7 @@ const OrderDetailProducts=(props) => {
                 <dt className="text-muted">Trạng thái: </dt>
                 <dd>
                   {
-                    status[(status.length-1)].level==5? (
+                    status[(status.length-1)].level==6? (
                       <span className="badge rounded-pill alert alert-success text-success">
                         {status[(status.length-1)].status}
                       </span>

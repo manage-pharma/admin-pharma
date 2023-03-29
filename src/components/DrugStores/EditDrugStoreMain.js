@@ -8,7 +8,7 @@ import Loading from "../LoadingError/Loading";
 
 import {singleDrugStore,updateDrugStore} from "../../Redux/Actions/DrugStoreActions";
 import {DRUGSTORE_UPDATE_RESET} from "../../Redux/Constants/DrugStoreConstants";
-import {listPromotion} from "../../Redux/Actions/PromotionAction";
+import {listPromotion,promotionProductList} from "../../Redux/Actions/PromotionAction";
 import {Carousel} from "react-bootstrap";
 
 const ToastObjects={
@@ -32,11 +32,14 @@ const EditDrugStoreMain=(props) => {
     product: {},
     isActive: false,
     stock: [],
-    discount: 0.0,
     refunded: 0.0
   })
   const promotionList = useSelector((state)=> state.promotionList)
   const {promotions}=promotionList
+
+
+
+
 
 
 
@@ -55,16 +58,17 @@ const EditDrugStoreMain=(props) => {
   const handleSubmit=async (e) => {
     e.preventDefault();
     dispatch(updateDrugStore({...data,discountDetail:discountArr.map((item)=>item._id), drugstoreId}));
-    //console.log("data",{...data,discountDetail:discountArr.map((item)=>item._id), drugstoreId});
   }
-
+  const currentDate = new Date();
   const drugstoreEdit=useSelector((state) => state.drugstoreSingle);
-  const {loading, error, drugstore}=drugstoreEdit;
+  const {loading, error, drugstore,success: successDS}=drugstoreEdit;
   const drugstoreUpdate=useSelector((state) => state.drugstoreUpdate);
   const {loading: loadingUpdate, error: errorUpdate, success: successUpdate}=drugstoreUpdate;
-  const {isActive,stock, discount, refunded} = data;
+  const [totalDiscount,setTotalDiscount]=useState(0)
+  const {isActive,stock, refunded} = data;
+  const {loading:loadingP,error:errorP,data: datapromotionProduct,success:successPP}=useSelector((state) => state.promotionProductList);
 
-
+  
   const handleSelect=(selectedIndex) => {
     setIndex(selectedIndex);
   };
@@ -86,33 +90,35 @@ const EditDrugStoreMain=(props) => {
     if(drugstore._id!==drugstoreId) {
       dispatch(singleDrugStore(drugstoreId));
     }
+    if(successDS){
+      dispatch(promotionProductList(drugstore.discountDetail));
+      setTotalDiscount(discountArr.filter(obj => new Date(obj.startOn) < currentDate && new Date(obj.endOn) > currentDate).reduce((sum,item)=>sum+item.discount,0))
+    }
+    
+    
+    
     if(drugstore._id===drugstoreId && !flag) {
       setDiscountArr(promotions.filter(itemA => drugstore.discountDetail.some(itemB => itemB === itemA._id)))
       setData({
         product: drugstore.product,
         isActive: drugstore.isActive,
         stock: drugstore.stock,
-        discount: drugstore.discount,//discountArr.reduce((sum,item)=>sum+item.discount,0),
-        
         refunded: drugstore.refunded,
       })
       
       setFlag(true)
     }
-    
-  },[dispatch, drugstore, drugstoreId, flag, successUpdate,discountArr]);
-  console.log({data,discountItem,discountArr,promotions});
 
-  var sum = promotions.filter(itemA => discountArr.some(itemB => itemB._id === itemA._id))
-               //.map(item => item.discount)
-               //.reduce((total, value) => total + value, 0);
-               console.log(sum);
+    
+  },[dispatch, drugstore,successDS,drugstoreId, flag, successUpdate,discountArr]);
+  console.log({data,discountItem,discountArr,promotions,datapromotionProduct,totalDiscount});
+
   return (
     <>
       <Toast />
       {loading || loadingUpdate ? (<Loading />) : error || errorUpdate ? (<Message>{error || errorUpdate}</Message>) : ''}
       <section className="content-main" >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}><p>{datapromotionProduct?.total}</p>
           <div className="content-header">
             <div className="content-title d-flex" onClick={e => {
               e.preventDefault()
@@ -321,7 +327,8 @@ const EditDrugStoreMain=(props) => {
                     </label>
                     <input
                       onChange={handleChange}
-                      value={discount}
+                      //value={discount}
+                      value={totalDiscount}
                       name="discount"
                       type="number"
                       placeholder="Nhập % khuyến mãi"
@@ -412,9 +419,13 @@ const EditDrugStoreMain=(props) => {
                             className="btn btn-success" 
                             onClick={(e)=>{
                               e.preventDefault()
-                              if(discountArr.length<5){
+                              if(discountArr.length<promotions.length){
+                                
                                 setDiscountArr([...discountArr, discountItem])
-                                setData({...data,discount: Number(data.discount+discountItem.discount)})
+                                //setData({...data,discount: Number(data.discount+discountItem.discount)})
+                                setTotalDiscount(totalDiscount+Number(discountItem.discount))
+                              
+                                
                               }
                               
                             }}
@@ -473,7 +484,8 @@ const EditDrugStoreMain=(props) => {
                                               onClick={(e)=>{
                                                 e.preventDefault()
                                                 console.log(index);
-                                                setData({...data,discount: Number(data.discount-itemPro.discount)})
+                                                //setData({...data,discount: Number(data.discount-itemPro.discount)})
+                                                setTotalDiscount(totalDiscount-Number(discountItem.discount))
                                                 discountArr.splice(index, 1)
                                                 setDiscountArr([...discountArr])
                                               }}

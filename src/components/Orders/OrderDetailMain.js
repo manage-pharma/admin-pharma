@@ -3,7 +3,7 @@ import OrderDetailProducts from "./OrderDetailProducts";
 import OrderDetailInfo from "./OrderDetailInfo";
 import { Link} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrderDetails,getOrderConform ,getOrderCanceled,getOrderReceived} from "../../Redux/Actions/OrderActions";
+import { listOrder,getOrderDetails,getOrderConform ,getOrderCanceled,getOrderReceived} from "../../Redux/Actions/OrderActions";
 import { getOrderDelivered } from '../../Redux/Actions/OrderActions';
 import Message from '../LoadingError/Error';
 import Loading from '../LoadingError/Loading';
@@ -12,6 +12,7 @@ import moment from 'moment/moment';
 const OrderDetailMain = (props) => {
   const {orderId} = props;
   const dispatch = useDispatch()
+  const orderList = useSelector((state)=> state.orderList)
 
   const orderDetail = useSelector((state)=> state.orderDetail)
   const {loading, error, orderItems} = orderDetail
@@ -33,6 +34,7 @@ const OrderDetailMain = (props) => {
 
   useEffect(()=>{
     dispatch(getOrderDetails(orderId))
+    dispatch(listOrder())
   },[dispatch, orderId, successDelivered,successCanceled,successReceived,successConform])
   
   const deliveredHanlder = ((e)=>{ 
@@ -47,10 +49,7 @@ const OrderDetailMain = (props) => {
     e.preventDefault()
     dispatch(getOrderCanceled(orderItems))
   })
-  const receivedHanlder = ((e)=>{ 
-    e.preventDefault()
-    dispatch(getOrderReceived(orderItems))
-  })
+
   return (
     <section className="content-main">
       <div className="content-header">
@@ -199,6 +198,7 @@ const OrderDetailMain = (props) => {
                   ) :""
                      
                 }
+                
 
 
 
