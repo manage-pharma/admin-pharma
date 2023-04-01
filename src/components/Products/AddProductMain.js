@@ -37,6 +37,9 @@ import {
 import renderToast from "../../util/Toast";
 import formatCurrency from "./../../util/formatCurrency";
 import { backendUrlFile } from "../../util/fileUploader";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -264,6 +267,8 @@ const AddProductMain = () => {
     }
   };
 
+
+console.log({data});
   useEffect(() => {
     if (product) {
       toast.success("Thuốc đã được thêm", ToastObjects);
@@ -369,6 +374,7 @@ const AddProductMain = () => {
     newArr.splice(index, 1);
     setImages(newArr);
   };
+  
   return (
     <>
       <Toast />
@@ -849,30 +855,39 @@ const AddProductMain = () => {
                   </div>
                 </div>
                 {/* // ! mô tả - lời chỉ dẫn */}
-                <div className="mb-4 form-divided-2">
-                  <div>
+                <div className="mb-4 form-divided-1">
+                  <div className="mt-2">
                     <label className="form-label">Mô tả</label>
-                    <textarea
-                      name="description"
-                      placeholder="Nhập mô tả, công dụng,.."
-                      className="form-control"
-                      rows="4"
-                      required
-                      onChange={handleChange}
-                      value={description}
-                    ></textarea>
+                    <CKEditor
+                      editor={ ClassicEditor }
+                      data=""
+                      onReady={ editor => {
+                        editor.editing.view.change((writer) => {
+                          writer.setStyle('height', '350px', editor.editing.view.document.getRoot());
+                        });
+                      } }
+                      onChange={ ( event, editor ) => {
+                        const demo = editor.getData();
+                        setData({ ...data, description: demo });
+                      } }
+                    />
+
                   </div>
-                  <div>
+                  <div className="mt-2">
                     <label className="form-label">Lời chỉ dẫn</label>
-                    <textarea
-                      name="instruction"
-                      placeholder="Nhập lời chỉ dẫn"
-                      className="form-control"
-                      rows="4"
-                      required
-                      onChange={handleChange}
-                      value={instruction}
-                    ></textarea>
+                    <CKEditor
+                      editor={ ClassicEditor }
+                      data=""
+                      onReady={ editor => {
+                        editor.editing.view.change((writer) => {
+                          writer.setStyle('height', '350px', editor.editing.view.document.getRoot());
+                        });
+                      } }
+                      onChange={ ( event, editor ) => {
+                        const demo = editor.getData();
+                        setData({ ...data, instruction: demo });
+                      } }
+                    />
                   </div>
                 </div>
                 {/* // ! ảnh - cho phép bán */}

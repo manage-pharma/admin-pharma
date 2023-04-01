@@ -52,7 +52,7 @@ export const updateContent = ({logo, qrCode, phone,banners,companyName,companyAd
       },
     };
     const { data } = await axios.put(`/api/content/`, {
-      logo:process.env.REACT_APP_BE_URL+"/upload/"+logo, qrCode:process.env.REACT_APP_BE_URL+"/upload/"+qrCode, phone,banners,companyName,companyAddress,links,contacs, zaloUrl, fbUrl
+      logo, qrCode, phone,banners,companyName,companyAddress,links,contacs, zaloUrl, fbUrl
     }, config)
     dispatch({type: CONTENT_UPDATE_SUCCESS, payload: data});
   } catch (error) {

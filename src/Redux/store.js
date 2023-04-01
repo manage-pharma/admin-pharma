@@ -35,7 +35,8 @@ import {
   orderListReducer,
   orderCanceledReducer,
   orderConformReducer,
-  orderReceivedReducer
+  orderReceivedReducer,
+  orderCompletedReducer
 
 } from "./Reducers/OrderReducers";
 import {
@@ -147,6 +148,7 @@ const reducer = combineReducers({
   orderCanceled:orderCanceledReducer,
   orderConform :orderConformReducer,
   orderReceived:orderReceivedReducer,
+  orderCompleted:orderCompletedReducer,
 
   categoryList: categoryListReducer,
   categoryCreate: categoryCreateReducer,

@@ -209,7 +209,7 @@ const EditContentMain = () => {
         );
         imgOldURL.push({
           link: image.link,
-          image: "/upload/" + dataUpdate.filename,
+          image: process.env.REACT_APP_BE_URL+"/upload/" + dataUpdate.filename,
         });
       }
       bannerNew = imgOldURL;
@@ -224,7 +224,7 @@ const EditContentMain = () => {
         formData
       );
       const imglogoUrl = dataUpdate.filename;
-      logoNew = imglogoUrl;
+      logoNew =process.env.REACT_APP_BE_URL+"/upload/"+ imglogoUrl;
     }
 
     //upload qrCode
@@ -236,17 +236,18 @@ const EditContentMain = () => {
         formData
       );
       const imgqrCodeUrl = dataUpdate.filename;
-      qrNew = imgqrCodeUrl;
+      qrNew = process.env.REACT_APP_BE_URL+"/upload/"+imgqrCodeUrl;
     }
 
     const dataPost = {
       ...data,
       banners: [...bannerNew],
-      logo: logoNew,
-      qrCode: qrNew,
+      logo: logoNew!=""?logoNew:data.logo,
+      qrCode: qrNew!=""?qrNew:data.qrCode,
       links: [...itemPage],
       contacts: [...itemContact],
     };
+    console.log({POST:dataPost});
     dispatch(
       updateContent({
         ...dataPost,

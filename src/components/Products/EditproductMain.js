@@ -8,6 +8,8 @@ import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
 import renderToast from "../../util/Toast";
 import formatCurrency from "./../../util/formatCurrency";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 //! Modal
 import MyVerticallyCenteredModalUnit from "./Modal/ModalUnit";
@@ -416,6 +418,7 @@ const EditProductMain = (props) => {
     successAPICreate,
     successAPIDelete,
   ]);
+  console.log({dataUp:data});
   return (
     <>
       <Toast />
@@ -897,10 +900,10 @@ const EditProductMain = (props) => {
                   </div>
                 </div>
                 {/* // ! mô tả - lời chỉ dẫn */}
-                <div className="mb-4 form-divided-2">
-                  <div>
+                <div className="mb-4 form-divided-1">
+                  <div className="mt-2">
                     <label className="form-label">Mô tả</label>
-                    <textarea
+                    {/*<textarea
                       name="description"
                       placeholder="Nhập mô tả, công dụng,.."
                       className="form-control"
@@ -908,19 +911,50 @@ const EditProductMain = (props) => {
                       required
                       onChange={handleChange}
                       value={description}
-                    ></textarea>
+                    ></textarea>*/}
+                    {/*<CKEditor
+                      editor={ClassicEditor}
+                      data={"khoa"}
+                      onReady={(editor) => {
+                        editor.editing.view.change((writer) => {
+                          writer.setStyle('height', '200px', editor.editing.view.document.getRoot());
+                        });
+                      }}
+                      onChange={(event, editor) => {
+                        const demo = editor.getData();
+                        setData({ ...data, description: demo });
+                      }}
+                    />*/}
+                    <CKEditor
+                      editor={ ClassicEditor }
+                      data={data.description}
+                      onReady={ editor => {
+                        editor.editing.view.change((writer) => {
+                          writer.setStyle('height', '350px', editor.editing.view.document.getRoot());
+                        });
+                      } }
+                      onChange={ ( event, editor ) => {
+                        const demo = editor.getData();
+                        setData({ ...data, description: demo });
+                      } }
+                    />
+
                   </div>
-                  <div>
+                  <div className="mt-2">
                     <label className="form-label">Lời chỉ dẫn</label>
-                    <textarea
-                      name="instruction"
-                      placeholder="Nhập lời chỉ dẫn"
-                      className="form-control"
-                      rows="4"
-                      required
-                      onChange={handleChange}
-                      value={instruction}
-                    ></textarea>
+                    <CKEditor
+                      editor={ ClassicEditor }
+                      data={data.instruction}
+                      onReady={ editor => {
+                        editor.editing.view.change((writer) => {
+                          writer.setStyle('height', '350px', editor.editing.view.document.getRoot());
+                        });
+                      } }
+                      onChange={ ( event, editor ) => {
+                        const demo = editor.getData();
+                        setData({ ...data, instruction: demo });
+                      } }
+                    />
                   </div>
                 </div>
                 {/* // ! ảnh - cho phép bán */}

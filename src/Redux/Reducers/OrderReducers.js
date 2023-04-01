@@ -2,8 +2,8 @@ import { ORDER_DETAILS_FAIL, ORDER_DETAILS_SUCCESS, ORDER_DETAILS_REQUEST, ORDER
   
 
   ORDER_CANCELED_RESET, ORDER_CANCELED_SUCCESS, ORDER_CANCELED_REQUEST,ORDER_CANCELED_FAIL,
-  ORDER_RECEIVED_RESET, ORDER_RECEIVED_SUCCESS, ORDER_RECEIVED_REQUEST,ORDER_RECEIVED_FAIL,
   ORDER_CONFORM_RESET, ORDER_CONFORM_SUCCESS, ORDER_CONFORM_REQUEST,ORDER_CONFORM_FAIL, ORDER_DELIVERED_FAIL,
+  ORDER_COMPLETED_RESET, ORDER_COMPLETED_SUCCESS, ORDER_COMPLETED_REQUEST,ORDER_COMPLETED_FAIL
 
 
 } from "../Constants/OrderConstants";
@@ -91,13 +91,30 @@ export const orderCanceledReducer  = (state= {}, action) =>{
 //ORDER RECEIVED
 export const orderReceivedReducer  = (state= {}, action) =>{
   switch(action.type){
-    case ORDER_RECEIVED_REQUEST:
+    case ORDER_COMPLETED_REQUEST:
       return { loading: true};
-    case ORDER_RECEIVED_SUCCESS:
+    case ORDER_COMPLETED_SUCCESS:
       return { loading: false, success: true}
-    case ORDER_RECEIVED_FAIL:
+    case ORDER_COMPLETED_FAIL:
       return { loading: false, error: action.payload}
-    case ORDER_RECEIVED_RESET:
+    case ORDER_COMPLETED_RESET:
+      return {}
+    default: 
+      return state;
+  }
+}
+
+
+//ORDER COMPLETED
+export const orderCompletedReducer  = (state= {}, action) =>{
+  switch(action.type){
+    case ORDER_COMPLETED_REQUEST:
+      return { loading: true};
+    case ORDER_COMPLETED_SUCCESS:
+      return { loading: false, success: true}
+    case ORDER_COMPLETED_FAIL:
+      return { loading: false, error: action.payload}
+    case ORDER_COMPLETED_RESET:
       return {}
     default: 
       return state;

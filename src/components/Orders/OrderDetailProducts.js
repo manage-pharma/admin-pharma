@@ -75,7 +75,7 @@ const OrderDetailProducts=(props) => {
                 <dt className="text-muted">Trạng thái: </dt>
                 <dd>
                   {
-                    status[(status.length-1)].level==6? (
+                    status[(status.length-1)].level==7||status[(status.length-1)].level==6? (
                       <span className="badge rounded-pill alert alert-success text-success">
                         {status[(status.length-1)].status}
                       </span>

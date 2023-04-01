@@ -4,6 +4,7 @@ import { ORDER_DELIVERED_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_REQUEST, ORD
     ORDER_CANCELED_FAIL, ORDER_CANCELED_SUCCESS, ORDER_CANCELED_REQUEST,
     ORDER_RECEIVED_FAIL, ORDER_RECEIVED_SUCCESS, ORDER_RECEIVED_REQUEST,
     ORDER_CONFORM_FAIL, ORDER_CONFORM_SUCCESS, ORDER_CONFORM_REQUEST,
+    ORDER_COMPLETED_FAIL, ORDER_COMPLETED_SUCCESS, ORDER_COMPLETED_REQUEST,
 } from "../Constants/OrderConstants";
 import { logout } from "./UserActions";
 import { ORDER_DELIVERED_REQUEST, ORDER_DELIVERED_FAIL } from './../Constants/OrderConstants';
@@ -222,6 +223,40 @@ export const getOrderCanceled = (orderItems) => async (dispatch, getState) => {
         });
     }
 };
+//ORDER RECEIVED  for Admin
+export const getOrderCompleted  = (orderItems) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_COMPLETED_REQUEST });
+        // userInfo -> userLogin -> getState(){globalState}
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+        // api not transmiss any params because it just change state of deliverd 
+        const { data } = await axios.get(`/api/orders/${orderItems._id}/complete`, config);
+        dispatch({ type: ORDER_COMPLETED_SUCCESS, payload: data });
+
+    
+        
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        if (message === "Not authorized, token failed") {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_COMPLETED_FAIL,
+            payload: message,
+        });
+    }
+};
 
 //ORDER RECEIVED  for User
 export const getOrderReceived  = (orderItems) => async (dispatch, getState) => {
@@ -256,5 +291,5 @@ export const getOrderReceived  = (orderItems) => async (dispatch, getState) => {
             payload: message,
         });
     }
-};
+};//getOrderConform
 
