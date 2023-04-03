@@ -106,7 +106,7 @@ const MainDrugStores = () => {
                 }}>{!expanded ? 'Mở rộng' : 'Thu gọn' }</button>
               </div>
             </div>
-            <div className="col-lg-2 col-6 col-md-3">
+            {/*<div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
                 <span className="label-date">From: </span>
                 <input
@@ -138,7 +138,7 @@ const MainDrugStores = () => {
               : 
                 <button className="btn btn-success" onClick={handleSearchDate}>Search</button>
               }
-            </div>
+            </div>*/}
           </div>
         </header>
 

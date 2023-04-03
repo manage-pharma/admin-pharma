@@ -239,6 +239,9 @@ export const getOrderCompleted  = (orderItems) => async (dispatch, getState) => 
         };
         // api not transmiss any params because it just change state of deliverd 
         const { data } = await axios.get(`/api/orders/${orderItems._id}/complete`, config);
+        orderItems.orderItems.map(async(item)=>{
+            await axios.get(`/api/drugstore/${item.drugstoreId}/inc-buy-num`, config);
+        })
         dispatch({ type: ORDER_COMPLETED_SUCCESS, payload: data });
 
     
