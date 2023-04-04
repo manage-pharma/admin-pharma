@@ -12,6 +12,7 @@ import  moment  from 'moment';
 import renderToast from "../../util/Toast";
 import DataTable from "react-data-table-component";
 import NoRecords from "../../util/noData";  
+import Select from "react-select";
 
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -42,6 +43,8 @@ const AddReqInventory = () => {
         product: '',
         qty: 0,
     });
+
+    const [selectedProduct, setSelectedProduct] = useState({});
 
     const [data, setData] = useState({
         requestedAt: moment(new Date(Date.now())).format('YYYY-MM-DD'),
@@ -75,21 +78,21 @@ const AddReqInventory = () => {
         })
     }
     
-    const handleChangeProduct = e =>{
-        e.preventDefault();
-        setFieldProduct(prev => {
-            let a = document.getElementById("select-product");
-            let b = a.options[a.selectedIndex]
-            let c = b.getAttribute('data-foo')
-            let d = b.getAttribute('data-unit')
-            return {
-                ...prev,
-                [e.target.name]: e.target.value,
-                name:c, 
-                unit:d
-              }
-        })
-    }
+    // const handleChangeProduct = e =>{
+    //     e.preventDefault();
+    //     setFieldProduct(prev => {
+    //         let a = document.getElementById("select-product");
+    //         let b = a.options[a.selectedIndex]
+    //         let c = b.getAttribute('data-foo')
+    //         let d = b.getAttribute('data-unit')
+    //         return {
+    //             ...prev,
+    //             [e.target.name]: e.target.value,
+    //             name:c, 
+    //             unit:d
+    //           }
+    //     })
+    // }
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
@@ -149,6 +152,7 @@ const AddReqInventory = () => {
                 qty: 0,
             })
             setItemProducts([])
+            setSelectedProduct({})
             dispatch(listReqInventory())
         }
         dispatch(listProvider())
@@ -258,6 +262,39 @@ const AddReqInventory = () => {
             qty: row?.qty,
         })
     };
+    // start search input
+    const options = [];
+    if(products?.length > 0){
+      products.map((p) => {
+        options.push({ value: p?._id, label: p.name, dataFoo: p.name, dataUnit: p.unit} )
+      })
+      
+    }
+    
+    const handleChangeProduct = (selectedOptions) => {
+      if(selectedOptions?.target?.name){
+        setFieldProduct((prev) => {
+            return {
+                ...prev,
+                [selectedOptions.target.name]: selectedOptions.target.value 
+            }
+        })
+      }
+      else{
+        setFieldProduct(prev => {
+            return {
+                ...prev,
+                product: selectedOptions.value ,
+                name: selectedOptions.dataFoo, 
+                unit: selectedOptions.dataUnit
+              }
+        })
+        setSelectedProduct(selectedOptions);
+      }
+    };
+
+    const selectedOptions = selectedProduct
+    // end search input
     return (
       <>
         <Toast/>
@@ -350,7 +387,23 @@ const AddReqInventory = () => {
                         <div className="card-body">
                             <div className="mb-4 form-divided-2">
                                 <div>
-                                    <label htmlFor="product_category" className="form-label">
+                                <label htmlFor="product_category" className="form-label">
+                                    Tên thuốc
+                                </label>
+                                <Select
+                                    options={options}
+                                    value={selectedOptions}
+                                    onChange={handleChangeProduct}
+                                    placeholder="Tag"
+                                    getOptionLabel={(option) => (
+                                      <div data-foo={option.dataFoo}>{option.label}</div>
+                                    )}
+                                    getOptionValue={(option) => option.value}
+                                    filterOption={(option, inputValue) =>
+                                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                                    }
+                                  />
+                                    {/* <label htmlFor="product_category" className="form-label">
                                         Tên thuốc
                                     </label>
                                     <select
@@ -364,7 +417,7 @@ const AddReqInventory = () => {
                                         {products?.map((item, index)=>(
                                             <option key={index} value={item._id} data-foo={item.name} data-unit={item.unit}>{item.name}</option>
                                         ))}
-                                    </select>
+                                    </select> */}
                                 </div>
                                 <div>
                                     <label htmlFor="qty" className="form-label">
