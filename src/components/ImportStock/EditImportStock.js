@@ -13,6 +13,7 @@ import renderToast from "../../util/Toast";
 import formatCurrency from './../../util/formatCurrency';
 import DataTable from "react-data-table-component";
 import NoRecords from "../../util/noData";
+import Select from "react-select";
 
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -43,6 +44,7 @@ const EditImportStock = (props) => {
     const [ isStop , setIsStop ] = useState(false)
     const [isEdited, setIsEdited] = useState(false)
     const [itemProducts, setItemProducts] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState({});
     const [field, setFieldProduct] = useState({
         name: '',
         product: '',
@@ -99,29 +101,29 @@ const EditImportStock = (props) => {
           }
         })
     }
-    const handleChangeProduct = e =>{
-        e.preventDefault();
-        let formattedPrice = price;
-        if (e.target.name === "price") {
-          formattedPrice = e.target.value.replace(/\D/g, '')
-        }
-        if(!isEdited){
-            setIsEdited(true)
-        }
-        setFieldProduct(prev => {
-            let a = document.getElementById("select-product");
-            let b = a.options[a.selectedIndex]
-            let c = b.getAttribute('data-foo')
-            let d = b.getAttribute('data-expproduct')
-            return {
-                ...prev,
-                name:c, 
-                [e.target.name]: e.target.value,
-                price: formattedPrice,
-                expProduct: d
-              }
-        })
-    }
+    // const handleChangeProduct = e =>{
+    //     e.preventDefault();
+    //     let formattedPrice = price;
+    //     if (e.target.name === "price") {
+    //       formattedPrice = e.target.value.replace(/\D/g, '')
+    //     }
+    //     if(!isEdited){
+    //         setIsEdited(true)
+    //     }
+    //     setFieldProduct(prev => {
+    //         let a = document.getElementById("select-product");
+    //         let b = a.options[a.selectedIndex]
+    //         let c = b.getAttribute('data-foo')
+    //         let d = b.getAttribute('data-expproduct')
+    //         return {
+    //             ...prev,
+    //             name:c, 
+    //             [e.target.name]: e.target.value,
+    //             price: formattedPrice,
+    //             expProduct: d
+    //           }
+    //     })
+    // }
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
@@ -192,6 +194,7 @@ const EditImportStock = (props) => {
             toast.success(`Cập nhập đơn thành công`, ToastObjects);
             dispatch({type: IMPORT_STOCK_UPDATE_RESET})
             dispatch({type: IMPORT_STOCK_DETAILS_RESET})
+            setSelectedProduct({})
             dispatch(singleImportStock(importId));
         }
         if (importId !== importStockItem?._id ) {
@@ -390,7 +393,48 @@ const EditImportStock = (props) => {
             qty: row?.qty,
         })
     };
+     // start search input
+     const options = [];
+     if(products?.length > 0){
+       products.map((p) => {
+         options.push({ value: p?._id, label: p.name, dataFoo: p.name, dataExpproduct: p.expDrug} )
+       })
+       
+     }
+     
+     const handleChangeProduct = (selectedOptions) => {
+        if(!isEdited){
+            setIsEdited(true)
+        }
+       if(selectedOptions?.target?.name){
+        let formattedPrice = price;
+        if (selectedOptions.target.name === "price") {
+          formattedPrice = selectedOptions.target.value.replace(/\D/g, '')
+        }
+        setFieldProduct((prev) => {
+             return {
+                 ...prev,
+                 [selectedOptions.target.name]: selectedOptions.target.value,
+                 price: formattedPrice
 
+             }
+         })
+       }
+       else{
+         setFieldProduct(prev => {
+             return {
+                 ...prev,
+                 product: selectedOptions.value ,
+                 name: selectedOptions.dataFoo, 
+                 expProduct: selectedOptions.dataExpproduct
+               }
+         })
+         setSelectedProduct(selectedOptions);
+       }
+     };
+ 
+     const selectedOptions = selectedProduct
+     // end search input
     return (
       <>
         <Toast/>
@@ -500,7 +544,20 @@ const EditImportStock = (props) => {
                                     <label htmlFor="product_category" className="form-label">
                                         Tên thuốc
                                     </label>
-                                    <select
+                                    <Select
+                                    options={options}
+                                    value={selectedOptions}
+                                    onChange={handleChangeProduct}
+                                    placeholder="Tag"
+                                    getOptionLabel={(option) => (
+                                      <div data-foo={option.dataFoo}>{option.label}</div>
+                                    )}
+                                    getOptionValue={(option) => option.value}
+                                    filterOption={(option, inputValue) =>
+                                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                                    }
+                                  />
+                                    {/* <select
                                     id="select-product"
                                     value={product}
                                     name="product"
@@ -511,7 +568,7 @@ const EditImportStock = (props) => {
                                         {products?.map((item, index)=>(
                                             <option key={index} value={item._id} data-foo={item.name} data-expproduct={item.expDrug}>{item.name}</option>
                                         ))}
-                                    </select>
+                                    </select> */}
                                 </div>
                                 <div>
                                     <label className="form-label">Số lô</label>

@@ -14,6 +14,8 @@ import moment from "moment";
 import renderToast from "../../util/Toast";
 import { listInventory } from "../../Redux/Actions/InventoryAction";
 import ExportTable from "./ExportStockTable";
+import Select from "react-select";
+
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -42,6 +44,7 @@ const AddExportStock = () => {
 
   const [isStop, setIsStop] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState({});
   const [field, setFieldProduct] = useState({
     countInStock: 0,
     name: "",
@@ -131,41 +134,41 @@ const AddExportStock = () => {
     });
     return data;
   };
-  const handleChangeProduct = (e) => {
-    e.preventDefault();
-    let a = document.getElementById("select-product");
-    let b = a.options[a.selectedIndex];
-    let c = b.getAttribute("data-foo");
+  // const handleChangeProduct = (e) => {
+  //   e.preventDefault();
+  //   let a = document.getElementById("select-product");
+  //   let b = a.options[a.selectedIndex];
+  //   let c = b.getAttribute("data-foo");
 
-    let b1 = a.options[a.selectedIndex];
-    let c1 = b1.getAttribute("data-countinstock");
+  //   let b1 = a.options[a.selectedIndex];
+  //   let c1 = b1.getAttribute("data-countinstock");
 
-    let d = a.options[a.selectedIndex];
-    let d1 = d.getAttribute("data-lotlist");
-    refreshField();
+  //   let d = a.options[a.selectedIndex];
+  //   let d1 = d.getAttribute("data-lotlist");
+  //   refreshField();
 
-    const tempLot = d1 ? [...JSON.parse(d1)] : [];
-    const updateQtyLot = [];
-    tempLot.forEach((lot, index) => {
-      updateQtyLot[index] = {
-        name: lot.lotNumber,
-        value: 0,
-        expDrug: lot.expDrug,
-      };
-    });
-    setqtyLost(updateQtyLot);
+  //   const tempLot = d1 ? [...JSON.parse(d1)] : [];
+  //   const updateQtyLot = [];
+  //   tempLot.forEach((lot, index) => {
+  //     updateQtyLot[index] = {
+  //       name: lot.lotNumber,
+  //       value: 0,
+  //       expDrug: lot.expDrug,
+  //     };
+  //   });
+  //   setqtyLost(updateQtyLot);
 
-    setFieldProduct((prev) => {
-      return {
-        ...prev,
-        name: c,
-        countInStock: c1,
-        qty: 0,
-        lotField: tempLot,
-        [e.target.name]: e.target.value,
-      };
-    });
-  };
+  //   setFieldProduct((prev) => {
+  //     return {
+  //       ...prev,
+  //       name: c,
+  //       countInStock: c1,
+  //       qty: 0,
+  //       lotField: tempLot,
+  //       [e.target.name]: e.target.value,
+  //     };
+  //   });
+  // };
   const vonglap = (product, newData) => {
     let index = -1;
     for (let i = 0; i < newData.length; i++) {
@@ -346,12 +349,59 @@ const AddExportStock = () => {
         qty: 0,
       });
       setItemProducts([]);
+      setSelectedProduct({})
       dispatch(listExportStock());
     }
     dispatch(listUser());
     dispatch(listProduct());
     dispatch(listInventory());
   }, [success, dispatch]);
+    // start search input
+    const options = [];
+    if(inventoriesClone?.length > 0){
+      inventoriesClone.map((p) => {
+        options.push({ value: p?.idDrug, label: p.name, dataFoo: p.name, dataCountinstock: p.total_count,
+          dataLotlist: JSON.stringify(p.products)} )
+      })
+      
+    }
+    const handleChangeProduct = (selectedOptions) => {
+      refreshField();
+      if(selectedOptions?.target?.name){
+        setFieldProduct((prev) => {
+          return {
+            ...prev,
+            [selectedOptions.target.name]: selectedOptions.target.value,
+          };
+        });
+      }
+      else{
+        const tempLot = selectedOptions.dataLotlist ? [...JSON.parse(selectedOptions.dataLotlist)] : [];
+        const updateQtyLot = [];
+        tempLot.forEach((lot, index) => {
+          updateQtyLot[index] = {
+            name: lot.lotNumber,
+            value: 0,
+            expDrug: lot.expDrug,
+          };
+        });
+        setqtyLost(updateQtyLot);
+        setFieldProduct((prev) => {
+          return {
+            ...prev,
+            product: selectedOptions.value,
+            name: selectedOptions.dataFoo,
+            countInStock: selectedOptions.dataCountinstock,
+            qty: 0,
+            lotField: tempLot,
+          };
+        });
+        setSelectedProduct(selectedOptions);
+      }
+    };
+
+    const selectedOptions = selectedProduct
+    // end search input
   return (
     <>
       <Toast />
@@ -444,11 +494,26 @@ const AddExportStock = () => {
           <div className="mb-4">
             <div className="card card-custom mb-4 shadow-sm">
               <div className="card-body">
-                <div className="mb-4">
-                  <label htmlFor="product_category" className="form-label">
+                <div className="mb-4 form-divided-2">
+                 <div>
+                 <label htmlFor="product_category" className="form-label">
                     Sản phẩm
                   </label>
-                  <select
+                  <Select
+                    
+                    options={options}
+                    value={selectedOptions}
+                    onChange={handleChangeProduct}
+                    placeholder="Tag"
+                    getOptionLabel={(option) => (
+                      <div data-foo={option.dataFoo}>{option.label}</div>
+                    )}
+                    getOptionValue={(option) => option.value}
+                    filterOption={(option, inputValue) =>
+                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                    }
+                  />
+                  {/* <select
                     id="select-product"
                     value={product}
                     name="product"
@@ -468,7 +533,8 @@ const AddExportStock = () => {
                         {item.name}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
+                 </div>
                 </div>
 
                 <div className="mb-4">
