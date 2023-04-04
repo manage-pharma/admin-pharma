@@ -29,6 +29,7 @@
   },
   "scripts": {
     "serve": "webpack serve --mode development",
+    "start": "set PORT=4000 && react-scripts start",
     "build": "webpack --mode production",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
