@@ -22,6 +22,12 @@ const ExpandedComponent = (props) =>{
             sortable: true,
         },
         {
+            name: "Ngày sản xuất",
+            selector: (row) => moment(row?.manufactureDate).format("DD-MM-YYYY"),
+            sortable: true,
+            minWidth: "180px",
+        },
+        {
             name: "Hạn sử dụng",
             selector: (row) => moment(row?.expDrug).format("DD-MM-YYYY"),
             sortable: true,
@@ -31,7 +37,7 @@ const ExpandedComponent = (props) =>{
 
     const conditionalRowStyles = [
         {
-            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") > 180,
+            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "months") > +(row?.expProduct/2),
             style: {
                 backgroundColor: 'rgba(63, 195, 128, 0.9)',
                 color: 'white',
@@ -41,7 +47,7 @@ const ExpandedComponent = (props) =>{
             },
         },
         {
-            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") >= 90 && (moment(row?.expDrug)).diff(moment(Date.now()), "days") < 180,
+            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "months") <= +(row?.expProduct/2) && (moment(row?.expDrug)).diff(moment(Date.now()), "days") >= 15,
             style: {
                 backgroundColor: 'rgba(248, 148, 6, 0.9)',
                 color: 'white',
@@ -51,7 +57,7 @@ const ExpandedComponent = (props) =>{
             },
         },
         {
-            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") < 90,
+            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "months") < +(row?.expProduct),
             style: {
                 backgroundColor: 'rgba(242, 38, 19, 0.9)',
                 color: 'white',

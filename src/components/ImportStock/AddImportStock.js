@@ -41,6 +41,7 @@ const AddImportStock = () => {
         name: '',
         product: '',
         lotNumber: '',
+        manufactureDate: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         price: '',
         VAT: 0,
@@ -48,7 +49,6 @@ const AddImportStock = () => {
         qty: 0,
         expProduct: 0
     });
-
     const [data, setData] = useState({
         importedAt: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         invoiceNumber: '',
@@ -67,7 +67,7 @@ const AddImportStock = () => {
         importedAt
     } = data
     // eslint-disable-next-line
-    const { name, product, lotNumber, expDrug, qty, VAT, discount, price } = field
+    const { name, product, lotNumber, manufactureDate, expDrug, qty, VAT, discount, price } = field
     totalPrice= importItems.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0)
     totalVAT = importItems.reduce((sum, curr) => sum + ( ((+curr.price) * (+curr.qty) * (1 - (+curr.discount/100))) *  (+curr.VAT/100) ) , 0)
     totalDiscount = importItems.reduce((sum, curr) => sum + ( (((+curr.price) * (+curr.qty)) * (+curr.discount/100)) ), 0)
@@ -147,7 +147,7 @@ const AddImportStock = () => {
             }
             return;
         }
-        else if((+field.expProduct) > +(moment(field.expDrug)).diff(moment(Date.now()), "days")){
+        else if((+moment(field.expDrug).diff(moment(field.manufactureDate), "months") < +field.expProduct)){
             renderToast(`Hạn sử dụng của thuốc phải lớn hơn ${+field.expProduct} tháng `,'error', setIsStop, isStop)
             return;
         }
@@ -160,7 +160,9 @@ const AddImportStock = () => {
                         VAT: parseInt(field.VAT),
                         discount: parseInt(field.discount),
                         price: parseInt(field.price),
+                        manufactureDate: field.manufactureDate,
                         expDrug: field.expDrug,
+                        expProduct: field.expProduct,
                         qty: parseInt(field.qty)})
                     setItemProducts(importItems)
                  }
@@ -203,6 +205,7 @@ const AddImportStock = () => {
                 name: '',
                 product: '',
                 lotNumber: '',
+                manufactureDate: moment(new Date(Date.now())).format('YYYY-MM-DD'),
                 expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
                 price: '',
                 VAT: 0,
@@ -284,6 +287,14 @@ const AddImportStock = () => {
             reorder: true,
             grow: 2,
             width:'150px'
+        },
+        {
+            name: "Ngày sản xuất",
+            selector: (row) => moment(row?.manufactureDate).format("DD-MM-YYYY"),
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
         },
         {
             name: "Hạn sử dụng",
@@ -376,6 +387,7 @@ const AddImportStock = () => {
             name: row?.name,
             product: row?.product,
             lotNumber: row?.lotNumber,
+            manufactureDate: moment(row?.manufactureDate).format('YYYY-MM-DD'),
             expDrug: moment(row?.expDrug).format('YYYY-MM-DD'),
             price: row?.price,
             VAT: row?.VAT,
@@ -488,7 +500,7 @@ const AddImportStock = () => {
                 <div className="mb-4">
                     <div className="card card-custom mb-4 shadow-sm">
                         <div className="card-body">
-                            <div className="mb-4 form-divided-3">
+                            <div className="mb-4 form-divided-2">
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
                                         Tên thuốc
@@ -518,7 +530,20 @@ const AddImportStock = () => {
                                     ></input>
 
                                 </div>
-                                 <div>
+                            </div>
+                            <div className="mb-4 form-divided-2">
+                                <div>
+                                    <label className="form-label">Ngày sản xuất</label>
+                                    <input
+                                        name="manufactureDate"
+                                        value={manufactureDate}
+                                        type='Date'
+                                        className="form-control"
+                                        required
+                                        onChange={handleChangeProduct}
+                                    ></input>
+                                </div>
+                                <div>
                                     <label className="form-label">Hạn sử dụng</label>
                                     <input
                                         name="expDrug"

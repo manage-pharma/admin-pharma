@@ -47,6 +47,7 @@ const EditImportStock = (props) => {
         name: '',
         product: '',
         lotNumber: '',
+        manufactureDate: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         price: '',
         VAT: 0,
@@ -73,7 +74,7 @@ const EditImportStock = (props) => {
     } = data
     
     // eslint-disable-next-line
-    const { name, product, lotNumber, expDrug, qty, VAT, discount, price } = field
+    const { name, product, lotNumber, manufactureDate, expDrug, qty, VAT, discount, price } = field
     totalPrice= itemProducts.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0)
     totalVAT = itemProducts.reduce((sum, curr) => sum + ( ((+curr.price) * (+curr.qty) * (1 - (+curr.discount/100))) *  (+curr.VAT/100) ) , 0)
     totalDiscount = itemProducts.reduce((sum, curr) => sum + ( (((+curr.price) * (+curr.qty)) * (+curr.discount/100)) ), 0)
@@ -136,7 +137,7 @@ const EditImportStock = (props) => {
             }
             return;
         }
-        else if((+field.expProduct) > +(moment(field.expDrug)).diff(moment(Date.now()), "days")){
+        else if((+moment(field.expDrug).diff(moment(field.manufactureDate), "months") < +field.expProduct)){
             renderToast(`Hạn sử dụng của thuốc phải lớn hơn ${+field.expProduct} tháng `,'error', setIsStop, isStop)
             return;
         }
@@ -148,7 +149,9 @@ const EditImportStock = (props) => {
                     VAT: parseInt(field.VAT),
                     discount: parseInt(field.discount),
                     price: parseInt(field.price),
+                    manufactureDate: field.manufactureDate,
                     expDrug: field.expDrug,
+                    expProduct: field.expProduct,
                     qty: parseInt(field.qty)})
                 setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
              }
@@ -281,6 +284,14 @@ const EditImportStock = (props) => {
             width:'150px'
         },
         {
+            name: "Ngày sản xuất",
+            selector: (row) => moment(row?.manufactureDate).format("DD-MM-YYYY"),
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {
             name: "Hạn sử dụng",
             selector: (row) => moment(row?.expDrug).format("DD-MM-YYYY"),
             sortable: true,
@@ -371,6 +382,7 @@ const EditImportStock = (props) => {
             name: row?.name,
             product: row?.product?._id || row?.product,
             lotNumber: row?.lotNumber,
+            manufactureDate: moment(row?.manufactureDate).format('YYYY-MM-DD'),
             expDrug: moment(row?.expDrug).format('YYYY-MM-DD'),
             price: row?.price,
             VAT: row?.VAT,
@@ -483,7 +495,7 @@ const EditImportStock = (props) => {
                  <div className="mb-4">
                     <div className="card card-custom mb-4 shadow-sm">
                         <div className="card-body">
-                            <div className="mb-4 form-divided-3">
+                            <div className="mb-4 form-divided-2">
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
                                         Tên thuốc
@@ -512,7 +524,19 @@ const EditImportStock = (props) => {
                                     ></input>
 
                                 </div>
-                                 <div>
+                            </div>
+                            <div className="mb-4 form-divided-2">
+                                <div>
+                                    <label className="form-label">Ngày sản xuất</label>
+                                    <input
+                                        name="manufactureDate"
+                                        value={manufactureDate}
+                                        type='Date'
+                                        className="form-control"
+                                        onChange={handleChangeProduct}
+                                    ></input>
+                                </div>
+                                <div>
                                     <label className="form-label">Hạn sử dụng</label>
                                     <input
                                         name="expDrug"
