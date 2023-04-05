@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
-import { listProduct } from './../../Redux/Actions/ProductActions';
+import { listProductWithQty } from './../../Redux/Actions/ProductActions';
 import { useHistory } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import { REQ_INVENTORY_DETAILS_RESET, REQ_INVENTORY_UPDATE_RESET } from "../../Redux/Constants/RequestInventoryConstant";
@@ -31,7 +31,7 @@ const EditImportStock = (props) => {
     const providerList = useSelector((state)=>state.providerList)
     const { providers } = providerList
 
-    const productList = useSelector((state)=>state.productList)
+    const productList = useSelector((state)=>state.productListWithQty)
     const { products } = productList
 
     const userList  = useSelector((state)=> state.userList)
@@ -151,7 +151,7 @@ const EditImportStock = (props) => {
 
     useEffect(()=>{
         dispatch(listProvider())
-        dispatch(listProduct())
+        dispatch(listProductWithQty())
         dispatch(listUser())
         if(success){
             toast.success(`Cập nhập đơn thành công`, ToastObjects);
@@ -280,10 +280,18 @@ const EditImportStock = (props) => {
     };
 
      // start search input
+     const colourStyles = {
+        option: (provided, {data}) => {
+            return {
+                ...provided,
+                color: isSelected ? 'white' : data?.dataTotal  < 30 ? "red" : "black",
+            }
+        },
+      };
      const options = [];
      if(products?.length > 0){
        products.map((p) => {
-         options.push({ value: p?._id, label: p.name, dataFoo: p.name, dataUnit: p.unit} )
+         options.push({ value: p?._id, label: p.name, dataFoo: p.name, dataUnit: p.unit, dataTotal: p.total_count} )
        })
        
      }
@@ -426,12 +434,16 @@ const EditImportStock = (props) => {
                                     onChange={handleChangeProduct}
                                     placeholder="Tag"
                                     getOptionLabel={(option) => (
-                                      <div data-foo={option.dataFoo}>{option.label}</div>
+                                      <div data-foo={option.dataFoo}>
+                                        {option.label} {option.label && `- (Tổng tồn: ${option.dataTotal})`}
+                                      </div>
                                     )}
                                     getOptionValue={(option) => option.value}
                                     filterOption={(option, inputValue) =>
                                       option.data.label.toLowerCase().includes(inputValue.toLowerCase())
                                     }
+                                    styles={colourStyles}
+                                    getOptionStyle={(option) => colourStyles.option(null, { data: option })}
                                   />
                                 </div>
                                 <div>
