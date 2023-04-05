@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
-import { listProduct } from './../../Redux/Actions/ProductActions';
+import { listProductWithQty } from './../../Redux/Actions/ProductActions';
 import { useHistory } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import { REQ_INVENTORY_DETAILS_RESET, REQ_INVENTORY_UPDATE_RESET } from "../../Redux/Constants/RequestInventoryConstant";
@@ -12,6 +12,7 @@ import  moment  from 'moment';
 import renderToast from "../../util/Toast";
 import DataTable from "react-data-table-component";
 import NoRecords from "../../util/noData";
+import Select from "react-select";
 
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -30,7 +31,7 @@ const EditImportStock = (props) => {
     const providerList = useSelector((state)=>state.providerList)
     const { providers } = providerList
 
-    const productList = useSelector((state)=>state.productList)
+    const productList = useSelector((state)=>state.productListWithQty)
     const { products } = productList
 
     const userList  = useSelector((state)=> state.userList)
@@ -42,6 +43,7 @@ const EditImportStock = (props) => {
     const [ isStop , setIsStop ] = useState(false)
     const [isEdited, setIsEdited] = useState(false)
     const [itemProducts, setItemProducts] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState({});
     const [field, setFieldProduct] = useState({
         name: '',
         product: '',
@@ -80,24 +82,24 @@ const EditImportStock = (props) => {
         })
     }
 
-    const handleChangeProduct = e =>{
-        e.preventDefault();
-        if(!isEdited){
-            setIsEdited(true)
-        }
-        setFieldProduct(prev => {
-            let a = document.getElementById("select-product");
-            let b = a.options[a.selectedIndex]
-            let c = b.getAttribute('data-foo')
-            let d = b.getAttribute('data-unit')
-            return {
-                ...prev,
-                name:c, 
-                unit:d,
-                [e.target.name]: e.target.value,
-              }
-        })
-    }
+    // const handleChangeProduct = e =>{
+    //     e.preventDefault();
+    //     if(!isEdited){
+    //         setIsEdited(true)
+    //     }
+    //     setFieldProduct(prev => {
+    //         let a = document.getElementById("select-product");
+    //         let b = a.options[a.selectedIndex]
+    //         let c = b.getAttribute('data-foo')
+    //         let d = b.getAttribute('data-unit')
+    //         return {
+    //             ...prev,
+    //             name:c, 
+    //             unit:d,
+    //             [e.target.name]: e.target.value,
+    //           }
+    //     })
+    // }
 
     const handleAddProduct = e =>{
         e.preventDefault();
@@ -149,12 +151,13 @@ const EditImportStock = (props) => {
 
     useEffect(()=>{
         dispatch(listProvider())
-        dispatch(listProduct())
+        dispatch(listProductWithQty())
         dispatch(listUser())
         if(success){
             toast.success(`Cập nhập đơn thành công`, ToastObjects);
             dispatch({type: REQ_INVENTORY_DETAILS_RESET})
             dispatch({type: REQ_INVENTORY_UPDATE_RESET})
+            setSelectedProduct({})
             dispatch(singleReqInventory(reqId));
         }
         if (reqId !== reqInventoryItem?._id ) {
@@ -276,6 +279,48 @@ const EditImportStock = (props) => {
         })
     };
 
+     // start search input
+     const colourStyles = {
+        option: (provided, {data}) => {
+            return {
+                ...provided,
+                color: isSelected ? 'white' : data?.dataTotal  < 30 ? "red" : "black",
+            }
+        },
+      };
+     const options = [];
+     if(products?.length > 0){
+       products.map((p) => {
+         options.push({ value: p?._id, label: p.name, dataFoo: p.name, dataUnit: p.unit, dataTotal: p.total_count} )
+       })
+       
+     }
+     
+     const handleChangeProduct = (selectedOptions) => {
+       if(selectedOptions?.target?.name){
+         setFieldProduct((prev) => {
+             return {
+                 ...prev,
+                 [selectedOptions.target.name]: selectedOptions.target.value 
+             }
+         })
+       }
+       else{
+         setFieldProduct(prev => {
+             return {
+                 ...prev,
+                 product: selectedOptions.value ,
+                 name: selectedOptions.dataFoo, 
+                 unit: selectedOptions.dataUnit
+               }
+         })
+         setSelectedProduct(selectedOptions);
+       }
+     };
+ 
+     const selectedOptions = selectedProduct
+     // end search input
+
     return (
       <>
         <Toast/>
@@ -371,7 +416,7 @@ const EditImportStock = (props) => {
                                     <label htmlFor="product_category" className="form-label">
                                         Tên thuốc
                                     </label>
-                                    <select
+                                    {/* <select
                                     id="select-product"
                                     value={product}
                                     name="product"
@@ -382,20 +427,37 @@ const EditImportStock = (props) => {
                                         {products?.map((item, index)=>(
                                             <option key={index} value={item._id} data-foo={item.name} data-unit={item.unit}>{item.name}</option>
                                         ))}
-                                    </select>
+                                    </select> */}
+                                     <Select
+                                    options={options}
+                                    value={selectedOptions}
+                                    onChange={handleChangeProduct}
+                                    placeholder="Tag"
+                                    getOptionLabel={(option) => (
+                                      <div data-foo={option.dataFoo}>
+                                        {option.label} {option.label && `- (Tổng tồn: ${option.dataTotal})`}
+                                      </div>
+                                    )}
+                                    getOptionValue={(option) => option.value}
+                                    filterOption={(option, inputValue) =>
+                                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                                    }
+                                    styles={colourStyles}
+                                    getOptionStyle={(option) => colourStyles.option(null, { data: option })}
+                                  />
                                 </div>
                                 <div>
-                                        <label htmlFor="qty" className="form-label">
-                                            Số lượng
-                                        </label>
-                                        <input
-                                            name="qty"
-                                            value={qty}
-                                            type="number"
-                                            className="form-control"
-                                            onChange={handleChangeProduct}
-                                            onFocus={handleFocus}
-                                        />
+                                    <label htmlFor="qty" className="form-label">
+                                        Số lượng
+                                    </label>
+                                    <input
+                                    name="qty"
+                                    value={qty}
+                                    type="number"
+                                    className="form-control"
+                                    onChange={handleChangeProduct}
+                                    onFocus={handleFocus}
+                                    />
                                     </div>
                             </div>
                             <div className="mb-6 d-flex justify-content-end">

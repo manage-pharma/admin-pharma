@@ -13,6 +13,7 @@ import renderToast from "../../util/Toast";
 import formatCurrency from './../../util/formatCurrency';
 import DataTable from "react-data-table-component";
 import NoRecords from "../../util/noData";
+import Select from "react-select";
 
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -43,10 +44,12 @@ const EditImportStock = (props) => {
     const [ isStop , setIsStop ] = useState(false)
     const [isEdited, setIsEdited] = useState(false)
     const [itemProducts, setItemProducts] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState({});
     const [field, setFieldProduct] = useState({
         name: '',
         product: '',
         lotNumber: '',
+        manufactureDate: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         expDrug: moment(new Date(Date.now())).format('YYYY-MM-DD'),
         price: '',
         VAT: 0,
@@ -73,7 +76,7 @@ const EditImportStock = (props) => {
     } = data
     
     // eslint-disable-next-line
-    const { name, product, lotNumber, expDrug, qty, VAT, discount, price } = field
+    const { name, product, lotNumber, manufactureDate, expDrug, qty, VAT, discount, price } = field
     totalPrice= itemProducts.reduce((sum, curr) => sum + (+curr.price) * curr.qty, 0)
     totalVAT = itemProducts.reduce((sum, curr) => sum + ( ((+curr.price) * (+curr.qty) * (1 - (+curr.discount/100))) *  (+curr.VAT/100) ) , 0)
     totalDiscount = itemProducts.reduce((sum, curr) => sum + ( (((+curr.price) * (+curr.qty)) * (+curr.discount/100)) ), 0)
@@ -98,29 +101,29 @@ const EditImportStock = (props) => {
           }
         })
     }
-    const handleChangeProduct = e =>{
-        e.preventDefault();
-        let formattedPrice = price;
-        if (e.target.name === "price") {
-          formattedPrice = e.target.value.replace(/\D/g, '')
-        }
-        if(!isEdited){
-            setIsEdited(true)
-        }
-        setFieldProduct(prev => {
-            let a = document.getElementById("select-product");
-            let b = a.options[a.selectedIndex]
-            let c = b.getAttribute('data-foo')
-            let d = b.getAttribute('data-expproduct')
-            return {
-                ...prev,
-                name:c, 
-                [e.target.name]: e.target.value,
-                price: formattedPrice,
-                expProduct: d
-              }
-        })
-    }
+    // const handleChangeProduct = e =>{
+    //     e.preventDefault();
+    //     let formattedPrice = price;
+    //     if (e.target.name === "price") {
+    //       formattedPrice = e.target.value.replace(/\D/g, '')
+    //     }
+    //     if(!isEdited){
+    //         setIsEdited(true)
+    //     }
+    //     setFieldProduct(prev => {
+    //         let a = document.getElementById("select-product");
+    //         let b = a.options[a.selectedIndex]
+    //         let c = b.getAttribute('data-foo')
+    //         let d = b.getAttribute('data-expproduct')
+    //         return {
+    //             ...prev,
+    //             name:c, 
+    //             [e.target.name]: e.target.value,
+    //             price: formattedPrice,
+    //             expProduct: d
+    //           }
+    //     })
+    // }
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
@@ -136,7 +139,7 @@ const EditImportStock = (props) => {
             }
             return;
         }
-        else if((+field.expProduct) > +(moment(field.expDrug)).diff(moment(Date.now()), "days")){
+        else if((+moment(field.expDrug).diff(moment(field.manufactureDate), "months") < +field.expProduct)){
             renderToast(`Hạn sử dụng của thuốc phải lớn hơn ${+field.expProduct} tháng `,'error', setIsStop, isStop)
             return;
         }
@@ -148,7 +151,9 @@ const EditImportStock = (props) => {
                     VAT: parseInt(field.VAT),
                     discount: parseInt(field.discount),
                     price: parseInt(field.price),
+                    manufactureDate: field.manufactureDate,
                     expDrug: field.expDrug,
+                    expProduct: field.expProduct,
                     qty: parseInt(field.qty)})
                 setItemProducts(JSON.parse(JSON.stringify(itemProducts)))
              }
@@ -189,6 +194,7 @@ const EditImportStock = (props) => {
             toast.success(`Cập nhập đơn thành công`, ToastObjects);
             dispatch({type: IMPORT_STOCK_UPDATE_RESET})
             dispatch({type: IMPORT_STOCK_DETAILS_RESET})
+            setSelectedProduct({})
             dispatch(singleImportStock(importId));
         }
         if (importId !== importStockItem?._id ) {
@@ -281,6 +287,14 @@ const EditImportStock = (props) => {
             width:'150px'
         },
         {
+            name: "Ngày sản xuất",
+            selector: (row) => moment(row?.manufactureDate).format("DD-MM-YYYY"),
+            sortable: true,
+            reorder: true,
+            grow: 2,
+            width:'200px'
+        },
+        {
             name: "Hạn sử dụng",
             selector: (row) => moment(row?.expDrug).format("DD-MM-YYYY"),
             sortable: true,
@@ -371,6 +385,7 @@ const EditImportStock = (props) => {
             name: row?.name,
             product: row?.product?._id || row?.product,
             lotNumber: row?.lotNumber,
+            manufactureDate: moment(row?.manufactureDate).format('YYYY-MM-DD'),
             expDrug: moment(row?.expDrug).format('YYYY-MM-DD'),
             price: row?.price,
             VAT: row?.VAT,
@@ -378,7 +393,48 @@ const EditImportStock = (props) => {
             qty: row?.qty,
         })
     };
+     // start search input
+     const options = [];
+     if(products?.length > 0){
+       products.map((p) => {
+         options.push({ value: p?._id, label: p.name, dataFoo: p.name, dataExpproduct: p.expDrug} )
+       })
+       
+     }
+     
+     const handleChangeProduct = (selectedOptions) => {
+        if(!isEdited){
+            setIsEdited(true)
+        }
+       if(selectedOptions?.target?.name){
+        let formattedPrice = price;
+        if (selectedOptions.target.name === "price") {
+          formattedPrice = selectedOptions.target.value.replace(/\D/g, '')
+        }
+        setFieldProduct((prev) => {
+             return {
+                 ...prev,
+                 [selectedOptions.target.name]: selectedOptions.target.value,
+                 price: formattedPrice
 
+             }
+         })
+       }
+       else{
+         setFieldProduct(prev => {
+             return {
+                 ...prev,
+                 product: selectedOptions.value ,
+                 name: selectedOptions.dataFoo, 
+                 expProduct: selectedOptions.dataExpproduct
+               }
+         })
+         setSelectedProduct(selectedOptions);
+       }
+     };
+ 
+     const selectedOptions = selectedProduct
+     // end search input
     return (
       <>
         <Toast/>
@@ -483,12 +539,25 @@ const EditImportStock = (props) => {
                  <div className="mb-4">
                     <div className="card card-custom mb-4 shadow-sm">
                         <div className="card-body">
-                            <div className="mb-4 form-divided-3">
+                            <div className="mb-4 form-divided-2">
                                 <div>
                                     <label htmlFor="product_category" className="form-label">
                                         Tên thuốc
                                     </label>
-                                    <select
+                                    <Select
+                                    options={options}
+                                    value={selectedOptions}
+                                    onChange={handleChangeProduct}
+                                    placeholder="Tag"
+                                    getOptionLabel={(option) => (
+                                      <div data-foo={option.dataFoo}>{option.label}</div>
+                                    )}
+                                    getOptionValue={(option) => option.value}
+                                    filterOption={(option, inputValue) =>
+                                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                                    }
+                                  />
+                                    {/* <select
                                     id="select-product"
                                     value={product}
                                     name="product"
@@ -499,7 +568,7 @@ const EditImportStock = (props) => {
                                         {products?.map((item, index)=>(
                                             <option key={index} value={item._id} data-foo={item.name} data-expproduct={item.expDrug}>{item.name}</option>
                                         ))}
-                                    </select>
+                                    </select> */}
                                 </div>
                                 <div>
                                     <label className="form-label">Số lô</label>
@@ -512,7 +581,19 @@ const EditImportStock = (props) => {
                                     ></input>
 
                                 </div>
-                                 <div>
+                            </div>
+                            <div className="mb-4 form-divided-2">
+                                <div>
+                                    <label className="form-label">Ngày sản xuất</label>
+                                    <input
+                                        name="manufactureDate"
+                                        value={manufactureDate}
+                                        type='Date'
+                                        className="form-control"
+                                        onChange={handleChangeProduct}
+                                    ></input>
+                                </div>
+                                <div>
                                     <label className="form-label">Hạn sử dụng</label>
                                     <input
                                         name="expDrug"

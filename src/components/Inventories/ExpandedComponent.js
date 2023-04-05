@@ -12,7 +12,7 @@ const ExpandedComponent = (props) =>{
         },
         {
             name: "Số lô",
-            selector: (row) => row?.lotNumber,
+            selector: (row) => `${row?.lotNumber} (${row?.expProduct})`,
             sortable: true,
             reorder: true,
         },
@@ -20,6 +20,12 @@ const ExpandedComponent = (props) =>{
             name: "Số lượng",
             selector: (row) => row?.count,
             sortable: true,
+        },
+        {
+            name: "Ngày sản xuất",
+            selector: (row) => moment(row?.manufactureDate).format("DD-MM-YYYY"),
+            sortable: true,
+            minWidth: "180px",
         },
         {
             name: "Hạn sử dụng",
@@ -31,7 +37,7 @@ const ExpandedComponent = (props) =>{
 
     const conditionalRowStyles = [
         {
-            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") > 180,
+            when: row => +Math.round((moment(row?.expDrug) - moment(Date.now())) / (30.44 * 24 * 60 * 60 * 1000)) > +(row?.expProduct/2),
             style: {
                 backgroundColor: 'rgba(63, 195, 128, 0.9)',
                 color: 'white',
@@ -41,7 +47,7 @@ const ExpandedComponent = (props) =>{
             },
         },
         {
-            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") >= 90 && (moment(row?.expDrug)).diff(moment(Date.now()), "days") < 180,
+            when: row => +Math.round((moment(row?.expDrug) - moment(Date.now())) / (30.44 * 24 * 60 * 60 * 1000)) <= +(row?.expProduct/2) && Math.round((moment(row?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) >= 15,
             style: {
                 backgroundColor: 'rgba(248, 148, 6, 0.9)',
                 color: 'white',
@@ -51,7 +57,7 @@ const ExpandedComponent = (props) =>{
             },
         },
         {
-            when: row => (moment(row?.expDrug)).diff(moment(Date.now()), "days") < 90,
+            when: row => Math.round((moment(row?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1,
             style: {
                 backgroundColor: 'rgba(242, 38, 19, 0.9)',
                 color: 'white',

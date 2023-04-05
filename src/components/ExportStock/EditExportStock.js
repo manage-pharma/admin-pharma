@@ -17,6 +17,7 @@ import { listProduct } from "./../../Redux/Actions/ProductActions";
 import renderToast from "../../util/Toast";
 import { listInventory } from "../../Redux/Actions/InventoryAction";
 import ExportTable from "./ExportStockTable";
+import Select from "react-select";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -49,7 +50,7 @@ const EditImportStock = (props) => {
   const [isEdited, setIsEdited] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
   const [globalFlag, setGlobalFlag] = useState(false);
-
+  const [selectedProduct, setSelectedProduct] = useState({});
   const [field, setFieldProduct] = useState({
     countInStock: 0,
     name: "",
@@ -146,72 +147,72 @@ const EditImportStock = (props) => {
     }
     return { index, product };
   };
-  const handleChangeProduct = (e) => {
-    e.preventDefault();
-    if (!isEdited) {
-      setIsEdited(true);
-    }
-    let idProduct = e.target.value;
-    let a = document.getElementById("select-product");
-    let b = a.options[a.selectedIndex];
-    let c = b.getAttribute("data-foo");
+  // const handleChangeProduct = (e) => {
+  //   e.preventDefault();
+  //   if (!isEdited) {
+  //     setIsEdited(true);
+  //   }
+  //   let idProduct = e.target.value;
+  //   let a = document.getElementById("select-product");
+  //   let b = a.options[a.selectedIndex];
+  //   let c = b.getAttribute("data-foo");
 
-    let b1 = a.options[a.selectedIndex];
-    let c1 = b1.getAttribute("data-countinstock");
+  //   let b1 = a.options[a.selectedIndex];
+  //   let c1 = b1.getAttribute("data-countinstock");
 
-    let d = a.options[a.selectedIndex];
-    let d1 = d.getAttribute("data-lotlist");
-    refreshField();
-    const tempLot = d1 ? [...JSON.parse(d1)] : [];
-    const updateQtyLot = [];
-    const { index, product } = checkExistProduct(idProduct, itemProducts);
-    tempLot.forEach((lot, index) => {
-      updateQtyLot[index] = {
-        name: lot.lotNumber,
-        value: 0,
-        expDrug: lot.expDrug,
-      };
-    });
-    setqtyLost(updateQtyLot);
-    if (index === -1) {
-      setGlobalFlag(false);
-      setFieldProduct((prev) => {
-        return {
-          ...prev,
-          name: c,
-          countInStock: c1,
-          qty: 0,
-          lotField: tempLot,
-          [e.target.name]: e.target.value,
-        };
-      });
-    } else {
-      setGlobalFlag(true);
-      const findProduct = inventories.find((item) => item.idDrug === idProduct);
-      const newLotField = findProduct?.products?.map((lot, index) => {
-        let positon = CheckLotWhenSelect(lot, product);
-        return positon !== -1
-          ? {
-              ...lot,
-              count:
-                parseInt(lot?.count) -
-                parseInt(product?.lotField?.[positon]?.count),
-            }
-          : lot;
-      });
+  //   let d = a.options[a.selectedIndex];
+  //   let d1 = d.getAttribute("data-lotlist");
+  //   refreshField();
+  //   const tempLot = d1 ? [...JSON.parse(d1)] : [];
+  //   const updateQtyLot = [];
+  //   const { index, product } = checkExistProduct(idProduct, itemProducts);
+  //   tempLot.forEach((lot, index) => {
+  //     updateQtyLot[index] = {
+  //       name: lot.lotNumber,
+  //       value: 0,
+  //       expDrug: lot.expDrug,
+  //     };
+  //   });
+  //   setqtyLost(updateQtyLot);
+  //   if (index === -1) {
+  //     setGlobalFlag(false);
+  //     setFieldProduct((prev) => {
+  //       return {
+  //         ...prev,
+  //         name: c,
+  //         countInStock: c1,
+  //         qty: 0,
+  //         lotField: tempLot,
+  //         [e.target.name]: e.target.value,
+  //       };
+  //     });
+  //   } else {
+  //     setGlobalFlag(true);
+  //     const findProduct = inventories.find((item) => item.idDrug === idProduct);
+  //     const newLotField = findProduct?.products?.map((lot, index) => {
+  //       let positon = CheckLotWhenSelect(lot, product);
+  //       return positon !== -1
+  //         ? {
+  //             ...lot,
+  //             count:
+  //               parseInt(lot?.count) -
+  //               parseInt(product?.lotField?.[positon]?.count),
+  //           }
+  //         : lot;
+  //     });
 
-      setFieldProduct((prev) => {
-        return {
-          ...prev,
-          name: c,
-          countInStock: c1,
-          qty: 0,
-          lotField: [...newLotField],
-          [e.target.name]: e.target.value,
-        };
-      });
-    }
-  };
+  //     setFieldProduct((prev) => {
+  //       return {
+  //         ...prev,
+  //         name: c,
+  //         countInStock: c1,
+  //         qty: 0,
+  //         lotField: [...newLotField],
+  //         [e.target.name]: e.target.value,
+  //       };
+  //     });
+  //   }
+  // };
 
   const CheckLotWhenSelect = (lot, product) => {
     let index = -1;
@@ -463,6 +464,7 @@ const EditImportStock = (props) => {
       toast.success(`Cập nhật thành công`, ToastObjects);
       dispatch({ type: EXPORT_STOCK_UPDATE_RESET });
       dispatch({ type: EXPORT_STOCK_DETAILS_RESET });
+      setSelectedProduct({})
       dispatch(singleExportStock(exportId));
     }
     if (exportId !== exportStockItem?._id) {
@@ -484,6 +486,77 @@ const EditImportStock = (props) => {
       }
     } // eslint-disable-next-line
   }, [dispatch, exportStockItem, exportId, isEdited, success]);
+  // start search input
+  const options = [];
+  if(inventoriesClone?.length > 0){
+    inventoriesClone.map((p) => {
+      options.push({ value: p?.idDrug, label: p.name, dataFoo: p.name, dataCountinstock: p.total_count,
+        dataLotlist: JSON.stringify(p.products)} )
+    })
+    
+  }
+  const handleChangeProduct = (selectedOptions) => {
+    let idProduct = selectedOptions?.value;
+    if (!isEdited) {
+      setIsEdited(true);
+    }
+    refreshField();
+    
+    
+    const tempLot = selectedOptions.dataLotlist ? [...JSON.parse(selectedOptions.dataLotlist)] : [];
+    const updateQtyLot = [];
+    const { index, product } = checkExistProduct(idProduct, itemProducts);
+    tempLot.forEach((lot, index) => {
+    updateQtyLot[index] = {
+      name: lot.lotNumber,
+      value: 0,
+      expDrug: lot.expDrug,
+      };
+    });
+    setqtyLost(updateQtyLot);
+    if (index === -1) {
+      setGlobalFlag(false);
+      setFieldProduct((prev) => {
+        return {
+          ...prev,
+          product: selectedOptions.value,
+          name: selectedOptions.dataFoo,
+          countInStock: selectedOptions.dataCountinstock,
+          qty: 0,
+          lotField: tempLot,
+        };
+      });
+    } else {
+      setGlobalFlag(true);
+      const findProduct = inventories.find((item) => item.idDrug === idProduct);
+      const newLotField = findProduct?.products?.map((lot) => {
+        let positon = CheckLotWhenSelect(lot, product);
+        return positon !== -1
+          ? {
+              ...lot,
+              count:
+                parseInt(lot?.count) -
+                parseInt(product?.lotField?.[positon]?.count),
+            }
+          : lot;
+      });
+
+      setFieldProduct((prev) => {
+        return {
+          ...prev,
+          product: selectedOptions.value,
+          name: selectedOptions.dataFoo,
+          countInStock: selectedOptions.dataCountinstock,
+          qty: 0,
+          lotField: [...newLotField],
+        };
+      });
+    }
+    setSelectedProduct(selectedOptions);
+  };
+
+  const selectedOptions = selectedProduct
+  // end search input
   return (
     <>
       <Toast />
@@ -591,11 +664,25 @@ const EditImportStock = (props) => {
           <div className="mb-4">
             <div className="card card-custom mb-4 shadow-sm">
               <div className="card-body">
-                <div className="mb-4">
+                <div className="mb-4 form-divided-2">
+                  <div>
                   <label htmlFor="product_category" className="form-label">
                     Sản phẩm
                   </label>
-                  <select
+                  <Select 
+                    options={options}
+                    value={selectedOptions}
+                    onChange={handleChangeProduct}
+                    placeholder="Tag"
+                    getOptionLabel={(option) => (
+                      <div data-foo={option.dataFoo}>{option.label}</div>
+                    )}
+                    getOptionValue={(option) => option.value}
+                    filterOption={(option, inputValue) =>
+                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                    }
+                  />
+                  {/* <select
                     id="select-product"
                     value={product}
                     name="product"
@@ -614,7 +701,8 @@ const EditImportStock = (props) => {
                         {item.name}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
+                  </div>
                 </div>
                 <div className="mb-4">
                   {lotField?.length > 0 && (

@@ -5,13 +5,14 @@ import { toast } from "react-toastify";
 import { REQ_INVENTORY_CREATE_RESET } from '../../Redux/Constants/RequestInventoryConstant';
 import { listProvider } from '../../Redux/Actions/ProviderAction';
 import { listUser } from "../../Redux/Actions/UserActions";
-import { listProduct } from '../../Redux/Actions/ProductActions';
+import { listProductWithQty } from '../../Redux/Actions/ProductActions';
 import { useHistory } from 'react-router-dom';
 import Toast from '../LoadingError/Toast';
 import  moment  from 'moment';
 import renderToast from "../../util/Toast";
 import DataTable from "react-data-table-component";
 import NoRecords from "../../util/noData";  
+import Select from "react-select";
 
 const ToastObjects = {
     pauseOnFocusLoss: false,
@@ -28,7 +29,7 @@ const AddReqInventory = () => {
     const providerList = useSelector((state)=>state.providerList)
     const { providers } = providerList
 
-    const productList = useSelector((state)=>state.productList)
+    const productList = useSelector((state)=>state.productListWithQty)
     const { products } = productList
 
     const userList  = useSelector((state)=> state.userList)
@@ -42,6 +43,8 @@ const AddReqInventory = () => {
         product: '',
         qty: 0,
     });
+
+    const [selectedProduct, setSelectedProduct] = useState({});
 
     const [data, setData] = useState({
         requestedAt: moment(new Date(Date.now())).format('YYYY-MM-DD'),
@@ -75,21 +78,21 @@ const AddReqInventory = () => {
         })
     }
     
-    const handleChangeProduct = e =>{
-        e.preventDefault();
-        setFieldProduct(prev => {
-            let a = document.getElementById("select-product");
-            let b = a.options[a.selectedIndex]
-            let c = b.getAttribute('data-foo')
-            let d = b.getAttribute('data-unit')
-            return {
-                ...prev,
-                [e.target.name]: e.target.value,
-                name:c, 
-                unit:d
-              }
-        })
-    }
+    // const handleChangeProduct = e =>{
+    //     e.preventDefault();
+    //     setFieldProduct(prev => {
+    //         let a = document.getElementById("select-product");
+    //         let b = a.options[a.selectedIndex]
+    //         let c = b.getAttribute('data-foo')
+    //         let d = b.getAttribute('data-unit')
+    //         return {
+    //             ...prev,
+    //             [e.target.name]: e.target.value,
+    //             name:c, 
+    //             unit:d
+    //           }
+    //     })
+    // }
     const handleAddProduct = e =>{
         e.preventDefault();
         let flag = false;
@@ -149,10 +152,12 @@ const AddReqInventory = () => {
                 qty: 0,
             })
             setItemProducts([])
+            setSelectedProduct({})
             dispatch(listReqInventory())
         }
         dispatch(listProvider())
-        dispatch(listProduct())
+        dispatch(listProductWithQty())
+        // dispatch(listProduct())
         dispatch(listUser())
     }, [success, dispatch])
 
@@ -258,6 +263,48 @@ const AddReqInventory = () => {
             qty: row?.qty,
         })
     };
+    // start search input
+    const colourStyles = {
+        option: (provided, {data, isSelected }) => {
+            return {
+                ...provided,
+                color: isSelected ? 'white' : data?.dataTotal  < 30 ? "red" : "black",
+            }
+        },
+      };
+      
+    const options = [];
+    if(products?.length > 0){
+      products.map((p) => {
+        options.push({ value: p?._id, label: p.name, dataFoo: p.name, dataUnit: p.unit, dataTotal: p.total_count} )
+      })
+      
+    }
+    
+    const handleChangeProduct = (selectedOptions) => {
+      if(selectedOptions?.target?.name){
+        setFieldProduct((prev) => {
+            return {
+                ...prev,
+                [selectedOptions.target.name]: selectedOptions.target.value 
+            }
+        })
+      }
+      else{
+        setFieldProduct(prev => {
+            return {
+                ...prev,
+                product: selectedOptions.value ,
+                name: selectedOptions.dataFoo, 
+                unit: selectedOptions.dataUnit
+              }
+        })
+        setSelectedProduct(selectedOptions);
+      }
+    };
+
+    const selectedOptions = selectedProduct
+    // end search input
     return (
       <>
         <Toast/>
@@ -350,7 +397,27 @@ const AddReqInventory = () => {
                         <div className="card-body">
                             <div className="mb-4 form-divided-2">
                                 <div>
-                                    <label htmlFor="product_category" className="form-label">
+                                <label htmlFor="product_category" className="form-label">
+                                    Tên thuốc
+                                </label>
+                                <Select
+                                    options={options}
+                                    value={selectedOptions}
+                                    onChange={handleChangeProduct}
+                                    placeholder="Tag"
+                                    getOptionLabel={(option) => (
+                                      <div data-foo={option.dataFoo}>
+                                        {option.label} {option.label && `- (Tổng tồn: ${option.dataTotal})`}
+                                      </div>
+                                    )}
+                                    getOptionValue={(option) => option.value}
+                                    filterOption={(option, inputValue) =>
+                                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                                    }
+                                    styles={colourStyles}
+                                    getOptionStyle={(option) => colourStyles.option(null, { data: option })}
+                                  />
+                                    {/* <label htmlFor="product_category" className="form-label">
                                         Tên thuốc
                                     </label>
                                     <select
@@ -364,7 +431,7 @@ const AddReqInventory = () => {
                                         {products?.map((item, index)=>(
                                             <option key={index} value={item._id} data-foo={item.name} data-unit={item.unit}>{item.name}</option>
                                         ))}
-                                    </select>
+                                    </select> */}
                                 </div>
                                 <div>
                                     <label htmlFor="qty" className="form-label">

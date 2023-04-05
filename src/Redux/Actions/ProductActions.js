@@ -27,6 +27,10 @@ import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_RESET,
   PRODUCT_LIST_SUCCESS,
+  PRODUCT_LIST_WITH_QTY_FAIL,
+  PRODUCT_LIST_WITH_QTY_REQUEST,
+  PRODUCT_LIST_WITH_QTY_RESET,
+  PRODUCT_LIST_WITH_QTY_SUCCESS,
   PRODUCT_SINGLE_FAIL,
   PRODUCT_SINGLE_REQUEST,
   PRODUCT_SINGLE_RESET,
@@ -109,7 +113,40 @@ export const allProduct = () => async (dispatch, getState) => {
     }, 3000);
   }
 };
+// Product list with quantity
+export const listProductWithQty = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_LIST_WITH_QTY_REQUEST });
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/products/totalqty`, config)
+    dispatch({ type:  PRODUCT_LIST_WITH_QTY_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type:  PRODUCT_LIST_WITH_QTY_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type:  PRODUCT_LIST_WITH_QTY_RESET });
+    }, 3000);
+  }
+};
 
 // ADMIN PRODUCT DELETE
 export const deleteProduct = (id) => async (dispatch, getState) => {

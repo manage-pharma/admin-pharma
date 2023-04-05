@@ -18,6 +18,7 @@ import {
 } from "../../Redux/Actions/InventoryCheckAction";
 import { listCategory } from "../../Redux/Actions/CategoryAction";
 import MyVerticallyCenteredModalListCategory from "./ModalActivePharma";
+import Select from "react-select";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -55,6 +56,7 @@ const EditInventoryCheck = (props) => {
   const [isStop, setIsStop] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState({});
   const [field, setFieldProduct] = useState({
     _id: "",
     name: "",
@@ -101,29 +103,29 @@ const EditInventoryCheck = (props) => {
       }
     });
   };
-  const handleChangeProduct = (e) => {
-    e.preventDefault();
-    if (!isEdited) {
-      setIsEdited(true);
-    }
-    setFieldProduct(() => {
-      let a = document.getElementById("select-product");
-      let b = a.options[a.selectedIndex];
-      let c = b.getAttribute("data-inventory");
+  // const handleChangeProduct = (e) => {
+  //   e.preventDefault();
+  //   if (!isEdited) {
+  //     setIsEdited(true);
+  //   }
+  //   setFieldProduct(() => {
+  //     let a = document.getElementById("select-product");
+  //     let b = a.options[a.selectedIndex];
+  //     let c = b.getAttribute("data-inventory");
 
-      let data = c ? JSON.parse(c) : {};
-      return {
-        _id: data._id,
-        name: data.idDrug.name,
-        product: data.idDrug._id,
-        lotNumber: data.lotNumber,
-        count: data.count,
-        expDrug: data.expDrug,
-        realQty: 0,
-        unequal: -data.count,
-      };
-    });
-  };
+  //     let data = c ? JSON.parse(c) : {};
+  //     return {
+  //       _id: data._id,
+  //       name: data.idDrug.name,
+  //       product: data.idDrug._id,
+  //       lotNumber: data.lotNumber,
+  //       count: data.count,
+  //       expDrug: data.expDrug,
+  //       realQty: 0,
+  //       unequal: -data.count,
+  //     };
+  //   });
+  // };
 
   const handleAddProduct = (e) => {
     e.preventDefault();
@@ -209,6 +211,7 @@ const EditInventoryCheck = (props) => {
       dispatch({ type: INVENTORY_CHECK_UPDATE_RESET });
       dispatch({ type: INVENTORY_CHECK_DETAILS_RESET });
       dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
+      setSelectedProduct({})
       dispatch(singleInventoryCheck(checkId));
     }
     if (checkId !== inventoryCheckItem?._id) {
@@ -226,7 +229,37 @@ const EditInventoryCheck = (props) => {
     }
     // eslint-disable-next-line
   }, [dispatch, inventoryCheckItem, checkId, isEdited, success]);
+  // start search input
+  const options = [];
+  if(inventories?.length > 0){
+    inventories.map((p) => {
+      options.push({ value: p?.idDrug?._id, label: p.idDrug.name, lotNumber: p.lotNumber ,dataFoo: p.idDrug.name, dataInventory: JSON.stringify(p)} )
+    })
+    
+  }
+  const handleChangeProduct = (selectedOptions) => {
+    if (!isEdited) {
+      setIsEdited(true);
+    }
+    setFieldProduct(() => {
+      let data = selectedOptions.dataInventory ? JSON.parse(selectedOptions.dataInventory) : {};
+          return {
+            _id: data._id,
+            name: data.idDrug.name,
+            product: data.idDrug._id,
+            lotNumber: data.lotNumber,
+            count: data.count,
+            expDrug: data.expDrug,
+            realQty: "",
+            unequal: -data.count,
+          };
+      })
+    setSelectedProduct(selectedOptions);
+    
+  };
 
+  const selectedOptions = selectedProduct
+  // end search input
   return (
     <>
       <Toast />
@@ -333,12 +366,29 @@ const EditInventoryCheck = (props) => {
           <div className="mb-4">
             <div className="card card-custom mb-4 shadow-sm">
               <div className="card-body">
-                <div className="mb-4 form-divided-3">
+                <div className="mb-4 form-divided-2">
                   <div>
                     <label htmlFor="product_category" className="form-label">
                       Tên thuốc
                     </label>
-                    <select
+                    <Select
+                      options={options}
+                      value={selectedOptions}
+                      onChange={handleChangeProduct}
+                      placeholder="Tag"
+                      getOptionLabel={(option) => (
+                        selectedOptions && (
+                          <div data-foo={option.dataFoo}>
+                            {option.label} {option.label && `- (Số lô: ${option.lotNumber})`}
+                          </div>
+                        )
+                      )}
+                      getOptionValue={(option) => option.value}
+                      filterOption={(option, inputValue) =>
+                        option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                      }
+                    />
+                    {/* <select
                       id="select-product"
                       value={_id}
                       name="product"
@@ -355,7 +405,7 @@ const EditInventoryCheck = (props) => {
                           {item.idDrug.name} - (Số lô: {item.lotNumber})
                         </option>
                       ))}
-                    </select>
+                    </select> */}
                   </div>
                   <div>
                     <label htmlFor="product_category" className="form-label">

@@ -4,7 +4,6 @@ import {Link} from "react-router-dom";
 const OrderDetailProducts=(props) => {
   const {order,loading}=props
   const {status}=order
-  console.log(status[(status.length-1)].level);
   if(!loading) {
     const addDecimals=(num) => {
       return (Math.round(num*100)/100).toFixed(2)

@@ -72,7 +72,6 @@ const MainPromotion = () => {
   const deletePromotionSelector = useSelector(state => state.promotionDelete)
   const { loading: loadingDelete, error: errorDelete, success: successDelete} = deletePromotionSelector
   useEffect(()=>{
-    console.log({updateCallback});
     if(createCallback){
       toast.success("Thêm khuyến mãi thành công", ToastObjects);
       dispatch({ type: PROMOTION_CREATE_RESET })
