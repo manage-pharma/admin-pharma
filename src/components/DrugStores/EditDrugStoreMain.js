@@ -118,7 +118,7 @@ const EditDrugStoreMain=(props) => {
       <Toast />
       {loading || loadingUpdate ? (<Loading />) : error || errorUpdate ? (<Message>{error || errorUpdate}</Message>) : ''}
       <section className="content-main" >
-        <form onSubmit={handleSubmit}><p>{datapromotionProduct?.total}</p>
+        <form onSubmit={handleSubmit}>
           <div className="content-header">
             <div className="content-title d-flex" onClick={e => {
               e.preventDefault()

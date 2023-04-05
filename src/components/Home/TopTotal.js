@@ -5,7 +5,7 @@ const TopTotal = (props) => {
   let totalSale = 0;
   if(orders){
     orders.map((order)=>(
-      order.isPaid === true ? (totalSale += order.totalPrice) : null
+      order.isSuccess === true ? (totalSale += order.totalPrice) : null
     ))
   }
   return (

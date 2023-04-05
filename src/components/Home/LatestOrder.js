@@ -22,11 +22,11 @@ const LatestOrder = (props) => {
                       <td>{order?.user?.email || '---'}</td>
                       <td>${order?.totalPrice || '---'}</td>
                       <td>{
-                          order.isPaid ? (
-                            <span className="badge rounded-pill alert-success">Đã trả {moment(order.paidAt).format("MMM Do YY")}</span>
+                          order.isSuccess ? (
+                            <span className="badge rounded-pill alert-success">Đã hoàn tất {moment(order.receivedAt).format("MMM Do YY")}</span>
                           ) : 
                           (
-                            <span className="badge rounded-pill alert-danger">Chưa trả</span>
+                            <span className="badge rounded-pill alert-danger">Chưa hoàn tất</span>
                           ) 
                         }
                       </td>
