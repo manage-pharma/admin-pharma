@@ -6,6 +6,7 @@ import Message from '../LoadingError/Error';
 import AddUser from "./AddUserModal";
 import debounce from 'lodash.debounce';
 import { useHistory } from 'react-router-dom';
+import { withAuthorization } from "../../util/withAuthorization ";
 const UserComponent = (props) => {
   const dispatch = useDispatch();
   const userList = useSelector(state => state.userList);
@@ -70,7 +71,7 @@ const UserComponent = (props) => {
           {loading ? (<Loading />) : error ? (<Message variant="alert-danger" >{error}</Message>) : (
             <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
               {
-                users.map((user, index) => (
+                users.filter((user) => !user.isAdmin).map((user, index) => (
                   <div className="col" key={index}>
                     <div className="card card-user shadow-sm">
                       <div className="card-header">
@@ -90,7 +91,7 @@ const UserComponent = (props) => {
                         <h5 className="card-title mt-5">{user.name}</h5>
                         <div className="card-text text-muted">
                           {
-                            user.isAdmin ? (
+                            user.role === "isAdmin" ? (
                               <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>Admin</p>
                             )
                             :
@@ -118,4 +119,4 @@ const UserComponent = (props) => {
   );
 };
 
-export default UserComponent;
+export default withAuthorization(UserComponent,'isAdmin',true);
