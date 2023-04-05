@@ -149,7 +149,7 @@ const AddImportStock = () => {
             }
             return;
         }
-        else if((+moment(field.expDrug).diff(moment(field.manufactureDate), "months") < +field.expProduct)){
+        else if((+Math.round((moment(field.expDrug) - moment(field.manufactureDate)) / (30.44 * 24 * 60 * 60 * 1000)) < +field.expProduct)){
             renderToast(`Hạn sử dụng của thuốc phải lớn hơn ${+field.expProduct} tháng `,'error', setIsStop, isStop)
             return;
         }

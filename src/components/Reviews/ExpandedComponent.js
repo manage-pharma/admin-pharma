@@ -11,12 +11,9 @@ const ExpandedComponent = (props) =>{
     const drugstoreList = useSelector(state=> state.drugstoreList)
     const dispatch = useDispatch()
     const {data, dessert} = props
-    console.log(data)
 
     const history=useHistory()
     const handleUpdateReview=(productId,reviewId,status)=>{
-        //console.log("stattus ",status)
-        //console.log("POST",productId,reviewId,status);
         toast.success(`Đã ${status?"hiện":"ẩn"} bình luận`,ToastObjects);
         dispatch(updateDrugStoreReview({productId:productId,reviewId:reviewId,status:status}))
         dispatch(listDrugStore())
@@ -62,22 +59,18 @@ const ExpandedComponent = (props) =>{
     }
     const columns = [
         {
+            name: "Hành động",
+            cell: row => <CustomMaterialMenu size="small" productId={data?.data?.product?._id} row={row} />,
+            allowOverflow: true,
+            button: true,
+            width: '100px',
+        },
+        {
             name: "Tên",
             selector: (row) => row.name,
             sortable: true,
             reorder: true,
            
-        },
-        {
-            name: "Đánh giá",
-            selector: (row) => row?.rating,
-            sortable: true,
-        },
-        {
-            name: "Bình luận",
-            selector: (row) => <span>{row?.comment}</span>,
-            sortable: true,
-            minWidth: "500px",
         },
         {
             name: "Hiển thị",
@@ -89,13 +82,20 @@ const ExpandedComponent = (props) =>{
 
             minWidth: "100px",
         },
+        
         {
-            name: "Hành động",
-            cell: row => <CustomMaterialMenu size="small" productId={data?.data?.product?._id} row={row} />,
-            allowOverflow: true,
-            button: true,
-            width: '100px',
+            name: "Bình luận",
+            selector: (row) => <span>{row?.comment}</span>,
+            sortable: true,
+            minWidth: "500px",
         },
+        {
+            name: "Đánh giá",
+            selector: (row) => row?.rating,
+            sortable: true,
+        },
+        
+        
     ];
 
     

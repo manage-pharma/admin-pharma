@@ -247,7 +247,6 @@ const EditContentMain = () => {
       links: [...itemPage],
       contacts: [...itemContact],
     };
-    console.log({POST:dataPost});
     dispatch(
       updateContent({
         ...dataPost,

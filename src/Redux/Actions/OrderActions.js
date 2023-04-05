@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ORDER_DELIVERED_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS, ORDER_LIST_FAIL, ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS ,
-
+    ORDER_SEARCH_LIST_FAIL, ORDER_SEARCH_LIST_REQUEST, ORDER_SEARCH_LIST_SUCCESS,
     ORDER_CANCELED_FAIL, ORDER_CANCELED_SUCCESS, ORDER_CANCELED_REQUEST,
     ORDER_RECEIVED_FAIL, ORDER_RECEIVED_SUCCESS, ORDER_RECEIVED_REQUEST,
     ORDER_CONFORM_FAIL, ORDER_CONFORM_SUCCESS, ORDER_CONFORM_REQUEST,
@@ -36,6 +36,39 @@ export const listOrder = () => async (dispatch, getState) => {
         }
         dispatch({
             type: ORDER_LIST_FAIL,
+            payload: message,
+        });
+    }
+};
+
+
+//ORDER LIST
+export const searchListOrder = (from=' ', to = ' ') => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_SEARCH_LIST_REQUEST });
+        // userInfo -> userLogin -> getState(){globalState}
+        //const {
+        //    userLogin: { userInfo },
+        //} = getState();
+
+        //const config = {
+        //    headers: {
+        //        Authorization: `Bearer ${userInfo.token}`,
+        //    },
+        //};
+
+        const { data } = await axios.get(`/api/orders/all-check?from=${from}&to=${to}`);
+        dispatch({ type: ORDER_SEARCH_LIST_SUCCESS, payload: data });
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        if (message === "Not authorized, token failed") {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_SEARCH_LIST_FAIL,
             payload: message,
         });
     }
@@ -127,19 +160,14 @@ export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
         let checkStock=true;
 
         const check= async()=>{
-            console.log("GD1");
             orderItems.orderItems.map( async  (item)=>{
                 const {data}=await axios.get(`/api/drugstore/${item.drugstoreId}/check-stock?num=${item.qty}`, config)
                 
-                 console.log(data.result)
                  if(!data.result) checkStock=false;
              })
         }
         const update=async()=>{
-            console.log("GD2");
-            if(checkStock){
-                console.log("TRUE");
-                
+            if(checkStock){                
                 // api not transmiss any params because it just change state of deliverd 
                 const { data } = await axios.put(`/api/orders/${orderItems._id}/delivered`, {}, config);
                 dispatch({ type: ORDER_DELIVERED_SUCCESS, payload: data });
@@ -150,7 +178,6 @@ export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
                 })
                
             }else{
-                console.log("FALSE");
                 dispatch({
                     type: ORDER_DELIVERED_FAIL,
                     payload: "Số lượng không thỏa",

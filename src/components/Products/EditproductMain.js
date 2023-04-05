@@ -418,7 +418,6 @@ const EditProductMain = (props) => {
     successAPICreate,
     successAPIDelete,
   ]);
-  console.log({dataUp:data});
   return (
     <>
       <Toast />

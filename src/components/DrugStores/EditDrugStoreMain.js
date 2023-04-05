@@ -111,14 +111,13 @@ const EditDrugStoreMain=(props) => {
 
     
   },[dispatch, drugstore,successDS,drugstoreId, flag, successUpdate,discountArr]);
-  console.log({data,discountItem,discountArr,promotions,datapromotionProduct,totalDiscount});
 
   return (
     <>
       <Toast />
       {loading || loadingUpdate ? (<Loading />) : error || errorUpdate ? (<Message>{error || errorUpdate}</Message>) : ''}
       <section className="content-main" >
-        <form onSubmit={handleSubmit}><p>{datapromotionProduct?.total}</p>
+        <form onSubmit={handleSubmit}>
           <div className="content-header">
             <div className="content-title d-flex" onClick={e => {
               e.preventDefault()
@@ -483,7 +482,6 @@ const EditDrugStoreMain=(props) => {
                                               className="dropdown-item text-danger"
                                               onClick={(e)=>{
                                                 e.preventDefault()
-                                                console.log(index);
                                                 //setData({...data,discount: Number(data.discount-itemPro.discount)})
                                                 setTotalDiscount(totalDiscount-Number(discountItem.discount))
                                                 discountArr.splice(index, 1)
