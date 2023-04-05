@@ -76,7 +76,7 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // ADMIN CREATE
-export const createUser = ({ name, email, phone, password }) => async (dispatch, getState) => {
+export const createUser = ({ name, email, role, phone, password }) => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_CREATE_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
@@ -92,7 +92,7 @@ export const createUser = ({ name, email, phone, password }) => async (dispatch,
 
     const { data } = await axios.post(`/api/users/add`,
       {
-        name, email, phone, password
+        name, email, role, phone, password
       }
       , config);
     dispatch({ type: USER_CREATE_SUCCESS, payload: data });
@@ -160,7 +160,7 @@ export const listUser = (keyword = " ", pageNumber = " ") => async (dispatch, ge
 
 
 //ADMIN UPDATE PROVIDER
-export const updateUser = ({name, email, phone, password ,userID}) => async(dispatch, getState)=>{
+export const updateUser = ({name, email, role, phone, password ,userID}) => async(dispatch, getState)=>{
   try {
     dispatch({type: USER_UPDATE_REQUEST});
     const {
@@ -174,7 +174,7 @@ export const updateUser = ({name, email, phone, password ,userID}) => async(disp
       },
     };
     const { data } = await axios.put(`/api/users/${userID}`, {
-      name, email, phone, password
+      name, email, role, phone, password
     }, config)
     dispatch({type: USER_UPDATE_SUCCESS, payload: data});
   } catch (error) {

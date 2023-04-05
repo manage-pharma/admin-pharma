@@ -16,7 +16,12 @@ const ToastObjects = {
     pauseOnHover: false,
     autoClose: 2000,
   };
-const AddUser = (props) => {    
+  const initialItems = [
+    { id: 2, name: 'Kho', value: 'isInventory' },
+    { id: 3, name: 'Bán hàng', value: 'isSaleAgent' },
+    { id: 4, name: 'Quản trị', value: 'isAdmin' },
+  ];
+const AddUser = (props) => { 
     const {show, setShow} = props
     const dispatch = useDispatch();
     const handleClose = () => {
@@ -25,19 +30,21 @@ const AddUser = (props) => {
         setDataModal({
             name: '',
             email: '',
+            role: '',
             phone: '',
             password: '',
             passwordAgain: ''
+
         })  
     };
     const [dataModal, setDataModal] = useState({
         name: '',
         email: '',
+        role: '',
         phone: '',
         password: '',
         passwordAgain: ''
     })
-
     const handleSubmit = e => {
         e.preventDefault();
         if(successUserSingle){
@@ -53,7 +60,7 @@ const AddUser = (props) => {
     }
       
     const handelChangeModal = e =>{
-        e.preventDefault();
+        // e.preventDefault();
         setDataModal(prev => {
           return {
             ...prev, [e.target.name]: e.target.value
@@ -94,6 +101,7 @@ const AddUser = (props) => {
             setDataModal({
                 name: '',
                 email: '',
+                role: '',
                 phone: '',
                 password: '',
                 passwordAgain: ''
@@ -105,13 +113,13 @@ const AddUser = (props) => {
             setDataModal({
                 name: userEdit.name,
                 phone: userEdit.phone,
+                role: userEdit.role,
                 email: userEdit.email,
             })
         }
     }, [success, dispatch, setShow, successUserSingle, successUserUpdated, userEdit, errorCreate, errorUpdate])
 
-    const { name, email, phone, password, passwordAgain } = dataModal
-
+    const { name, email, role,  phone, password, passwordAgain } = dataModal
     return (
       <>
         <Toast />
@@ -153,6 +161,43 @@ const AddUser = (props) => {
                                     required
                                 />
                             </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} md={12}>
+                            <Form.Label>Quyền</Form.Label>
+                            <Form.Group>
+                                <div>
+                                    {
+                                        initialItems.map((item, index) => {
+                                            return <div key={index} className="form-check form-check-inline">
+                                            <Form.Check
+                                            type="radio"
+                                            label={item.name}
+                                            name="role"
+                                            value={item.value}
+                                            inline
+                                            required
+                                            checked={role === item.value}
+                                            onChange={handelChangeModal}
+                                            />
+                                        </div>
+                                        })
+                                    }
+                                </div>
+                            </Form.Group>
+                            {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+                                 <Form.Label>Email</Form.Label>
+                                <Form.Control
+                                    type="email"
+                                    autoComplete="off"
+                                    placeholder="name@example.com"
+                                    onChange={handelChangeModal}
+                                    name="email"
+                                    value={email}
+                                    required
+                                />
+                            </Form.Group> */}
                         </Col>
                     </Row>
                     <Row>

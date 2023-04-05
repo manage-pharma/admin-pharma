@@ -2,6 +2,8 @@ import React from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import MainInventoryCheck from "../components/InventoryCheck/MainInventoryCheck";
+import { withAuthorization } from "../util/withAuthorization ";
+import { PERMISSIONS } from "../util/RolesContanst";
 
 
 const InventoryCheckScreen = () => {
@@ -16,4 +18,4 @@ const InventoryCheckScreen = () => {
   );
 };
 
-export default InventoryCheckScreen;
+export default withAuthorization(InventoryCheckScreen,PERMISSIONS.isInventory.check_inventory, true);
