@@ -127,19 +127,14 @@ export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
         let checkStock=true;
 
         const check= async()=>{
-            console.log("GD1");
             orderItems.orderItems.map( async  (item)=>{
                 const {data}=await axios.get(`/api/drugstore/${item.drugstoreId}/check-stock?num=${item.qty}`, config)
                 
-                 console.log(data.result)
                  if(!data.result) checkStock=false;
              })
         }
         const update=async()=>{
-            console.log("GD2");
-            if(checkStock){
-                console.log("TRUE");
-                
+            if(checkStock){                
                 // api not transmiss any params because it just change state of deliverd 
                 const { data } = await axios.put(`/api/orders/${orderItems._id}/delivered`, {}, config);
                 dispatch({ type: ORDER_DELIVERED_SUCCESS, payload: data });
@@ -150,7 +145,6 @@ export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
                 })
                
             }else{
-                console.log("FALSE");
                 dispatch({
                     type: ORDER_DELIVERED_FAIL,
                     payload: "Số lượng không thỏa",

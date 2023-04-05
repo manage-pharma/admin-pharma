@@ -111,7 +111,6 @@ const EditDrugStoreMain=(props) => {
 
     
   },[dispatch, drugstore,successDS,drugstoreId, flag, successUpdate,discountArr]);
-  console.log({data,discountItem,discountArr,promotions,datapromotionProduct,totalDiscount});
 
   return (
     <>
@@ -483,7 +482,6 @@ const EditDrugStoreMain=(props) => {
                                               className="dropdown-item text-danger"
                                               onClick={(e)=>{
                                                 e.preventDefault()
-                                                console.log(index);
                                                 //setData({...data,discount: Number(data.discount-itemPro.discount)})
                                                 setTotalDiscount(totalDiscount-Number(discountItem.discount))
                                                 discountArr.splice(index, 1)

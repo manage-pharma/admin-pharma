@@ -268,7 +268,6 @@ const AddProductMain = () => {
   };
 
 
-console.log({data});
   useEffect(() => {
     if (product) {
       toast.success("Thuốc đã được thêm", ToastObjects);

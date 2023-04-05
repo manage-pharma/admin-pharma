@@ -77,7 +77,6 @@ const OrderDetailMain = (props) => {
   };
 
 
-  console.log({successDelivered,successConform,successCanceled,successReceived});
 
   useEffect(()=>{
     dispatch(getOrderDetails(orderId))

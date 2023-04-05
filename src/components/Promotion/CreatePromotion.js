@@ -23,7 +23,6 @@ const CreatePromotion = (props) => {
   const promotionUpdate = useSelector(state => state.promotionUpdate);
   const { loading: loadingUpdateDrug, error: errorUpdateDrug , success: successUpdate, promotion: promotionU } = promotionUpdate;
 
-  console.log({promotionUpdate});
   
   const handleChange = e => {
     setData(prev => {

@@ -15,6 +15,10 @@
   .navbar-aside {
     max-width: 220px;
   }
+
+  .inventory-flex div{
+    width: -webkit-fill-available;
+  }
 }
 @media (max-width: 992px) {
   /* small tablet devices */
