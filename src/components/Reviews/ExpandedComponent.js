@@ -11,12 +11,9 @@ const ExpandedComponent = (props) =>{
     const drugstoreList = useSelector(state=> state.drugstoreList)
     const dispatch = useDispatch()
     const {data, dessert} = props
-    console.log(data)
 
     const history=useHistory()
     const handleUpdateReview=(productId,reviewId,status)=>{
-        //console.log("stattus ",status)
-        //console.log("POST",productId,reviewId,status);
         toast.success(`Đã ${status?"hiện":"ẩn"} bình luận`,ToastObjects);
         dispatch(updateDrugStoreReview({productId:productId,reviewId:reviewId,status:status}))
         dispatch(listDrugStore())

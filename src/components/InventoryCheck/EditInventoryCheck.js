@@ -243,7 +243,6 @@ const EditInventoryCheck = (props) => {
     }
     setFieldProduct(() => {
       let data = selectedOptions.dataInventory ? JSON.parse(selectedOptions.dataInventory) : {};
-      console.log(data)
           return {
             _id: data._id,
             name: data.idDrug.name,
