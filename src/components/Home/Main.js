@@ -12,11 +12,10 @@ import Message from "../LoadingError/Error";
 import Toast from '../LoadingError/Toast';
 import renderToast from "../../util/Toast";
 
+
+
 const Main = () => {
   const dispatch = useDispatch()
-  //const orderList = useSelector(state => state.orderList)
-  //const { loading, error, orders:ordersList,success:successList } = orderList;
-
 
   const orderSearchList = useSelector(state => state.orderSearchList)
   const { loading,error, orders:ordersSearch,success:successSearch } = orderSearchList;
@@ -49,12 +48,14 @@ const Main = () => {
     if(!toggleSearch){
       if(!data.from || !data.to){
         if(!isStop){
-          renderToast('Chưa chọn ngày','error', setIsStop, isStop)
+          renderToast('Chua chọn ngày','error', setIsStop, isStop)
         }
         return;
       }
-      //dispatch(listInventory(keyword, data.from, data.to)) 
-      dispatch(searchListOrder(data.from,data.to))
+      setData({
+        from: data.from,
+        to: data.to
+      })
     }
     else{//nút cancel->click
       setData({
@@ -62,7 +63,7 @@ const Main = () => {
         to: ''
       })
       
-      dispatch(searchListOrder(data.from,data.to))//
+      dispatch(searchListOrder('',''))
     }
     setToggleSearch(!toggleSearch)
     setIsSearch(!isSearch)
@@ -74,17 +75,12 @@ const Main = () => {
   },[successSearch])
 
   useEffect(()=>{
+    if(toggleSearch)
+      dispatch(searchListOrder(data.from,data.to))   
+  },[data,toggleSearch])
+  useEffect(()=>{
     dispatch(searchListOrder(data.from,data.to))   
-  },[toggleSearch])
-
-
- 
-
-
-  console.log({data,ordersSearch,orders});
-
-
-
+  },[])
   
   return (
     <>
@@ -113,7 +109,7 @@ const Main = () => {
           </div>
           <div className="col-lg-2 col-6 col-md-3">
             <div className="d-flex">
-              <span className="label-date">Đến: </span>
+              <span className="label-date">Ðến: </span>
               <input
                   id="datePicker"
                   name="to"
@@ -154,46 +150,13 @@ const Main = () => {
           <div className="card card-custom mb-4 shadow-sm">
             <OrderStatistics orders= {ordersSearch} loading={loading} error={error}/>
           </div>
+
+          
           </>
         }
       </section>
+      {/*<ContainerDemo/>*/}
     </>
-    //<>
-    // <div className="col-lg-2 col-6 col-md-3">
-    //        <div className="d-flex">
-    //          <span className="label-date">Từ: </span>
-    //          <input
-    //              id="datePicker"
-    //              name="from"
-    //              value={from}
-    //              className="form-control"
-    //              type='date'
-    //              onChange={handleChange}
-    //          ></input>
-    //        </div>
-    //      </div>
-    //      <div className="col-lg-2 col-6 col-md-3">
-    //        <div className="d-flex">
-    //          <span className="label-date">Đến: </span>
-    //          <input
-    //              id="datePicker"
-    //              name="to"
-    //              value={to}
-    //              className="form-control"
-    //              type='date'
-    //              onChange={handleChange}
-    //          ></input>
-    //        </div>
-    //      </div>
-    //      <div className="col-lg-1">
-    //        {toggleSearch ? 
-    //          <button className="btn btn-danger" onClick={handleSearchDate}>Cancel</button>
-    //        : 
-    //          <button className="btn btn-success" onClick={handleSearchDate}>Search</button>
-    //        }
-    //      </div>
-    
-    //</>
   );
 };
 

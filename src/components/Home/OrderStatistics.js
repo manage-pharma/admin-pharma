@@ -46,7 +46,7 @@ for (const order of filteredOrders) {
 // Log the final orders array.
 //console.log({finalOrders,nameToQty,nameToSellNum})
   return (
-    <div className="card-body">
+    <div className="card-body bg-white">
       <h5 className="card-title">Thống kê sản phẩm bán ra</h5>
       {
         loading ? <Loading/> : error ? <Message variant="alert-danger">{error}</Message> : (

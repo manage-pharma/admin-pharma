@@ -6,7 +6,7 @@ import moment from "moment/moment";
 const LatestOrder = (props) => {
   const {loading, error, orders} = props
   return (
-    <div className="card-body">
+    <div className="card-body bg-white" >
       <h5 className="card-title">Đơn đặt hàng gần đây</h5>
       {
         loading ? <Loading/> : error ? <Message variant="alert-danger">{error}</Message> : (
