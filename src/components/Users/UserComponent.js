@@ -34,7 +34,17 @@ const UserComponent = (props) => {
   useEffect(() => {
     dispatch((listUser()));
   }, [dispatch])
-
+  const nameRole =  (role) => {
+    if(role === "isAdmin"){
+      return "Quản trị viên"
+    }
+    else if(role === "isInventory"){
+      return "Nhân viên kho"
+    }
+    else if(role === "isSaleAgent"){
+      return "Nhân viên bán hàng"
+    }
+  }
   return (
     <>
     <AddUser show={show} setShow={setShow}/>
@@ -91,12 +101,12 @@ const UserComponent = (props) => {
                         <h5 className="card-title mt-5">{user.name}</h5>
                         <div className="card-text text-muted">
                           {
-                            user.role === "isAdmin" ? (
-                              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>Admin</p>
+                            user?.role === "isAdmin" ? (
+                              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>{nameRole(user?.role)}</p>
                             )
                             :
                             (
-                              <p className="m-0 badge bg-primary text-wrap" style={{width: '4rem', fontSize: '16px'}}>User</p>
+                              <p className="m-0 badge bg-primary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{nameRole(user?.role)}</p>
                             )
                           }
                           <h6 className="mt-2 card-title">{user.phone}</h6>

@@ -6,6 +6,17 @@ import {logout} from '../Redux/Actions/UserActions';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 const Header = () => {
+  const nameRole =  (role) => {
+    if(role === "isAdmin"){
+      return "Quản trị viên"
+    }
+    else if(role === "isInventory"){
+      return "Nhân viên kho"
+    }
+    else if(role === "isSaleAgent"){
+      return "Nhân viên bán hàng"
+    }
+  }
   const MyVerticallyCenteredModal = (props) =>{
     return (
       <Modal
@@ -22,12 +33,12 @@ const Header = () => {
         </Modal.Header>
         <Modal.Body>
           <div className="fw-bold">Quyền người dùng: {
-            userInfo.isAdmin ? (
-              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>Admin</p>
+            userInfo?.role === "isAdmin" ? (
+              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>{nameRole(userInfo?.role)}</p>
             )
             :
             (
-              <p className="m-0 badge bg-primary text-wrap" style={{width: '4rem', fontSize: '16px'}}>User</p>
+              <p className="m-0 badge bg-primary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{nameRole(userInfo?.role)}</p>
             )
           }</div>
           <div className="fw-bold">Email: <span className="fw-normal">{userInfo.email}</span></div>
@@ -111,8 +122,8 @@ const Header = () => {
           </button>
           <ul className="nav">
             <li className="nav-item me-3">
-              <Badge pill bg={userInfo.isAdmin ? 'danger' : 'primary'} >
-                <Link className={`dropdown-item text-white fw-bold ${userInfo.isAdmin ? 'bg-danger' : 'bg-primary'}`} to="#" onClick={handleMyProfile}>
+              <Badge pill bg={userInfo.role === "isAdmin" ? 'danger' : 'primary'} >
+                <Link className={`dropdown-item text-white fw-bold ${userInfo.role === "isAdmin" ? 'bg-danger' : 'bg-primary'}`} to="#" onClick={handleMyProfile}>
                   <span style={{fontSize:"16px"}}>{userInfo.name}</span>
                 </Link>
                 </Badge>
