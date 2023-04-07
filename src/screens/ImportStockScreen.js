@@ -17,4 +17,4 @@ const ImportStockScreen = () => {
   );
 };
 
-export default withAuthorization(ImportStockScreen,PERMISSIONS.isInventory.import_inventory, true);
+export default withAuthorization(ImportStockScreen,[PERMISSIONS.isInventory.import_inventory]);

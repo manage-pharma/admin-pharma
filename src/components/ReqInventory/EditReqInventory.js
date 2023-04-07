@@ -281,7 +281,7 @@ const EditImportStock = (props) => {
 
      // start search input
      const colourStyles = {
-        option: (provided, {data}) => {
+        option: (provided, {data, isSelected}) => {
             return {
                 ...provided,
                 color: isSelected ? 'white' : data?.dataTotal  < 30 ? "red" : "black",

@@ -7,6 +7,7 @@ import AddCustomer from "./AddCustomerModal";
 import debounce from 'lodash.debounce';
 import { useHistory } from 'react-router-dom';
 import { withAuthorization } from "../../util/withAuthorization ";
+import { PERMISSIONS } from "../../util/RolesContanst";
 const CustomerComponent = (props) => {
   const dispatch = useDispatch();
   const customerList = useSelector(state => state.customerList);
@@ -129,4 +130,4 @@ const CustomerComponent = (props) => {
   );
 };
 
-export default withAuthorization(CustomerComponent,'isAdmin',true);
+export default withAuthorization(CustomerComponent,[PERMISSIONS.isAdmin]);

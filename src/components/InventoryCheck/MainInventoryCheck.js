@@ -31,7 +31,10 @@ const MainInventoryCheck = (props) => {
   const { loading, error, inventoryCheck } = inventoryCheckList;
   const inventoryCheckStatus = useSelector((state) => state.inventoryCheckStatus);
   const { loading: loadingStatus, error: errorStatus, success } = inventoryCheckStatus;
-
+  const inventoryCheckCancel = useSelector(
+    (state) => state.inventoryCheckCancel
+  );
+  const { error: errorCancel } = inventoryCheckCancel;
   const callApiKeywordSearch = (keyword, pageNumber, from, to) => {
     dispatch(listInventoryCheck(keyword, pageNumber, from, to));
   };
@@ -94,8 +97,8 @@ const MainInventoryCheck = (props) => {
   return (
     <>
       <Toast />
-      {error || errorStatus ? (
-        <Message variant="alert-danger">{error || errorStatus}</Message>
+      {error || errorStatus || errorCancel ? (
+        <Message variant="alert-danger">{error || errorStatus || errorCancel}</Message>
       ) : (
         ""
       )}

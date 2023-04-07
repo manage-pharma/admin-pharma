@@ -7,6 +7,7 @@ import AddUser from "./AddUserModal";
 import debounce from 'lodash.debounce';
 import { useHistory } from 'react-router-dom';
 import { withAuthorization } from "../../util/withAuthorization ";
+import { PERMISSIONS } from "../../util/RolesContanst";
 const UserComponent = (props) => {
   const dispatch = useDispatch();
   const userList = useSelector(state => state.userList);
@@ -129,4 +130,4 @@ const UserComponent = (props) => {
   );
 };
 
-export default withAuthorization(UserComponent,'isAdmin',true);
+export default withAuthorization(UserComponent,[PERMISSIONS.isAdmin]);
