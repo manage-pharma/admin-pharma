@@ -4,7 +4,7 @@ import CustomLoader from '../../util/LoadingTable';
 import ExpandedComponent from './ExpandedComponent'
 import NoRecords from "../../util/noData";
 const InventoryTable = (props) =>{
-    const {inventory, dessert, expanded, loading} = props 
+    const {inventory, colorOH, colorHSD, expanded, loading} = props 
     const columns = [
         {
             name: "STT",
@@ -22,14 +22,14 @@ const InventoryTable = (props) =>{
         },
         {
             name: "Nhóm sản phẩm",
-            selector: (row) => row?.category.join(', '),
+            selector: (row) => row?.category,
             sortable: true,
             reorder: true,
             grow: 3
         },
         {
             name: "Nhóm thuốc",
-            selector: (row) => row?.categoryDrug.join(', '),
+            selector: (row) => row?.categoryDrug,
             sortable: true,
             reorder: true,
             grow: 3
@@ -120,7 +120,7 @@ const InventoryTable = (props) =>{
             progressPending={loading}
             expandableRows
 			expandableRowExpanded={isExpanded}
-            expandableRowsComponent={(data) => <ExpandedComponent data={data} dessert={dessert} />}
+            expandableRowsComponent={(data) => <ExpandedComponent data={data} colorHSD={colorHSD} colorOH={colorOH} />}
 		    progressComponent={<CustomLoader />}
             highlightOnHover
             pointerOnHover
