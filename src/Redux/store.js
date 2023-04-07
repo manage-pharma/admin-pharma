@@ -9,6 +9,13 @@ import {
   userUpdateReducer,
 } from "./Reducers/UserReducers";
 import {
+  customerLoginReducer,
+  customerListReducer,
+  customerCreateReducer,
+  customerSingleReducer,
+  customerUpdateReducer,
+} from "./Reducers/CustomerReducers";
+import {
   productAllReducer,
   productCategoriesDrugReducer,
   productCategoriesReducer,
@@ -33,6 +40,7 @@ import {
 import {
   orderDeliveredReducer,
   orderDetailReducer,
+  orderSearchListReducer,
   orderListReducer,
   orderCanceledReducer,
   orderConformReducer,
@@ -124,6 +132,12 @@ const reducer = combineReducers({
   userSingle: userSingleReducer,
   userUpdate: userUpdateReducer,
 
+  customerLogin: customerLoginReducer,
+  customerCreate: customerCreateReducer,
+  customerList: customerListReducer,
+  customerSingle: customerSingleReducer,
+  customerUpdate: customerUpdateReducer,
+
   productList: productListReducer,
   productListWithQty: productListWithQtyReducer,
   productAll: productAllReducer,
@@ -145,6 +159,7 @@ const reducer = combineReducers({
   drugstoreUpdateReview:  drugstoreUpdateReviewReducer,
 
   orderList: orderListReducer,
+  orderSearchList:orderSearchListReducer,
   orderDetail: orderDetailReducer,
   orderDelivered: orderDeliveredReducer,
   orderCanceled:orderCanceledReducer,

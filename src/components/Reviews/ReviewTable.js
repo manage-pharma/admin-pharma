@@ -52,12 +52,7 @@ const ReviewTable = (props) =>{
             selector: (row) => <img className="mt-1 w-80 h-80" style={{width:"100px",height:"100px"}} src={row.product.image?.slice(0,0+1)} alt="ImageCategory" />,
             minWidth: "150px",
         },
-        {
-            name: "Giá bán",
-            selector: (row) => row.product.price.toLocaleString('vi-VN').replace(/\./g, ',')+" vnđ",
-            sortable: true,
-            minWidth: "150px",
-        },
+        
         
        
         {

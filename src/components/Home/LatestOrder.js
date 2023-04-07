@@ -6,7 +6,7 @@ import moment from "moment/moment";
 const LatestOrder = (props) => {
   const {loading, error, orders} = props
   return (
-    <div className="card-body">
+    <div className="card-body bg-white" >
       <h5 className="card-title">Đơn đặt hàng gần đây</h5>
       {
         loading ? <Loading/> : error ? <Message variant="alert-danger">{error}</Message> : (
@@ -20,13 +20,13 @@ const LatestOrder = (props) => {
                         <b>{order?.user?.name}</b>
                       </td>
                       <td>{order?.user?.email || '---'}</td>
-                      <td>${order?.totalPrice || '---'}</td>
+                      <td>{order?.totalPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ" || '---'}</td>
                       <td>{
-                          order.isPaid ? (
-                            <span className="badge rounded-pill alert-success">Đã trả {moment(order.paidAt).format("MMM Do YY")}</span>
+                          order.isSuccess ? (
+                            <span className="badge rounded-pill alert-success">Đã hoàn tất {moment(order.receivedAt).format("MMM Do YY")}</span>
                           ) : 
                           (
-                            <span className="badge rounded-pill alert-danger">Chưa trả</span>
+                            <span className="badge rounded-pill alert-danger">Chưa hoàn tất</span>
                           ) 
                         }
                       </td>

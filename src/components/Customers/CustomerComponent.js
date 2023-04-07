@@ -1,26 +1,26 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { listUser, singleUser } from "../../Redux/Actions/UserActions";
+import { listCustomer, singleCustomer } from "../../Redux/Actions/CustomerActions";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
-import AddUser from "./AddUserModal";
+import AddCustomer from "./AddCustomerModal";
 import debounce from 'lodash.debounce';
 import { useHistory } from 'react-router-dom';
 import { withAuthorization } from "../../util/withAuthorization ";
-const UserComponent = (props) => {
+const CustomerComponent = (props) => {
   const dispatch = useDispatch();
-  const userList = useSelector(state => state.userList);
-  const { loading, error, users } = userList 
+  const customerList = useSelector(state => state.customerList);
+  const { loading, error, customers } = customerList 
   const [show, setShow] = useState(false);
   const { pageNumber } = props
     const [keyword, setSearch] = useState()
     const history = useHistory()
     const callApiKeywordSearch = (keyword, pageNumber) =>{
         if( keyword.trim() !== ''){
-          dispatch(listUser(keyword, pageNumber))
+          dispatch(listCustomer(keyword, pageNumber))
         }
         else{
-          history.push('/users');
+          history.push('/customers');
         }
       }
     const debounceDropDown = useRef(debounce((keyword, pageNumber) => callApiKeywordSearch(keyword, pageNumber) , 300)).current;
@@ -32,7 +32,7 @@ const UserComponent = (props) => {
     setShow(true)
   }
   useEffect(() => {
-    dispatch((listUser()));
+    dispatch((listCustomer()));
   }, [dispatch])
   const nameRole =  (role) => {
     if(role === "isAdmin"){
@@ -47,7 +47,7 @@ const UserComponent = (props) => {
   }
   return (
     <>
-    <AddUser show={show} setShow={setShow}/>
+    <AddCustomer show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">Danh sách người dùng</h2>
@@ -81,37 +81,37 @@ const UserComponent = (props) => {
           {loading ? (<Loading />) : error ? (<Message variant="alert-danger" >{error}</Message>) : (
             <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
               {
-                users.filter((user) => !user.isAdmin).map((user, index) => (
+                customers.filter((customer) => !customer.isAdmin).map((customer, index) => (
                   <div className="col" key={index}>
                     <div className="card card-user shadow-sm">
                       <div className="card-header">
                         <div className="user-effect" onClick={e=>{
                           e.preventDefault();
-                          dispatch(singleUser(user._id))
+                          dispatch(singleCustomer(customer._id))
                           setShow(true)
                         }}><i className="far fa-edit"></i></div>
                         <img
                           className="img-md img-avatar"
                           src="images/tpone.png"
                           // src="https://tpone.vn/webinfo_files/images/57c57e30-461d-11ed-a701-9b027010aa3d--XMLID_92_.png"
-                          alt="User pic"
+                          alt="Customer pic"
                         />
                       </div>
                       <div className="card-body">
-                        <h5 className="card-title mt-5">{user.name}</h5>
+                        <h5 className="card-title mt-5">{customer.name}</h5>
                         <div className="card-text text-muted">
                           {
-                            user?.role === "isAdmin" ? (
-                              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>{nameRole(user?.role)}</p>
+                            customer?.role === "isAdmin" ? (
+                              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>{nameRole(customer?.role)}</p>
                             )
                             :
                             (
-                              <p className="m-0 badge bg-primary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{nameRole(user?.role)}</p>
+                              <p className="m-0 badge bg-primary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{nameRole(customer?.role)}</p>
                             )
                           }
-                          <h6 className="mt-2 card-title">{user.phone}</h6>
+                          <h6 className="mt-2 card-title">{customer.phone}</h6>
                           <p style={{fontWeight: "bold"}}>
-                            <a href={`mailto:${user.email}`}>{user.email}</a>
+                            <a href={`mailto:${customer.email}`}>{customer.email}</a>
                           </p>
                         </div>
                       </div>
@@ -129,4 +129,4 @@ const UserComponent = (props) => {
   );
 };
 
-export default withAuthorization(UserComponent,'isAdmin',true);
+export default withAuthorization(CustomerComponent,'isAdmin',true);

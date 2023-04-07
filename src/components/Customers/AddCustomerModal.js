@@ -8,8 +8,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import Toast from '../LoadingError/Toast';
-import { USER_CREATE_RESET, USER_SINGLE_RESET, USER_UPDATE_RESET } from '../../Redux/Constants/UserConstants';
-import { createUser, listUser, updateUser } from './../../Redux/Actions/UserActions';
+import { CUSTOMER_CREATE_RESET, CUSTOMER_SINGLE_RESET, CUSTOMER_UPDATE_RESET } from '../../Redux/Constants/CustomerConstants';
+import { createCustomer, listCustomer, updateCustomer } from '../../Redux/Actions/CustomerActions';
 const ToastObjects = {
     pauseOnFocusLoss: false,
     draggable: false,
@@ -21,12 +21,12 @@ const ToastObjects = {
     { id: 3, name: 'Bán hàng', value: 'isSaleAgent' },
     { id: 4, name: 'Quản trị', value: 'isAdmin' },
   ];
-const AddUser = (props) => { 
+const AddCustomer = (props) => { 
     const {show, setShow} = props
     const dispatch = useDispatch();
     const handleClose = () => {
         setShow(false);
-        dispatch({type: USER_SINGLE_RESET})
+        dispatch({type: CUSTOMER_SINGLE_RESET})
         setDataModal({
             name: '',
             email: '',
@@ -47,15 +47,15 @@ const AddUser = (props) => {
     })
     const handleSubmit = e => {
         e.preventDefault();
-        if(successUserSingle){
-            dispatch(updateUser({ ...dataModal, userID }));
+        if(successCustomerSingle){
+            dispatch(updateCustomer({ ...dataModal, customerID }));
         }
         else{
             if(dataModal.password !== dataModal.passwordAgain){
                 toast.error("Mật khẩu không khớp", ToastObjects);
                 return;
             }
-            dispatch(createUser(dataModal));
+            dispatch(createCustomer(dataModal));
         }
     }
       
@@ -67,36 +67,36 @@ const AddUser = (props) => {
           }
         })
     }
-    const createUserStatus = useSelector((state)=> state.userCreate)
-    const { error: errorCreate, success } = createUserStatus
+    const createCustomerStatus = useSelector((state)=> state.customerCreate)
+    const { error: errorCreate, success } = createCustomerStatus
 
-    const userEditing = useSelector((state)=> state.userSingle)
-    const {success: successUserSingle, user: userEdit } = userEditing
-    const userID = userEdit._id
+    const customerEditing = useSelector((state)=> state.customerSingle)
+    const {success: successCustomerSingle, customer: customerEdit } = customerEditing
+    const customerID = customerEdit._id
 
-    const userUpdated = useSelector((state)=> state.userUpdate) 
-    const {error: errorUpdate, success: successUserUpdated} = userUpdated
+    const customerUpdated = useSelector((state)=> state.customerUpdate) 
+    const {error: errorUpdate, success: successCustomerUpdated} = customerUpdated
 
     useEffect(()=>{
         if (errorCreate || errorUpdate){
             if(errorCreate){
                 toast.error( errorCreate, ToastObjects);
-                dispatch({type: USER_CREATE_RESET})
+                dispatch({type: CUSTOMER_CREATE_RESET})
             }
             else{
                 toast.error( errorUpdate, ToastObjects);
-                dispatch({type: USER_UPDATE_RESET})
+                dispatch({type: CUSTOMER_UPDATE_RESET})
             }
             setShow(false)
         }
-        if(success || successUserUpdated){
-            if(successUserUpdated){
+        if(success || successCustomerUpdated){
+            if(successCustomerUpdated){
                 toast.success(`Cập nhật thành công`, ToastObjects);
-                dispatch({type: USER_UPDATE_RESET})
+                dispatch({type: CUSTOMER_UPDATE_RESET})
             }
             else{
                 toast.success(`Thêm thành công`, ToastObjects);
-                dispatch({type: USER_CREATE_RESET})
+                dispatch({type: CUSTOMER_CREATE_RESET})
             }
             setDataModal({
                 name: '',
@@ -106,18 +106,18 @@ const AddUser = (props) => {
                 password: '',
                 passwordAgain: ''
             })
-            dispatch(listUser())
+            dispatch(listCustomer())
             setShow(false)
         }
-        if(successUserSingle){
+        if(successCustomerSingle){
             setDataModal({
-                name: userEdit.name,
-                phone: userEdit.phone,
-                role: userEdit.role,
-                email: userEdit.email,
+                name: customerEdit.name,
+                phone: customerEdit.phone,
+                role: customerEdit.role,
+                email: customerEdit.email,
             })
         }
-    }, [success, dispatch, setShow, successUserSingle, successUserUpdated, userEdit, errorCreate, errorUpdate])
+    }, [success, dispatch, setShow, successCustomerSingle, successCustomerUpdated, customerEdit, errorCreate, errorUpdate])
 
     const { name, email, role,  phone, password, passwordAgain } = dataModal
     return (
@@ -125,7 +125,7 @@ const AddUser = (props) => {
         <Toast />
         <Modal show={show} onHide={handleClose} aria-labelledby="contained-modal-title-vcenter">
           <Modal.Header closeButton>
-            <Modal.Title  id="contained-modal-title-vcenter">{successUserSingle ? `Cập nhật ${name}` : 'Thêm người dùng'}</Modal.Title>
+            <Modal.Title  id="contained-modal-title-vcenter">{successCustomerSingle ? `Cập nhật ${name}` : 'Thêm người dùng'}</Modal.Title>
           </Modal.Header>
           <Modal.Body  className="show-grid">
             <Form onSubmit={handleSubmit}>
@@ -226,7 +226,7 @@ const AddUser = (props) => {
                                     onChange={handelChangeModal}
                                     name="password"
                                     value={password}
-                                    required={successUserSingle ? false : true}
+                                    required={successCustomerSingle ? false : true}
                                 />
                             </Form.Group>
                         </Col>
@@ -241,7 +241,7 @@ const AddUser = (props) => {
                                         onChange={handelChangeModal}
                                         name="passwordAgain"
                                         value={passwordAgain}
-                                        required={successUserSingle ? false : true}
+                                        required={successCustomerSingle ? false : true}
                                     />
                                 </Form.Group>
                             </Col>
@@ -252,7 +252,7 @@ const AddUser = (props) => {
                     Đóng
                 </Button>
                 <Button type='submit' variant="primary">
-                    {successUserSingle ? 'Cập nhật' : 'Thêm'}
+                    {successCustomerSingle ? 'Cập nhật' : 'Thêm'}
                 </Button>
                 </Modal.Footer>     
             </Form>
@@ -265,4 +265,4 @@ const AddUser = (props) => {
 
 
 
-  export default AddUser;
+  export default AddCustomer;

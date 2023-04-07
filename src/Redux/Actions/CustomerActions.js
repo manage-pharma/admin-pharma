@@ -1,26 +1,26 @@
 import {
-  USER_CREATE_FAIL,
-  USER_CREATE_REQUEST,
-  USER_CREATE_RESET,
-  USER_CREATE_SUCCESS,
-  USER_LIST_FAIL,
-  USER_LIST_REQUEST,
-  USER_LIST_RESET,
-  USER_LIST_SUCCESS,
-  USER_LOGIN_FAIL,
-  USER_LOGIN_REQUEST,
-  USER_LOGIN_RESET,
-  USER_LOGIN_SUCCESS,
-  USER_LOGOUT,
-  USER_SINGLE_FAIL,
-  USER_SINGLE_REQUEST,
-  USER_SINGLE_SUCCESS,
-  USER_UPDATE_FAIL,
-  USER_UPDATE_REQUEST,
-  USER_UPDATE_SUCCESS,
-  USER_UPDATE_RESET,
-  USER_SINGLE_RESET,
-} from "../Constants/UserConstants";
+  CUSTOMER_CREATE_FAIL,
+  CUSTOMER_CREATE_REQUEST,
+  CUSTOMER_CREATE_RESET,
+  CUSTOMER_CREATE_SUCCESS,
+  CUSTOMER_LIST_FAIL,
+  CUSTOMER_LIST_REQUEST,
+  CUSTOMER_LIST_RESET,
+  CUSTOMER_LIST_SUCCESS,
+  CUSTOMER_LOGIN_FAIL,
+  CUSTOMER_LOGIN_REQUEST,
+  CUSTOMER_LOGIN_RESET,
+  CUSTOMER_LOGIN_SUCCESS,
+  CUSTOMER_LOGOUT,
+  CUSTOMER_SINGLE_FAIL,
+  CUSTOMER_SINGLE_REQUEST,
+  CUSTOMER_SINGLE_SUCCESS,
+  CUSTOMER_UPDATE_FAIL,
+  CUSTOMER_UPDATE_REQUEST,
+  CUSTOMER_UPDATE_SUCCESS,
+  CUSTOMER_UPDATE_RESET,
+  CUSTOMER_SINGLE_RESET,
+} from "../Constants/CustomerConstants";
 import axios from "axios";
 import { PRODUCT_LIST_RESET } from "../Constants/ProductConstants";
 // import { toast } from "react-toastify";
@@ -33,7 +33,7 @@ import { PRODUCT_LIST_RESET } from "../Constants/ProductConstants";
 // ADMIN LOGIN
 export const login = (email, password) => async (dispatch) => {
   try {
-    dispatch({ type: USER_LOGIN_REQUEST });
+    dispatch({ type: CUSTOMER_LOGIN_REQUEST });
 
     const config = {
       headers: {
@@ -42,18 +42,18 @@ export const login = (email, password) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      `/api/users/login`,
+      `/api/customers/login`,
       { email, password },
       config
     );
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+    dispatch({ type: CUSTOMER_LOGIN_SUCCESS, payload: data });
     // if (!data.isAdmin === true) {
     //   toast.error("You are not Admin", ToastObjects);
     //   dispatch({
-    //     type: USER_LOGIN_FAIL,
+    //     type: CUSTOMER_LOGIN_FAIL,
     //   });
     // } else {
-    //   dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+    //   dispatch({ type: CUSTOMER_LOGIN_SUCCESS, payload: data });
     // }
 
     localStorage.setItem("userInfo", JSON.stringify(data));
@@ -66,19 +66,19 @@ export const login = (email, password) => async (dispatch) => {
       dispatch(logout());
     }
     dispatch({
-      type: USER_LOGIN_FAIL,
+      type: CUSTOMER_LOGIN_FAIL,
       payload: message,
     });
     setTimeout(() => {
-      dispatch({ type: USER_LOGIN_RESET });
+      dispatch({ type: CUSTOMER_LOGIN_RESET });
     }, 3000);
   }
 };
 
 // ADMIN CREATE
-export const createUser = ({ name, email, role, phone, password }) => async (dispatch, getState) => {
+export const createCustomer = ({ name, email, role, phone, password }) => async (dispatch, getState) => {
   try {
-    dispatch({ type: USER_CREATE_REQUEST });
+    dispatch({ type: CUSTOMER_CREATE_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
     const {
       userLogin: { userInfo },
@@ -90,12 +90,12 @@ export const createUser = ({ name, email, role, phone, password }) => async (dis
       },
     };
 
-    const { data } = await axios.post(`/api/users/add`,
+    const { data } = await axios.post(`/api/customers/add`,
       {
         name, email, role, phone, password
       }
       , config);
-    dispatch({ type: USER_CREATE_SUCCESS, payload: data });
+    dispatch({ type: CUSTOMER_CREATE_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -105,11 +105,11 @@ export const createUser = ({ name, email, role, phone, password }) => async (dis
       dispatch(logout());
     }
     dispatch({
-      type: USER_CREATE_FAIL,
+      type: CUSTOMER_CREATE_FAIL,
       payload: message,
     });
     setTimeout(() => {
-      dispatch({ type: USER_CREATE_RESET });
+      dispatch({ type: CUSTOMER_CREATE_RESET });
     }, 3000);
   }
 };
@@ -117,15 +117,15 @@ export const createUser = ({ name, email, role, phone, password }) => async (dis
 // ADMIN LOGOUT
 export const logout = () => (dispatch) => {
   localStorage.removeItem("userInfo");
-  dispatch({ type: USER_LOGOUT });
-  dispatch({ type: USER_LIST_RESET });
+  dispatch({ type: CUSTOMER_LOGOUT });
+  dispatch({ type: CUSTOMER_LIST_RESET });
   dispatch({ type: PRODUCT_LIST_RESET });
 };
 
-// ADMIN ALL USER
-export const listUser = (keyword = " ", pageNumber = " ") => async (dispatch, getState) => {
+// ADMIN ALL CUSTOMER
+export const listCustomer = (keyword = " ", pageNumber = " ") => async (dispatch, getState) => {
   try {
-    dispatch({ type: USER_LIST_REQUEST });
+    dispatch({ type: CUSTOMER_LIST_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
     const {
       userLogin: { userInfo },
@@ -137,9 +137,9 @@ export const listUser = (keyword = " ", pageNumber = " ") => async (dispatch, ge
       },
     };
 
-    const { data } = await axios.get(`/api/users/?keyword=${keyword}&pageNumber=${pageNumber}`, config);
+    const { data } = await axios.get(`/api/customers/?keyword=${keyword}&pageNumber=${pageNumber}`, config);
 
-    dispatch({ type: USER_LIST_SUCCESS, payload: data });
+    dispatch({ type: CUSTOMER_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -149,20 +149,20 @@ export const listUser = (keyword = " ", pageNumber = " ") => async (dispatch, ge
       dispatch(logout());
     }
     dispatch({
-      type: USER_LIST_FAIL,
+      type: CUSTOMER_LIST_FAIL,
       payload: message,
     });
     setTimeout(() => {
-      dispatch({ type: USER_LIST_RESET });
+      dispatch({ type: CUSTOMER_LIST_RESET });
     }, 3000);
   }
 };
 
 
 //ADMIN UPDATE PROVIDER
-export const updateUser = ({name, email, role, phone, password ,userID}) => async(dispatch, getState)=>{
+export const updateCustomer = ({name, email, role, phone, password ,customerID}) => async(dispatch, getState)=>{
   try {
-    dispatch({type: USER_UPDATE_REQUEST});
+    dispatch({type: CUSTOMER_UPDATE_REQUEST});
     const {
       userLogin: { userInfo },
     } = getState();
@@ -173,10 +173,10 @@ export const updateUser = ({name, email, role, phone, password ,userID}) => asyn
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.put(`/api/users/${userID}`, {
+    const { data } = await axios.put(`/api/customers/${customerID}`, {
       name, email, role, phone, password
     }, config)
-    dispatch({type: USER_UPDATE_SUCCESS, payload: data});
+    dispatch({type: CUSTOMER_UPDATE_SUCCESS, payload: data});
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -186,19 +186,19 @@ export const updateUser = ({name, email, role, phone, password ,userID}) => asyn
       dispatch(logout());
     }
     dispatch({
-      type: USER_UPDATE_FAIL,
+      type: CUSTOMER_UPDATE_FAIL,
       payload: message,
     });
     setTimeout(() => {
-      dispatch({ type: USER_UPDATE_RESET });
+      dispatch({ type: CUSTOMER_UPDATE_RESET });
     }, 3000);
   }
 }
 
-//ADMIN USER SINGLE
-export const singleUser = (id) => async (dispatch, getState) => {
+//ADMIN CUSTOMER SINGLE
+export const singleCustomer = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: USER_SINGLE_REQUEST });
+    dispatch({ type: CUSTOMER_SINGLE_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}
     const {
       userLogin: { userInfo },
@@ -209,8 +209,8 @@ export const singleUser = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(`/api/users/${id}`, config);
-    dispatch({ type: USER_SINGLE_SUCCESS, payload: data });
+    const { data } = await axios.get(`/api/customers/${id}`, config);
+    dispatch({ type: CUSTOMER_SINGLE_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -220,11 +220,11 @@ export const singleUser = (id) => async (dispatch, getState) => {
       dispatch(logout());
     }
     dispatch({
-      type: USER_SINGLE_FAIL,
+      type: CUSTOMER_SINGLE_FAIL,
       payload: message,
     });
     setTimeout(() => {
-      dispatch({ type: USER_SINGLE_RESET });
+      dispatch({ type: CUSTOMER_SINGLE_RESET });
     }, 3000);
   }
 };

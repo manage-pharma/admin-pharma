@@ -1,6 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 const Sidebar = () => {
+  const userLogin=useSelector(state => state.userLogin)
+  const {userInfo}=userLogin;
   return (
     <div style={{fontSize: "19px"}}>
       <aside className="navbar-aside" id="offcanvas_aside">
@@ -37,49 +40,52 @@ const Sidebar = () => {
             </li>
 
             {/* //! Danh mục  */}
-            <li className="menu-item lv1 arrow down">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
-                to="/products"
-              >
-                <i className="icon fas fa-list"></i>
-                <span className="text">Danh mục</span>
-              </NavLink>
-              <ul className="menu-aside lv2">
-                <li className="menu-item">
-                  <NavLink
-                    activeClassName="active"
-                    className="menu-link"
-                    to="/products"
-                  >
-                    <i className="icon fas fa-capsules"></i>
-                    <span className="text">Dược phẩm</span>
-                  </NavLink>
-                </li>
-                <li className="menu-item">
-                  <NavLink
-                    activeClassName="active"
-                    className="menu-link"
-                    to="/categories"
-                  >
-                    <i className="icon fas fa-medkit"></i>
-                    <span className="text">Nhóm sản phẩm</span>
-                  </NavLink>
-                </li>
-                <li className="menu-item">
-                  <NavLink
-                    activeClassName="active"
-                    className="menu-link"
-                    to="/categories-drug"
-                  >
-                    <i className="icon fas fa-pills"></i>
-                    <span className="text">Nhóm thuốc</span>
-                  </NavLink>
-                </li>
-              </ul>
-            </li>
-
+            {
+              (userInfo?.role === "isAdmin" || userInfo?.role === "isInventory") && (
+                <li className="menu-item lv1 arrow down">
+                <NavLink
+                  activeClassName="active"
+                  className="menu-link"
+                  to="/products"
+                >
+                  <i className="icon fas fa-list"></i>
+                  <span className="text">Danh mục</span>
+                </NavLink>
+                <ul className="menu-aside lv2">
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/products"
+                    >
+                      <i className="icon fas fa-capsules"></i>
+                      <span className="text">Dược phẩm</span>
+                    </NavLink>
+                  </li>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/categories"
+                    >
+                      <i className="icon fas fa-medkit"></i>
+                      <span className="text">Nhóm sản phẩm</span>
+                    </NavLink>
+                  </li>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/categories-drug"
+                    >
+                      <i className="icon fas fa-pills"></i>
+                      <span className="text">Nhóm thuốc</span>
+                    </NavLink>
+                  </li>
+                </ul>
+              </li>
+              )
+            }
             {/* //! Order */}
             <li className="menu-item">
               <NavLink
@@ -93,7 +99,9 @@ const Sidebar = () => {
             </li>
 
             {/* //! Thông tin cá nhân */}
-            <li className="menu-item">
+            {
+              userInfo.role === "isAdmin" && (
+                <li className="menu-item">
               <NavLink
                 activeClassName="active"
                 className="menu-link"
@@ -103,6 +111,20 @@ const Sidebar = () => {
                 <span className="text">Người dùng</span>
               </NavLink>
             </li>
+            
+              )
+            }
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
+                to="/customers"
+              >
+                <i className="icon fas fa-user"></i>
+                <span className="text">Người dùng</span>
+              </NavLink>
+            </li>
+            
             <li className="menu-item">
               <NavLink
                 activeClassName="active"
@@ -155,7 +177,10 @@ const Sidebar = () => {
                 <span className="text">Khuyến mãi</span>
               </NavLink>
             </li>
-            <li className="menu-item">
+            {
+              (userInfo.role === "isAdmin" || userInfo.role === "isInventory") && (
+                <>
+                   <li className="menu-item">
               <NavLink
                 activeClassName="active"
                 className="menu-link"
@@ -187,7 +212,7 @@ const Sidebar = () => {
               </NavLink>
             </li>
 
-            {/* //! Kho dược */}
+           
             <li className="menu-item lv1 arrow down">
               <NavLink
                 activeClassName="active"
@@ -230,7 +255,10 @@ const Sidebar = () => {
                 </li>
               </ul>
             </li>
-
+                </>
+              )
+            }
+           
           </ul>
           <br />
           <br />

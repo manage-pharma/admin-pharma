@@ -1,6 +1,6 @@
 import { ORDER_DETAILS_FAIL, ORDER_DETAILS_SUCCESS, ORDER_DETAILS_REQUEST, ORDER_LIST_FAIL, ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS, ORDER_DELIVERED_REQUEST, ORDER_DELIVERED_SUCCESS, ORDER_DELIVERED_RESET,
   
-
+  ORDER_SEARCH_LIST_FAIL, ORDER_SEARCH_LIST_REQUEST, ORDER_SEARCH_LIST_SUCCESS,
   ORDER_CANCELED_RESET, ORDER_CANCELED_SUCCESS, ORDER_CANCELED_REQUEST,ORDER_CANCELED_FAIL,
   ORDER_CONFORM_RESET, ORDER_CONFORM_SUCCESS, ORDER_CONFORM_REQUEST,ORDER_CONFORM_FAIL, ORDER_DELIVERED_FAIL,
   ORDER_COMPLETED_RESET, ORDER_COMPLETED_SUCCESS, ORDER_COMPLETED_REQUEST,ORDER_COMPLETED_FAIL
@@ -15,13 +15,27 @@ export const orderListReducer = (state = {orders:[]}, action) => {
       case ORDER_LIST_REQUEST:
         return { loading: true };
       case ORDER_LIST_SUCCESS:
-        return { loading: false, orders: action.payload };
+        return { loading: false, orders: action.payload,success:true };
       case ORDER_LIST_FAIL:
         return { loading: false, error: action.payload };
       default:
         return state;
     }
   };
+
+  // ORDER LIST
+export const orderSearchListReducer = (state = {orders:[]}, action) => {
+  switch (action.type) {
+    case ORDER_SEARCH_LIST_REQUEST:
+      return { loading: true };
+    case ORDER_SEARCH_LIST_SUCCESS:
+      return { loading: false, orders: action.payload ,success:true};
+    case ORDER_SEARCH_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
 
 //ORDER DETAIL
 export const orderDetailReducer  = (state = {loading : true, orderItems: [], shippingAddress: {}}, action) =>{

@@ -5,7 +5,7 @@ const TopTotal = (props) => {
   let totalSale = 0;
   if(orders){
     orders.map((order)=>(
-      order.isPaid === true ? (totalSale += order.totalPrice) : null
+      order.isSuccess === true ? (totalSale += order.totalPrice) : null
     ))
   }
   return (
@@ -17,7 +17,7 @@ const TopTotal = (props) => {
               <i className="text-primary fas fa-usd-circle"></i>
             </span>
             <div className="text">
-              <h6 className="mb-1">Tổng doanh thu</h6> <span>${totalSale.toFixed(0)}</span>
+              <h6 className="mb-1">Tổng doanh thu</h6> <span>{(totalSale.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'))+" đ"}</span>
             </div>
           </article>
         </div>

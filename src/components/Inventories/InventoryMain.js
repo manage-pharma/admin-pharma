@@ -54,6 +54,7 @@ const MainInventory = () => {
         ...prev, [e.target.name]: e.target.value
       }
     })
+    
   }
 
   const handleSearchDate = (e) =>{
