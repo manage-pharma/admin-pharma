@@ -3,7 +3,7 @@ import  moment  from 'moment';
 import DataTable from "react-data-table-component";
 import NoRecords from '../../util/noData';
 const ExpandedComponent = (props) =>{
-    const {data, dessert} = props
+    const {data, colorOH, colorHSD} = props
     const columns = [
         {
             name: "STT",
@@ -35,7 +35,7 @@ const ExpandedComponent = (props) =>{
         }
     ];
 
-    const conditionalRowStyles = [
+    const conditionalRowStylesHSD = [
         {
             when: row => +Math.round((moment(row?.expDrug) - moment(Date.now())) / (30.44 * 24 * 60 * 60 * 1000)) > +(row?.expProduct/2),
             style: {
@@ -68,6 +68,38 @@ const ExpandedComponent = (props) =>{
         },
     ];
 
+    const conditionalRowStylesOH = [
+        {
+            when: row => row?.count > 30,
+            style: {
+                backgroundColor: 'rgba(63, 195, 128, 0.9)',
+                color: 'white',
+                '&:hover': {
+                    cursor: 'pointer',
+                },
+            },
+        },
+        {
+            when: row => row?.count >= 1 && row?.count <= 30,
+            style: {
+                backgroundColor: 'rgba(248, 148, 6, 0.9)',
+                color: 'white',
+                '&:hover': {
+                    cursor: 'pointer',
+                },
+            },
+        },
+        {
+            when: row => row?.count <= 0,
+            style: {
+                backgroundColor: 'rgba(242, 38, 19, 0.9)',
+                color: 'white',
+                '&:hover': {
+                    cursor: 'not-allowed',
+                },
+            },
+        },
+    ];
     const customStyles = {
         rows: {
             highlightOnHoverStyle: {
@@ -112,7 +144,7 @@ const ExpandedComponent = (props) =>{
                         customStyles={customStyles}
                         defaultSortFieldId
                         // onRowClicked={handleRowClicked}
-                        conditionalRowStyles={dessert ? conditionalRowStyles: ''}
+                        conditionalRowStyles={colorHSD ? conditionalRowStylesHSD : colorOH ? conditionalRowStylesOH : '' }
                         // progressPending={loading||loadingDelete}
                         // progressComponent={<CustomLoader />}
                         highlightOnHover
