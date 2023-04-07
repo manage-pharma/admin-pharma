@@ -17,4 +17,4 @@ const ReqInventoryScreen = () => {
   );
 };
 
-export default withAuthorization(ReqInventoryScreen,PERMISSIONS.isInventory.request_inventory, true);
+export default withAuthorization(ReqInventoryScreen,[PERMISSIONS.isInventory.request_inventory]);

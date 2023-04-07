@@ -2,6 +2,8 @@ import React from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import MainReview from "../components/Reviews/MainReview";
+import { withAuthorization } from "../util/withAuthorization ";
+import { PERMISSIONS } from "../util/RolesContanst";
 
 
 const DrugStoreScreen=({match}) => {
@@ -16,5 +18,5 @@ const DrugStoreScreen=({match}) => {
   );
 };
 
-export default DrugStoreScreen;
+export default withAuthorization(DrugStoreScreen,[PERMISSIONS.isSaleAgent.access_comment]);
 

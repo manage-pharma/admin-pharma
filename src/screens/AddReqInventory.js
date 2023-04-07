@@ -17,4 +17,4 @@ const AddRequestInventory = () => {
   );
 };
 
-export default withAuthorization(AddRequestInventory,PERMISSIONS.isInventory.request_inventory_add, true);
+export default withAuthorization(AddRequestInventory,[PERMISSIONS.isInventory.request_inventory_add]);

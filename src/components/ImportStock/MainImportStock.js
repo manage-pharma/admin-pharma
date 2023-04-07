@@ -33,6 +33,8 @@ const MainImportStock = (props) => {
   const updateStatus = useSelector(state => state.importStockStatus)
   const {loading: loadingStatus, error: errorStatus, success} = updateStatus
 
+  const cancelImport = useSelector(state => state.importStockCancel)
+  const {error: errorCancel} = cancelImport
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
       dispatch(listImportStock(keyword, pageNumber, from, to))
@@ -91,7 +93,7 @@ const MainImportStock = (props) => {
   return (
     <>
     <Toast/>
-    { error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
+    { error || errorStatus || errorCancel ? (<Message variant="alert-danger">{error || errorStatus || errorCancel}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">Danh sách nhập kho</h2>

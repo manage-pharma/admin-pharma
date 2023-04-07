@@ -443,6 +443,13 @@ const EditImportStock = (props) => {
       };
     });
     setqtyLost(updateQtyLot);
+    setSelectedProduct({
+      dataCountinstock: findProduct?.total_count,
+      dataFoo: findProduct?.name,
+      dataLotlist: JSON.stringify(findProduct?.products),
+      label: findProduct?.name, 
+      value: findProduct?.idDrug
+    })
     setFieldProduct(() => {
       return {
         countInStock: findProduct.total_count,
@@ -718,8 +725,10 @@ const EditImportStock = (props) => {
                         className="mb-4 form-divided-2"
                       >
                         <label>
-                          Số lô: {lot.lotNumber} (tồn: {lot.count}) (HSD:{" "}
-                          {moment(lot.expDrug).format("DD-MM-YYYY")})
+                          <div className={Math.round((moment(lot?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1 || lot.count <= 0 ? 'text-danger' : 'text-success'} style={{fontWeight:'500'}}>
+                            Số lô: {lot.lotNumber} (tồn: {lot.count}) (HSD:{" "}
+                            {moment(lot.expDrug).format("DD-MM-YYYY")})
+                          </div>
                         </label>
                         <input
                           name={lot.lotNumber}
@@ -729,6 +738,7 @@ const EditImportStock = (props) => {
                           data-id={lot._id}
                           data-expdrug={lot.expDrug}
                           className="form-control"
+                          disabled={Math.round((moment(lot?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1 || lot.count <= 0 ? true : false}
                           onChange={(e) =>
                             handleChangeQuantity(e, index, lot.expDrug)
                           }

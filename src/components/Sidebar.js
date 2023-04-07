@@ -41,7 +41,7 @@ const Sidebar = () => {
 
             {/* //! Danh mục  */}
             {
-              (userInfo?.role === "isAdmin" || userInfo?.role === "isInventory") && (
+              (userInfo?.role === "isAdmin" || userInfo?.role === "isInventory" || userInfo?.role === "isSaleAgent") && (
                 <li className="menu-item lv1 arrow down">
                 <NavLink
                   activeClassName="active"
@@ -87,16 +87,21 @@ const Sidebar = () => {
               )
             }
             {/* //! Order */}
-            <li className="menu-item">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
-                to="/orders"
-              >
-                <i className="icon fas fa-bags-shopping"></i>
-                <span className="text">Đơn đặt hàng</span>
-              </NavLink>
-            </li>
+            {
+              (userInfo?.role === "isAdmin" || userInfo?.role === "isSaleAgent") && (
+                <li className="menu-item">
+                <NavLink
+                  activeClassName="active"
+                  className="menu-link"
+                  to="/orders"
+                >
+                  <i className="icon fas fa-bags-shopping"></i>
+                  <span className="text">Đơn đặt hàng</span>
+                </NavLink>
+              </li>
+              )
+            }
+           
 
             {/* //! Thông tin cá nhân */}
             {
@@ -113,20 +118,27 @@ const Sidebar = () => {
             </li>
               )
             }
-            
-            <li className="menu-item">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
-                to="/providers"
-              >
-                <i className="icon fas fa-store-alt"></i>
-                <span className="text">Nhà cung cấp</span>
-              </NavLink>
-            </li>
+            {
+              (userInfo?.role === "isAdmin") && (
+                <li className="menu-item">
+                <NavLink
+                  activeClassName="active"
+                  className="menu-link"
+                  to="/providers"
+                >
+                  <i className="icon fas fa-store-alt"></i>
+                  <span className="text">Nhà cung cấp</span>
+                </NavLink>
+              </li>
+              )
+            }
+           
 
             {/* //! Nhà thuốc */}
-            <li className="menu-item">
+            {
+              (userInfo?.role === "isAdmin" || userInfo?.role === "isSaleAgent") && (
+                <>
+                  <li className="menu-item">
               <NavLink
                 activeClassName="active"
                 className="menu-link"
@@ -166,6 +178,10 @@ const Sidebar = () => {
                 <span className="text">Khuyến mãi</span>
               </NavLink>
             </li>
+                </>
+              )
+            }
+            
             {
               (userInfo.role === "isAdmin" || userInfo.role === "isInventory") && (
                 <>
