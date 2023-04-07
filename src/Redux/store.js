@@ -9,6 +9,13 @@ import {
   userUpdateReducer,
 } from "./Reducers/UserReducers";
 import {
+  customerLoginReducer,
+  customerListReducer,
+  customerCreateReducer,
+  customerSingleReducer,
+  customerUpdateReducer,
+} from "./Reducers/CustomerReducers";
+import {
   productAllReducer,
   productCategoriesDrugReducer,
   productCategoriesReducer,
@@ -124,6 +131,12 @@ const reducer = combineReducers({
   userList: userListReducer,
   userSingle: userSingleReducer,
   userUpdate: userUpdateReducer,
+
+  customerLogin: customerLoginReducer,
+  customerCreate: customerCreateReducer,
+  customerList: customerListReducer,
+  customerSingle: customerSingleReducer,
+  customerUpdate: customerUpdateReducer,
 
   productList: productListReducer,
   productListWithQty: productListWithQtyReducer,

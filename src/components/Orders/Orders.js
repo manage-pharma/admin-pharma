@@ -27,7 +27,7 @@ const Orders = (props) => {
                 <b>{order?.user?.name}</b>
               </td>
               <td>{order?.user?.email}</td>
-              <td>${order?.totalPrice}</td>
+              <td>{order?.totalPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</td>
               <td>{
                   order.isPaid ? (
                     <span className="badge rounded-pill alert-success">Trả ngày {moment(order.paidAt).format("MMM Do YY")}</span>
