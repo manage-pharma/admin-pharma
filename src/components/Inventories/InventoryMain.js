@@ -11,33 +11,44 @@ const MainInventory = () => {
   const dispatch = useDispatch()
 
   const [ isStop , setIsStop ] = useState(false)
-  const [dessert, setDessert] = useState(false)
+  const [colorHSD, setColorHSD] = useState(false)
+  const [colorOH, setColorOH] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
   const [keyword, setSearch] = useState()
   const [toggleSearch, setToggleSearch] = useState(false)
   const [data, setData] = useState({
+    oh: '',
+    exp: '',
     from: '',
     to: ''
   })
-  const {from,to} = data
+  const {from, to, oh, exp} = data
   
   const inventoryList = useSelector(state=> state.inventoryList)
   const { loading, error, inventories } = inventoryList
 
-  const callApiKeywordSearch = (keyword, from, to) =>{
-      dispatch(listInventory(keyword, from, to))
+  const callApiKeywordSearch = (keyword, from, to, oh, exp) =>{
+      dispatch(listInventory(keyword, from, to, oh, exp))
   }
-  const debounceDropDown = useRef(debounce((keyword, from, to) => callApiKeywordSearch(keyword, from, to) , 300)).current;
+  const debounceDropDown = useRef(debounce((keyword, from, to, oh, exp) => callApiKeywordSearch(keyword, from, to, oh, exp) , 300)).current;
 
   const handleSubmitSearch = e =>{
     e.preventDefault()
     setSearch(e.target.value)
-    debounceDropDown(e.target.value, data.from, data.to);
+    debounceDropDown(e.target.value, data.from, data.to, data.oh, data.exp);
   }
 
   const handleChange = e =>{
     e.preventDefault();
+    const selectOH = document.querySelector('#OH-select');
+    const selectedOptionOH = selectOH.options[selectOH.selectedIndex];
+    selectOH.style.color = selectedOptionOH.id;
+
+    const selectEXP = document.querySelector('#HSD-select');
+    const selectedOptionEXP = selectEXP.options[selectEXP.selectedIndex];
+    selectEXP.style.color = selectedOptionEXP.id;
+
     setData(prev => {
       return {
         ...prev, [e.target.name]: e.target.value
@@ -45,6 +56,7 @@ const MainInventory = () => {
     })
     
   }
+
   const handleSearchDate = (e) =>{
     e.preventDefault();
     if(!toggleSearch){
@@ -54,10 +66,12 @@ const MainInventory = () => {
         }
         return;
       }
-      dispatch(listInventory(keyword, data.from, data.to)) 
+      dispatch(listInventory(keyword, data.from, data.to, data.oh, data.exp)) 
     }
     else{
       setData({
+        exp: '',
+        oh: '',
         from: '',
         to: ''
       })
@@ -67,9 +81,9 @@ const MainInventory = () => {
   }
 
   useEffect(()=>{
-      dispatch(listInventory(keyword)) 
+      dispatch(listInventory(keyword, oh, exp)) 
      // eslint-disable-next-line
-  },[dispatch])
+  },[dispatch, oh, exp])
 
   return (
     <>
@@ -94,19 +108,19 @@ const MainInventory = () => {
                 />
               </div>
               <div className="me-1" style={{flexGrow: '1'}}>
-                <select defaultValue="" className="p-2 form-select" >
-                  <option value="">Tất cả HSD</option>
-                  <option value="cheap">Còn hạn</option>
-                  <option value="expensive">Cảnh báo</option>
-                  <option value="expensive">Hết hạn</option>
+                <select defaultValue="" name="exp" className="p-2 form-select" id="HSD-select" style={{fontWeight: '500'}} onChange={handleChange}>
+                  <option id='black'   className="text-dark"    style={{fontWeight: '500'}} value="">Tất cả HSD</option>
+                  <option id='#28a745' className="text-success" style={{fontWeight: '500'}} value="HSD2">Còn hạn</option>
+                  <option id='#ffc107' className="text-warning" value="HSD1">Cảnh báo</option>
+                  <option id="#dc3545" className="text-danger"  value="HSD0">Hết hạn</option>
                 </select>
               </div>
               <div className="me-1" style={{flexGrow: '1'}}>
-                <select defaultValue="" className="form-control p-2 form-select" >
-                  <option value="">Tất cả</option>
-                  <option value="cheap">Còn hạn</option>
-                  <option value="expensive">Cảnh báo</option>
-                  <option value="expensive">Hết hạn</option>
+                <select defaultValue=""  name="oh" className="form-control p-2 form-select" id="OH-select" style={{fontWeight: '500'}} onChange={handleChange} >
+                  <option id='black'   className="text-dark" style={{fontWeight: '500'}} value="">Tất cả số lượng</option>
+                  <option id='#28a745' className="text-success" style={{fontWeight: '500'}} value="OH2">Số lượng đủ</option>
+                  <option id='#ffc107' className="text-warning" value="OH1">Số lượng sắp hết</option>
+                  <option id="#dc3545" className="text-danger" value="OH0">Số lượng hết</option>
                 </select>
               </div>
               <div>
@@ -114,6 +128,24 @@ const MainInventory = () => {
                   e.preventDefault()
                   setExpanded(prev => !prev)
                 }}>{!expanded ? 'Mở rộng' : 'Thu gọn' }</button>
+              </div>
+              <div>
+                <button className="btn btn-success p-2" style={{width: 'max-content', marginLeft: '5px'}}onClick={(e)=>{
+                  e.preventDefault();
+                  setColorHSD(prev => !prev);
+                  if (colorOH) {
+                    setColorOH(false);
+                  }
+                }}>{!colorHSD ? 'Màu HSD' : 'Tắt HSD' }</button>
+              </div>
+              <div>
+                <button className="btn btn-success p-2" style={{width: 'max-content', marginLeft: '5px'}}onClick={(e)=>{
+                  e.preventDefault()
+                  setColorOH(prev => !prev);
+                  if (colorHSD) {
+                    setColorHSD(false);
+                  }
+                }}>{!colorOH ? 'Màu OH' : 'Tắt OH' }</button>
               </div>
             </div>
             <div className="col-lg-4 d-flex justify-content-end">
@@ -160,7 +192,8 @@ const MainInventory = () => {
             <InventoryTable
               inventory={inventories}
               loading={loading}
-              dessert={dessert}
+              colorHSD={colorHSD}
+              colorOH={colorOH}
               expanded={expanded}
             /> : 
             <div>Không có dữ liệu</div>

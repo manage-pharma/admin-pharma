@@ -20,7 +20,7 @@ const LatestOrder = (props) => {
                         <b>{order?.user?.name}</b>
                       </td>
                       <td>{order?.user?.email || '---'}</td>
-                      <td>${order?.totalPrice || '---'}</td>
+                      <td>{order?.totalPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ" || '---'}</td>
                       <td>{
                           order.isSuccess ? (
                             <span className="badge rounded-pill alert-success">Đã hoàn tất {moment(order.receivedAt).format("MMM Do YY")}</span>

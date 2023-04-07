@@ -6,7 +6,7 @@ const OrderDetailProducts=(props) => {
   const {status}=order
   if(!loading) {
     const addDecimals=(num) => {
-      return (Math.round(num*100)/100).toFixed(2)
+      return (Math.round(num*100)/100)
     }
     order.itemsPrice=addDecimals(
       order.orderItems.reduce((acc,item) => acc+item.price*item.qty*(1-item.discount/100),0)
@@ -43,9 +43,9 @@ const OrderDetailProducts=(props) => {
                   </div>
                 </Link>
               </td>
-              <td>{(item.price*(1-item.discount/100)).toFixed(2)}</td>
+              <td>{(item.price*(1-item.discount/100)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</td>
               <td>{item.qty}</td>
-              <td className="text-end">${(item.price*item.qty*(1-item.discount/100)).toFixed(2)}</td>
+              <td className="text-end">{(item.price*item.qty*(1-item.discount/100)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</td>
             </tr>
           ))
         }
@@ -53,21 +53,21 @@ const OrderDetailProducts=(props) => {
           <td colSpan="4">
             <article className="float-end">
               <dl className="dlist">
-                <dt>Tổng tiền hàng:</dt> <dd>${order.itemsPrice}</dd>
+                <dt>Tổng tiền hàng:</dt> <dd>{order?.itemsPrice?.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</dd>
               </dl>
               <dl className="dlist">
-                <dt>Phí vận chuyển:</dt> <dd>${order.shippingPrice}</dd>
+                <dt>Phí vận chuyển:</dt> <dd>{order.shippingPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</dd>
               </dl>
               <dl className="dlist">
-                <dt>Vouncher:</dt> <dd>${order.taxPrice}</dd>
+                <dt>Vouncher:</dt> <dd>{order.taxPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</dd>
               </dl>
               <dl className="dlist">
-                <dt>Vouncher:</dt> <dd>$0</dd>
+                <dt>Điểm quy đồi:</dt> <dd>-{order.discountPoint.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</dd>
               </dl>
               <dl className="dlist">
                 <dt>Tổng thanh toán:</dt>
                 <dd>
-                  <b className="h5">${order.totalPrice}</b>
+                  <b className="h5">{order.totalPrice?.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</b>
                 </dd>
               </dl>
               <dl className="dlist">

@@ -16,7 +16,7 @@ import {
 } from "./../Constants/InventoryConstants";
 
 export const listInventory =
-  (keyword = "", from = " ", to = " ") =>
+  (keyword = "", oh = "", exp = "" ,from = " ", to = " ") =>
   async (dispatch, getState) => {
     try {
       dispatch({ type: INVENTORY_LIST_REQUEST });
@@ -32,7 +32,7 @@ export const listInventory =
       };
 
       const { data } = await axios.get(
-        `/api/inventory/?keyword=${keyword}&from=${from}&to=${to}`,
+        `/api/inventory/?keyword=${keyword}&oh=${oh}&exp=${exp}&from=${from}&to=${to}`,
         config
       );
       dispatch({ type: INVENTORY_LIST_SUCCESS, payload: data });

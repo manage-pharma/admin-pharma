@@ -16,6 +16,7 @@ import AddExport from "./screens/AddExport";
 import EditExport from "./screens/EditExport";
 import Login from "./screens/LoginScreen";
 import UsersScreen from "./screens/UsersScreen";
+import CustomersScreen from "./screens/CustomersScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
 import NotFound from "./screens/NotFound";
 import PrivateRouter from "./PrivateRouter";
@@ -110,6 +111,7 @@ function App() {
           <PrivateRouter path="/content" component={ContentEditScreen} exact />
           <PrivateRouter path="/promotion" component={PromotionScreen} exact />
           <PrivateRouter path="/users" component={UsersScreen} />
+          <PrivateRouter path="/customers" component={CustomersScreen} />
 
           <Route path="/login" component={Login} />
           <Route path="*" component={NotFound} />
