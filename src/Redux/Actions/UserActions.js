@@ -20,6 +20,10 @@ import {
   USER_UPDATE_SUCCESS,
   USER_UPDATE_RESET,
   USER_SINGLE_RESET,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
+  USER_DELETE_RESET,
 } from "../Constants/UserConstants";
 import axios from "axios";
 import { PRODUCT_LIST_RESET } from "../Constants/ProductConstants";
@@ -225,6 +229,40 @@ export const singleUser = (id) => async (dispatch, getState) => {
     });
     setTimeout(() => {
       dispatch({ type: USER_SINGLE_RESET });
+    }, 3000);
+  }
+};
+
+//ADMIN USER DELETE
+export const deleteUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_DELETE_REQUEST });
+    // userInfo -> userLogin -> getState(){globalState}
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.put(`/api/users/${id}/delete`, {}, config);
+    dispatch({ type: USER_DELETE_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: USER_DELETE_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: USER_DELETE_RESET});
     }, 3000);
   }
 };

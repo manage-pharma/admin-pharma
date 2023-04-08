@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { listUser, singleUser } from "../../Redux/Actions/UserActions";
+import { deleteUser, listUser, singleUser } from "../../Redux/Actions/UserActions";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import AddUser from "./AddUserModal";
@@ -8,11 +8,57 @@ import debounce from 'lodash.debounce';
 import { useHistory } from 'react-router-dom';
 import { withAuthorization } from "../../util/withAuthorization ";
 import { PERMISSIONS } from "../../util/RolesContanst";
+import { toast } from "react-toastify";
+import Toast from "../LoadingError/Toast";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import { USER_DELETE_RESET } from "../../Redux/Constants/UserConstants";
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
+
 const UserComponent = (props) => {
   const dispatch = useDispatch();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   const userList = useSelector(state => state.userList);
   const { loading, error, users } = userList 
+  const userDelete = useSelector(state => state.userDelete)
+  const {success: successDelete} = userDelete
+
   const [show, setShow] = useState(false);
+  const [modalShow,setModalShow]=useState(false);
+  const [dataModal,setDataModal]=useState();
+
+  const MyVerticallyCenteredModal=(props) => {
+    return (
+        <Modal
+            {...props}
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            className="my-modal"
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Xóa
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>Bạn có muốn xóa <span className="text-danger">{dataModal?.name}</span> ?</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button className="btn-danger" onClick={() => {
+                    dispatch(deleteUser(dataModal?._id))
+                    setModalShow(false)
+                }}>OK</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
   const { pageNumber } = props
     const [keyword, setSearch] = useState()
     const history = useHistory()
@@ -34,7 +80,12 @@ const UserComponent = (props) => {
   }
   useEffect(() => {
     dispatch((listUser()));
-  }, [dispatch])
+    if(successDelete) {
+      dispatch({type: USER_DELETE_RESET});
+      toast.success("Xóa người dùng thành công", ToastObjects);
+      dispatch(listUser())
+  }
+  }, [dispatch, successDelete])
   const nameRole =  (role) => {
     if(role === "isAdmin"){
       return "Quản trị viên"
@@ -48,6 +99,11 @@ const UserComponent = (props) => {
   }
   return (
     <>
+    <Toast />
+    <MyVerticallyCenteredModal
+      show={modalShow}
+      onHide={() => setModalShow(false)}
+    />
     <AddUser show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
@@ -85,12 +141,28 @@ const UserComponent = (props) => {
                 users.filter((user) => !user.isAdmin).map((user, index) => (
                   <div className="col" key={index}>
                     <div className="card card-user shadow-sm">
-                      <div className="card-header">
-                        <div className="user-effect" onClick={e=>{
-                          e.preventDefault();
-                          dispatch(singleUser(user._id))
-                          setShow(true)
-                        }}><i className="far fa-edit"></i></div>
+                    <div className="card-header">
+                      { userInfo?.isAdmin ? 
+                        <div className="user-effect">
+                          <div className="user-effect-delete" onClick={e=>{
+                            e.preventDefault();
+                            setModalShow(true)
+                            setDataModal(user)
+                          }}><i className="far fa-trash"></i></div>
+
+                          <div className="user-effect-edit" onClick={e=>{
+                            e.preventDefault();
+                            dispatch(singleUser(user._id))
+                            setShow(true)
+                          }}><i className="far fa-edit"></i></div>
+                        </div>
+                        :
+                          <div className="user-effect-edit" onClick={e=>{
+                            e.preventDefault();
+                            dispatch(singleUser(user._id))
+                            setShow(true)
+                          }}><i className="far fa-edit"></i></div>
+                        }
                         <img
                           className="img-md img-avatar"
                           src="images/tpone.png"
