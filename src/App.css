@@ -1189,11 +1189,31 @@ input:checked+.slider:before {
   transition: 0.3s ease-in-out;
   transform: translateY(90%) rotate(90deg);
 }
+.user-effect{
+  display: flex;
+  justify-content: space-between;
+}
 
-.user-effect {
+.user-effect-edit {
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
+  font-size: 20px;
+}
+
+.user-effect-delete {
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.user-effect-edit:hover {
+  color: #FFC107
+}
+
+.user-effect-delete:hover {
+  color: #DC3747
 }
 
 .arrow-breadcrum {
