@@ -241,6 +241,7 @@ body.offcanvas-active {
 
 .main-header .col-search {
   flex-grow: 0.5;
+  width: 350px;
 }
 
 .main-header .col-nav {

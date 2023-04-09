@@ -29,9 +29,9 @@ const MainInventory = () => {
   const { loading, error, inventories } = inventoryList
 
   const callApiKeywordSearch = (keyword, from, to, oh, exp) =>{
-      dispatch(listInventory(keyword, from, to, oh, exp))
+      dispatch(listInventory(keyword, oh, exp, from, to))
   }
-  const debounceDropDown = useRef(debounce((keyword, from, to, oh, exp) => callApiKeywordSearch(keyword, from, to, oh, exp) , 300)).current;
+  const debounceDropDown = useRef(debounce((keyword, oh, exp, from, to) => callApiKeywordSearch(keyword, from, to, oh, exp) , 300)).current;
 
   const handleSubmitSearch = e =>{
     e.preventDefault()
@@ -66,7 +66,7 @@ const MainInventory = () => {
         }
         return;
       }
-      dispatch(listInventory(keyword, data.from, data.to, data.oh, data.exp)) 
+      dispatch(listInventory(keyword, data.oh, data.exp, data.from, data.to)) 
     }
     else{
       setData({
@@ -81,7 +81,7 @@ const MainInventory = () => {
   }
 
   useEffect(()=>{
-      dispatch(listInventory(keyword, oh, exp)) 
+      dispatch(listInventory(keyword, oh, exp, from, to)) 
      // eslint-disable-next-line
   },[dispatch, oh, exp])
 
@@ -98,10 +98,10 @@ const MainInventory = () => {
         <header className="card-header bg-aliceblue">
           <div className="row gx-3 py-3 justify-content-between inventory-flex">
             <div className="col-lg-6 me-auto d-flex">
-              <div className="me-1" style={{flexGrow: '1'}}>
+              <div className="me-1" style={{flexGrow: '2'}}>
                 <input
                   type="search"
-                  placeholder="Tìm kiếm tên thuốc..."
+                  placeholder="Tìm kiếm tên thuốc, số lô"
                   className="form-control p-2"
                   value={keyword}
                   onChange={handleSubmitSearch}

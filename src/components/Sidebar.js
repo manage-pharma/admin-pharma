@@ -220,7 +220,7 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/req-inventory"
               >
-                <i className="icon fas fa-sign-out-alt"></i>
+                <i className="icon fas fa-calendar"></i>
                 <span className="text">Yêu cầu đặt hàng</span>
               </NavLink>
             </li>
