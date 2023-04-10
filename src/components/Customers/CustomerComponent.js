@@ -1,21 +1,66 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { listCustomer, singleCustomer } from "../../Redux/Actions/CustomerActions";
+import { listCustomer,deleteCustomer } from "../../Redux/Actions/CustomerActions";
+import {CUSTOMER_DELETE_RESET} from "../../Redux/Constants/CustomerConstants"
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import AddCustomer from "./AddCustomerModal";
+import { toast } from "react-toastify";
+import Toast from "../LoadingError/Toast";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 import debounce from 'lodash.debounce';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { withAuthorization } from "../../util/withAuthorization ";
 import { PERMISSIONS } from "../../util/RolesContanst";
+
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
 const CustomerComponent = (props) => {
   const dispatch = useDispatch();
   const customerList = useSelector(state => state.customerList);
+  const customerDelete = useSelector(state => state.customerDelete)
+  const {success: successDelete} = customerDelete
+
   const { loading, error, customers } = customerList 
   const [show, setShow] = useState(false);
+  const [modalShow,setModalShow]=useState(false);
+  const [dataModal,setDataModal]=useState();
+
+  const MyVerticallyCenteredModal=(props) => {
+    return (
+        <Modal
+            {...props}
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            className="my-modal"
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Xóa
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>Bạn có muốn xóa <span className="text-danger">{dataModal?.name}</span> ?</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button className="btn-danger" onClick={() => {
+                    dispatch(deleteCustomer(dataModal?._id))
+                    setModalShow(false)
+                }}>OK</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
   const { pageNumber } = props
     const [keyword, setSearch] = useState()
     const history = useHistory()
+
     const callApiKeywordSearch = (keyword, pageNumber) =>{
         if( keyword.trim() !== ''){
           dispatch(listCustomer(keyword, pageNumber))
@@ -34,7 +79,12 @@ const CustomerComponent = (props) => {
   }
   useEffect(() => {
     dispatch((listCustomer()));
-  }, [dispatch])
+    if(successDelete) {
+      dispatch({type: CUSTOMER_DELETE_RESET});
+      toast.success("Xóa khách thành công", ToastObjects);
+      dispatch(listCustomer())
+  }
+  }, [dispatch,successDelete])
   const nameRole =  (role) => {
     if(role === "isAdmin"){
       return "Quản trị viên"
@@ -78,19 +128,33 @@ const CustomerComponent = (props) => {
         </header>
 
         {/* Card */}
+        <MyVerticallyCenteredModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
         <div className="card-body">
           {loading ? (<Loading />) : error ? (<Message variant="alert-danger" >{error}</Message>) : (
             <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
               {
-                customers.filter((customer) => !customer.isAdmin).map((customer, index) => (
+                customers.filter((customer) => !customer.isAdmin&&!customer.isDeleted).map((customer, index) => (
                   <div className="col" key={index}>
                     <div className="card card-user shadow-sm">
                       <div className="card-header">
-                        <div className="user-effect" onClick={e=>{
-                          e.preventDefault();
-                          dispatch(singleCustomer(customer._id))
-                          setShow(true)
-                        }}><i className="far fa-edit"></i></div>
+                      <div className="user-effect">
+                          <div className="user-effect-delete" onClick={e=>{
+                            e.preventDefault();
+                            setModalShow(true)
+                            setDataModal(customer)
+                          }}><i className="far fa-trash"></i></div>
+
+                          <div className="user-effect-edit" onClick={e=>{
+                            e.preventDefault();
+                        
+                            history.push(`/customer/${customer._id}`)
+                            
+                          }}><i className="fas fa-eye"></i></div>
+                        </div>
+                        
                         <img
                           className="img-md img-avatar"
                           src="images/tpone.png"
@@ -114,12 +178,14 @@ const CustomerComponent = (props) => {
                           <p style={{fontWeight: "bold"}}>
                             <a href={`mailto:${customer.email}`}>{customer.email}</a>
                           </p>
+                          
                         </div>
                       </div>
                     </div>
                   </div>
                 ))
               }
+
             </div>
           )}
         </div>
@@ -130,4 +196,4 @@ const CustomerComponent = (props) => {
   );
 };
 
-export default withAuthorization(CustomerComponent,[PERMISSIONS.isAdmin]);
+export default withAuthorization(CustomerComponent,[PERMISSIONS.isSaleAgent.access_customer]);

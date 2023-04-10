@@ -24,5 +24,6 @@ export const PERMISSIONS = {
         access_content: 'access_content',
         access_comment: 'access_comment',
         access_promotion: 'access_promotion',
+        access_customer:'access_customer',
     }
   };

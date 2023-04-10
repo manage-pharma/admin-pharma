@@ -40,7 +40,7 @@ const AddCustomer = (props) => {
     const [dataModal, setDataModal] = useState({
         name: '',
         email: '',
-        role: '',
+        role: 'userDefault',
         phone: '',
         password: '',
         passwordAgain: ''
@@ -163,43 +163,7 @@ const AddCustomer = (props) => {
                             </Form.Group>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col xs={12} md={12}>
-                            <Form.Label>Quyền</Form.Label>
-                            <Form.Group>
-                                <div>
-                                    {
-                                        initialItems.map((item, index) => {
-                                            return <div key={index} className="form-check form-check-inline">
-                                            <Form.Check
-                                            type="radio"
-                                            label={item.name}
-                                            name="role"
-                                            value={item.value}
-                                            inline
-                                            required
-                                            checked={role === item.value}
-                                            onChange={handelChangeModal}
-                                            />
-                                        </div>
-                                        })
-                                    }
-                                </div>
-                            </Form.Group>
-                            {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                                 <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                    type="email"
-                                    autoComplete="off"
-                                    placeholder="name@example.com"
-                                    onChange={handelChangeModal}
-                                    name="email"
-                                    value={email}
-                                    required
-                                />
-                            </Form.Group> */}
-                        </Col>
-                    </Row>
+                    
                     <Row>
                         <Col xs={12} md={12}>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">

@@ -20,6 +20,21 @@ import {
   CUSTOMER_UPDATE_SUCCESS,
   CUSTOMER_UPDATE_RESET,
   CUSTOMER_SINGLE_RESET,
+
+  CUSTOMER_CHANGE_FAIL,
+  CUSTOMER_CHANGE_REQUEST,
+  CUSTOMER_CHANGE_RESET,
+  CUSTOMER_CHANGE_SUCCESS,
+
+  CUSTOMER_UPDATE_PROFILE_FAIL,
+  CUSTOMER_UPDATE_PROFILE_REQUEST,
+  CUSTOMER_UPDATE_PROFILE_RESET,
+  CUSTOMER_UPDATE_PROFILE_SUCCESS,
+
+  CUSTOMER_DELETE_FAIL,
+  CUSTOMER_DELETE_REQUEST,
+  CUSTOMER_DELETE_RESET,
+  CUSTOMER_DELETE_SUCCESS,
 } from "../Constants/CustomerConstants";
 import axios from "axios";
 import { PRODUCT_LIST_RESET } from "../Constants/ProductConstants";
@@ -159,6 +174,7 @@ export const listCustomer = (keyword = " ", pageNumber = " ") => async (dispatch
 };
 
 
+
 //ADMIN UPDATE PROVIDER
 export const updateCustomer = ({name, email, role, phone, password ,customerID}) => async(dispatch, getState)=>{
   try {
@@ -225,6 +241,103 @@ export const singleCustomer = (id) => async (dispatch, getState) => {
     });
     setTimeout(() => {
       dispatch({ type: CUSTOMER_SINGLE_RESET });
+    }, 3000);
+  }
+};
+
+    // CHANGE PROFILE
+    export const changeProfile = ({emailModal, passModal}) => async (dispatch) => {
+      try {
+        dispatch({ type: CUSTOMER_CHANGE_REQUEST });
+    
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        const formatForm = {
+          "email": emailModal,
+          "password": passModal
+        }
+        const { data } = await axios.post(`/api/customers/changeprofile`, formatForm, config);
+        dispatch({ type: CUSTOMER_CHANGE_SUCCESS, payload: data });
+      } catch (error) {
+        dispatch({
+          type: CUSTOMER_CHANGE_FAIL,
+          payload:
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message,
+        });
+      }
+    };
+  
+  // UPDATE PROFILE
+  export const updateCustomerProfile = (customer,customerId) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: CUSTOMER_UPDATE_PROFILE_REQUEST });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axios.put(`/api/customers/${customerId}/profile`, customer, config);
+      dispatch({ type: CUSTOMER_UPDATE_PROFILE_SUCCESS, payload: data });
+      dispatch({ type: CUSTOMER_LOGIN_SUCCESS, payload: data });
+  
+      //localStorage.setItem("userInfo", JSON.stringify(data));
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: CUSTOMER_UPDATE_PROFILE_FAIL,
+        payload: message,
+      });
+    }
+  };
+
+  //ADMIN USER DELETE
+export const deleteCustomer = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CUSTOMER_DELETE_REQUEST });
+    // userInfo -> userLogin -> getState(){globalState}
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.put(`/api/customers/${id}/delete`, {}, config);
+    dispatch({ type: CUSTOMER_DELETE_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: CUSTOMER_DELETE_FAIL,
+      payload: message,
+    });
+    setTimeout(() => {
+      dispatch({ type: CUSTOMER_DELETE_RESET});
     }, 3000);
   }
 };

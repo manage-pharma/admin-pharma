@@ -15,6 +15,9 @@ import {
   customerCreateReducer,
   customerSingleReducer,
   customerUpdateReducer,
+  customerChangeProfileReducer,
+  customerUpdateProfileReducer,
+  customerDeleteReducer,
 } from "./Reducers/CustomerReducers";
 import {
   productAllReducer,
@@ -139,6 +142,9 @@ const reducer = combineReducers({
   customerList: customerListReducer,
   customerSingle: customerSingleReducer,
   customerUpdate: customerUpdateReducer,
+  customerChangeProfile:customerChangeProfileReducer,
+  customerUpdateProfile:customerUpdateProfileReducer,
+  customerDelete:customerDeleteReducer,
 
   productList: productListReducer,
   productListWithQty: productListWithQtyReducer,

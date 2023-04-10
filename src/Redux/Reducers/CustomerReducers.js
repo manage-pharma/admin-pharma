@@ -19,6 +19,23 @@ import {
   CUSTOMER_LOGOUT,
   CUSTOMER_SINGLE_RESET,
   CUSTOMER_SINGLE_FAIL,
+
+  CUSTOMER_CHANGE_FAIL,
+  CUSTOMER_CHANGE_REQUEST,
+  CUSTOMER_CHANGE_RESET,
+  CUSTOMER_CHANGE_SUCCESS,
+
+  CUSTOMER_UPDATE_PROFILE_FAIL,
+  CUSTOMER_UPDATE_PROFILE_REQUEST,
+  CUSTOMER_UPDATE_PROFILE_RESET,
+  CUSTOMER_UPDATE_PROFILE_SUCCESS,
+
+
+  CUSTOMER_DELETE_FAIL,
+  CUSTOMER_DELETE_REQUEST,
+  CUSTOMER_DELETE_RESET,
+  CUSTOMER_DELETE_SUCCESS,
+  
 } from "../Constants/CustomerConstants";
 
 // LOGIN
@@ -98,3 +115,51 @@ switch (action.type) {
     return state;
 }
 };
+
+
+  // CHANGE PROFILE
+  export const customerChangeProfileReducer = (state = {}, action) => {
+    switch (action.type) {
+      case CUSTOMER_CHANGE_REQUEST:
+        return { loading: true };
+      case CUSTOMER_CHANGE_SUCCESS:
+        return { loading: false, success: true, info: action.payload };
+      case CUSTOMER_CHANGE_FAIL:
+        return { loading: false, error: action.payload };
+      case CUSTOMER_CHANGE_RESET:
+        return {}
+      default:
+        return state;
+    }
+  };
+  
+  // UPDATE PROFILE
+  export const customerUpdateProfileReducer = (state = {}, action) => {
+    switch (action.type) {
+      case CUSTOMER_UPDATE_PROFILE_REQUEST:
+        return { loading: true };
+      case CUSTOMER_UPDATE_PROFILE_SUCCESS:
+        return { loading: false, success: true, userInfo: action.payload };
+      case CUSTOMER_UPDATE_PROFILE_FAIL:
+        return { loading: false, error: action.payload };
+      default:
+        return state;
+    }
+  };
+
+  // DELETE CUSTOMER
+export const customerDeleteReducer = (state = {customer:{}}, action) => {
+  switch (action.type) {
+    case CUSTOMER_DELETE_REQUEST:
+      return {...state, loading: true };
+    case CUSTOMER_DELETE_SUCCESS:
+      return { loading: false, success: true, customer: action.payload };
+    case CUSTOMER_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+    case CUSTOMER_DELETE_RESET:
+      return {customer:{}};
+    default:
+      return state;
+  }
+  };
+  
