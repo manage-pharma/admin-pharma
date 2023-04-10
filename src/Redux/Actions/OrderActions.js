@@ -47,17 +47,17 @@ export const searchListOrder = (from=' ', to = ' ') => async (dispatch, getState
     try {
         dispatch({ type: ORDER_SEARCH_LIST_REQUEST });
         // userInfo -> userLogin -> getState(){globalState}
-        //const {
-        //    userLogin: { userInfo },
-        //} = getState();
+        const {
+            userLogin: { userInfo },
+        } = getState();
 
-        //const config = {
-        //    headers: {
-        //        Authorization: `Bearer ${userInfo.token}`,
-        //    },
-        //};
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
 
-        const { data } = await axios.get(`/api/orders/all-check?from=${from}&to=${to}`);
+        const { data } = await axios.get(`/api/orders/all-check?from=${from}&to=${to}`,config);
         dispatch({ type: ORDER_SEARCH_LIST_SUCCESS, payload: data });
     } catch (error) {
         const message =
@@ -231,7 +231,7 @@ export const getOrderCanceled = (orderItems) => async (dispatch, getState) => {
         })
         
         // api not transmiss any params because it just change state of deliverd 
-        const { data } = await axios.get(`/api/orders/${orderItems._id}/canceled`, config);
+        const { data } = await axios.get(`/api/orders/${orderItems._id}/AdminCanceled`, config);
         dispatch({ type: ORDER_CANCELED_SUCCESS, payload: data });
 
     
