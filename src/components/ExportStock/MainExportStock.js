@@ -33,6 +33,9 @@ const MainExportStock = (props) => {
   const updateStatus = useSelector(state => state.exportStockStatus)
   const {loading: loadingStatus, error: errorStatus, success} = updateStatus
 
+  const cancelExport = useSelector(state => state.exportStockCancel)
+  const {error: errorCancel} = cancelExport
+
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
       dispatch(listExportStock(keyword, pageNumber, from, to))
   }
@@ -88,7 +91,7 @@ const MainExportStock = (props) => {
   return (
     <>
     <Toast/>
-    { error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
+    { error || errorStatus || errorCancel ? (<Message variant="alert-danger">{error || errorStatus || errorCancel}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h3 className="content-title">Danh sách phiếu xuất</h3>
@@ -154,7 +157,7 @@ const MainExportStock = (props) => {
             loading={loading}
             loadingStatus={loadingStatus}
           /> : 
-          <div>There are no record</div>
+          <div>Không có dữ liệu</div>
         }
         </div>
       </div>

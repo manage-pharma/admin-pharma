@@ -100,21 +100,58 @@ const Sidebar = () => {
               </>
               )
             }
-            
+            {/* //! Order */}
+            {
+              (userInfo?.role === "isAdmin" || userInfo?.role === "isSaleAgent") && (
+                <li className="menu-item">
+                <NavLink
+                  activeClassName="active"
+                  className="menu-link"
+                  to="/orders"
+                >
+                  <i className="icon fas fa-bags-shopping"></i>
+                  <span className="text">Đơn đặt hàng</span>
+                </NavLink>
+              </li>
+              )
+            }
+           
 
             {/* //! Thông tin cá nhân */}
             {
               userInfo.role === "isAdmin" && (
-                <li className="menu-item">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
-                to="/users"
-              >
-                <i className="icon fas fa-user"></i>
-                <span className="text">Người dùng</span>
-              </NavLink>
-            </li>
+                <>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/users"
+                    >
+                      <i className="icon fas fa-user"></i>
+                      <span className="text">Người dùng</span>
+                    </NavLink>
+                  </li>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/customers"
+                    >
+                      <i className="icon fas fa-user"></i>
+                      <span className="text">Khách hàng</span>
+                    </NavLink>
+                  </li>
+                  <li className="menu-item">
+                    <NavLink
+                      activeClassName="active"
+                      className="menu-link"
+                      to="/providers"
+                    >
+                      <i className="icon fas fa-store-alt"></i>
+                      <span className="text">Nhà cung cấp</span>
+                    </NavLink>
+                  </li>
+                </>
             
               )
             }
@@ -233,7 +270,7 @@ const Sidebar = () => {
                 className="menu-link"
                 to="/req-inventory"
               >
-                <i className="icon fas fa-sign-out-alt"></i>
+                <i className="icon fas fa-calendar"></i>
                 <span className="text">Yêu cầu đặt hàng</span>
               </NavLink>
             </li>

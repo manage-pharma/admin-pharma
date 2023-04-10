@@ -488,7 +488,7 @@ const EditProductMain = (props) => {
                     errorAPICreate ||
                     errorAPIDelete ? (
                     <Message>
-                      {error || errorUnit || errorUnitCreate || errorUnitDelete}
+                      {error || errorUpdate|| errorUnit || errorUnitCreate || errorUnitDelete}
                     </Message>
                   ) : (
                     ""

@@ -19,4 +19,4 @@ const EditRequestInventory = () => {
   );
 };
 
-export default withAuthorization(EditRequestInventory,PERMISSIONS.isInventory.request_inventory_edit, true);
+export default withAuthorization(EditRequestInventory,[PERMISSIONS.isInventory.request_inventory_edit]);

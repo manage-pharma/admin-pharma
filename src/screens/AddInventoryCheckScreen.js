@@ -16,4 +16,4 @@ const AddInventoryCheckScreen = () => {
   );
 };
 
-export default withAuthorization(AddInventoryCheckScreen,PERMISSIONS.isInventory.check_inventory_add, true);
+export default withAuthorization(AddInventoryCheckScreen,[PERMISSIONS.isInventory.check_inventory_add]);

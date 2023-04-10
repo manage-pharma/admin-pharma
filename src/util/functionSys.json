@@ -1,0 +1,34 @@
+[
+    {
+      "_id": 1,
+      "functionName": "Danh mục thuốc",
+      "functionPath": "/products"
+      
+    },
+    {
+      "_id": 2,
+      "functionName": "Nhóm sản phẩm",
+      "functionPath": "/categories"
+    },
+    {
+      "_id": 3,
+      "functionName": "Nhóm thuốc",
+      "functionPath": "/categories-drug"
+    },
+    {
+      "_id": 4,
+      "functionName": "Đơn đặt hàng",
+      "functionPath": "/orders"
+    },
+    {
+      "_id": 5,
+      "functionName": "Khách hàng",
+      "functionPath": "/customers"
+    },
+    {
+      "_id": 6,
+      "functionName": "Người dùng",
+      "functionPath": "/customers"
+    }
+]
+  

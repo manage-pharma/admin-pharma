@@ -19,6 +19,10 @@ import {
   USER_LOGOUT,
   USER_SINGLE_RESET,
   USER_SINGLE_FAIL,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
+  USER_DELETE_RESET,
 } from "../Constants/UserConstants";
 
 // LOGIN
@@ -98,3 +102,19 @@ switch (action.type) {
     return state;
 }
 };
+
+// DELETE USER
+export const userDeleteReducer = (state = {user:{}}, action) => {
+  switch (action.type) {
+    case USER_DELETE_REQUEST:
+      return {...state, loading: true };
+    case USER_DELETE_SUCCESS:
+      return { loading: false, success: true, user: action.payload };
+    case USER_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_DELETE_RESET:
+      return {user:{}};
+    default:
+      return state;
+  }
+  };

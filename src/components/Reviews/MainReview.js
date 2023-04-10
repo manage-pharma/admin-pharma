@@ -146,7 +146,7 @@ const MainReview = () => {
               dessert={dessert}
               expanded={expanded}
             /> : 
-            <div>There are no record</div>
+            <div>Không có dữ liệu</div>
           }
         </div>
       </div>

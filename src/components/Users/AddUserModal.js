@@ -119,7 +119,7 @@ const AddUser = (props) => {
         }
     }, [success, dispatch, setShow, successUserSingle, successUserUpdated, userEdit, errorCreate, errorUpdate])
 
-    const { name, email, role,  phone, password, passwordAgain } = dataModal
+    const { name, email, role, phone, password, passwordAgain } = dataModal
     return (
       <>
         <Toast />

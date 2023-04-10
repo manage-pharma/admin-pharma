@@ -11,7 +11,6 @@ const OrderStatistics = (props) => {
   orders?.map(item=>item?.orderItems)?.map(item=>{
     _orders.push(...item)
   })
-  //console.log({_orders});
 
 // Define an object to keep track of the total quantity for each name.
 const nameToQty = {}
@@ -44,7 +43,6 @@ for (const order of filteredOrders) {
 }
 
 // Log the final orders array.
-//console.log({finalOrders,nameToQty,nameToSellNum})
   return (
     <div className="card-body bg-white">
       <h5 className="card-title">Thống kê sản phẩm bán ra</h5>

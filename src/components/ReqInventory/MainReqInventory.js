@@ -33,6 +33,8 @@ const MainReqInventory = (props) => {
   const updateStatus = useSelector(state => state.reqInventoryStatus)
   const {loading: loadingStatus, error: errorStatus, success} = updateStatus
 
+  const cancelReq = useSelector(state => state.reqInventoryCancel)
+  const {error: errorCancel} = cancelReq
 
   const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
       dispatch(listReqInventory(keyword, pageNumber, from, to))
@@ -91,7 +93,7 @@ const MainReqInventory = (props) => {
   return (
     <>
     <Toast/>
-    { error || errorStatus ? (<Message variant="alert-danger">{error || errorStatus}</Message>) : ''}
+    { error || errorStatus || errorCancel ? (<Message variant="alert-danger">{error || errorStatus || errorCancel}</Message>) : ''}
     <section className="content-main">
       <div className="content-header">
         <h2 className="content-title">Danh sách yêu cầu đặt hàng</h2>

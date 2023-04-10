@@ -5,6 +5,9 @@ import {logout} from '../Redux/Actions/UserActions';
 // import { changeTheme } from './../Redux/Actions/ThemeAction';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
+import Select from "react-select";
+import functionSys from "./../../src/util/functionSys.json"
+
 const Header = () => {
   const nameRole =  (role) => {
     if(role === "isAdmin"){
@@ -91,6 +94,14 @@ const Header = () => {
     e.preventDefault();
     setModalShow(true);
   }
+
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const handleChange = (selectedOption) => {
+    setSelectedOption(selectedOption);
+    history.push(selectedOption.functionPath)
+  };
+
   return (
     <>
       <MyVerticallyCenteredModal
@@ -99,19 +110,14 @@ const Header = () => {
       />
       <header className="main-header navbar">
         <div className="col-search">
-          <form className="searchform">
-            <div className="input-group">
-              <input
-                list="search_terms"
-                type="text"
-                className="form-control"
-                placeholder="Nhập tìm kiếm"
-              />
-              <button className="btn btn-light bg" type="button">
-                <i className="far fa-search"></i>
-              </button>
-            </div>
-          </form>
+          <Select
+            options={functionSys}
+            value={selectedOption}
+            onChange={handleChange}
+            getOptionLabel={(option) => option.functionName}
+            getOptionValue={(option) => option._id}
+            placeholder="Chọn chức năng cần tìm"
+          />
         </div>
         <div className="col-nav">
           <button

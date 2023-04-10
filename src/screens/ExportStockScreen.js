@@ -17,4 +17,4 @@ const ProviderScreen = () => {
   );
 };
 
-export default withAuthorization(ProviderScreen,PERMISSIONS.isInventory.export_inventory, true);
+export default withAuthorization(ProviderScreen,[PERMISSIONS.isInventory.export_inventory]);
