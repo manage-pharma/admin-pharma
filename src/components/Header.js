@@ -76,14 +76,21 @@ const Header = () => {
   // const data = useSelector((state)=> state.theme)
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const cloneFunctionSys = JSON.parse(JSON.stringify(functionSys))
 
+  const filteredFunctionSys = () => {
+    return cloneFunctionSys?.filter(functionItem => {
+      return userInfo.isAdmin ? true : functionItem?.isAdmin === userInfo.isAdmin &&
+        functionItem?.role?.includes(userInfo.role)
+    })
+  }
+  const filteredOptions = filteredFunctionSys()
   // const handleChangeTheme = (e) =>{
   //   e.preventDefault();
   //   dispatch(changeTheme(data.theme === 'light' ? 'dark' : 'light'))
   //   var element = document.getElementById("radio-inner");
   //   element.classList.toggle("active");
   // }
-
   const handleLogout = (e) =>{
     e.preventDefault();
     dispatch(logout())
@@ -111,7 +118,11 @@ const Header = () => {
       <header className="main-header navbar">
         <div className="col-search">
           <Select
-            options={functionSys}
+            options={filteredOptions}
+            // filterOption={(option) => 
+            //   userInfo.isAdmin ? true : option.data.isAdmin === userInfo.isAdmin &&
+            //   option?.data?.role?.includes(userInfo.role)
+            // }
             value={selectedOption}
             onChange={handleChange}
             getOptionLabel={(option) => option.functionName}

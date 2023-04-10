@@ -128,7 +128,7 @@ const ExcelCSVProductComponent = () => {
                 </div>
 
                 <div className="card card-custom mb-4 shadow-sm">
-                    <header className="card-header bg-aliceblue ">
+                    <header className="card-header bg-white ">
                         <div className="row gx-3 py-3">
                         {
                             loading ? (<Loading />) : error ? (<Message>{error}</Message>) : ''
