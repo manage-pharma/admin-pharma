@@ -45,6 +45,7 @@ import {
   orderDeliveredReducer,
   orderDetailReducer,
   orderSearchListReducer,
+  orderSearchD2DListReducer,
   orderListReducer,
   orderCanceledReducer,
   orderConformReducer,
@@ -168,6 +169,7 @@ const reducer = combineReducers({
 
   orderList: orderListReducer,
   orderSearchList:orderSearchListReducer,
+  orderSearchD2DList:orderSearchD2DListReducer,
   orderDetail: orderDetailReducer,
   orderDelivered: orderDeliveredReducer,
   orderCanceled:orderCanceledReducer,

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import moment from "moment";
 import { useDispatch, useSelector } from 'react-redux';
 import { singleCustomer } from "../../Redux/Actions/CustomerActions";
 import Loading from '../LoadingError/Loading';
@@ -16,6 +17,8 @@ const CustomerDetailMain = (props) => {
   const {customerId} = props;
   console.log(customerId)
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { loading, error, customer } = useSelector(state => state.customerSingle);
 
   const {orders}=useSelector(state => state.orderList)
   const orderFilter= orders?.filter(item => item?.user?._id === customerId)
@@ -25,7 +28,7 @@ const CustomerDetailMain = (props) => {
   console.log({orderFilter})
 
   useEffect(() => {
-
+    dispatch(singleCustomer(customerId))
     
   }, [dispatch])
 
@@ -45,6 +48,12 @@ const CustomerDetailMain = (props) => {
     <>
     <section className="content-main">
       <div className="content-header">
+        <button  className="btn btn-dark text-white" onClick={(e)=>{
+          e.preventDefault()
+          history.push('/customers')
+        }}>
+          Quay về
+        </button>
         <h2 className="content-title">Chi tiết khách hàng</h2>
         <div>
           
@@ -68,11 +77,11 @@ const CustomerDetailMain = (props) => {
                         </div>
                         <div className="author-card-details col-md-7">
                           <h5 className="author-card-name mb-2">
-                            <strong>{""}</strong>
+                            <strong>{customer?.name}</strong>
                           </h5>
                           <span className="author-card-position">
-                            <>Ngày đăng kí {""}</>
-                            <p >Coin : {""}</p>
+                            <>Ngày đăng kí {moment(customer?.createdAt).format('LL')}</>
+                            <p >Coin : {(customer?.pCoin)?.toFixed(2)}</p>
                           </span>
                         </div>
                       </div>

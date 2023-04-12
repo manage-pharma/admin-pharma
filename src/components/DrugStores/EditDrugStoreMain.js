@@ -332,7 +332,7 @@ const EditDrugStoreMain=(props) => {
                       type="number"
                       placeholder="Nhập % khuyến mãi"
                       className="form-control"
-                      
+                      disabled
                       required
                     />
                   </div>
@@ -391,7 +391,7 @@ const EditDrugStoreMain=(props) => {
                             {promotions?.map((item, index) => (
                               discountArr.map((item=>item._id)).includes(item._id)?'':
                               <option key={index-1}  value={JSON.stringify(item)} selected={false}>
-                                {item?.name+" - khuyến mãi: "+item?.discount+"% key "+(index)}
+                                {item?.name+" - khuyến mãi: "+item?.discount+"%"}
                               </option>
                               
                             ))}
@@ -419,10 +419,13 @@ const EditDrugStoreMain=(props) => {
                             onClick={(e)=>{
                               e.preventDefault()
                               if(discountArr.length<promotions.length){
-                                
-                                setDiscountArr([...discountArr, discountItem])
-                                //setData({...data,discount: Number(data.discount+discountItem.discount)})
-                                setTotalDiscount(totalDiscount+Number(discountItem.discount))
+                                if((totalDiscount+Number(discountItem.discount))>50&&new Date(discountItem.startOn) < currentDate && new Date(discountItem.endOn) > currentDate){
+                                  toast.error("Giá trị khuyến mãi đã vượt 50%",ToastObjects)
+                                }else{
+
+                                  setDiscountArr([...discountArr, discountItem])
+                                  setTotalDiscount(totalDiscount+Number(discountItem.discount))
+                                }
                               
                                 
                               }
@@ -460,7 +463,7 @@ const EditDrugStoreMain=(props) => {
                                         <>
                                         <tr key={index}>
                                           <td>{itemPro.name}</td>
-                                          <td>{itemPro.discount}</td>
+                                          <td>{itemPro.discount+" %"}</td>
                                           <td>{itemPro.startOn}</td>
                                           <td>{itemPro.endOn}</td>
                                           <td>

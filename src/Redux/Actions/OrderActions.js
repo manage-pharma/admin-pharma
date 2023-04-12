@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ORDER_DELIVERED_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS, ORDER_LIST_FAIL, ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS ,
     ORDER_SEARCH_LIST_FAIL, ORDER_SEARCH_LIST_REQUEST, ORDER_SEARCH_LIST_SUCCESS,
+    ORDER_SEARCH_D2D_LIST_FAIL, ORDER_SEARCH_D2D_LIST_REQUEST, ORDER_SEARCH_D2D_LIST_SUCCESS,
     ORDER_CANCELED_FAIL, ORDER_CANCELED_SUCCESS, ORDER_CANCELED_REQUEST,
     ORDER_RECEIVED_FAIL, ORDER_RECEIVED_SUCCESS, ORDER_RECEIVED_REQUEST,
     ORDER_CONFORM_FAIL, ORDER_CONFORM_SUCCESS, ORDER_CONFORM_REQUEST,
@@ -73,6 +74,39 @@ export const searchListOrder = (from=' ', to = ' ') => async (dispatch, getState
         });
     }
 };
+
+//ORDER LIST
+export const searchD2DListOrder = (keyword='',from=' ', to = ' ') => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_SEARCH_D2D_LIST_REQUEST });
+        // userInfo -> userLogin -> getState(){globalState}
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        };
+
+        const { data } = await axios.get(`/api/orders/all-search?keyword=${keyword}&from=${from}&to=${to}`,config);
+        dispatch({ type: ORDER_SEARCH_D2D_LIST_SUCCESS, payload: data });
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        if (message === "Not authorized, token failed") {
+            dispatch(logout());
+        }
+        dispatch({
+            type: ORDER_SEARCH_D2D_LIST_FAIL,
+            payload: message,
+        });
+    }
+};
+
 
 //ORDER DETAIL
 export const getOrderDetails = (id) => async (dispatch, getState) => {
@@ -250,7 +284,7 @@ export const getOrderCanceled = (orderItems) => async (dispatch, getState) => {
         });
     }
 };
-//ORDER RECEIVED  for Admin
+//ORDER COMPLETE  for Admin
 export const getOrderCompleted  = (orderItems) => async (dispatch, getState) => {
     try {
         dispatch({ type: ORDER_COMPLETED_REQUEST });
@@ -266,6 +300,7 @@ export const getOrderCompleted  = (orderItems) => async (dispatch, getState) => 
         };
         // api not transmiss any params because it just change state of deliverd 
         const { data } = await axios.get(`/api/orders/${orderItems._id}/complete`, config);
+        //cong diem khách hàng
         orderItems.orderItems.map(async(item)=>{
             await axios.get(`/api/drugstore/${item.drugstoreId}/inc-buy-num`, config);
         })

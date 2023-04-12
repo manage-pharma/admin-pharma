@@ -24,6 +24,7 @@ import PrivateRouter from "./PrivateRouter";
 import CategoriesDetail from "./screens/CategoriesDetail";
 import CategoriesDrugDetail from "./screens/CategoriesDrugDetail";
 import ProductExcelCSV from "./screens/ProductExcelCSV";
+import DrugStoreExcelCSV from "./screens/DrugStoreExcelCSV";
 import {useDispatch,useSelector} from "react-redux";
 import {listProduct} from "./Redux/Actions/ProductActions";
 import {listOrder} from "./Redux/Actions/OrderActions";
@@ -107,6 +108,7 @@ function App() {
           <PrivateRouter path="/req-inventory/:id" component={EditRequestInventory} />
 
           <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact />
+          <PrivateRouter path="/drugstore/excel" component={DrugStoreExcelCSV} exact />
           <PrivateRouter path="/review" component={ReviewScreen} exact />
           <PrivateRouter path="/drugstore/:id" component={DrugStoreEditScreen} exact />
           <PrivateRouter path="/content" component={ContentEditScreen} exact />

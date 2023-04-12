@@ -85,17 +85,7 @@ const CustomerComponent = (props) => {
       dispatch(listCustomer())
   }
   }, [dispatch,successDelete])
-  const nameRole =  (role) => {
-    if(role === "isAdmin"){
-      return "Quản trị viên"
-    }
-    else if(role === "isInventory"){
-      return "Nhân viên kho"
-    }
-    else if(role === "isSaleAgent"){
-      return "Nhân viên bán hàng"
-    }
-  }
+  
   return (
     <>
     <AddCustomer show={show} setShow={setShow}/>
@@ -166,12 +156,15 @@ const CustomerComponent = (props) => {
                         <h5 className="card-title mt-5">{customer.name}</h5>
                         <div className="card-text text-muted">
                           {
-                            customer?.role === "isAdmin" ? (
-                              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>{nameRole(customer?.role)}</p>
+                            customer?.totalOrder >10 ? (
+                              <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>{"Khách hàng thân thiết"}</p>
                             )
-                            :
+                            :customer?.totalOrder >0&& customer?.totalOrder<10?
                             (
-                              <p className="m-0 badge bg-primary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{nameRole(customer?.role)}</p>
+                              <p className="m-0 badge bg-primary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{"Khách hàng tiềm năng"}</p>
+                            ):
+                            (
+                              <p className="m-0 badge bg-secondary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{"Khách hàng mới"}</p>
                             )
                           }
                           <h6 className="mt-2 card-title">{customer.phone}</h6>
