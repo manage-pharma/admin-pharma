@@ -30,6 +30,14 @@ const CustomerComponent = (props) => {
   const [show, setShow] = useState(false);
   const [modalShow,setModalShow]=useState(false);
   const [dataModal,setDataModal]=useState();
+  const usageTime=(date)=>{
+    const createdAt = new Date(date);
+    const now = new Date();
+    const monthNumber=(now.getFullYear() - createdAt.getFullYear()) * 12 + (now.getMonth() - createdAt.getMonth())
+    return monthNumber
+  }
+
+
 
   const MyVerticallyCenteredModal=(props) => {
     return (
@@ -155,13 +163,19 @@ const CustomerComponent = (props) => {
                       <div className="card-body">
                         <h5 className="card-title mt-5">{customer.name}</h5>
                         <div className="card-text text-muted">
-                          {
-                            customer?.totalOrder >10 ? (
+                          {// (now.getFullYear() - createdAt.getFullYear()) * 12 + (now.getMonth() - createdAt.getMonth())
+                            usageTime(customer.createdAt)>12&&(customer?.totalOrder/usageTime(customer.createdAt)) >5 ? (
                               <p className="m-0 badge bg-danger" style={{fontSize: '16px'}}>{"Khách hàng thân thiết"}</p>
                             )
-                            :customer?.totalOrder >0&& customer?.totalOrder<10?
+                            //:(customer?.totalOrder/usageTime(customer?.createdAt))>10?
+                            :(customer?.totalOrder)>10?
                             (
                               <p className="m-0 badge bg-primary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{"Khách hàng tiềm năng"}</p>
+                            )
+                            //:(customer?.totalOrder/usageTime(customer?.createdAt))<=10&&(customer?.totalOrder/usageTime(customer?.createdAt))>0?
+                            :(customer?.totalOrder)<=10&&(customer?.totalOrder)>0?
+                            (
+                              <p className="m-0 badge bg-success  text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{"Khách hàng thường"}</p>
                             ):
                             (
                               <p className="m-0 badge bg-secondary text-wrap" style={{minWidth: '4rem', fontSize: '16px'}}>{"Khách hàng mới"}</p>

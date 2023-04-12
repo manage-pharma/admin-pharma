@@ -206,10 +206,12 @@ export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
                 const { data } = await axios.put(`/api/orders/${orderItems._id}/delivered`, {}, config);
                 dispatch({ type: ORDER_DELIVERED_SUCCESS, payload: data });
 
-                
+                ///////////////////////////
                 orderItems.orderItems.map( async  (item)=>{
-                    await axios.get(`/api/drugstore/${item.drugstoreId}/update-stock?num=${item.qty}`, config);
+                    await axios.get(`/api/drugstore/${item.drugstoreId}/update-stock?num=${item.qty}`, config);//lấy kq trả về
+                
                 })
+                ////////////////////////////
                
             }else{
                 dispatch({
