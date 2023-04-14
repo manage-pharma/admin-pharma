@@ -5,27 +5,22 @@ import { singleCustomer } from "../../Redux/Actions/CustomerActions";
 import Loading from '../LoadingError/Loading';
 import Message from '../LoadingError/Error';
 import AddCustomer from "./AddCustomerModal";
-import debounce from 'lodash.debounce';
 import { useHistory } from 'react-router-dom';
-import { withAuthorization } from "../../util/withAuthorization ";
-import { PERMISSIONS } from "../../util/RolesContanst";
 import ProfileTabs from "./Profile";
 import Orders from "./Orders";
 
 
 const CustomerDetailMain = (props) => {
   const {customerId} = props;
-  console.log(customerId)
   const dispatch = useDispatch();
   const history = useHistory();
-  const { loading, error, customer } = useSelector(state => state.customerSingle);
+  const { customer } = useSelector(state => state.customerSingle);
 
   const {orders}=useSelector(state => state.orderList)
   const orderFilter= orders?.filter(item => item?.user?._id === customerId)
 
 
 
-  console.log({orderFilter})
 
   useEffect(() => {
     dispatch(singleCustomer(customerId))
