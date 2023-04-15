@@ -8,7 +8,7 @@ const HomeScreen = () => {
   return (
     <>
       <Sidebar />
-      <main className="main-wrap">
+      <main className="main-wrap" style={{height: 'auto'}}>
         <Header />
         <Main />
       </main>
