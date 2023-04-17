@@ -36,7 +36,6 @@ const Orders = (props) => {
       cancelList.push(item)
     }
   })
-  console.log({createList,conformList,deliveredList,successList,cancelList});
   
   const handleClick = (e,order) => {
     e.preventDefault()

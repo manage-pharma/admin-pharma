@@ -19,7 +19,6 @@ const ExcelCSVProductComponent = () => {
     
     const drugstoreList = useSelector((state)=> state.drugstoreList)
     const { drugstores } = drugstoreList
-    console.log({drugstores});
     useEffect(()=>{
        
         if(!data){

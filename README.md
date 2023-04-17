@@ -11,11 +11,11 @@ To run this project with webpack:
 - Change script start: 
 ```  
 "scripts": {
-    "serve": "webpack serve --mode development",
+    "start": "webpack serve --mode development",
     "build": "webpack --mode production"
   }
 ```
-- Run ```npm run serve``` to serve the app on your local machine.
+- Run ```npm run start``` to serve the app on your local machine.
 
 ## Documents helps to dev
 

@@ -944,17 +944,17 @@ const AddProductMain = () => {
                     />
                   </div>
                 </div>
+                <div>
+                  <button
+                    type="submit"
+                    className="btn btn-primary mb-4"
+                    style={{ float: "right" }}
+                  >
+                    Lưu lại
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="btn btn-primary mb-4"
-              style={{ float: "right" }}
-            >
-              Lưu lại
-            </button>
           </div>
         </form>
       </section>
