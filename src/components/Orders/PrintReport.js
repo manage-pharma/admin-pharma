@@ -106,6 +106,7 @@ const printReport = async(data) =>{
                                 <th>Sản phẩm</th>
                                 <th>Giá</th>
                                 <th>Số lượng</th>
+                                <th>Ghi chú</th>
                                 <th>Giảm giá</th>
                                 <th>Thành tiền</th>
                             </tr>
@@ -117,7 +118,7 @@ const printReport = async(data) =>{
                                     <td>${item?.name}</td>
                                     <td>${formatCurrency(item?.price)}</td>
                                     <td>${item?.qty}</td>
-
+                                    <td>${item?.detailStock?item?.detailStock.map(item=>"[Lô:"+ item?.lotNumber+" - "+item?.count+" sp]"):""}</td>
                                     <td>${item?.discount}%</td>
                                     <td>${formatCurrency(((item?.price*item?.qty)*((1)*(1.0)-item?.discount/100)).toFixed(2))}</td>
 
