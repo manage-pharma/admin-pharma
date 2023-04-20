@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import {Link,useHistory} from "react-router-dom";
 import CustomLoader from '../../util/LoadingTable';
 import ExpandedComponent from './ExpandedComponent'
+import NoRecords from "../../util/noData";
 
 const ReviewTable = (props) =>{
     const {drugstores, dessert, expanded, loading} = props 
@@ -142,7 +143,6 @@ const ReviewTable = (props) =>{
 
   return (
     <>
-
         <DataTable
             // theme="solarized"
             columns={columns}
@@ -150,7 +150,7 @@ const ReviewTable = (props) =>{
             customStyles={customStyles}
             defaultSortFieldId
             pagination
-            
+            noDataComponent={NoRecords()}
             paginationComponentOptions={paginationComponentOptions}
             progressPending={loading}
             expandableRows

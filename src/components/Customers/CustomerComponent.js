@@ -99,7 +99,7 @@ const CustomerComponent = (props) => {
     <AddCustomer show={show} setShow={setShow}/>
     <section className="content-main">
       <div className="content-header">
-        <h2 className="content-title">Danh sách người dùng</h2>
+        <h2 className="content-title">Danh sách khách hàng</h2>
         <div>
           {/* <Link to="#" className="btn btn-primary">
             <i className="material-icons md-plus"></i> Create new
@@ -134,7 +134,7 @@ const CustomerComponent = (props) => {
           {loading ? (<Loading />) : error ? (<Message variant="alert-danger" >{error}</Message>) : (
             <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
               {
-                customers.filter((customer) => !customer.isAdmin&&!customer.isDeleted).map((customer, index) => (
+                !customers.length === 0 || !customers ? customers.filter((customer) => !customer.isAdmin&&!customer.isDeleted).map((customer, index) => (
                   <div className="col" key={index}>
                     <div className="card card-user shadow-sm">
                       <div className="card-header">
@@ -190,9 +190,9 @@ const CustomerComponent = (props) => {
                       </div>
                     </div>
                   </div>
-                ))
+                )) :
+                <div style={{fontSize: 19, color: 'red'}}>Không có dữ liệu</div>
               }
-
             </div>
           )}
         </div>

@@ -392,6 +392,7 @@ const EditImportStock = (props) => {
             discount: row?.discount, 
             qty: row?.qty,
         })
+        setSelectedProduct(row?.product)
     };
      // start search input
      const options = [];
@@ -450,9 +451,9 @@ const EditImportStock = (props) => {
                         <h3 className="content-title">Mã hóa đơn: <span className="text-danger">{importStockItem?.importCode}</span></h3>
                     </div>
                     <div>
-                        {importStockItem?.status ? 
-                            <h4><span className="badge bg-danger text-white">Hóa đơn này đã hoàn tất, bạn không thể chỉnh sửa</span></h4>:
-                            <button type="submit" className="btn btn-primary">Cập nhật đơn</button>
+                        {!importStockItem?.status ? <button type="submit" className="btn btn-primary">Cập nhật đơn</button> :
+                            <h4><span className="badge bg-danger text-white">Hóa đơn này đã hoàn tất, bạn không thể chỉnh sửa</span></h4>
+                            
                         }
                     </div>
                 </div>
