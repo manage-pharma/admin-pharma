@@ -21,7 +21,7 @@ const Orders = (props) => {
       </thead>
       <tbody>
         {
-          orders?.map((order, index) => (
+          !orders.length === 0 || !orders ? orders?.map((order, index) => (
             <tr key={index}>
               <td>
                 <b>{order?.user?.name}</b>
@@ -53,10 +53,9 @@ const Orders = (props) => {
                 </Link>
               </td>
             </tr>
-          ))
+          )) 
+          : <div style={{fontSize: 19, color: 'red'}}>Không có dữ liệu</div>
         }
-      
-        
       </tbody>
     </table>
   );

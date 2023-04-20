@@ -111,7 +111,23 @@ const DataTableProduct=(props) => {
                 <span className="badge bg-danger text-white p-2" >Không</span>,
             sortable: true,
             reorder: true,
-
+            sortFunction: (products) => {
+                return [products].map((a, b) => {
+                  const fieldA = a?.prescription;
+                  const fieldB = b?.prescription;
+                  let comparison = 0;
+              
+                  if (fieldA === fieldB) {
+                    comparison = 0;
+                  } else if (fieldA === true) {
+                    comparison = 1;
+                  } else {
+                    comparison = -1;
+                  }
+              
+                  return comparison
+                });
+            },
             minWidth: "150px",
         },
         {
@@ -127,24 +143,35 @@ const DataTableProduct=(props) => {
             reorder: true
         },
         {
-            name: "NSX",
-            selector: (row) => row?.manufacturer,
+            name: "HSD",
+            selector: (row) => row?.expDrug,
             sortable: true,
             reorder: true
         },
-        {
-            name: "Nguồn gốc",
-            selector: (row) => row?.countryOfOrigin,
-            sortable: true,
-            reorder: true,
-            minWidth: "130px",
-        },
+
         {
             name: "Thuốc bán",
             selector: (row) => row?.allowToSell?
                 <span className="badge bg-success text-white p-2   " style={{minWidth: '45px'}}>Có</span>:
                 <span className="badge bg-danger text-white p-2 " >Không</span>,
             sortable: true,
+            sortFunction: (products) => {
+                return [products].map((a, b) => {
+                  const fieldA = a?.prescription;
+                  const fieldB = b?.prescription;
+                  let comparison = 0;
+              
+                  if (fieldA === fieldB) {
+                    comparison = 0;
+                  } else if (fieldA === true) {
+                    comparison = 1;
+                  } else {
+                    comparison = -1;
+                  }
+              
+                  return comparison
+                });
+            },
             reorder: true,
             minWidth: "120px",
         },
