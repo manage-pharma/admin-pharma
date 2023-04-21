@@ -168,12 +168,19 @@ const ImportStock = (props) =>{
             grow: 3
         },
         {
+          name: "Số HD",
+          selector: (row) => row?.invoiceNumber,
+          sortable: true,
+          reorder: true,
+          grow: 1
+        },
+        {
             name: "Nhà cung cấp",
             selector: (row) => row?.provider?.name,
             sortable: true,
             reorder: true,
             grow: 2,
-            width: '350px'
+            width: '330px'
         },
         {
             name: "Tạo bởi",
@@ -187,7 +194,8 @@ const ImportStock = (props) =>{
             selector: (row) => moment(row?.importedAt).format("DD/MM/YYYY"),
             sortable: true,
             reorder: true,
-            grow: 2
+            grow: 2,
+            width: '140px'
         },
         {
             name: "Tổng cộng",
@@ -221,7 +229,7 @@ const ImportStock = (props) =>{
                 });
             },
             grow: 2,
-            width: '150px'
+            width: '130px'
         },
         {   name: "Hành động",
             cell: row => <CustomMaterialMenu row={row} />,
