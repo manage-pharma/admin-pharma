@@ -18,5 +18,6 @@ const DrugStoreScreen=({match}) => {
   );
 };
 
-export default withAuthorization(DrugStoreScreen,[PERMISSIONS.isSaleAgent.drug_store]);
+// export default withAuthorization(DrugStoreScreen,[PERMISSIONS.isSaleAgent.drug_store]);
 
+export default DrugStoreScreen;

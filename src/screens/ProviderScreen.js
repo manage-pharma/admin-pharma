@@ -17,4 +17,5 @@ const ProviderScreen = () => {
   );
 };
 
-export default withAuthorization(ProviderScreen,[PERMISSIONS.isAdmin]);
+// export default withAuthorization(ProviderScreen,[PERMISSIONS.isAdmin]);
+export default ProviderScreen;
