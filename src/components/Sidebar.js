@@ -116,87 +116,77 @@ const Sidebar = () => {
               </>
             )}
             {
-              // (userInfo?.role === "isAdmin" || userInfo?.role === "isSaleAgent") &&(
-              //   <>
-              //   {/* //! Order */}
-              //   <li className="menu-item">
-              //     <NavLink
-              //       activeClassName="active"
-              //       className="menu-link"
-              //       to="/orders"
-              //     >
-              //       <i className="icon fas fa-bags-shopping"></i>
-              //       <span className="text">Đơn đặt hàng</span>
-              //     </NavLink>
-              //   </li>
-              //   {/* //! Customer */}
-              //   <li className="menu-item">
-              //     <NavLink
-              //       activeClassName="active"
-              //       className="menu-link"
-              //       to="/customers"
-              //     >
-              //       <i className="icon fas fa-user"></i>
-              //       <span className="text">Khách hàng</span>
-              //     </NavLink>
-              //   </li>
-              //   {/* //! Drugstore */}
-              //   <li className="menu-item">
-              //     <NavLink
-              //       activeClassName="active"
-              //       className="menu-link"
-              //       to="/drugstore"
-              //     >
-              //       <i className="icon fas fa-clinic-medical"></i>
-              //       <span className="text">Nhà Thuốc</span>
-              //     </NavLink>
-              //   </li>
-              //   {/* //! Content */}
-              //   <li className="menu-item">
-              //     <NavLink
-              //       activeClassName="active"
-              //       className="menu-link"
-              //       to="/content/"
-              //     >
-              //       <i className="icon fas fa-server"></i>
-              //       <span className="text">Nội dung</span>
-              //     </NavLink>
-              //   </li>
-              //   {/* //! Review */}
-              //   <li className="menu-item">
-              //     <NavLink
-              //       activeClassName="active"
-              //       className="menu-link"
-              //       to="/review/"
-              //     >
-              //       <i className="icon fas fa-comment-alt" ></i>
-              //       <span className="text">Bình luận</span>
-              //     </NavLink>
-              //   </li>
-              //   {/* //! Promotion */}
-              //   <li className="menu-item">
-              //     <NavLink
-              //       activeClassName="active"
-              //       className="menu-link"
-              //       to="/promotion/"
-              //     >
-              //       <i className="icon fas fa-tags" ></i>
-              //       <span className="text">Khuyến mãi</span>
-              //     </NavLink>
-              //   </li>
-              //   </>
-              // )
+              (userInfo?.role === "isAdmin" || userInfo?.role === "isSaleAgent") &&(
+                <>
+                {/* //! Order */}
+                <li className="menu-item">
+                  <NavLink
+                    activeClassName="active"
+                    className="menu-link"
+                    to="/orders"
+                  >
+                    <i className="icon fas fa-bags-shopping"></i>
+                    <span className="text">Đơn đặt hàng</span>
+                  </NavLink>
+                </li>
+                {/* //! Customer */}
+                <li className="menu-item">
+                  <NavLink
+                    activeClassName="active"
+                    className="menu-link"
+                    to="/customers"
+                  >
+                    <i className="icon fas fa-user"></i>
+                    <span className="text">Khách hàng</span>
+                  </NavLink>
+                </li>
+                {/* //! Drugstore */}
+                <li className="menu-item">
+                  <NavLink
+                    activeClassName="active"
+                    className="menu-link"
+                    to="/drugstore"
+                  >
+                    <i className="icon fas fa-clinic-medical"></i>
+                    <span className="text">Nhà Thuốc</span>
+                  </NavLink>
+                </li>
+                {/* //! Content */}
+                <li className="menu-item">
+                  <NavLink
+                    activeClassName="active"
+                    className="menu-link"
+                    to="/content/"
+                  >
+                    <i className="icon fas fa-server"></i>
+                    <span className="text">Nội dung</span>
+                  </NavLink>
+                </li>
+                {/* //! Review */}
+                <li className="menu-item">
+                  <NavLink
+                    activeClassName="active"
+                    className="menu-link"
+                    to="/review/"
+                  >
+                    <i className="icon fas fa-comment-alt" ></i>
+                    <span className="text">Bình luận</span>
+                  </NavLink>
+                </li>
+                {/* //! Promotion */}
+                <li className="menu-item">
+                  <NavLink
+                    activeClassName="active"
+                    className="menu-link"
+                    to="/promotion/"
+                  >
+                    <i className="icon fas fa-tags" ></i>
+                    <span className="text">Khuyến mãi</span>
+                  </NavLink>
+                </li>
+                </>
+              )
             }
-            <li className="menu-item">
-              <NavLink
-                activeClassName="active"
-                className="menu-link"
-                to="/drugstore"
-              >
-                <i className="icon fas fa-clinic-medical"></i>
-                <span className="text">Nhà Thuốc</span>
-              </NavLink>
-            </li>
             {(userInfo.role === "isAdmin" ||
               userInfo.role === "isInventory") && (
               <>
