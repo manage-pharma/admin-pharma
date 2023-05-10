@@ -49,3 +49,21 @@ https://react.dev/
 https://jbetancur.github.io/react-data-table-component/?path=/story/custom-styles-compact-grid--compact-grid
 
 https://www.educative.io/answers/how-to-create-a-react-application-with-webpack
+
+## Review
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/1c846db9-5cd0-4cf0-972c-ed2ec1cea564)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/4ddbfe14-fa93-4497-807e-780334808b34)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/7528cf2c-b289-4142-857e-51b07400a701)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/94572070-39e2-4b37-bfde-1fba7ba9edd3)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/6a47c850-b9b4-4cb5-9dcf-6f250278c52f)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/a4cff108-eea4-42c8-b522-4d4882038908)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/2f02e048-4bf1-41fc-8df9-1a003222e35e)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/8bc13b5f-950f-4807-ad43-284a2ace5056)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/73d017c3-405b-49aa-910f-8e0ca7b229cb)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/db3f61d2-2a78-46f9-9353-a3e2bf0ab002)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/07fb0512-b7b7-4298-9391-278fd602dcdc)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/4b7fbeb2-2f63-4e65-8f50-4b1e04145188)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/dc572953-1478-4783-9978-08f51dfc187d)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/972ee376-16d1-4c34-bb46-e969bd9f5ea0)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/f375cf32-7892-4a0d-99c1-8af73b8e9cfb)
+![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/3c1f04d6-644d-49e3-94d8-0ef509d03eea)
