@@ -50,7 +50,7 @@ https://jbetancur.github.io/react-data-table-component/?path=/story/custom-style
 
 https://www.educative.io/answers/how-to-create-a-react-application-with-webpack
 
-## Review
+## Review project
 ![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/1c846db9-5cd0-4cf0-972c-ed2ec1cea564)
 ![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/4ddbfe14-fa93-4497-807e-780334808b34)
 ![image](https://github.com/manage-pharma/admin-pharma/assets/59383987/7528cf2c-b289-4142-857e-51b07400a701)
