@@ -165,7 +165,7 @@ const UserComponent = (props) => {
                         }
                         <img
                           className="img-md img-avatar"
-                          src="images/tpone.png"
+                          src="images/user_avatar_default.png"
                           // src="https://tpone.vn/webinfo_files/images/57c57e30-461d-11ed-a701-9b027010aa3d--XMLID_92_.png"
                           alt="User pic"
                         />

@@ -76,10 +76,10 @@ const printReport = async(data) =>{
             <page>
                 <div style="display: flex; flex-direction: row;">
                     <div style="">
-                        <img style="width: 44px; height: 44px; margin-right: 10px;" alt="Sanctum-2.jpg" src="https://tpone.vn/webinfo_files/images/57c57e30-461d-11ed-a701-9b027010aa3d--XMLID_92_.png" />
+                        <img style="width: 44px; height: 44px; margin-right: 10px;" alt="Sanctum-2.jpg" src="https://moh.gov.vn/documents/20182/0/ch%E1%BB%89+m%E1%BB%A5c+%281%29.jpg/0d1a9e4b-29c0-4b29-aa8b-6001a78f52fd?t=1550469174025" />
                     </div>
                     <div style="">
-                        <div style="font-weight: bold;">PHÒNG KHÁM ĐA KHOA MỸ THẠNH</div>
+                        <div style="font-weight: bold;">Công ty TNHH HMK</div>
                         <div>Số 2996/17 hẻm Trần Hưng Đạo, Phường Mỹ Thạnh, TP. Long Xuyên, Tỉnh An Giang.</div>
                         <div>
                             <span>Hotline: 0767 267 267</span>

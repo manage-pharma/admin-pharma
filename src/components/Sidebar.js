@@ -10,7 +10,7 @@ const Sidebar = () => {
         <div className="aside-top">
           <Link to="/" className="brand-wrap">
             <img
-              src="/images/tpone_text.png"
+              src="/images/user_avatar_default.png"
               // src="	https://tpone.vn/webinfo_files/images/5410b390-461d-11ed-a701-9b027010aa3d--Group%202268.png"
               style={{ height: "46" }}
               className="logo"

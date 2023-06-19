@@ -165,7 +165,7 @@ const Header = () => {
               <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
                 <img
                   className="img-xs rounded-circle"
-                  src="/images/tpone.png"
+                  src="/images/user_avatar_default.png"
                   alt="User"
                 />
               </Link>
