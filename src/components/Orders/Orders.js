@@ -21,13 +21,13 @@ const Orders = (props) => {
       </thead>
       <tbody>
         {
-          !orders.length === 0 || !orders ? orders?.map((order, index) => (
+          orders?.map((order, index) => (
             <tr key={index}>
               <td>
                 <b>{order?.user?.name}</b>
               </td>
               <td>{order?.user?.email}</td>
-              <td>{order?.totalPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</td>
+              <td style={{textAlign:'right'}}>{order?.totalPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')+" đ"}</td>
               <td>{
                   order.isPaid ? (
                     <span className="badge rounded-pill alert-success">Trả ngày {moment(order.paidAt).format("MMM Do YY")}</span>
@@ -53,9 +53,10 @@ const Orders = (props) => {
                 </Link>
               </td>
             </tr>
-          )) 
-          : <div style={{fontSize: 19, color: 'red'}}>Không có dữ liệu</div>
+          ))
         }
+      
+        
       </tbody>
     </table>
   );

@@ -80,9 +80,9 @@ const printReport = async (data) => {
                     </div>
                     <div style="">
                         <div style="font-weight: bold;">PHÒNG KHÁM ĐA KHOA MỸ THẠNH</div>
-                        <div>Số 2996/17 hẻm Trần Hưng Đạo, Phường Mỹ Thạnh, TP. Long Xuyên, Tỉnh An Giang.</div>
+                        <div>Tổ 18, Phạm Ngũ Lão, Quận 1, Thành phố Hồ Chí Minh</div>
                         <div>
-                            <span>Hotline: 0767 267 267</span>
+                            <span>Hotline: 0777 977 177</span>
                         </div>
                     </div>
                 </div>
