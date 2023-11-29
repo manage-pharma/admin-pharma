@@ -128,6 +128,7 @@ import {ContactCreateReducer, ContactDeleteReducer, ContactListReducer} from './
 import {contentSingleReducer,contentUpdateReducer} from './Reducers/ContentReducer';
 import {promotionCreateReducer,promotionUpdateReducer,promotionDeleteReducer,promotionListReducer,promotionProductListReducer} from "./Reducers/PromotionReducer"
 import { reqInventoryCancelReducer, reqInventoryCreateReducer, reqInventoryDetailReducer, reqInventoryListReducer, reqInventoryStatusReducer, reqInventoryUpdateReducer } from "./Reducers/RequestInventoryReducer";
+import { NotificationListReducer, NotificationSingleReducer, NotificationUpdateReducer } from "./Reducers/NotificationReducer";
 const reducer = combineReducers({
   theme: themeReducer,
 
@@ -260,6 +261,9 @@ const reducer = combineReducers({
   promotionDelete:promotionDeleteReducer,
   promotionProductList:promotionProductListReducer,
 
+  notificationList: NotificationListReducer,
+  notificationSingle: NotificationSingleReducer,
+  notificationUpdate: NotificationUpdateReducer,
 });
 
 const initialState = {
