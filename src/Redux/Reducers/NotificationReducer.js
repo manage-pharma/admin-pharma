@@ -4,9 +4,9 @@ import { NOTIFICATION_SINGLE_REQUEST, NOTIFICATION_SINGLE_FAIL } from '../Consta
 export const NotificationListReducer = (state = { notifications: [] }, action) => {
     switch (action.type) {
       case NOTIFICATION_LIST_REQUEST:
-        return { loading: true, notifications: [] };
+        return { loading: true, notifications: [], numberUnread: 0 };
       case NOTIFICATION_LIST_SUCCESS:
-        return { loading: false, notifications: action.payload}
+        return { loading: false, notifications: action.payload?.notifications, numberUnread: action?.payload?.numberUnread}
       case NOTIFICATION_LIST_FAIL:
         return { loading: false, error: action.payload };
       case NOTIFICATION_LIST_RESET:

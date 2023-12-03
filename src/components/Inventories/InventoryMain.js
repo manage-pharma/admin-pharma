@@ -97,7 +97,7 @@ const MainInventory = () => {
       <div className="card card-custom mb-4 shadow-sm">
         <header className="card-header bg-aliceblue">
           <div className="row gx-3 py-3 justify-content-between inventory-flex">
-            <div className="col-lg-6 me-auto d-flex">
+            <div className="col-lg-7 me-auto d-flex">
               <div className="me-1" style={{flexGrow: '2'}}>
                 <input
                   type="search"
