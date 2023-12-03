@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import Select from "react-select";
 import functionSys from "./../../src/util/functionSys.json";
 import {
+  SetOHNotification,
   listNotification,
   updateNotification,
 } from "../Redux/Actions/NotificationAction";
@@ -119,12 +120,12 @@ const Header = () => {
                               <td>{name}</td>
                               <td>
                                 {notificationsForName.map((item, subIndex) => (
-                                  <div>{item?.lotNumber}</div>
+                                  <div key={subIndex}>{item?.lotNumber}</div>
                                 ))}
                               </td>
                               <td>
                                 {notificationsForName.map((item, subIndex) => (
-                                  <div>{item?.status}</div>
+                                  <div key={subIndex}>{item?.status}</div>
                                 ))}
                               </td>
                             </tr>
@@ -143,6 +144,14 @@ const Header = () => {
                     )}
                   </tbody>
                 </table>
+              </div>
+              <div className="d-flex justify-content-end">
+                <button className="btn btn-primary" onClick={e=>{
+                  history.push('/req-inventory/add')
+                  dispatch(SetOHNotification(dataNoti?.listItem))
+                }}>
+                  Yêu cầu đặt hàng
+                </button>
               </div>
             </>
           )}

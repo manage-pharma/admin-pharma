@@ -8,6 +8,7 @@ import { listReqInventory } from "../../Redux/Actions/RequestInventoryAction";
 import Toast from './../LoadingError/Toast';
 import { toast } from "react-toastify";
 import renderToast from "../../util/Toast";
+import { SetOHNotification } from "../../Redux/Actions/NotificationAction";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -50,6 +51,7 @@ const MainReqInventory = (props) => {
   const handleAdd = (e) =>{
     e.preventDefault();
     history.push('/req-inventory/add');
+    dispatch(SetOHNotification([]))
   }
 
   const handleChange = e =>{
