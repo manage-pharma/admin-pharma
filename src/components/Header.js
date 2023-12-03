@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {logout} from '../Redux/Actions/UserActions';
@@ -7,7 +7,10 @@ import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 import Select from "react-select";
 import functionSys from "./../../src/util/functionSys.json"
-
+import { listNotification, updateNotification } from "../Redux/Actions/NotificationAction";
+import moment from "moment";
+import socketIO from 'socket.io-client';
+import { Row, Col } from "react-bootstrap";
 const Header = () => {
   const nameRole =  (role) => {
     if(role === "isAdmin"){
@@ -50,11 +53,95 @@ const Header = () => {
       </Modal>
     );
   }
-
+  const ModalNotification = (props) => {
+  
+    const groupedNotifications = dataNoti?.listItem?.reduce((groups, item) => {
+      const name = item?.name;
+      if (!groups[name]) {
+        groups[name] = [];
+      }
+      groups[name].push(item);
+      return groups;
+    }, {});
+  
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        className="my-modal-simple"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-sm">
+            Thông báo {dataNoti?.contents} ({moment(dataNoti?.createdAt).format("DD-MM-YYYY HH:mm:ss")})
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {groupedNotifications && (
+            <>
+              <div className="table-responsive">
+                <table className="table table-bordered">
+                  {/* Header for the table */}
+                  <thead>
+                    <tr>
+                      <th>Tên</th>
+                      <th>Số lô</th>
+                      <th>Tình trạng</th>
+                    </tr>
+                  </thead>
+  
+                  <tbody>
+                    {Object.entries(groupedNotifications).map(([name, notificationsForName], index) => (
+                      <React.Fragment key={index}>
+                        {/* Display notifications for the current name */}
+                        {notificationsForName.length > 1 ? (
+                          <tr>
+                            <td >{name}</td>
+                            <td>
+                              {notificationsForName.map((item, subIndex) => (
+                                <div>{item?.lotNumber}</div>
+                              ))}
+                            </td>
+                            <td>
+                            {notificationsForName.map((item, subIndex) => (
+                                <div>{item?.status}</div>
+                              ))}
+                            </td>
+                          </tr>
+                        ) : (
+                          // Single lotNumber
+                          notificationsForName.map((item, subIndex) => (
+                            <tr key={subIndex}>
+                              <td>{name}</td>
+                              <td>{item?.lotNumber}</td>
+                              <td>{item?.status}</td>
+                            </tr>
+                          ))
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </Modal.Body>
+      </Modal>
+    );
+  };
 
   const history = useHistory();
   const dispatch = useDispatch();
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    setSocket(socketIO.connect(process.env.REACT_APP_BE_URL))
+  }, []);
+
   const [modalShow, setModalShow] = useState(false);
+  const [modalNotiShow, setModalNotiShow] = useState(false);
+  const [dataNoti, setDataNoti] = useState(null)
   useEffect(() => {
     document.querySelector("button[data-trigger]").addEventListener("click",function (e) {
       document.querySelector("body").classList.remove("aside-mini");
@@ -74,10 +161,15 @@ const Header = () => {
   }, []);
 
   // const data = useSelector((state)=> state.theme)
+  const notificationList = useSelector((state) => state.notificationList);
+  const { loading, error, notifications} = notificationList
+  const notificationUpdate = useSelector((state) => state.notificationUpdate);
+  const { loading: loadingNotiUpdate, success: successNotiUpdate, notifications: notiUpdate} = notificationUpdate
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  
   const cloneFunctionSys = JSON.parse(JSON.stringify(functionSys))
-
+  const readCount = notifications?.filter((item) => item.isReaded === false).length;
   const filteredFunctionSys = () => {
     return cloneFunctionSys?.filter(functionItem => {
       return userInfo.isAdmin ? true : functionItem?.isAdmin === userInfo.isAdmin &&
@@ -109,11 +201,52 @@ const Header = () => {
     history.push(selectedOption.functionPath)
   };
 
+  useEffect(()=>{
+    dispatch(listNotification()) 
+  },[dispatch, successNotiUpdate])
+
+  useEffect(() => {
+    socket?.on('changeNotification', function (message) {
+      dispatch(listNotification());
+    });
+  },[socket]);
+
+  const notificationElements = notifications?.map((item) => {
+    return (
+        <a
+          key={item._id}
+          className='dropdown-item d-flex align-items-center'
+          style={{gap:20, background: item?.isReaded ? '': 'mistyrose', cursor: "pointer", marginBottom: 2}}
+          onClick={() =>{
+            setModalNotiShow(true)
+            console.log('item', item?.listItem)
+            setDataNoti(item)
+            dispatch(updateNotification(item?._id))
+          }}
+        >
+          <div className='mr-3'>
+            <div className='icon-circle bg-primary'>
+              <i className='fas fa-file-alt text-white' />
+            </div>
+          </div>
+          <div>
+            <div className='small text-gray-500' style={{color: 'cadetblue'}}>{moment(item.createdAt).format("DD-MM-YYYY HH:mm:ss")}</div>
+            <div className='font-weight-bold' style={{color: 'black'}}>{item.contents}</div>
+          </div>
+        </a>
+      );
+    }
+  );
+
   return (
     <>
       <MyVerticallyCenteredModal
       show={modalShow}
       onHide={() => setModalShow(false)}
+      />
+      <ModalNotification
+      show={modalNotiShow}
+      onHide={() => setModalNotiShow(false)}
       />
       <header className="main-header navbar">
         <div className="col-search">
@@ -155,6 +288,28 @@ const Header = () => {
                 <i className="fas fa-bell"></i>
               </Link>
             </li> */}
+            <li className="dropdown nav-item me-4">
+              <Link className="dropdown-toggle-no-arrow" data-bs-toggle="dropdown" to="#">
+              <i className='fas fa-bell' style={{color: 'white'}}/>
+                {readCount > 0 && (
+                  <span className='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>
+                    {readCount}
+                  </span>
+                )}
+              </Link>
+  
+              <div className="dropdown-menu dropdown-menu-end" style={{maxHeight: 400, overflowY: 'auto', background: 'white', paddingBottom: 0}}>
+                <h6 className='dropdown-header'>Alerts Center</h6>
+                {notificationElements}
+                <a
+                  className='dropdown-item text-center small text-gray-500'
+                  style={{background: 'aliceblue', marginTop: 5}}
+                  href='/#'
+                >
+                  Show All Alerts
+                </a>
+              </div>
+            </li>
             {/* <li className="nav-item">
               <Link className="nav-link" to="#">
                 <span style={{color: "white"}}>English</span>
@@ -162,7 +317,7 @@ const Header = () => {
             </li> */}
 
             <li className="dropdown nav-item">
-              <Link className="dropdown-toggle" data-bs-toggle="dropdown" to="#">
+              <Link className="dropdown-toggle-no-arrow" data-bs-toggle="dropdown" to="#">
                 <img
                   className="img-xs rounded-circle"
                   src="/images/user_avatar_default.png"
@@ -184,8 +339,7 @@ const Header = () => {
           </ul>
         </div>
       </header>
-    </>
-
+   </>
   );
 };
 
