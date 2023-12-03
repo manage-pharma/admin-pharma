@@ -10,6 +10,7 @@ import {
   NOTIFICATION_SINGLE_SUCCESS,
   NOTIFICATION_SINGLE_RESET,
   NOTIFICATION_LIST_RESET,
+  NOTIFICATION_SET_OH,
 } from "../Constants/NotificationConstants";
 import { logout } from "./UserActions";
 import {
@@ -120,3 +121,10 @@ export const updateNotification = (id) => async (dispatch, getState) => {
     }, 3000);
   }
 };
+
+
+
+export const SetOHNotification = (value) => ({
+  type: NOTIFICATION_SET_OH,
+  payload: value,
+});
