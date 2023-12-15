@@ -54,7 +54,8 @@ const EditImportStock = (props) => {
     name: "",
     product: "",
     unit: "",
-    qty: 0,
+    qty: 0,        
+    dataTotal: 0
   });
 
   const [data, setData] = useState({
@@ -179,7 +180,7 @@ const EditImportStock = (props) => {
       if (itemProducts.length === 0 && !isEdited) {
         setItemProducts(JSON.parse(JSON.stringify(requestItems)));
       }
-    } // eslint-disable-next-line
+    }
   }, [dispatch, reqInventoryItem, reqId, itemProducts, isEdited, success]);
   const customStyles = {
     rows: {
@@ -271,7 +272,12 @@ const EditImportStock = (props) => {
               });
             }}
           />
-          <div style={{ marginLeft: 10 }}>({row?.qty})</div>
+          <div style={{ marginLeft: 10 }}>
+            {`(${products?.find(item => {
+              console.log(item)
+              return item?._id === row?.product?._id;
+            })?.total_count || row?.dataTotal || 0})`}
+          </div>
         </>
       ),
       grow: 2,
@@ -306,6 +312,7 @@ const EditImportStock = (props) => {
       product: row?.product?._id || row?.product,
       unit: row?.unit,
       qty: row?.qty,
+      dataTotal: row?.dataTotal
     });
   };
 
@@ -346,6 +353,7 @@ const EditImportStock = (props) => {
           product: selectedOptions.value,
           name: selectedOptions.dataFoo,
           unit: selectedOptions.dataUnit,
+          dataTotal: selectedOptions.dataTotal
         };
       });
       setSelectedProduct(selectedOptions);
