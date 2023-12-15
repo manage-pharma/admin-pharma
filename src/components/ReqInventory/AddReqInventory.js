@@ -49,6 +49,7 @@ const AddReqInventory = () => {
     unit: "",
     product: "",
     qty: 0,
+    dataTotal: 0
   });
 
   const [selectedProduct, setSelectedProduct] = useState({});
@@ -151,9 +152,11 @@ const AddReqInventory = () => {
             unit,
             product: _id,
             qty: 0,
+            dataTotal: 0
           }
         }
         processedItems[_id].qty += Number(status)
+        processedItems[_id].dataTotal += Number(status)
       })
 
       const resultArray = Object.values(processedItems)
@@ -161,7 +164,6 @@ const AddReqInventory = () => {
         const product = products?.find(p => p._id === result.product);
         return product && product.total_count <= result.qty
       })
-      console.log('filteredResults', filteredResults)
       setItemProducts(filteredResults)
     }
     if (success) {
@@ -176,6 +178,7 @@ const AddReqInventory = () => {
         product: "",
         unit: "",
         qty: 0,
+        dataTotal: 0
       });
       setItemProducts([]);
       setSelectedProduct({});
@@ -274,7 +277,7 @@ const AddReqInventory = () => {
             });
           }}
         />
-        <div style={{marginLeft: 10}}>({row?.qty})</div>
+        <div style={{marginLeft: 10}}>({row?.dataTotal})</div>
         </>
       ),
       grow: 2,
@@ -309,6 +312,7 @@ const AddReqInventory = () => {
       product: row?.product,
       unit: row?.unit,
       qty: row?.qty,
+      dataTotal: row?.dataTotal
     });
   };
   // start search input
@@ -349,6 +353,7 @@ const AddReqInventory = () => {
           product: selectedOptions.value,
           name: selectedOptions.dataFoo,
           unit: selectedOptions.dataUnit,
+          dataTotal: selectedOptions.dataTotal
         };
       });
       setSelectedProduct(selectedOptions);

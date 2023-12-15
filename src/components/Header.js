@@ -145,14 +145,16 @@ const Header = () => {
                   </tbody>
                 </table>
               </div>
-              <div className="d-flex justify-content-end">
-                <button className="btn btn-primary" onClick={e=>{
-                  history.push('/req-inventory/add')
-                  dispatch(SetOHNotification(dataNoti?.listItem))
-                }}>
-                  Yêu cầu đặt hàng
-                </button>
-              </div>
+              { dataNoti?.signature === 'OH' &&
+                <div className="d-flex justify-content-end">
+                  <button className="btn btn-primary" onClick={e=>{
+                    history.push('/req-inventory/add')
+                    dispatch(SetOHNotification(dataNoti?.listItem))
+                  }}>
+                    Yêu cầu đặt hàng
+                  </button>
+                </div>
+              }
             </>
           )}
         </Modal.Body>
