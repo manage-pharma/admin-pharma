@@ -211,13 +211,9 @@ export const getOrderDelivered = (orderItems) => async (dispatch, getState) => {
                 let OrderItem={}
                 orderItems.orderItems.map( async  (item)=>{
                     const {data}=await axios.get(`/api/drugstore/${item.drugstoreId}/update-stock?num=${item.qty}`, config);//lấy kq trả về
-                    //console.log({data});
                     OrderItem={...item,detailStock:data.orderStock}
                     newOrderItems.push(OrderItem)
                 })
-                console.log({orderItems:orderItems.orderItems});
-                console.log({newOrderItems});
-                console.log(orderItems._id);
 
                 setTimeout(async()=>{
                     await axios.put(`/api/orders/${orderItems._id}/update-order-item`,newOrderItems, config);
