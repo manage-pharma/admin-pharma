@@ -274,7 +274,6 @@ const EditImportStock = (props) => {
           />
           <div style={{ marginLeft: 10 }}>
             {`(${products?.find(item => {
-              console.log(item)
               return item?._id === row?.product?._id;
             })?.total_count || row?.dataTotal || 0})`}
           </div>

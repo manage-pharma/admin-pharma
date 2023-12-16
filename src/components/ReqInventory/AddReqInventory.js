@@ -41,7 +41,6 @@ const AddReqInventory = () => {
 
   const notificationOH = useSelector((state) => state.notificationOH);
   const { OH } = notificationOH;
-
   const [isStop, setIsStop] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
   const [field, setFieldProduct] = useState({
@@ -142,7 +141,33 @@ const AddReqInventory = () => {
     setItemProducts(importItems);
   };
   useEffect(() => {
-    if (OH) {
+    if (success) {
+      toast.success(`Yêu cầu đặt hàng thành công`, ToastObjects);
+      dispatch({ type: REQ_INVENTORY_CREATE_RESET });
+      setData({
+        requestedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
+        note: "",
+      });
+      setFieldProduct({
+        name: "",
+        product: "",
+        unit: "",
+        qty: 0,
+        dataTotal: 0
+      });
+      setItemProducts([]);
+      setSelectedProduct({});
+      dispatch(listReqInventory());
+      dispatch(SetOHNotification([]))
+    }
+    dispatch(listProvider());
+    dispatch(listProductWithQty());
+    // dispatch(listProduct())
+    dispatch(listUser());
+  }, [success, dispatch, OH]);
+
+  useEffect(()=>{
+    if(OH?.length && products?.length){
       const processedItems = {}
       OH?.forEach((item) => {
         const { _id, name, unit, status } = item
@@ -166,29 +191,7 @@ const AddReqInventory = () => {
       })
       setItemProducts(filteredResults)
     }
-    if (success) {
-      toast.success(`Yêu cầu đặt hàng thành công`, ToastObjects);
-      dispatch({ type: REQ_INVENTORY_CREATE_RESET });
-      setData({
-        requestedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
-        note: "",
-      });
-      setFieldProduct({
-        name: "",
-        product: "",
-        unit: "",
-        qty: 0,
-        dataTotal: 0
-      });
-      setItemProducts([]);
-      setSelectedProduct({});
-      dispatch(listReqInventory());
-    }
-    dispatch(listProvider());
-    dispatch(listProductWithQty());
-    // dispatch(listProduct())
-    dispatch(listUser());
-  }, [success, dispatch, OH]);
+  }, [OH, products])
 
   const customStyles = {
     rows: {
