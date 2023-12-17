@@ -101,12 +101,19 @@ const TagInventory = () => {
         grow: 2
     },
     {
-        name: "Xuất",
+        name: "Xuất bán",
         selector: (row) => row?.X,
         sortable: true,
         reorder: true,
         grow: 2
     },
+    {
+      name: "Xuất huỷ",
+      selector: (row) => row?.XH,
+      sortable: true,
+      reorder: true,
+      grow: 2
+  },
     {
         name: "Tồn cuối kỳ",
         selector: (row) => row?.TCK,

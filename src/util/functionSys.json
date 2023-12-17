@@ -151,6 +151,13 @@
     "functionPath": "/customers",
     "role": ["isAdmin", "isSaleAgent"],
     "isAdmin": false  
+  },
+  {
+    "_id": 23,
+    "functionName": "Danh sách thuốc đã huỷ",
+    "functionPath": "/drugcancel",
+    "role": ["isAdmin","isInventory"],
+    "isAdmin": false 
   }
 ]
   

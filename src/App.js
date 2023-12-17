@@ -33,6 +33,7 @@ import ImportStockScreen from "./screens/ImportStockScreen"
 import ExportStockScreen from "./screens/ExportStockScreen"
 import InventoryScreen from './screens/InventoryScreen';
 import DrugStoreScreen from './screens/DrugStoreScreen';
+import DrugCancelScreen from './screens/DrugCancelScreen';
 import PromotionScreen from './screens/PromotionScreen';
 import DrugStoreEditScreen from "./screens/DrugStoreEditScreen";
 import TagInventory from './screens/TagInventory';
@@ -106,7 +107,8 @@ TODO:
           <PrivateRouter path="/req-inventory" component={ReqInventoryScreen} exact />
           <PrivateRouter path="/req-inventory/add" component={AddRequestInventory} />
           <PrivateRouter path="/req-inventory/:id" component={EditRequestInventory} />
-
+          
+          <PrivateRouter path="/drugcancel" component={DrugCancelScreen} exact />
           <PrivateRouter path="/drugstore" component={DrugStoreScreen} exact />
           <PrivateRouter path="/drugstore/excel" component={DrugStoreExcelCSV} exact />
           <PrivateRouter path="/review" component={ReviewScreen} exact />
