@@ -57,11 +57,13 @@ const AddExportStock = () => {
   const [data, setData] = useState({
     note: "",
     reason: "",
+    isExportCanceled: false,
     exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
   var {
     note,
     reason,
+    isExportCanceled ,
     exportItems = itemProducts ? [...itemProducts] : [],
     user,
     exportedAt,
@@ -295,6 +297,17 @@ const AddExportStock = () => {
         EditDataMinus(field.product, newData);
       }
     }
+    const resetQtyLost = qtyLot?.map((item) => {
+      return { ...item, value: 0 }
+    });
+    
+    lotField?.forEach((lot) => {
+      const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
+      if (inputElement) {
+        inputElement.value = null
+      }
+    })    
+    setqtyLost(resetQtyLost)
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -482,7 +495,6 @@ const AddExportStock = () => {
                       placeholder="Nhập ghi chú"
                       className="form-control"
                       rows="3"
-                      required
                       onChange={handleChange}
                       value={note}
                     ></textarea>
@@ -535,6 +547,81 @@ const AddExportStock = () => {
                     ))}
                   </select> */}
                  </div>
+                 <div className="form-check form-switch">
+                    <label className="form-label d-flex">
+                     Xuất huỷ
+                    </label>
+                    <input
+                      style={{
+                        transform: "scale(1.5)",
+                        marginTop: "10px",
+                        marginLeft: "10px",
+                      }}
+                      className="form-check-input"
+                      type="checkbox"
+                      id="flexSwitchCheckChecked"
+                      checked={isExportCanceled}
+                      name="isExportCanceled"
+                      onChange={() => {
+                        console.log(itemProducts)
+                        const hasExpiredLot = itemProducts?.some((item) => {
+                          return (
+                            item?.lotField &&
+                            item?.lotField?.length > 0 &&
+                            item?.lotField?.some((lotItem) => {
+                              return lotItem?.count > 0 && Math.round((moment(lotItem?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1
+                            })
+                          );
+                        });
+
+                        if(!hasExpiredLot){
+                          setData((prev) => {
+                            if(!data?.isExportCanceled){
+                              toast.warning(
+                                `Các lô thuốc sẽ được đưa vào kho huỷ, hãy chọn các thuốc hết hạn`,
+                                ToastObjects
+                              );
+                            }
+                            return {
+                              ...prev,
+                              isExportCanceled: !isExportCanceled,
+                            };
+                          })
+                          const resetQtyLost = qtyLot?.map((item) => {
+                            return { ...item, value: 0 }
+                          });
+                          
+                          lotField?.forEach((lot) => {
+                            const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
+                            if (inputElement) {
+                              inputElement.value = null
+                            }
+                          })    
+                          setqtyLost(resetQtyLost)
+                        }
+                        else{
+                          if(data?.isExportCanceled){
+                            toast.error(
+                              `Vui lòng bỏ các thuốc hết hạn để tắt chế dộ xuất huỷ`,
+                              ToastObjects
+                            )
+                            const resetQtyLost = qtyLot?.map((item) => {
+                              return { ...item, value: 0 }
+                            });
+                            
+                            lotField?.forEach((lot) => {
+                              const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
+                              if (inputElement) {
+                                inputElement.value = null
+                              }
+                            })    
+                            setqtyLost(resetQtyLost)
+                          }
+                        }
+                      }
+                      }
+                    />
+                 </div>
                 </div>
 
                 <div className="mb-4">
@@ -548,6 +635,7 @@ const AddExportStock = () => {
                       <div
                         id="list-lot"
                         key={index}
+                        // style={{display: lot?.count <= 0 ? 'none': ''}}
                         className="mb-4 form-divided-2"
                       >
                         <label>
@@ -560,10 +648,10 @@ const AddExportStock = () => {
                           type="number"
                           min="0"
                           data-lotnumber={lot.lotNumber}
-                          data-qtylot={lot.count}
+                          data-qtylot={lot.count}   
                           data-id={lot._id}
                           data-expdrug={lot.expDrug}
-                          disabled={Math.round((moment(lot?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1 || lot.count <= 0 ? true : false}
+                          disabled={!data?.isExportCanceled && Math.round((moment(lot?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1 || lot.count <= 0 ? true : false}
                           className="form-control"
                           onChange={(e) =>
                             handleChangeQuantity(e, index, lot.expDrug)

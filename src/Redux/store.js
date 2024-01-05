@@ -129,6 +129,7 @@ import {contentSingleReducer,contentUpdateReducer} from './Reducers/ContentReduc
 import {promotionCreateReducer,promotionUpdateReducer,promotionDeleteReducer,promotionListReducer,promotionProductListReducer} from "./Reducers/PromotionReducer"
 import { reqInventoryCancelReducer, reqInventoryCreateReducer, reqInventoryDetailReducer, reqInventoryListReducer, reqInventoryStatusReducer, reqInventoryUpdateReducer } from "./Reducers/RequestInventoryReducer";
 import { NotificationListReducer, NotificationSetOHReducer, NotificationSingleReducer, NotificationUpdateReducer } from "./Reducers/NotificationReducer";
+import { DrugCancelListReducer } from "./Reducers/DrugCancelReducer";
 const reducer = combineReducers({
   theme: themeReducer,
 
@@ -264,7 +265,9 @@ const reducer = combineReducers({
   notificationList: NotificationListReducer,
   notificationSingle: NotificationSingleReducer,
   notificationUpdate: NotificationUpdateReducer,
-  notificationOH: NotificationSetOHReducer
+  notificationOH: NotificationSetOHReducer,
+
+  drugCancelList: DrugCancelListReducer,
 });
 
 const initialState = {

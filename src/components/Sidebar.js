@@ -194,6 +194,16 @@ const Sidebar = () => {
                   <NavLink
                     activeClassName="active"
                     className="menu-link"
+                    to="/drugcancel"
+                  >
+                    <i className="icon fas fa-radiation-alt"></i>
+                    <span className="text">Kho huỷ</span>
+                  </NavLink>
+                </li>
+                <li className="menu-item">
+                  <NavLink
+                    activeClassName="active"
+                    className="menu-link"
                     to="/import-stock"
                   >
                     <i className="icon fas fa-sign-in-alt"></i>

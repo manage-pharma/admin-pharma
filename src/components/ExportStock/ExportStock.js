@@ -106,7 +106,9 @@ const ExportStock = (props) =>{
                           setDataModal(row)
                         }}>
                           <i className="fas fa-clipboard-check"></i>
-                          <span> Xác nhận xuất</span>
+                          <span style={{ paddingLeft: 8 }}>
+                            {row?.isExportCanceled ? 'Xác nhận xuất huỷ' : 'Xác nhận xuất'}
+                          </span>
                         </button>
                         <button className="dropdown-item active-menu" onClick={(e)=>{
                           e.preventDefault()
@@ -266,7 +268,16 @@ const ExportStock = (props) =>{
             },
         },
     };
-  
+
+    const handleIsExportCanceled = [
+        {
+            when: row => row?.isExportCanceled,
+            style: {
+              backgroundColor: '#FFCCCB',
+            },
+        },
+    ];
+    
     useEffect(()=>{
         if(success){
           dispatch({ type: EXPORT_STOCK_STATUS_RESET});
@@ -306,6 +317,7 @@ const ExportStock = (props) =>{
               data={exportStock}
               noDataComponent={NoRecords()}
               customStyles={customStyles}
+              conditionalRowStyles={handleIsExportCanceled}
               defaultSortFieldId
               pagination
               // onRowClicked={handleRowClicked}
