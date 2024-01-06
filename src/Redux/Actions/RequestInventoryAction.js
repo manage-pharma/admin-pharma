@@ -2,7 +2,7 @@ import { REQ_INVENTORY_CANCEL_FAIL, REQ_INVENTORY_CANCEL_REQUEST, REQ_INVENTORY_
 import axios from 'axios';
 import { logout } from "./UserActions";
 
-export const listReqInventory = ( keyword = " ", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
+export const listReqInventory = ( keyword = "", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
   try {
       dispatch({type: REQ_INVENTORY_LIST_REQUEST});
       const { userLogin: {userInfo}} = getState();

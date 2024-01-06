@@ -2,7 +2,7 @@ import { IMPORT_STOCK_CANCEL_FAIL, IMPORT_STOCK_CANCEL_REQUEST, IMPORT_STOCK_CAN
 import axios from 'axios';
 import { logout } from "./UserActions";
 
-export const listImportStock = ( keyword = " ", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
+export const listImportStock = ( keyword = "", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
   try {
       dispatch({type: IMPORT_STOCK_LIST_REQUEST});
       const { userLogin: {userInfo}} = getState();

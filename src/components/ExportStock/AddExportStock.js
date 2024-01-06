@@ -15,6 +15,7 @@ import renderToast from "../../util/Toast";
 import { listInventory } from "../../Redux/Actions/InventoryAction";
 import ExportTable from "./ExportStockTable";
 import Select from "react-select";
+import { SetEXPNotification } from "../../Redux/Actions/NotificationAction";
 
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -32,8 +33,12 @@ const AddExportStock = () => {
 
   const inventoryList = useSelector((state) => state.inventoryList);
   const { inventories } = inventoryList;
+
   const userList = useSelector((state) => state.userList);
   const { users } = userList;
+
+  const notificationEXP = useSelector((state) => state.notificationEXP);
+  const { EXP } = notificationEXP;
 
   const [inventoriesClone, setInventoriesClone] = useState([]);
   useEffect(() => {
@@ -321,7 +326,6 @@ const AddExportStock = () => {
   const handleDeleteItem = (e, index, id) => {
     e.preventDefault();
     exportItems.splice(index, 1);
-
     const findProductIndex = inventories.findIndex((item) => {
       return item.idDrug === id;
     });
@@ -364,11 +368,89 @@ const AddExportStock = () => {
       setItemProducts([]);
       setSelectedProduct({})
       dispatch(listExportStock());
+      dispatch(SetEXPNotification([]))
     }
     dispatch(listUser());
     dispatch(listProduct());
     dispatch(listInventory());
-  }, [success, dispatch]);
+  }, [success, dispatch, EXP]);
+  useEffect(()=>{
+    if(EXP?.length && inventoriesClone?.length){
+      setData((prev) => {
+        return {
+          ...prev,
+          isExportCanceled: true,
+        }
+      })
+      const groupedData = EXP?.reduce((acc, item) => {
+        const existingItem = acc.find((group) => group._id === item._id)
+    
+        if (existingItem) {
+            existingItem.lotNumber.push(item.lotNumber)
+        } else {
+            acc.push({
+                _id: item._id,
+                name: item.name,
+                lotNumber: [item.lotNumber]
+            });
+        }
+    
+        return acc;
+    }, [])
+
+      const itemsNeedImport = []
+
+      groupedData?.forEach((exp) => {
+        const { _id, lotNumber } = exp
+
+        const existingItem = inventoriesClone.find((clone) => clone.idDrug === _id)
+        if(existingItem){
+          let qty = 0
+          let lotField = []
+          existingItem?.products?.forEach((product)=>{
+            if(lotNumber?.includes(product?.lotNumber)){
+              qty += product?.count
+              lotField.push({
+                count: product?.count,
+                expDrug: product?.expDrug,
+                idDrug: product?.idDrug,
+                lotNumber: product?.lotNumber
+              })              
+            }
+            else{
+              lotField.push({
+                count: 0,
+                expDrug: product?.expDrug,
+                idDrug: product?.idDrug,
+                lotNumber: product?.lotNumber
+              })
+            }
+          })
+          if(qty > 0){
+            itemsNeedImport.push({
+              countInStock: existingItem.total_count,
+              name: existingItem.name,
+              product: existingItem.idDrug,
+              price: 0,
+              qty,
+              lotField
+            })
+            EditDataMinus(existingItem.idDrug, lotField);
+          }
+        }
+      })
+      if(itemsNeedImport?.length === 0){
+        toast.error(
+          `Không có sản phẩm hết hạn`,
+          { toastId: 'notHaveEXP' },
+          ToastObjects
+        )
+      }
+      else{
+        setItemProducts(itemsNeedImport)
+      }
+    }
+  }, [EXP, inventoriesClone])
     // start search input
     const options = [];
     if(inventoriesClone?.length > 0){
@@ -413,6 +495,62 @@ const AddExportStock = () => {
       }
     };
 
+    const handleSwitchCancelExport = () => {
+      const hasExpiredLot = itemProducts?.some((item) => {
+        return (
+          item?.lotField &&
+          item?.lotField?.length > 0 &&
+          item?.lotField?.some((lotItem) => {
+            return lotItem?.count > 0 && Math.round((moment(lotItem?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1
+          })
+        );
+      });
+
+      if(!hasExpiredLot){
+        setData((prev) => {
+          if(!data?.isExportCanceled){
+            toast.warning(
+              `Các lô thuốc sẽ được đưa vào kho huỷ, hãy chọn các thuốc hết hạn`,
+              ToastObjects
+            );
+          }
+          return {
+            ...prev,
+            isExportCanceled: !isExportCanceled,
+          };
+        })
+        const resetQtyLost = qtyLot?.map((item) => {
+          return { ...item, value: 0 }
+        });
+        
+        lotField?.forEach((lot) => {
+          const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
+          if (inputElement) {
+            inputElement.value = null
+          }
+        })    
+        setqtyLost(resetQtyLost)
+      }
+      else{
+        if(data?.isExportCanceled){
+          toast.error(
+            `Vui lòng bỏ các thuốc hết hạn để tắt chế dộ xuất huỷ`,
+            ToastObjects
+          )
+          const resetQtyLost = qtyLot?.map((item) => {
+            return { ...item, value: 0 }
+          });
+          
+          lotField?.forEach((lot) => {
+            const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
+            if (inputElement) {
+              inputElement.value = null
+            }
+          })    
+          setqtyLost(resetQtyLost)
+        }
+      }
+    }
     const selectedOptions = selectedProduct
     // end search input
   return (
@@ -562,64 +700,7 @@ const AddExportStock = () => {
                       id="flexSwitchCheckChecked"
                       checked={isExportCanceled}
                       name="isExportCanceled"
-                      onChange={() => {
-                        console.log(itemProducts)
-                        const hasExpiredLot = itemProducts?.some((item) => {
-                          return (
-                            item?.lotField &&
-                            item?.lotField?.length > 0 &&
-                            item?.lotField?.some((lotItem) => {
-                              return lotItem?.count > 0 && Math.round((moment(lotItem?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1
-                            })
-                          );
-                        });
-
-                        if(!hasExpiredLot){
-                          setData((prev) => {
-                            if(!data?.isExportCanceled){
-                              toast.warning(
-                                `Các lô thuốc sẽ được đưa vào kho huỷ, hãy chọn các thuốc hết hạn`,
-                                ToastObjects
-                              );
-                            }
-                            return {
-                              ...prev,
-                              isExportCanceled: !isExportCanceled,
-                            };
-                          })
-                          const resetQtyLost = qtyLot?.map((item) => {
-                            return { ...item, value: 0 }
-                          });
-                          
-                          lotField?.forEach((lot) => {
-                            const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
-                            if (inputElement) {
-                              inputElement.value = null
-                            }
-                          })    
-                          setqtyLost(resetQtyLost)
-                        }
-                        else{
-                          if(data?.isExportCanceled){
-                            toast.error(
-                              `Vui lòng bỏ các thuốc hết hạn để tắt chế dộ xuất huỷ`,
-                              ToastObjects
-                            )
-                            const resetQtyLost = qtyLot?.map((item) => {
-                              return { ...item, value: 0 }
-                            });
-                            
-                            lotField?.forEach((lot) => {
-                              const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
-                              if (inputElement) {
-                                inputElement.value = null
-                              }
-                            })    
-                            setqtyLost(resetQtyLost)
-                          }
-                        }
-                      }
-                      }
+                      onChange={handleSwitchCancelExport}
                     />
                  </div>
                 </div>

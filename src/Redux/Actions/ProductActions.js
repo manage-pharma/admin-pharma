@@ -44,7 +44,7 @@ import { logout } from './UserActions';
 import axios from 'axios';
 
 // ADMIN PRODUCT LIST
-export const listProduct = (keyword = " ", pageNumber = " ", sort = " ") => async (dispatch, getState) => {
+export const listProduct = (keyword = "", pageNumber = " ", sort = " ") => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
