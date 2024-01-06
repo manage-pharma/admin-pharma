@@ -33,7 +33,7 @@ import {logout} from './UserActions';
 import axios from 'axios';
 
 // ADMINDRUGSTORE LIST
-export const listDrugStore=(keyword=" ",pageNumber=" ",sort=" ") => async (dispatch,getState) => {
+export const listDrugStore=(keyword="",pageNumber="",sort="") => async (dispatch,getState) => {
   try {
     dispatch({type: DRUGSTORE_LIST_REQUEST});
 

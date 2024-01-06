@@ -289,7 +289,7 @@ const OrderDetailMain = (props) => {
                     ) :"" 
                   }
                   {
-                    orderItems.isReceived&&!orderItems.isSuccess?
+                    orderItems?.isDelivered && !orderItems.isSuccess?
                     <>
                       <button onClick={completedHanlder} className="btn btn-dark col-12 user-select-none mt-2">
                         HOÀN TẤT ĐƠN HÀNG
