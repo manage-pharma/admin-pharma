@@ -228,9 +228,9 @@ const AddProductMain = () => {
       toast.error("Chưa chọn hoạt chất", ToastObjects);
       return;
     }
-    if (images.length === 0){
-      return toast.error("Chưa chọn ảnh.",ToastObjects)
-    }   
+    // if (images.length === 0){
+    //   return toast.error("Chưa chọn ảnh.",ToastObjects)
+    // }   
     var arrImg = [];
     if (images) {
       for (const image of images) {
@@ -244,9 +244,10 @@ const AddProductMain = () => {
           arrImg.push(`${backendUrlFile.image}/${dataUp.filename}`);
         }   
       }
+    }
 
       data.image = arrImg;
-      dispatch(createProduct({ ...data, APIs: APIs }));
+      dispatch(createProduct({ ...data, APIs: APIs }))
       setData({
         name: "",
         regisId: "",
@@ -264,7 +265,6 @@ const AddProductMain = () => {
         allowToSell: true,
       });
       document.getElementById("uploadFile").value = "";
-    }
   };
 
 

@@ -127,7 +127,7 @@ export const logout = () => (dispatch) => {
 };
 
 // ADMIN ALL USER
-export const listUser = (keyword = " ", pageNumber = " ") => async (dispatch, getState) => {
+export const listUser = (keyword = "", pageNumber = " ") => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_LIST_REQUEST });
     // userInfo -> userLogin -> getState(){globalState}

@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import Select from "react-select";
 import functionSys from "./../../src/util/functionSys.json";
 import {
+  SetEXPNotification,
   SetOHNotification,
   listNotification,
   updateNotification,
@@ -152,6 +153,16 @@ const Header = () => {
                     history.push('/req-inventory/add')
                   }}>
                     Yêu cầu đặt hàng
+                  </button>
+                </div>
+              }
+              { dataNoti?.signature === 'EXP' &&
+                <div className="d-flex justify-content-end">
+                  <button className="btn btn-danger" onClick={e=>{
+                    dispatch(SetEXPNotification(dataNoti?.listItem))
+                    history.push('/export-stock/add')
+                  }}>
+                    Huỷ thuốc
                   </button>
                 </div>
               }

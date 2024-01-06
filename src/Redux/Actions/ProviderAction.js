@@ -3,7 +3,7 @@ import { PROVIDER_LIST_REQUEST, PROVIDER_LIST_SUCCESS, PROVIDER_LIST_FAIL, PROVI
 import { logout } from "./UserActions";
 import { PROVIDER_SINGLE_REQUEST, PROVIDER_SINGLE_FAIL } from './../Constants/ProviderConstants';
 
-export const listProvider = ( keyword = " ", pageNumber = " ") => async (dispatch, getState) => {
+export const listProvider = ( keyword = "", pageNumber = " ") => async (dispatch, getState) => {
   try {
     dispatch({ type: PROVIDER_LIST_REQUEST });
 
