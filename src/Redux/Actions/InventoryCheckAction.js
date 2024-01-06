@@ -37,7 +37,7 @@ import {
 import axios from "axios";
 import { logout } from "./UserActions";
 
-export const listInventoryCheck = ( keyword = " ", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
+export const listInventoryCheck = ( keyword = "", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
   try {
       dispatch({type: INVENTORY_CHECK_LIST_REQUEST});
       const { userLogin: {userInfo}} = getState();

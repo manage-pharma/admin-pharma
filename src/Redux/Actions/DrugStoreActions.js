@@ -33,7 +33,7 @@ import {logout} from './UserActions';
 import axios from 'axios';
 
 // ADMINDRUGSTORE LIST
-export const listDrugStore=(keyword="",pageNumber="",sort="") => async (dispatch,getState) => {
+export const listDrugStore=(keyword="",pageNumber=" ",sort=" ") => async (dispatch,getState) => {
   try {
     dispatch({type: DRUGSTORE_LIST_REQUEST});
 
@@ -52,7 +52,7 @@ export const listDrugStore=(keyword="",pageNumber="",sort="") => async (dispatch
     dispatch({type: DRUGSTORE_LIST_SUCCESS,payload: data});
   } catch(error) {
     const message=
-      error.response&&error.response.data.message
+      error.response && error.response.data.message
         ? error.response.data.message
         :error.message;
     if(message==="Not authorized, token failed") {
@@ -87,7 +87,7 @@ export const allDrugStore=() => async (dispatch,getState) => {
     dispatch({type: DRUGSTORE_ALL_SUCCESS,payload: data});
   } catch(error) {
     const message=
-      error.response&&error.response.data.message
+      error.response && error.response.data.message
         ? error.response.data.message
         :error.message;
     if(message==="Not authorized, token failed") {
@@ -125,7 +125,7 @@ export const categoriesDrugStore=(id) => async (dispatch,getState) => {
     dispatch({type: DRUGSTORE_CATEGORY_SUCCESS,payload: data});
   } catch(error) {
     const message=
-      error.response&&error.response.data.message
+      error.response && error.response.data.message
         ? error.response.data.message
         :error.message;
     if(message==="Not authorized, token failed") {
@@ -159,7 +159,7 @@ export const categoriesDrugDrugStore=(id) => async (dispatch,getState) => {
     dispatch({type: DRUGSTORE_CATEGORY_DRUG_SUCCESS,payload: data});
   } catch(error) {
     const message=
-      error.response&&error.response.data.message
+      error.response && error.response.data.message
         ? error.response.data.message
         :error.message;
     if(message==="Not authorized, token failed") {
@@ -195,7 +195,7 @@ export const singleDrugStore=(id) => async (dispatch,getState) => {
     dispatch({type: DRUGSTORE_SINGLE_SUCCESS,payload: data});
   } catch(error) {
     const message=
-      error.response&&error.response.data.message
+      error.response && error.response.data.message
         ? error.response.data.message
         :error.message;
     if(message==="Not authorized, token failed") {
@@ -235,7 +235,7 @@ export const updateDrugStore=({countInStock,isActive,discount,refunded,discountD
     dispatch({type: DRUGSTORE_SINGLE_SUCCESS,payload: data});
   } catch(error) {
     const message=
-      error.response&&error.response.data.message
+      error.response && error.response.data.message
         ? error.response.data.message
         :error.message;
     if(message==="Not authorized, token failed") {
@@ -273,7 +273,7 @@ export const updateDrugStoreReview=({productId,reviewId,status}) => async (dispa
     dispatch({type: DRUGSTORE_SINGLE_SUCCESS,payload: data});
   } catch(error) {
     const message=
-      error.response&&error.response.data.message
+      error.response && error.response.data.message
         ? error.response.data.message
         :error.message;
     if(message==="Not authorized, token failed") {

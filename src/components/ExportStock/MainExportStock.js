@@ -8,6 +8,7 @@ import { listExportStock } from "../../Redux/Actions/ExportStockAction";
 import Toast from '../LoadingError/Toast';
 import { toast } from "react-toastify";
 import renderToast from "../../util/Toast";
+import { SetEXPNotification } from "../../Redux/Actions/NotificationAction";
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -22,10 +23,11 @@ const MainExportStock = (props) => {
   const [keyword, setSearch] = useState()
   const [toggleSearch, setToggleSearch] = useState(false)
   const [data, setData] = useState({
+    phieuxuat: '',
     from: '',
     to: ''
   })
-  const {from,to} = data
+  const {phieuxuat,from,to} = data
 
   const exportedStockList = useSelector((state)=> state.exportStockList)
   const { loading, error, stockExported} = exportedStockList
@@ -36,24 +38,29 @@ const MainExportStock = (props) => {
   const cancelExport = useSelector(state => state.exportStockCancel)
   const {error: errorCancel} = cancelExport
 
-  const callApiKeywordSearch = (keyword, pageNumber, from, to) =>{
-      dispatch(listExportStock(keyword, pageNumber, from, to))
+  const callApiKeywordSearch = (keyword, pageNumber, phieuxuat, from, to) =>{
+      dispatch(listExportStock(keyword, pageNumber, phieuxuat, from, to))
   }
-  const debounceDropDown = useRef(debounce((keyword, pageNumber, from, to) => callApiKeywordSearch(keyword, pageNumber, from, to) , 300)).current;
+  const debounceDropDown = useRef(debounce((keyword, pageNumber, phieuxuat, from, to) => callApiKeywordSearch(keyword, pageNumber, phieuxuat, from, to) , 300)).current;
 
   const handleSubmitSearch = e =>{
     e.preventDefault()
     setSearch(e.target.value)
-    debounceDropDown(e.target.value, pageNumber, data.from, data.to);
+    debounceDropDown(e.target.value, pageNumber, data.phieuxuat, data.from, data.to);
   }
 
   const handleAdd = (e) =>{
     e.preventDefault();
+    dispatch(SetEXPNotification([]))
     history.push('/export-stock/add');
   }
 
   const handleChange = e =>{
     e.preventDefault();
+    const selectPX = document.querySelector('#PX-select');
+    const selectedOptionPX = selectPX.options[selectPX.selectedIndex];
+    selectPX.style.color = selectedOptionPX.id;
+
     setData(prev => {
       return {
         ...prev, [e.target.name]: e.target.value
@@ -69,10 +76,11 @@ const MainExportStock = (props) => {
         }
         return;
       }
-      dispatch(listExportStock(keyword, pageNumber, data.from, data.to)) 
+      dispatch(listExportStock(keyword, pageNumber, data.phieuxuat, data.from, data.to)) 
     }
     else{
       setData({
+        phieuxuat: '',
         from: '',
         to: ''
       })
@@ -88,6 +96,11 @@ const MainExportStock = (props) => {
     dispatch(listExportStock(keyword, pageNumber)) // eslint-disable-next-line
   },[dispatch, pageNumber, success])
 
+  useEffect(()=>{
+    dispatch(listExportStock(keyword, pageNumber, data.phieuxuat, data.from, data.to)) 
+   // eslint-disable-next-line
+  },[dispatch, phieuxuat])
+  
   return (
     <>
     <Toast/>
@@ -105,14 +118,25 @@ const MainExportStock = (props) => {
       <div className="card card-custom mb-4 shadow-sm">
         <header className="card-header bg-aliceblue ">
           <div className="row gx-3 py-3">
-            <div className="col-lg-4 col-md-6 me-auto ">
-              <input
-                type="search"
-                placeholder="Tìm kiếm..."
-                className="form-control p-2"
-                value={keyword}
-                onChange={handleSubmitSearch}
-              />
+            <div className="col-lg-7 col-md-6 me-auto ">
+              <div className="d-flex" style={{gap: 10}}>                
+                <div style={{width: 300}}>
+                  <input
+                    type="search"
+                    placeholder="Tìm kiếm..."
+                    className="form-control p-2"
+                    value={keyword}
+                    onChange={handleSubmitSearch}
+                  />
+                </div>
+                <div style={{width: 170}}>
+                  <select defaultValue="" name="phieuxuat" className="p-2 form-select" id="PX-select" style={{fontWeight: '500'}} onChange={handleChange}>
+                    <option id='black'   className="text-dark"    style={{fontWeight: '500'}} value="">Tất cả phiếu xuất</option>
+                    <option id='#28a745' className="text-success" style={{fontWeight: '500'}} value="XNB">Phiếu xuất nội bộ</option>
+                    <option id="#dc3545" className="text-danger"  value="XH">Phiếu xuất huỷ</option>
+                  </select>
+                </div>
+              </div>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">

@@ -2,7 +2,7 @@ import { EXPORT_STOCK_CANCEL_FAIL, EXPORT_STOCK_CANCEL_REQUEST, EXPORT_STOCK_CAN
 import axios from 'axios';
 import { logout } from "./UserActions";
 
-export const listExportStock = ( keyword = " ", pageNumber = " ", from=' ', to = ' ') => async(dispatch, getState) =>{
+export const listExportStock = ( keyword = "", pageNumber = " ", phieuxuat = ' ', from=' ', to = ' ') => async(dispatch, getState) =>{
   try {
       dispatch({type: EXPORT_STOCK_LIST_REQUEST});
       const { userLogin: {userInfo}} = getState();
@@ -11,7 +11,7 @@ export const listExportStock = ( keyword = " ", pageNumber = " ", from=' ', to =
               Authorization: `Bearer ${userInfo.token}`
           }
       } 
-      const {data} = await axios.get(`/api/export-stock/?keyword=${keyword}&pageNumber=${pageNumber}&from=${from}&to=${to}`, config)
+      const {data} = await axios.get(`/api/export-stock/?keyword=${keyword}&pageNumber=${pageNumber}&phieuxuat=${phieuxuat}&from=${from}&to=${to}`, config)
       dispatch({type: EXPORT_STOCK_LIST_SUCCESS, payload: data})
 
   } catch (error) {
