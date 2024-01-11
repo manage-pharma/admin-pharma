@@ -11,10 +11,12 @@ import DataTable from "react-data-table-component";
 import { listProduct } from "../Redux/Actions/ProductActions";
 import { tagInventory } from "../Redux/Actions/InventoryAction";
 import NoRecords from "../util/noData";
+import { useHistory } from "react-router-dom";
 
 const TagInventory = () => {
   const textNoRecord = "vui lòng chọn thông tin để thống kê"
   const dispatch = useDispatch()
+  const history = useHistory();
   const [ isStop , setIsStop ] = useState(false)
   const [keyword, setSearch] = useState()
   const [toggleSearch, setToggleSearch] = useState(false)
@@ -191,6 +193,12 @@ const customStyles = {
       <section className="content-main">
         <div className="content-header">
           <h2 className="content-title">Thẻ kho</h2>
+          <button onClick={(e)=>{
+              e.preventDefault()
+              history.push("/chart")
+            }}className="btn btn-primary">
+              Xem thống kê
+            </button>
         </div>
 
         <div className="card card-custom mb-4 shadow-sm">

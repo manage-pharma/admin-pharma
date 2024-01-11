@@ -650,11 +650,12 @@ const AddExportStock = () => {
                     Sản phẩm
                   </label>
                   <Select
-                    
+                    isSearchable
+                    isClearable
                     options={options}
                     value={selectedOptions}
                     onChange={handleChangeProduct}
-                    placeholder="Tag"
+                    placeholder="Chọn thuốc cần xuất"
                     getOptionLabel={(option) => (
                       <div data-foo={option.dataFoo}>{option.label}</div>
                     )}

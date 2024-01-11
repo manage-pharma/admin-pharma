@@ -312,6 +312,8 @@ const Header = () => {
       <header className="main-header navbar">
         <div className="col-search">
           <Select
+            isSearchable
+            isClearable
             options={filteredOptions}
             // filterOption={(option) =>
             //   userInfo.isAdmin ? true : option.data.isAdmin === userInfo.isAdmin &&

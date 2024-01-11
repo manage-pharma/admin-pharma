@@ -1,4 +1,4 @@
-import { INVENTORY_TAG_FAIL, INVENTORY_TAG_REQUEST, INVENTORY_TAG_RESET, INVENTORY_TAG_SUCCESS, INVENTORY_LIST_FAIL, INVENTORY_LIST_REQUEST, INVENTORY_LIST_RESET, INVENTORY_LIST_SUCCESS, INVENTORY_TO_CHECK_LIST_REQUEST, INVENTORY_TO_CHECK_LIST_SUCCESS, INVENTORY_TO_CHECK_LIST_FAIL, INVENTORY_TO_CHECK_LIST_RESET } from './../Constants/InventoryConstants';
+import { INVENTORY_TAG_FAIL, INVENTORY_TAG_REQUEST, INVENTORY_TAG_RESET, INVENTORY_TAG_SUCCESS, INVENTORY_LIST_FAIL, INVENTORY_LIST_REQUEST, INVENTORY_LIST_RESET, INVENTORY_LIST_SUCCESS, INVENTORY_TO_CHECK_LIST_REQUEST, INVENTORY_TO_CHECK_LIST_SUCCESS, INVENTORY_TO_CHECK_LIST_FAIL, INVENTORY_TO_CHECK_LIST_RESET, CHART_IMPORT_EXPORT_REQUEST, CHART_IMPORT_EXPORT_SUCCESS, CHART_IMPORT_EXPORT_FAIL, CHART_IMPORT_EXPORT_RESET } from './../Constants/InventoryConstants';
   // INVENTORY LIST
   export const inventoryListReducer = (state = {inventories:[]}, action) => {
     switch (action.type) {
@@ -40,6 +40,22 @@ import { INVENTORY_TAG_FAIL, INVENTORY_TAG_REQUEST, INVENTORY_TAG_RESET, INVENTO
       case INVENTORY_TAG_FAIL:
         return { loading: false, error: action.payload}
       case INVENTORY_TAG_RESET:
+        return {}
+      default: 
+        return state;
+    }
+  }  
+
+  //CHART IMPORT EXPORT
+  export const chartImportExportReducer = (state = {}, action) =>{
+    switch(action.type){
+      case CHART_IMPORT_EXPORT_REQUEST:
+        return { ...state, loading: true};
+      case CHART_IMPORT_EXPORT_SUCCESS:
+        return { loading: false, success: true, dataChart: action.payload}
+      case CHART_IMPORT_EXPORT_FAIL:
+        return { loading: false, error: action.payload}
+      case CHART_IMPORT_EXPORT_RESET:
         return {}
       default: 
         return state;

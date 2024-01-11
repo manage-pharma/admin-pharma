@@ -546,10 +546,12 @@ const EditImportStock = (props) => {
                                         Tên thuốc
                                     </label>
                                     <Select
+                                    isSearchable
+                                    isClearable
                                     options={options}
                                     value={selectedOptions}
                                     onChange={handleChangeProduct}
-                                    placeholder="Tag"
+                                    placeholder="Chọn thuốc cần nhập"
                                     getOptionLabel={(option) => (
                                       <div data-foo={option.dataFoo}>{option.label}</div>
                                     )}
