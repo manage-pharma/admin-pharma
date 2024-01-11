@@ -45,6 +45,7 @@ import ReviewScreen from "./screens/ReviewScreen"
 import ReqInventoryScreen from "./screens/ReqInventoryScreen";
 import AddRequestInventory from "./screens/AddReqInventory";
 import EditRequestInventory from "./screens/EditReqInventory";
+import ChartScreen from "./screens/ChartScreen";
 function App() {
   const data=useSelector((state) => state.theme)
   if(data.theme==="dark") {
@@ -103,6 +104,7 @@ TODO:
 
           <PrivateRouter path="/inventories" component={InventoryScreen} exact />
           <PrivateRouter path="/tag-inventory" component={TagInventory} exact />
+          <PrivateRouter path="/chart" component={ChartScreen} exact />
 
           <PrivateRouter path="/req-inventory" component={ReqInventoryScreen} exact />
           <PrivateRouter path="/req-inventory/add" component={AddRequestInventory} />

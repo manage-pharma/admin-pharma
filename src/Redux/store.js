@@ -110,6 +110,7 @@ import {
   APIListReducer,
 } from "./Reducers/ActivePharmaReducer";
 import {
+  chartImportExportReducer,
   inventoryListReducer,
   inventoryTagReducer,
   inventoryToCheckListReducer,
@@ -227,6 +228,7 @@ const reducer = combineReducers({
 
   inventoryList: inventoryListReducer,
   inventoryTag: inventoryTagReducer,
+  chartImportExport: chartImportExportReducer,
 
   inventoryCheckCreate: inventoryCheckCreateReducer,
   inventoryCheckList: inventoryCheckListReducer,

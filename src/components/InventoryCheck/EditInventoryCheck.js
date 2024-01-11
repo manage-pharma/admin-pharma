@@ -372,10 +372,12 @@ const EditInventoryCheck = (props) => {
                       Tên thuốc
                     </label>
                     <Select
+                      isSearchable
+                      isClearable
                       options={options}
                       value={selectedOptions}
                       onChange={handleChangeProduct}
-                      placeholder="Tag"
+                      placeholder="Chọn thuốc cần kiểm tra"
                       getOptionLabel={(option) => (
                         selectedOptions && (
                           <div data-foo={option.dataFoo}>

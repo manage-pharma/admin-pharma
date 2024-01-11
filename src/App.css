@@ -1478,3 +1478,125 @@ input:checked+.slider:before {
   max-height: 420px;
   overflow-y: auto;
 }
+
+/* HANDLE CHART */
+.groupItem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0 14px;
+}
+
+.card-wrapper {
+  position: relative;
+  width: 600px;
+  height: 400px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 30px rgba(217, 217, 217, 0.75);;
+}
+.title-chart {
+  font-weight: 700;
+  position: absolute;
+  top: 11px;
+  left: 20px;
+  font-size: 15px;
+}
+.card-wrapper .statistic {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  width: 100%;
+}
+
+.card-wrapper .statistic .chart-overview {
+  width: 450px;
+  height: 350px;
+}
+.chart-overview .info{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: inherit;
+}
+.card-wrapper .statistic .chart-overview div:first-child {
+  padding-bottom: 10px;
+}
+.card-wrapper .statistic .chart-overview .chart-column {
+  width: 76px;
+  transform: translate(-32px, -37px) rotate(-90deg);
+}
+.card-wrapper .statistic .chart-overview .chart-column .bar {
+  height: 7px;
+  margin: 5px 0;
+}
+.card-wrapper .statistic .chart-list {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+.card-wrapper .statistic .chart-list .list-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.card-wrapper .statistic .chart-list .list-item .list-item-quantity {
+  font-weight: 700;
+  font-size: 18px;
+}
+.card-wrapper .line {
+  width: 20px;
+  height: 5px;
+  background: #e9730c;
+  border-radius: 5px;
+}
+@media screen and (max-width: 576px) {
+  .card-wrapper {
+    width: 100%;
+ }
+  .card-wrapper .chart-overview {
+    width: 100%;
+ }
+}
+@media screen and (max-width: 1024px) {
+  .card-wrapper .chart-overview {
+    width: 100%;
+ }
+}
+
+
+
+
+
+/* HANDLE CHART LONG */
+.card-wrapper-long .card-wrapper{
+  position: relative;
+  width: 1100px !important;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 0 30px rgba(217, 217, 217, 0.75);
+  height: 400px;
+}
+
+.card-wrapper-long .card-wrapper .statistic .chart-overview {
+  width: 1050px !important;
+}
+@media only screen and (min-width: 768px) and (max-width: 1280px) {
+  .card-wrapper-long .card-wrapper {
+    width: 727px !important;
+    overflow-x: auto !important;
+ }
+ .card-wrapper-long .card-wrapper .statistic .chart-overview canvas {
+  width: 1050px !important;
+  padding-right: 20px;
+  padding-left: 176px;
+}
+}
+@media only screen and (max-width: 615px) {
+  .card-wrapper-long .card-wrapper {
+    width: 420px;
+    overflow-x: auto !important;
+ }
+}

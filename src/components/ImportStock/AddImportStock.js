@@ -560,18 +560,20 @@ const AddImportStock = () => {
                                         ))}
                                     </select> */}
                                     <Select
-                                    options={options}
-                                    value={selectedOptions}
-                                    onChange={handleChangeProduct}
-                                    placeholder="Tag"
-                                    getOptionLabel={(option) => (
-                                      <div data-foo={option.dataFoo}>{option.label}</div>
-                                    )}
-                                    getOptionValue={(option) => option.value}
-                                    filterOption={(option, inputValue) =>
-                                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
-                                    }
-                                  />
+                                        isSearchable
+                                        isClearable
+                                        options={options}
+                                        value={selectedOptions}
+                                        onChange={handleChangeProduct}
+                                        placeholder="Chọn thuốc cần nhập"
+                                        getOptionLabel={(option) => (
+                                        <div data-foo={option.dataFoo}>{option.label}</div>
+                                        )}
+                                        getOptionValue={(option) => option.value}
+                                        filterOption={(option, inputValue) =>
+                                        option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                                        }
+                                    />
                                 </div>
                                 <div>
                                     <label className="form-label">Số lô</label>
