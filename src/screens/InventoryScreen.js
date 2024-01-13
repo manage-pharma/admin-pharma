@@ -8,7 +8,7 @@ const InventoryScreen = () => {
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <MainInventory/>
+        <MainInventory />
       </main>
     </>
   );

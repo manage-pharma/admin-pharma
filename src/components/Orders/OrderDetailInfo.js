@@ -1,7 +1,7 @@
 import React from "react";
 
 const OrderDetailInfo = (props) => {
-  const {order} = props
+  const { order } = props;
   return (
     <div className="row mb-5 order-info-wrap">
       <div className="col-md-6 col-lg-4">
@@ -12,7 +12,8 @@ const OrderDetailInfo = (props) => {
           <div className="text">
             <h6 className="mb-1">Khách hàng</h6>
             <p className="mb-1">
-            {order.user.name}<br />
+              {order.user.name}
+              <br />
               <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
             </p>
           </div>
@@ -26,7 +27,8 @@ const OrderDetailInfo = (props) => {
           <div className="text">
             <h6 className="mb-1">Thông tin đơn đặt hàng</h6>
             <p className="mb-1">
-              Nơi vận chuyển: {order.shippingAddress.country} <br /> Phương thức trả: {order.paymentMethod}
+              Nơi vận chuyển: {order.shippingAddress.country} <br /> Phương thức
+              trả: {order.paymentMethod}
             </p>
           </div>
         </article>
@@ -39,10 +41,10 @@ const OrderDetailInfo = (props) => {
           <div className="text">
             <h6 className="mb-1">Chuyển đến</h6>
             <p className="mb-1">
-              Địa chỉ: {order.shippingAddress.city} 
+              Địa chỉ: {order.shippingAddress.city}
               <br />
-              {order.shippingAddress.address} 
-              <br /> {order.shippingAddress.postalCode} 
+              {order.shippingAddress.address}
+              <br /> {order.shippingAddress.postalCode}
             </p>
           </div>
         </article>

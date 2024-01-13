@@ -4,9 +4,8 @@ import Header from "./../components/Header";
 import EditProductMain from "./../components/Products/EditproductMain";
 import { useParams } from "react-router-dom";
 
-
-const ProductEditScreen = ({match}) => {
-  const {id} = useParams();
+const ProductEditScreen = ({ match }) => {
+  const { id } = useParams();
   return (
     <>
       <Sidebar />

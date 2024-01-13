@@ -115,9 +115,9 @@ const Sidebar = () => {
                 </li>
               </>
             )}
-            {
-              (userInfo?.role === "isAdmin" || userInfo?.role === "isSaleAgent") &&(
-                <>
+            {(userInfo?.role === "isAdmin" ||
+              userInfo?.role === "isSaleAgent") && (
+              <>
                 {/* //! Order */}
                 <li className="menu-item">
                   <NavLink
@@ -169,7 +169,7 @@ const Sidebar = () => {
                     className="menu-link"
                     to="/review/"
                   >
-                    <i className="icon fas fa-comment-alt" ></i>
+                    <i className="icon fas fa-comment-alt"></i>
                     <span className="text">Bình luận</span>
                   </NavLink>
                 </li>
@@ -180,13 +180,12 @@ const Sidebar = () => {
                     className="menu-link"
                     to="/promotion/"
                   >
-                    <i className="icon fas fa-tags" ></i>
+                    <i className="icon fas fa-tags"></i>
                     <span className="text">Khuyến mãi</span>
                   </NavLink>
                 </li>
-                </>
-              )
-            }
+              </>
+            )}
             {(userInfo.role === "isAdmin" ||
               userInfo.role === "isInventory") && (
               <>

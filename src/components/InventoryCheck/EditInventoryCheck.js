@@ -31,7 +31,7 @@ const EditInventoryCheck = (props) => {
   const history = useHistory();
 
   const inventoryCheckDetails = useSelector(
-    (state) => state.inventoryCheckDetails
+    (state) => state.inventoryCheckDetails,
   );
   const { inventoryCheckItem } = inventoryCheckDetails;
 
@@ -39,7 +39,7 @@ const EditInventoryCheck = (props) => {
   const { inventories } = inventoryList;
 
   const inventoryCheckListItem = useSelector(
-    (state) => state.inventoryCheckListItem
+    (state) => state.inventoryCheckListItem,
   );
   const { inventoryCheckItem: inventoryCheckItemCategory } =
     inventoryCheckListItem;
@@ -48,7 +48,7 @@ const EditInventoryCheck = (props) => {
   const { users } = userList;
 
   const inventoryCheckUpdate = useSelector(
-    (state) => state.inventoryCheckUpdate
+    (state) => state.inventoryCheckUpdate,
   );
   const { success } = inventoryCheckUpdate;
   const categoryList = useSelector((state) => state.categoryList);
@@ -73,11 +73,7 @@ const EditInventoryCheck = (props) => {
     checkedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
   });
 
-  var {
-    note,
-    user,
-    checkedAt,
-  } = data;
+  var { note, user, checkedAt } = data;
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -155,7 +151,7 @@ const EditInventoryCheck = (props) => {
         ...data,
         checkItems: [...itemProducts],
         checkId,
-      })
+      }),
     );
   };
   const handleDeleteItem = (e, index) => {
@@ -179,8 +175,8 @@ const EditInventoryCheck = (props) => {
   useEffect(() => {
     if (inventoryCheckItemCategory?.length > 0) {
       const getList = inventoryCheckItemCategory?.map((item) => {
-        
-          return !checkExsistItem(item) && {
+        return (
+          !checkExsistItem(item) && {
             _id: item?._id,
             name: item?.idDrug?.name,
             product: item?.idDrug?._id,
@@ -189,21 +185,24 @@ const EditInventoryCheck = (props) => {
             expDrug: item?.expDrug,
             realQty: "",
             unequal: -item?.count,
-          };
-        
+          }
+        );
       });
-      
-      setItemProducts((prev) => [...prev, ...getList.filter((item) => item !== false)]);
+
+      setItemProducts((prev) => [
+        ...prev,
+        ...getList.filter((item) => item !== false),
+      ]);
     }
-     // eslint-disable-next-line
-  }, [inventoryCheckItemCategory,]);
+    // eslint-disable-next-line
+  }, [inventoryCheckItemCategory]);
   useEffect(() => {
     dispatch(listUser());
     dispatch(listInventoryToCheck());
     dispatch(listCategory());
-    return () =>{
+    return () => {
       dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
-    }
+    };
   }, [dispatch]);
   useEffect(() => {
     if (success) {
@@ -211,7 +210,7 @@ const EditInventoryCheck = (props) => {
       dispatch({ type: INVENTORY_CHECK_UPDATE_RESET });
       dispatch({ type: INVENTORY_CHECK_DETAILS_RESET });
       dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
-      setSelectedProduct({})
+      setSelectedProduct({});
       dispatch(singleInventoryCheck(checkId));
     }
     if (checkId !== inventoryCheckItem?._id) {
@@ -231,34 +230,40 @@ const EditInventoryCheck = (props) => {
   }, [dispatch, inventoryCheckItem, checkId, isEdited, success]);
   // start search input
   const options = [];
-  if(inventories?.length > 0){
+  if (inventories?.length > 0) {
     inventories.map((p) => {
-      options.push({ value: p?.idDrug?._id, label: p.idDrug.name, lotNumber: p.lotNumber ,dataFoo: p.idDrug.name, dataInventory: JSON.stringify(p)} )
-    })
-    
+      options.push({
+        value: p?.idDrug?._id,
+        label: p.idDrug.name,
+        lotNumber: p.lotNumber,
+        dataFoo: p.idDrug.name,
+        dataInventory: JSON.stringify(p),
+      });
+    });
   }
   const handleChangeProduct = (selectedOptions) => {
     if (!isEdited) {
       setIsEdited(true);
     }
     setFieldProduct(() => {
-      let data = selectedOptions.dataInventory ? JSON.parse(selectedOptions.dataInventory) : {};
-          return {
-            _id: data._id,
-            name: data.idDrug.name,
-            product: data.idDrug._id,
-            lotNumber: data.lotNumber,
-            count: data.count,
-            expDrug: data.expDrug,
-            realQty: "",
-            unequal: -data.count,
-          };
-      })
+      let data = selectedOptions.dataInventory
+        ? JSON.parse(selectedOptions.dataInventory)
+        : {};
+      return {
+        _id: data._id,
+        name: data.idDrug.name,
+        product: data.idDrug._id,
+        lotNumber: data.lotNumber,
+        count: data.count,
+        expDrug: data.expDrug,
+        realQty: "",
+        unequal: -data.count,
+      };
+    });
     setSelectedProduct(selectedOptions);
-    
   };
 
-  const selectedOptions = selectedProduct
+  const selectedOptions = selectedProduct;
   // end search input
   return (
     <>
@@ -378,16 +383,19 @@ const EditInventoryCheck = (props) => {
                       value={selectedOptions}
                       onChange={handleChangeProduct}
                       placeholder="Chọn thuốc cần kiểm tra"
-                      getOptionLabel={(option) => (
+                      getOptionLabel={(option) =>
                         selectedOptions && (
                           <div data-foo={option.dataFoo}>
-                            {option.label} {option.label && `- (Số lô: ${option.lotNumber})`}
+                            {option.label}{" "}
+                            {option.label && `- (Số lô: ${option.lotNumber})`}
                           </div>
                         )
-                      )}
+                      }
                       getOptionValue={(option) => option.value}
                       filterOption={(option, inputValue) =>
-                        option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                        option.data.label
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
                       }
                     />
                     {/* <select

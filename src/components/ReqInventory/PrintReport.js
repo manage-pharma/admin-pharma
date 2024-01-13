@@ -1,7 +1,7 @@
 import moment from "moment";
-const printReport = async(data) =>{
-    const reqItem = JSON.parse(JSON.stringify(data?.requestItems))
-    const contentPrint = `
+const printReport = async (data) => {
+  const reqItem = JSON.parse(JSON.stringify(data?.requestItems));
+  const contentPrint = `
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -108,14 +108,16 @@ const printReport = async(data) =>{
                             </tr>
                         </thead>
                         <tbody>
-                            ${reqItem?.map((item, index)=>`
+                            ${reqItem?.map(
+                              (item, index) => `
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>${item?.name}</td>
                                     <td>${item?.unit}</td>
                                     <td>${item?.qty}</td>
                                 </tr>
-                            `)}
+                            `,
+                            )}
                         </tbody>
                     </table>
                 </section>
@@ -131,7 +133,7 @@ const printReport = async(data) =>{
                         &nbsp;
                     </div>
                     <div style="text-align: center; width: 100%;">
-                        An Giang, ngày ${moment().format('DD')} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}
+                        An Giang, ngày ${moment().format("DD")} tháng ${moment().format("MM")} năm ${moment().format("YYYY")}
                         <div style="height: 100px; font-weight: bold; margin-top: 5px">Người lập</div>
                         <div>${data.user?.name}</div>
                     </div>
@@ -141,22 +143,21 @@ const printReport = async(data) =>{
     </body>
 </html>
 
-    `
+    `;
 
-
-    const iframe = document.createElement('iframe')
-    const div = document.createElement('div')
-    div.id = 'printIF'
-    iframe.srcdoc = contentPrint
-    iframe.name = 'printIF'
-    div.appendChild(iframe)
-    document.querySelector('body').appendChild(div)
-    setTimeout(() => {
-      window.frames['printIF'].focus()
-      window.frames['printIF'].print()
-    }, 500)
-    window.frames['printIF'].onafterprint = () =>
-      document.querySelector('#printIF').remove()
-    return true
-}
-export default printReport
+  const iframe = document.createElement("iframe");
+  const div = document.createElement("div");
+  div.id = "printIF";
+  iframe.srcdoc = contentPrint;
+  iframe.name = "printIF";
+  div.appendChild(iframe);
+  document.querySelector("body").appendChild(div);
+  setTimeout(() => {
+    window.frames["printIF"].focus();
+    window.frames["printIF"].print();
+  }, 500);
+  window.frames["printIF"].onafterprint = () =>
+    document.querySelector("#printIF").remove();
+  return true;
+};
+export default printReport;

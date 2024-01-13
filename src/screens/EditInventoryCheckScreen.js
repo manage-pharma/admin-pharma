@@ -7,16 +7,18 @@ import { PERMISSIONS } from "../util/RolesContanst";
 import { withAuthorization } from "../util/withAuthorization ";
 
 const EditInventoryCheckScreen = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   return (
     <>
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <EditInventoryCheck checkId={id}/>
+        <EditInventoryCheck checkId={id} />
       </main>
     </>
   );
 };
 
-export default withAuthorization(EditInventoryCheckScreen,[PERMISSIONS.isInventory.check_inventory_edit]);
+export default withAuthorization(EditInventoryCheckScreen, [
+  PERMISSIONS.isInventory.check_inventory_edit,
+]);

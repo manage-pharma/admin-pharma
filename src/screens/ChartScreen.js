@@ -10,7 +10,7 @@ const ChartScreen = () => {
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <DashboardChart/>
+        <DashboardChart />
       </main>
     </>
   );

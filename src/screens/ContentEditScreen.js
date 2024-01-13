@@ -11,9 +11,11 @@ const ContentEditScreen = () => {
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <EditContentMain/>
+        <EditContentMain />
       </main>
     </>
   );
 };
-export default withAuthorization(ContentEditScreen,[PERMISSIONS.isSaleAgent.access_content]);
+export default withAuthorization(ContentEditScreen, [
+  PERMISSIONS.isSaleAgent.access_content,
+]);

@@ -93,7 +93,7 @@ const printReport = async (data) => {
                   data?.checkCode
                 }</div>
                 <div style="margin-top: 5px; font-size: 12px; text-align: center;">Ngày lập: ${moment(
-                  data?.checkedAt
+                  data?.checkedAt,
                 ).format("YYYY-MM-DD")}</div>
                 <div style="margin-top: 15px;">Xuất tại kho: Kho Dược</div>
                 <div style="margin-top: 5px;">Người lập: ${
@@ -121,14 +121,14 @@ const printReport = async (data) => {
                             <td>${index + 1}</td>
                             <td>${item?.name}</td>
                             <td>${item?.lotNumber}</td>
-                            <td>${moment(
-                                item?.expDrug
-                              ).format("YYYY-MM-DD")}</td>
+                            <td>${moment(item?.expDrug).format(
+                              "YYYY-MM-DD",
+                            )}</td>
                             <td>${item?.count}</td>
                             <td>${item?.realQty}</td>
                             <td>${item?.unequal}</td>
                         </tr>
-                    `
+                    `,
                         )}
                         </tbody>
                     </table>
@@ -143,10 +143,10 @@ const printReport = async (data) => {
                     </div>
                     <div style="text-align: center; width: 100%;">
                         An Giang, ngày ${moment().format(
-                          "DD"
+                          "DD",
                         )} tháng ${moment().format("MM")} năm ${moment().format(
-    "YYYY"
-  )}
+                          "YYYY",
+                        )}
                         <div style="height: 100px; font-weight: bold; margin-top: 5px">Người lập</div>
                         <div>${data.user?.name}</div>
                     </div>

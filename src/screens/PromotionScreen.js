@@ -17,4 +17,6 @@ const PromotionScreen = () => {
   );
 };
 
-export default withAuthorization(PromotionScreen,[PERMISSIONS.isSaleAgent.access_promotion]);
+export default withAuthorization(PromotionScreen, [
+  PERMISSIONS.isSaleAgent.access_promotion,
+]);

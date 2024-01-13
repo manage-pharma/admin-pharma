@@ -1,12 +1,12 @@
 import React from "react";
 
 const TopTotal = (props) => {
-  const {orders, products} = props
+  const { orders, products } = props;
   let totalSale = 0;
-  if(orders){
-    orders.map((order)=>(
-      order.isSuccess === true ? (totalSale += order.totalPrice) : null
-    ))
+  if (orders) {
+    orders.map((order) =>
+      order.isSuccess === true ? (totalSale += order.totalPrice) : null,
+    );
   }
   return (
     <div className="row">
@@ -17,7 +17,11 @@ const TopTotal = (props) => {
               <i className="text-primary fas fa-usd-circle"></i>
             </span>
             <div className="text">
-              <h6 className="mb-1">Tổng doanh thu</h6> <span>{(totalSale.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'))+" đ"}</span>
+              <h6 className="mb-1">Tổng doanh thu</h6>{" "}
+              <span>
+                {totalSale.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,") +
+                  " đ"}
+              </span>
             </div>
           </article>
         </div>
@@ -30,7 +34,7 @@ const TopTotal = (props) => {
             </span>
             <div className="text">
               <h6 className="mb-1">Tổng đơn hàng</h6>
-              {orders ? (<span>{orders.length}</span>) : (<span>0</span>)}
+              {orders ? <span>{orders.length}</span> : <span>0</span>}
             </div>
           </article>
         </div>
@@ -43,7 +47,7 @@ const TopTotal = (props) => {
             </span>
             <div className="text">
               <h6 className="mb-1">Tổng sản phẩm</h6>
-              {products ? (<span>{products.length}</span>) : (<span>0</span>)}
+              {products ? <span>{products.length}</span> : <span>0</span>}
             </div>
           </article>
         </div>

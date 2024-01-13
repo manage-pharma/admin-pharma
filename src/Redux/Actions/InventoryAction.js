@@ -20,7 +20,8 @@ import {
 } from "./../Constants/InventoryConstants";
 import moment from "moment";
 
-export const listInventory = (keyword = "", oh = "", exp = "" ,from = " ", to = " ") =>
+export const listInventory =
+  (keyword = "", oh = "", exp = "", from = " ", to = " ") =>
   async (dispatch, getState) => {
     try {
       dispatch({ type: INVENTORY_LIST_REQUEST });
@@ -36,7 +37,7 @@ export const listInventory = (keyword = "", oh = "", exp = "" ,from = " ", to = 
 
       const { data } = await axios.get(
         `/api/inventory/?keyword=${keyword}&oh=${oh}&exp=${exp}&from=${from}&to=${to}`,
-        config
+        config,
       );
       dispatch({ type: INVENTORY_LIST_SUCCESS, payload: data });
     } catch (error) {
@@ -75,7 +76,7 @@ export const listInventoryToCheck =
 
       const { data } = await axios.get(
         `/api/inventory/check?keyword=${keyword}&from=${from}&to=${to}`,
-        config
+        config,
       );
       dispatch({ type: INVENTORY_TO_CHECK_LIST_SUCCESS, payload: data });
     } catch (error) {
@@ -114,7 +115,7 @@ export const tagInventory =
       };
       const { data } = await axios.get(
         `/api/inventory/tag/?keyword=${keyword}&from=${from}&to=${to}`,
-        config
+        config,
       );
       dispatch({ type: INVENTORY_TAG_SUCCESS, payload: data });
     } catch (error) {
@@ -135,7 +136,6 @@ export const tagInventory =
     }
   };
 
-
 //ADMIN CHART IMPORT EXPORT
 export const chartImportExport =
   (keyword = "", from = " ", to = " ", type = "") =>
@@ -152,12 +152,12 @@ export const chartImportExport =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      const fromConvert  = moment(from).format('YYYY-MM-DD')
-      const toConvert = moment(to).format('YYYY-MM-DD')
+      const fromConvert = moment(from).format("YYYY-MM-DD");
+      const toConvert = moment(to).format("YYYY-MM-DD");
 
       const { data } = await axios.get(
         `api/inventory/report/nhapxuat?keyword=${keyword}&from=${fromConvert}&to=${toConvert}&type=${type}`,
-        config
+        config,
       );
       dispatch({ type: CHART_IMPORT_EXPORT_SUCCESS, payload: data });
     } catch (error) {

@@ -31,7 +31,8 @@ const ExpandedExportComponent = (props) => {
 
   const conditionalRowStyles = [
     {
-      when: (row) => moment(row?.expDrug).diff(moment(Date.now()), "days") > 180,
+      when: (row) =>
+        moment(row?.expDrug).diff(moment(Date.now()), "days") > 180,
       style: {
         backgroundColor: "rgba(63, 195, 128, 0.9)",
         color: "white",
@@ -89,7 +90,7 @@ const ExpandedExportComponent = (props) => {
     },
     cells: {
       style: {
-        fontSize: '14px',
+        fontSize: "14px",
       },
     },
   };

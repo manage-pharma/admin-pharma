@@ -141,31 +141,37 @@ const Header = () => {
                             ))
                           )}
                         </React.Fragment>
-                      )
+                      ),
                     )}
                   </tbody>
                 </table>
               </div>
-              { dataNoti?.signature === 'OH' &&
+              {dataNoti?.signature === "OH" && (
                 <div className="d-flex justify-content-end">
-                  <button className="btn btn-primary" onClick={e=>{
-                    dispatch(SetOHNotification(dataNoti?.listItem))
-                    history.push('/req-inventory/add')
-                  }}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={(e) => {
+                      dispatch(SetOHNotification(dataNoti?.listItem));
+                      history.push("/req-inventory/add");
+                    }}
+                  >
                     Yêu cầu đặt hàng
                   </button>
                 </div>
-              }
-              { dataNoti?.signature === 'EXP' &&
+              )}
+              {dataNoti?.signature === "EXP" && (
                 <div className="d-flex justify-content-end">
-                  <button className="btn btn-danger" onClick={e=>{
-                    dispatch(SetEXPNotification(dataNoti?.listItem))
-                    history.push('/export-stock/add')
-                  }}>
+                  <button
+                    className="btn btn-danger"
+                    onClick={(e) => {
+                      dispatch(SetEXPNotification(dataNoti?.listItem));
+                      history.push("/export-stock/add");
+                    }}
+                  >
                     Huỷ thuốc
                   </button>
                 </div>
-              }
+              )}
             </>
           )}
         </Modal.Body>
@@ -283,8 +289,10 @@ const Header = () => {
         }}
       >
         <div className="mr-3">
-          <div className="icon-circle" style={{fontSize: 20}}>
-            <i className={`${item?.signature === 'EXP' ?  'fas fa-calendar-times ' : 'fas fa-exclamation-circle'} text-black`} />
+          <div className="icon-circle" style={{ fontSize: 20 }}>
+            <i
+              className={`${item?.signature === "EXP" ? "fas fa-calendar-times " : "fas fa-exclamation-circle"} text-black`}
+            />
           </div>
         </div>
         <div>

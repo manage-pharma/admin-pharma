@@ -5,8 +5,7 @@ import MainDrugStores from "./../components/DrugStores/MainDrugStores";
 import { withAuthorization } from "../util/withAuthorization ";
 import { PERMISSIONS } from "../util/RolesContanst";
 
-
-const DrugStoreScreen=({match}) => {
+const DrugStoreScreen = ({ match }) => {
   return (
     <>
       <Sidebar />

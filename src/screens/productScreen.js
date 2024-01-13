@@ -4,14 +4,13 @@ import Header from "./../components/Header";
 import MainProducts from "./../components/Products/MainProducts";
 
 const ProductScreen = ({ match }) => {
-
-  const pageNumber = match.params.pageNumber
+  const pageNumber = match.params.pageNumber;
   return (
     <>
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <MainProducts  pageNumber={pageNumber}/>
+        <MainProducts pageNumber={pageNumber} />
       </main>
     </>
   );

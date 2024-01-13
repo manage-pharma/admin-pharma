@@ -6,8 +6,6 @@ import { withAuthorization } from "../util/withAuthorization ";
 import { PERMISSIONS } from "../util/RolesContanst";
 
 const OrderScreen = () => {
-  
-  
   return (
     <>
       <Sidebar />
@@ -19,4 +17,6 @@ const OrderScreen = () => {
   );
 };
 
-export default withAuthorization(OrderScreen,[PERMISSIONS.isSaleAgent.access_orders]);
+export default withAuthorization(OrderScreen, [
+  PERMISSIONS.isSaleAgent.access_orders,
+]);
