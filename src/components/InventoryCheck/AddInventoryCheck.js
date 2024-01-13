@@ -26,7 +26,7 @@ const AddInventoryCheck = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const createInventoryCheckStatus = useSelector(
-    (state) => state.inventoryCheckCreate
+    (state) => state.inventoryCheckCreate,
   );
   const { success } = createInventoryCheckStatus;
 
@@ -34,7 +34,7 @@ const AddInventoryCheck = () => {
   const { inventories } = inventoryList;
 
   const inventoryCheckListItem = useSelector(
-    (state) => state.inventoryCheckListItem
+    (state) => state.inventoryCheckListItem,
   );
   const { inventoryCheckItem } = inventoryCheckListItem;
   const categoryList = useSelector((state) => state.categoryList);
@@ -141,7 +141,7 @@ const AddInventoryCheck = () => {
       createInventoryCheck({
         ...data,
         checkItems: [...importItems],
-      })
+      }),
     );
   };
   const handleDeleteItem = (e, index) => {
@@ -162,18 +162,23 @@ const AddInventoryCheck = () => {
   useEffect(() => {
     if (inventoryCheckItem?.length > 0) {
       const getList = inventoryCheckItem?.map((item, index) => {
-        return !checkExsistItem(item) && {
-          _id: item?._id,
-          name: item?.idDrug?.name,
-          product: item?.idDrug?._id,
-          lotNumber: item?.lotNumber,
-          count: item?.count,
-          expDrug: item?.expDrug,
-          realQty: "",
-          unequal: -item?.count,
-        };
+        return (
+          !checkExsistItem(item) && {
+            _id: item?._id,
+            name: item?.idDrug?.name,
+            product: item?.idDrug?._id,
+            lotNumber: item?.lotNumber,
+            count: item?.count,
+            expDrug: item?.expDrug,
+            realQty: "",
+            unequal: -item?.count,
+          }
+        );
       });
-      setItemProducts((prev) => [...prev, ...getList.filter((item) => item !== false)]);
+      setItemProducts((prev) => [
+        ...prev,
+        ...getList.filter((item) => item !== false),
+      ]);
     }
     // eslint-disable-next-line
   }, [inventoryCheckItem]);
@@ -197,44 +202,50 @@ const AddInventoryCheck = () => {
         realQty: 0,
         unequal: 0,
       });
-      setSelectedProduct({})
+      setSelectedProduct({});
       setItemProducts([]);
     }
-    
+
     dispatch(listInventoryToCheck());
     dispatch(listUser());
     dispatch(listCategory());
     return () => {
       dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
-    }
+    };
   }, [success, dispatch]);
   // start search input
   const options = [];
-  if(inventories?.length > 0){
+  if (inventories?.length > 0) {
     inventories.map((p) => {
-      options.push({ value: p?.idDrug?._id, label: p.idDrug.name, lotNumber: p.lotNumber ,dataFoo: p.idDrug.name, dataInventory: JSON.stringify(p)} )
-    })
-    
+      options.push({
+        value: p?.idDrug?._id,
+        label: p.idDrug.name,
+        lotNumber: p.lotNumber,
+        dataFoo: p.idDrug.name,
+        dataInventory: JSON.stringify(p),
+      });
+    });
   }
   const handleChangeProduct = (selectedOptions) => {
     setFieldProduct(() => {
-      let data = selectedOptions.dataInventory ? JSON.parse(selectedOptions.dataInventory) : {};
-          return {
-            _id: data._id,
-            name: data.idDrug.name,
-            product: data.idDrug._id,
-            lotNumber: data.lotNumber,
-            count: data.count,
-            expDrug: data.expDrug,
-            realQty: "",
-            unequal: -data.count,
-          };
-      })
+      let data = selectedOptions.dataInventory
+        ? JSON.parse(selectedOptions.dataInventory)
+        : {};
+      return {
+        _id: data._id,
+        name: data.idDrug.name,
+        product: data.idDrug._id,
+        lotNumber: data.lotNumber,
+        count: data.count,
+        expDrug: data.expDrug,
+        realQty: "",
+        unequal: -data.count,
+      };
+    });
     setSelectedProduct(selectedOptions);
-    
   };
 
-  const selectedOptions = selectedProduct
+  const selectedOptions = selectedProduct;
   // end search input
   return (
     <>
@@ -337,16 +348,19 @@ const AddInventoryCheck = () => {
                       value={selectedOptions}
                       onChange={handleChangeProduct}
                       placeholder="Chọn thuốc cần kiểm tra"
-                      getOptionLabel={(option) => (
+                      getOptionLabel={(option) =>
                         selectedOptions && (
                           <div data-foo={option.dataFoo}>
-                            {option.label} {option.label && `- (Số lô: ${option.lotNumber})`}
+                            {option.label}{" "}
+                            {option.label && `- (Số lô: ${option.lotNumber})`}
                           </div>
                         )
-                      )}
+                      }
                       getOptionValue={(option) => option.value}
                       filterOption={(option, inputValue) =>
-                        option.data.label.toLowerCase().includes(inputValue.toLowerCase())
+                        option.data.label
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
                       }
                     />
                     {/* <select

@@ -4,13 +4,12 @@ import Header from "../components/Header";
 import ExcelCSVDrugStore from "../components/DrugStores/ExcelCSVDrugStore";
 
 const ProductScreen = () => {
-
   return (
     <>
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <ExcelCSVDrugStore/>
+        <ExcelCSVDrugStore />
       </main>
     </>
   );

@@ -36,14 +36,16 @@ const ExportTable = (props) => {
         return (
           <div>
             <button
-              style={{fontSize: '18px'}}
+              style={{ fontSize: "18px" }}
               className="dropdown-item text-danger"
-              onClick={(e) => handleDeleteItem(e, index, row?.product?._id || row?.product)}
+              onClick={(e) =>
+                handleDeleteItem(e, index, row?.product?._id || row?.product)
+              }
             >
               <i className="fa fa-trash"></i>
             </button>
           </div>
-        )
+        );
       },
       sortable: true,
       reorder: true,
@@ -83,7 +85,7 @@ const ExportTable = (props) => {
     },
     cells: {
       style: {
-        fontSize: '16px',
+        fontSize: "16px",
         "&:not(:last-of-type)": {
           borderRightStyle: "solid",
           borderRightWidth: "1px",
@@ -111,7 +113,10 @@ const ExportTable = (props) => {
         expandableRows
         expandableRowExpanded={isExpanded}
         expandableRowsComponent={(data) => (
-          <ExpandedExportComponent data={data?.data?.lotField.filter((row) => row?.count > 0)} dessert={dessert} />
+          <ExpandedExportComponent
+            data={data?.data?.lotField.filter((row) => row?.count > 0)}
+            dessert={dessert}
+          />
         )}
         progressComponent={<CustomLoader />}
         highlightOnHover

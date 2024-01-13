@@ -48,7 +48,7 @@ const AddReqInventory = () => {
     unit: "",
     product: "",
     qty: 0,
-    dataTotal: 0
+    dataTotal: 0,
   });
 
   const [selectedProduct, setSelectedProduct] = useState({});
@@ -132,7 +132,7 @@ const AddReqInventory = () => {
       createReqInventory({
         ...data,
         requestItems: importItems,
-      })
+      }),
     );
   };
   const handleDeleteItem = (e, index) => {
@@ -153,12 +153,12 @@ const AddReqInventory = () => {
         product: "",
         unit: "",
         qty: 0,
-        dataTotal: 0
+        dataTotal: 0,
       });
       setItemProducts([]);
       setSelectedProduct({});
       dispatch(listReqInventory());
-      dispatch(SetOHNotification([]))
+      dispatch(SetOHNotification([]));
     }
     dispatch(listProvider());
     dispatch(listProductWithQty());
@@ -166,32 +166,32 @@ const AddReqInventory = () => {
     dispatch(listUser());
   }, [success, dispatch, OH]);
 
-  useEffect(()=>{
-    if(OH?.length && products?.length){
-      const processedItems = {}
+  useEffect(() => {
+    if (OH?.length && products?.length) {
+      const processedItems = {};
       OH?.forEach((item) => {
-        const { _id, name, unit, status } = item
+        const { _id, name, unit, status } = item;
         if (!processedItems[_id]) {
           processedItems[_id] = {
             name,
             unit,
             product: _id,
             qty: 0,
-            dataTotal: 0
-          }
+            dataTotal: 0,
+          };
         }
-        processedItems[_id].qty += Number(status)
-        processedItems[_id].dataTotal += Number(status)
-      })
+        processedItems[_id].qty += Number(status);
+        processedItems[_id].dataTotal += Number(status);
+      });
 
-      const resultArray = Object.values(processedItems)
-      const filteredResults = resultArray?.filter(result => {
-        const product = products?.find(p => p._id === result.product);
-        return product && product.total_count <= result.qty
-      })
-      setItemProducts(filteredResults)
+      const resultArray = Object.values(processedItems);
+      const filteredResults = resultArray?.filter((result) => {
+        const product = products?.find((p) => p._id === result.product);
+        return product && product.total_count <= result.qty;
+      });
+      setItemProducts(filteredResults);
     }
-  }, [OH, products])
+  }, [OH, products]);
 
   const customStyles = {
     rows: {
@@ -263,24 +263,24 @@ const AddReqInventory = () => {
       sortable: true,
       reorder: true,
       cell: (row) => (
-        <>        
-        <input
-          type="number"
-          style={{ width: "120px" }}
-          value={row?.qty}
-          onChange={(e) => {
-            importItems?.forEach((item, index) => {
-              if (item.product === row?.product) {
-                importItems?.splice(index, 1, {
-                  ...item,
-                  qty: parseInt(e.target.value),
-                });
-                setItemProducts(importItems);
-              }
-            });
-          }}
-        />
-        <div style={{marginLeft: 10}}>({row?.dataTotal})</div>
+        <>
+          <input
+            type="number"
+            style={{ width: "120px" }}
+            value={row?.qty}
+            onChange={(e) => {
+              importItems?.forEach((item, index) => {
+                if (item.product === row?.product) {
+                  importItems?.splice(index, 1, {
+                    ...item,
+                    qty: parseInt(e.target.value),
+                  });
+                  setItemProducts(importItems);
+                }
+              });
+            }}
+          />
+          <div style={{ marginLeft: 10 }}>({row?.dataTotal})</div>
         </>
       ),
       grow: 2,
@@ -315,7 +315,7 @@ const AddReqInventory = () => {
       product: row?.product,
       unit: row?.unit,
       qty: row?.qty,
-      dataTotal: row?.dataTotal
+      dataTotal: row?.dataTotal,
     });
   };
   // start search input
@@ -356,7 +356,7 @@ const AddReqInventory = () => {
           product: selectedOptions.value,
           name: selectedOptions.dataFoo,
           unit: selectedOptions.dataUnit,
-          dataTotal: selectedOptions.dataTotal
+          dataTotal: selectedOptions.dataTotal,
         };
       });
       setSelectedProduct(selectedOptions);
@@ -376,7 +376,7 @@ const AddReqInventory = () => {
               onClick={(e) => {
                 e.preventDefault();
                 history.push("/req-inventory");
-                dispatch(SetOHNotification([]))
+                dispatch(SetOHNotification([]));
               }}
             >
               <h4 className="arrow-breadcrum">

@@ -5,13 +5,13 @@ import OrderDetailMain from "../components/Orders/OrderDetailMain";
 import { useParams } from "react-router-dom";
 
 const OrderDetailScreen = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   return (
     <>
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <OrderDetailMain orderId={id}/>
+        <OrderDetailMain orderId={id} />
       </main>
     </>
   );

@@ -122,7 +122,7 @@ const EditImportStock = (props) => {
 
           toast.error(
             `Số lượng nhập đã vượt quá số lượng của lô ${lotNumberData} (${qtyLotData}) trong kho`,
-            ToastObjects
+            ToastObjects,
           );
           return;
         } else {
@@ -297,13 +297,13 @@ const EditImportStock = (props) => {
       return accumulator + CheckIsNaN(currentValue.value);
     }, 0);
     const checkNegative = inventoriesClone.some(
-      (item) => parseInt(item.value) < 0
+      (item) => parseInt(item.value) < 0,
     );
 
     if (checkNegative) {
       toast.error(
         `Sản phẩm dưới mức âm, không thể thêm tiếp tục vào danh sách`,
-        ToastObjects
+        ToastObjects,
       );
       return;
     }
@@ -314,7 +314,7 @@ const EditImportStock = (props) => {
     if (parseInt(sumUserInput) > parseInt(field.countInStock)) {
       toast.error(
         `Số lượng nhập đã vượt quá số lượng của ${field.name} (${field.countInStock}) trong kho`,
-        ToastObjects
+        ToastObjects,
       );
       return;
     }
@@ -336,7 +336,7 @@ const EditImportStock = (props) => {
           flag = true;
           toast.error(
             `Số lượng nhập đã vượt quá số lượng của ${field.name} (${field.countInStock}) trong kho`,
-            ToastObjects
+            ToastObjects,
           );
           return;
         } else {
@@ -400,16 +400,16 @@ const EditImportStock = (props) => {
       EditDataMinus(field.product, newData);
     }
     const resetQtyLost = qtyLot?.map((item) => {
-      return { ...item, value: 0 }
+      return { ...item, value: 0 };
     });
-    
+
     lotField?.forEach((lot) => {
       const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
       if (inputElement) {
-        inputElement.value = null
+        inputElement.value = null;
       }
-    })    
-    setqtyLost(resetQtyLost)
+    });
+    setqtyLost(resetQtyLost);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -418,7 +418,7 @@ const EditImportStock = (props) => {
         ...data,
         exportItems: itemProducts,
         exportId,
-      })
+      }),
     );
     setFieldProduct({
       countInStock: 0,
@@ -459,9 +459,9 @@ const EditImportStock = (props) => {
       dataCountinstock: findProduct?.total_count,
       dataFoo: findProduct?.name,
       dataLotlist: JSON.stringify(findProduct?.products),
-      label: findProduct?.name, 
-      value: findProduct?.idDrug
-    })
+      label: findProduct?.name,
+      value: findProduct?.idDrug,
+    });
     setFieldProduct(() => {
       return {
         countInStock: findProduct.total_count,
@@ -483,7 +483,7 @@ const EditImportStock = (props) => {
       toast.success(`Cập nhật thành công`, ToastObjects);
       dispatch({ type: EXPORT_STOCK_UPDATE_RESET });
       dispatch({ type: EXPORT_STOCK_DETAILS_RESET });
-      setSelectedProduct({})
+      setSelectedProduct({});
       dispatch(singleExportStock(exportId));
     }
     if (exportId !== exportStockItem?._id) {
@@ -501,19 +501,23 @@ const EditImportStock = (props) => {
       });
       if (itemProducts.length === 0 && !isEdited) {
         setItemProducts(
-          JSON.parse(JSON.stringify(exportStockItem?.exportItems))
+          JSON.parse(JSON.stringify(exportStockItem?.exportItems)),
         );
       }
     } // eslint-disable-next-line
   }, [dispatch, exportStockItem, exportId, isEdited, success]);
   // start search input
   const options = [];
-  if(inventoriesClone?.length > 0){
+  if (inventoriesClone?.length > 0) {
     inventoriesClone.map((p) => {
-      options.push({ value: p?.idDrug, label: p.name, dataFoo: p.name, dataCountinstock: p.total_count,
-        dataLotlist: JSON.stringify(p.products)} )
-    })
-    
+      options.push({
+        value: p?.idDrug,
+        label: p.name,
+        dataFoo: p.name,
+        dataCountinstock: p.total_count,
+        dataLotlist: JSON.stringify(p.products),
+      });
+    });
   }
   const handleChangeProduct = (selectedOptions) => {
     let idProduct = selectedOptions?.value;
@@ -521,16 +525,17 @@ const EditImportStock = (props) => {
       setIsEdited(true);
     }
     refreshField();
-    
-    
-    const tempLot = selectedOptions.dataLotlist ? [...JSON.parse(selectedOptions.dataLotlist)] : [];
+
+    const tempLot = selectedOptions.dataLotlist
+      ? [...JSON.parse(selectedOptions.dataLotlist)]
+      : [];
     const updateQtyLot = [];
     const { index, product } = checkExistProduct(idProduct, itemProducts);
     tempLot.forEach((lot, index) => {
-    updateQtyLot[index] = {
-      name: lot.lotNumber,
-      value: 0,
-      expDrug: lot.expDrug,
+      updateQtyLot[index] = {
+        name: lot.lotNumber,
+        value: 0,
+        expDrug: lot.expDrug,
       };
     });
     setqtyLost(updateQtyLot);
@@ -575,7 +580,7 @@ const EditImportStock = (props) => {
     setSelectedProduct(selectedOptions);
   };
 
-  const selectedOptions = selectedProduct
+  const selectedOptions = selectedProduct;
   // end search input
   return (
     <>
@@ -685,25 +690,27 @@ const EditImportStock = (props) => {
               <div className="card-body">
                 <div className="mb-4 form-divided-2">
                   <div>
-                  <label htmlFor="product_category" className="form-label">
-                    Sản phẩm
-                  </label>
-                  <Select 
-                    isSearchable
-                    isClearable
-                    options={options}
-                    value={selectedOptions}
-                    onChange={handleChangeProduct}
-                    placeholder="Chọn thuốc cần xuất"
-                    getOptionLabel={(option) => (
-                      <div data-foo={option.dataFoo}>{option.label}</div>
-                    )}
-                    getOptionValue={(option) => option.value}
-                    filterOption={(option, inputValue) =>
-                      option.data.label.toLowerCase().includes(inputValue.toLowerCase())
-                    }
-                  />
-                  {/* <select
+                    <label htmlFor="product_category" className="form-label">
+                      Sản phẩm
+                    </label>
+                    <Select
+                      isSearchable
+                      isClearable
+                      options={options}
+                      value={selectedOptions}
+                      onChange={handleChangeProduct}
+                      placeholder="Chọn thuốc cần xuất"
+                      getOptionLabel={(option) => (
+                        <div data-foo={option.dataFoo}>{option.label}</div>
+                      )}
+                      getOptionValue={(option) => option.value}
+                      filterOption={(option, inputValue) =>
+                        option.data.label
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
+                      }
+                    />
+                    {/* <select
                     id="select-product"
                     value={product}
                     name="product"
@@ -725,9 +732,7 @@ const EditImportStock = (props) => {
                   </select> */}
                   </div>
                   <div className="form-check form-switch">
-                    <label className="form-label d-flex">
-                     Xuất huỷ
-                    </label>
+                    <label className="form-label d-flex">Xuất huỷ</label>
                     <input
                       style={{
                         transform: "scale(1.5)",
@@ -740,65 +745,74 @@ const EditImportStock = (props) => {
                       checked={isExportCanceled}
                       name="isExportCanceled"
                       onChange={() => {
-                        console.log(itemProducts)
+                        console.log(itemProducts);
                         const hasExpiredLot = itemProducts?.some((item) => {
                           return (
                             item?.lotField &&
                             item?.lotField?.length > 0 &&
                             item?.lotField?.some((lotItem) => {
-                              return lotItem?.count > 0 && Math.round((moment(lotItem?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1
+                              return (
+                                lotItem?.count > 0 &&
+                                Math.round(
+                                  (moment(lotItem?.expDrug) -
+                                    moment(Date.now())) /
+                                    (24 * 60 * 60 * 1000),
+                                ) < 1
+                              );
                             })
                           );
                         });
 
-                        if(!hasExpiredLot){
+                        if (!hasExpiredLot) {
                           setData((prev) => {
-                            if(!data?.isExportCanceled){
+                            if (!data?.isExportCanceled) {
                               toast.warning(
                                 `Các lô thuốc sẽ được đưa vào kho huỷ, hãy chọn các thuốc hết hạn`,
-                                ToastObjects
+                                ToastObjects,
                               );
                             }
                             return {
                               ...prev,
                               isExportCanceled: !isExportCanceled,
                             };
-                          })
-                          const resetQtyLost = qtyLot?.map((item) => {
-                            return { ...item, value: 0 }
                           });
-                          
+                          const resetQtyLost = qtyLot?.map((item) => {
+                            return { ...item, value: 0 };
+                          });
+
                           lotField?.forEach((lot) => {
-                            const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
+                            const inputElement = document.querySelector(
+                              `[name="${lot.lotNumber}"]`,
+                            );
                             if (inputElement) {
-                              inputElement.value = null
+                              inputElement.value = null;
                             }
-                          })    
-                          setqtyLost(resetQtyLost)
-                        }
-                        else{
-                          if(data?.isExportCanceled){
+                          });
+                          setqtyLost(resetQtyLost);
+                        } else {
+                          if (data?.isExportCanceled) {
                             toast.error(
                               `Vui lòng bỏ các thuốc hết hạn để tắt chế dộ xuất huỷ`,
-                              ToastObjects
-                            )
+                              ToastObjects,
+                            );
                             const resetQtyLost = qtyLot?.map((item) => {
-                              return { ...item, value: 0 }
+                              return { ...item, value: 0 };
                             });
-                            
+
                             lotField?.forEach((lot) => {
-                              const inputElement = document.querySelector(`[name="${lot.lotNumber}"]`);
+                              const inputElement = document.querySelector(
+                                `[name="${lot.lotNumber}"]`,
+                              );
                               if (inputElement) {
-                                inputElement.value = null
+                                inputElement.value = null;
                               }
-                            })    
-                            setqtyLost(resetQtyLost)
+                            });
+                            setqtyLost(resetQtyLost);
                           }
                         }
-                      }
-                      }
+                      }}
                     />
-                 </div>
+                  </div>
                 </div>
                 <div className="mb-4">
                   {lotField?.length > 0 && (
@@ -814,7 +828,17 @@ const EditImportStock = (props) => {
                         className="mb-4 form-divided-2"
                       >
                         <label>
-                          <div className={Math.round((moment(lot?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1 || lot.count <= 0 ? 'text-danger' : 'text-success'} style={{fontWeight:'500'}}>
+                          <div
+                            className={
+                              Math.round(
+                                (moment(lot?.expDrug) - moment(Date.now())) /
+                                  (24 * 60 * 60 * 1000),
+                              ) < 1 || lot.count <= 0
+                                ? "text-danger"
+                                : "text-success"
+                            }
+                            style={{ fontWeight: "500" }}
+                          >
                             Số lô: {lot.lotNumber} (tồn: {lot.count}) (HSD:{" "}
                             {moment(lot.expDrug).format("DD-MM-YYYY")})
                           </div>
@@ -827,7 +851,16 @@ const EditImportStock = (props) => {
                           data-id={lot._id}
                           data-expdrug={lot.expDrug}
                           className="form-control"
-                          disabled={!data?.isExportCanceled && Math.round((moment(lot?.expDrug) - moment(Date.now())) / (24 * 60 * 60 * 1000)) < 1 || lot.count <= 0 ? true : false}
+                          disabled={
+                            (!data?.isExportCanceled &&
+                              Math.round(
+                                (moment(lot?.expDrug) - moment(Date.now())) /
+                                  (24 * 60 * 60 * 1000),
+                              ) < 1) ||
+                            lot.count <= 0
+                              ? true
+                              : false
+                          }
                           onChange={(e) =>
                             handleChangeQuantity(e, index, lot.expDrug)
                           }

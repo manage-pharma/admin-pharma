@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from "styled-components";
 const rotate360 = keyframes`
 from {
   transform: rotate(0deg);
@@ -24,9 +24,9 @@ const Spinner = styled.div`
   border-radius: 50%;
 `;
 const CustomLoader = () => (
-    <div style={{ padding: '24px' }}>
-        <Spinner />
-        <div>Loading...</div>
-    </div>
+  <div style={{ padding: "24px" }}>
+    <Spinner />
+    <div>Loading...</div>
+  </div>
 );
-export default CustomLoader
+export default CustomLoader;

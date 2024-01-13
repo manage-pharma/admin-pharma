@@ -5,8 +5,7 @@ import MainReview from "../components/Reviews/MainReview";
 import { withAuthorization } from "../util/withAuthorization ";
 import { PERMISSIONS } from "../util/RolesContanst";
 
-
-const DrugStoreScreen=({match}) => {
+const DrugStoreScreen = ({ match }) => {
   return (
     <>
       <Sidebar />
@@ -18,5 +17,6 @@ const DrugStoreScreen=({match}) => {
   );
 };
 
-export default withAuthorization(DrugStoreScreen,[PERMISSIONS.isSaleAgent.access_comment]);
-
+export default withAuthorization(DrugStoreScreen, [
+  PERMISSIONS.isSaleAgent.access_comment,
+]);

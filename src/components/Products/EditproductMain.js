@@ -8,8 +8,8 @@ import Message from "../LoadingError/Error";
 import Loading from "../LoadingError/Loading";
 import renderToast from "../../util/Toast";
 import formatCurrency from "./../../util/formatCurrency";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 //! Modal
 import MyVerticallyCenteredModalUnit from "./Modal/ModalUnit";
@@ -161,12 +161,12 @@ const EditProductMain = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(itemProducts.length < 1){
+    if (itemProducts.length < 1) {
       toast.error("Chưa chọn hoạt chất", ToastObjects);
       return;
     }
-    if (images.length === 0){
-      return toast.error("Chưa chọn file.",ToastObjects)
+    if (images.length === 0) {
+      return toast.error("Chưa chọn file.", ToastObjects);
     }
     if (product?.image.length < 1 && images.length < 1) {
       toast.error("Hình ảnh không được bỏ trống", ToastObjects);
@@ -181,7 +181,7 @@ const EditProductMain = (props) => {
         formData.append("image", image);
         const { data: dataUp } = await axios.post(
           `/api/products/single`,
-          formData
+          formData,
         );
         imgOldURL.push(`${backendUrlFile.image}/${dataUp.filename}`);
       }
@@ -300,20 +300,20 @@ const EditProductMain = (props) => {
 
     files.forEach((file) => {
       if (file.size > 1024 * 1024)
-        return toast.error("File có kích thước quá 1MB.",ToastObjects)
+        return toast.error("File có kích thước quá 1MB.", ToastObjects);
 
-      if (file.type !== 'image/jpeg' && file.type !== 'image/png')
-        return toast.error("File không đúng định dạng.",ToastObjects)
-      else{
+      if (file.type !== "image/jpeg" && file.type !== "image/png")
+        return toast.error("File không đúng định dạng.", ToastObjects);
+      else {
         num += 1;
         if (num <= 5) newImages.push(file);
-        else  toast.error("Chỉ chọn tối đa 5 ảnh.",ToastObjects)
+        else toast.error("Chỉ chọn tối đa 5 ảnh.", ToastObjects);
         return newImages;
       }
     });
-    if(images.length+newImages.length<=5)
+    if (images.length + newImages.length <= 5)
       setImages([...images, ...newImages]);
-    else  toast.error("Chỉ chọn tối đa 5 ảnh.",ToastObjects)
+    else toast.error("Chỉ chọn tối đa 5 ảnh.", ToastObjects);
   };
   const deleteImage = (index) => {
     const newArr = [...images];
@@ -488,7 +488,11 @@ const EditProductMain = (props) => {
                     errorAPICreate ||
                     errorAPIDelete ? (
                     <Message>
-                      {error || errorUpdate|| errorUnit || errorUnitCreate || errorUnitDelete}
+                      {error ||
+                        errorUpdate ||
+                        errorUnit ||
+                        errorUnitCreate ||
+                        errorUnitDelete}
                     </Message>
                   ) : (
                     ""
@@ -925,34 +929,41 @@ const EditProductMain = (props) => {
                       }}
                     />*/}
                     <CKEditor
-                      editor={ ClassicEditor }
+                      editor={ClassicEditor}
                       data={data.description}
-                      onReady={ editor => {
+                      onReady={(editor) => {
                         editor.editing.view.change((writer) => {
-                          writer.setStyle('height', '350px', editor.editing.view.document.getRoot());
+                          writer.setStyle(
+                            "height",
+                            "350px",
+                            editor.editing.view.document.getRoot(),
+                          );
                         });
-                      } }
-                      onChange={ ( event, editor ) => {
+                      }}
+                      onChange={(event, editor) => {
                         const demo = editor.getData();
                         setData({ ...data, description: demo });
-                      } }
+                      }}
                     />
-
                   </div>
                   <div className="mt-2">
                     <label className="form-label">Lời chỉ dẫn</label>
                     <CKEditor
-                      editor={ ClassicEditor }
+                      editor={ClassicEditor}
                       data={data.instruction}
-                      onReady={ editor => {
+                      onReady={(editor) => {
                         editor.editing.view.change((writer) => {
-                          writer.setStyle('height', '350px', editor.editing.view.document.getRoot());
+                          writer.setStyle(
+                            "height",
+                            "350px",
+                            editor.editing.view.document.getRoot(),
+                          );
                         });
-                      } }
-                      onChange={ ( event, editor ) => {
+                      }}
+                      onChange={(event, editor) => {
                         const demo = editor.getData();
                         setData({ ...data, instruction: demo });
-                      } }
+                      }}
                     />
                   </div>
                 </div>

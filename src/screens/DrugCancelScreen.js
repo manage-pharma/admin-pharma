@@ -5,8 +5,7 @@ import MainDrugCancel from "../components/DrugCancel/MainDrugCancel";
 import { withAuthorization } from "../util/withAuthorization ";
 import { PERMISSIONS } from "../util/RolesContanst";
 
-
-const DrugCancelScreen=({match}) => {
+const DrugCancelScreen = ({ match }) => {
   return (
     <>
       <Sidebar />

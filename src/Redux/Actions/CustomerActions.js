@@ -20,17 +20,14 @@ import {
   CUSTOMER_UPDATE_SUCCESS,
   CUSTOMER_UPDATE_RESET,
   CUSTOMER_SINGLE_RESET,
-
   CUSTOMER_CHANGE_FAIL,
   CUSTOMER_CHANGE_REQUEST,
   CUSTOMER_CHANGE_RESET,
   CUSTOMER_CHANGE_SUCCESS,
-
   CUSTOMER_UPDATE_PROFILE_FAIL,
   CUSTOMER_UPDATE_PROFILE_REQUEST,
   CUSTOMER_UPDATE_PROFILE_RESET,
   CUSTOMER_UPDATE_PROFILE_SUCCESS,
-
   CUSTOMER_DELETE_FAIL,
   CUSTOMER_DELETE_REQUEST,
   CUSTOMER_DELETE_RESET,
@@ -59,7 +56,7 @@ export const login = (email, password) => async (dispatch) => {
     const { data } = await axios.post(
       `/api/customers/login`,
       { email, password },
-      config
+      config,
     );
     dispatch({ type: CUSTOMER_LOGIN_SUCCESS, payload: data });
     // if (!data.isAdmin === true) {
@@ -91,43 +88,51 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // ADMIN CREATE
-export const createCustomer = ({ name, email, role, phone, password }) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CUSTOMER_CREATE_REQUEST });
-    // userInfo -> userLogin -> getState(){globalState}
-    const {
-      userLogin: { userInfo },
-    } = getState();
+export const createCustomer =
+  ({ name, email, role, phone, password }) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: CUSTOMER_CREATE_REQUEST });
+      // userInfo -> userLogin -> getState(){globalState}
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(`/api/customers/add`,
-      {
-        name, email, role, phone, password
+      const { data } = await axios.post(
+        `/api/customers/add`,
+        {
+          name,
+          email,
+          role,
+          phone,
+          password,
+        },
+        config,
+      );
+      dispatch({ type: CUSTOMER_CREATE_SUCCESS, payload: data });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
       }
-      , config);
-    dispatch({ type: CUSTOMER_CREATE_SUCCESS, payload: data });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === "Not authorized, token failed") {
-      dispatch(logout());
+      dispatch({
+        type: CUSTOMER_CREATE_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: CUSTOMER_CREATE_RESET });
+      }, 3000);
     }
-    dispatch({
-      type: CUSTOMER_CREATE_FAIL,
-      payload: message,
-    });
-    setTimeout(() => {
-      dispatch({ type: CUSTOMER_CREATE_RESET });
-    }, 3000);
-  }
-};
+  };
 
 // ADMIN LOGOUT
 export const logout = () => (dispatch) => {
@@ -138,78 +143,91 @@ export const logout = () => (dispatch) => {
 };
 
 // ADMIN ALL CUSTOMER
-export const listCustomer = (keyword = "", pageNumber = " ") => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CUSTOMER_LIST_REQUEST });
-    // userInfo -> userLogin -> getState(){globalState}
-    const {
-      userLogin: { userInfo },
-    } = getState();
+export const listCustomer =
+  (keyword = "", pageNumber = " ") =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: CUSTOMER_LIST_REQUEST });
+      // userInfo -> userLogin -> getState(){globalState}
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.get(`/api/customers/?keyword=${keyword}&pageNumber=${pageNumber}`, config);
+      const { data } = await axios.get(
+        `/api/customers/?keyword=${keyword}&pageNumber=${pageNumber}`,
+        config,
+      );
 
-    dispatch({ type: CUSTOMER_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === "Not authorized, token failed") {
-      dispatch(logout());
+      dispatch({ type: CUSTOMER_LIST_SUCCESS, payload: data });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: CUSTOMER_LIST_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: CUSTOMER_LIST_RESET });
+      }, 3000);
     }
-    dispatch({
-      type: CUSTOMER_LIST_FAIL,
-      payload: message,
-    });
-    setTimeout(() => {
-      dispatch({ type: CUSTOMER_LIST_RESET });
-    }, 3000);
-  }
-};
-
-
+  };
 
 //ADMIN UPDATE PROVIDER
-export const updateCustomer = ({name, email, role, phone, password ,customerID}) => async(dispatch, getState)=>{
-  try {
-    dispatch({type: CUSTOMER_UPDATE_REQUEST});
-    const {
-      userLogin: { userInfo },
-    } = getState();
+export const updateCustomer =
+  ({ name, email, role, phone, password, customerID }) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({ type: CUSTOMER_UPDATE_REQUEST });
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-    const { data } = await axios.put(`/api/customers/${customerID}`, {
-      name, email, role, phone, password
-    }, config)
-    dispatch({type: CUSTOMER_UPDATE_SUCCESS, payload: data});
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === "Not authorized, token failed") {
-      dispatch(logout());
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.put(
+        `/api/customers/${customerID}`,
+        {
+          name,
+          email,
+          role,
+          phone,
+          password,
+        },
+        config,
+      );
+      dispatch({ type: CUSTOMER_UPDATE_SUCCESS, payload: data });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: CUSTOMER_UPDATE_FAIL,
+        payload: message,
+      });
+      setTimeout(() => {
+        dispatch({ type: CUSTOMER_UPDATE_RESET });
+      }, 3000);
     }
-    dispatch({
-      type: CUSTOMER_UPDATE_FAIL,
-      payload: message,
-    });
-    setTimeout(() => {
-      dispatch({ type: CUSTOMER_UPDATE_RESET });
-    }, 3000);
-  }
-}
+  };
 
 //ADMIN CUSTOMER SINGLE
 export const singleCustomer = (id) => async (dispatch, getState) => {
@@ -245,53 +263,64 @@ export const singleCustomer = (id) => async (dispatch, getState) => {
   }
 };
 
-    // CHANGE PROFILE
-    export const changeProfile = ({emailModal, passModal}) => async (dispatch) => {
-      try {
-        dispatch({ type: CUSTOMER_CHANGE_REQUEST });
-    
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-        const formatForm = {
-          "email": emailModal,
-          "password": passModal
-        }
-        const { data } = await axios.post(`/api/customers/changeprofile`, formatForm, config);
-        dispatch({ type: CUSTOMER_CHANGE_SUCCESS, payload: data });
-      } catch (error) {
-        dispatch({
-          type: CUSTOMER_CHANGE_FAIL,
-          payload:
-            error.response && error.response.data.message
-              ? error.response.data.message
-              : error.message,
-        });
-      }
-    };
-  
-  // UPDATE PROFILE
-  export const updateCustomerProfile = (customer,customerId) => async (dispatch, getState) => {
+// CHANGE PROFILE
+export const changeProfile =
+  ({ emailModal, passModal }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: CUSTOMER_CHANGE_REQUEST });
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const formatForm = {
+        email: emailModal,
+        password: passModal,
+      };
+      const { data } = await axios.post(
+        `/api/customers/changeprofile`,
+        formatForm,
+        config,
+      );
+      dispatch({ type: CUSTOMER_CHANGE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: CUSTOMER_CHANGE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+// UPDATE PROFILE
+export const updateCustomerProfile =
+  (customer, customerId) => async (dispatch, getState) => {
     try {
       dispatch({ type: CUSTOMER_UPDATE_PROFILE_REQUEST });
-  
+
       const {
         userLogin: { userInfo },
       } = getState();
-  
+
       const config = {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-  
-      const { data } = await axios.put(`/api/customers/${customerId}/profile`, customer, config);
+
+      const { data } = await axios.put(
+        `/api/customers/${customerId}/profile`,
+        customer,
+        config,
+      );
       dispatch({ type: CUSTOMER_UPDATE_PROFILE_SUCCESS, payload: data });
       dispatch({ type: CUSTOMER_LOGIN_SUCCESS, payload: data });
-  
+
       //localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       const message =
@@ -308,7 +337,7 @@ export const singleCustomer = (id) => async (dispatch, getState) => {
     }
   };
 
-  //ADMIN USER DELETE
+//ADMIN USER DELETE
 export const deleteCustomer = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: CUSTOMER_DELETE_REQUEST });
@@ -337,7 +366,7 @@ export const deleteCustomer = (id) => async (dispatch, getState) => {
       payload: message,
     });
     setTimeout(() => {
-      dispatch({ type: CUSTOMER_DELETE_RESET});
+      dispatch({ type: CUSTOMER_DELETE_RESET });
     }, 3000);
   }
 };

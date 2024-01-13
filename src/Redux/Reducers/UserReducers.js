@@ -1,4 +1,4 @@
-import { 
+import {
   USER_SINGLE_SUCCESS,
   USER_UPDATE_RESET,
   USER_UPDATE_SUCCESS,
@@ -57,64 +57,64 @@ export const userListReducer = (state = { users: [] }, action) => {
   }
 };
 //CREATE
-export const userCreateReducer = (state= {}, action) =>{
+export const userCreateReducer = (state = {}, action) => {
   switch (action.type) {
-      case USER_CREATE_REQUEST:
-          return {loading: true};
-      case USER_CREATE_SUCCESS:
-          return {loading: false, success: true, user: action.payload}
-      case USER_CREATE_FAIL:
-          return {loading: false, error: action.payload}
-      case USER_CREATE_RESET:
-          return {};  
-      default:
-          return state;
+    case USER_CREATE_REQUEST:
+      return { loading: true };
+    case USER_CREATE_SUCCESS:
+      return { loading: false, success: true, user: action.payload };
+    case USER_CREATE_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_CREATE_RESET:
+      return {};
+    default:
+      return state;
   }
 };
 //UPDATE
-export const userUpdateReducer = (state = {user:{}}, action) =>{
+export const userUpdateReducer = (state = { user: {} }, action) => {
   switch (action.type) {
-      case USER_UPDATE_REQUEST:
-          return {loading: true};
-      case USER_UPDATE_SUCCESS:
-          return {loading: false, success: true, user: action.payload}
-      case USER_UPDATE_FAIL:
-          return {loading: false, error: action.payload};
-      case USER_UPDATE_RESET:
-          return {USER: {}}
-      default:
-          return state
+    case USER_UPDATE_REQUEST:
+      return { loading: true };
+    case USER_UPDATE_SUCCESS:
+      return { loading: false, success: true, user: action.payload };
+    case USER_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_UPDATE_RESET:
+      return { USER: {} };
+    default:
+      return state;
   }
-}
+};
 
 // SINGLE USER
-export const userSingleReducer = (state = {user:{}}, action) => {
-switch (action.type) {
-  case USER_SINGLE_REQUEST:
-    return {...state, loading: true };
-  case USER_SINGLE_SUCCESS:
-    return { loading: false, success: true, user: action.payload };
-  case USER_SINGLE_FAIL:
-    return { loading: false, error: action.payload };
-  case USER_SINGLE_RESET:
-    return {user:{}};
-  default:
-    return state;
-}
+export const userSingleReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case USER_SINGLE_REQUEST:
+      return { ...state, loading: true };
+    case USER_SINGLE_SUCCESS:
+      return { loading: false, success: true, user: action.payload };
+    case USER_SINGLE_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_SINGLE_RESET:
+      return { user: {} };
+    default:
+      return state;
+  }
 };
 
 // DELETE USER
-export const userDeleteReducer = (state = {user:{}}, action) => {
+export const userDeleteReducer = (state = { user: {} }, action) => {
   switch (action.type) {
     case USER_DELETE_REQUEST:
-      return {...state, loading: true };
+      return { ...state, loading: true };
     case USER_DELETE_SUCCESS:
       return { loading: false, success: true, user: action.payload };
     case USER_DELETE_FAIL:
       return { loading: false, error: action.payload };
     case USER_DELETE_RESET:
-      return {user:{}};
+      return { user: {} };
     default:
       return state;
   }
-  };
+};

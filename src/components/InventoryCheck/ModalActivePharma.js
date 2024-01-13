@@ -11,18 +11,18 @@ const MyVerticallyCenteredModalListCategory = (props) => {
 
   const [itemName, setItemName] = useState("");
   const handleSubmit = (e) => {
-    e.preventDefault();  
-    dispatch(listItemInventoryCheck(itemName))
+    e.preventDefault();
+    dispatch(listItemInventoryCheck(itemName));
     setItemName("");
-    setModalShowActivePharma(false)
+    setModalShowActivePharma(false);
   };
   const handleChange = (e) => {
     e.preventDefault();
     setItemName(e.target.value);
   };
-  const onHide= () => {
-    setModalShowActivePharma(false)
-  }
+  const onHide = () => {
+    setModalShowActivePharma(false);
+  };
   return (
     <Modal
       {...props}

@@ -59,31 +59,20 @@ const EditContentMain = () => {
   });
 
   const contentUpdate = useSelector((state) => state.contentSingle);
-  const {  contentUp } = contentUpdate;
+  const { contentUp } = contentUpdate;
   const contentUpdated = useSelector((state) => state.contentUpdate);
   const { success } = contentUpdated;
   const pageCreated = useSelector((state) => state.pageCreate);
-  const {
-    success: successPageCreate,
-  } = pageCreated;
+  const { success: successPageCreate } = pageCreated;
 
   const pageDeleted = useSelector((state) => state.pageDelete);
-  const {
- 
-    success: successPageDelete,
-  } = pageDeleted;
+  const { success: successPageDelete } = pageDeleted;
 
   const contactCreated = useSelector((state) => state.contactCreate);
-  const {
-   
-    success: successContactCreate,
-  } = contactCreated;
+  const { success: successContactCreate } = contactCreated;
 
   const contactDeleted = useSelector((state) => state.contactDelete);
-  const {
-  
-    success: successContactDelete,
-  } = contactDeleted;
+  const { success: successContactDelete } = contactDeleted;
 
   //! Handler
   const handleChange = (e) => {
@@ -205,11 +194,12 @@ const EditContentMain = () => {
         formData.append("image", image.image);
         let { data: dataUpdate } = await axios.post(
           `/api/products/single`,
-          formData
+          formData,
         );
         imgOldURL.push({
           link: image.link,
-          image: process.env.REACT_APP_BE_URL+"/upload/" + dataUpdate.filename,
+          image:
+            process.env.REACT_APP_BE_URL + "/upload/" + dataUpdate.filename,
         });
       }
       bannerNew = imgOldURL;
@@ -221,10 +211,10 @@ const EditContentMain = () => {
       formData.append("image", imageLogo);
       let { data: dataUpdate } = await axios.post(
         `/api/products/single`,
-        formData
+        formData,
       );
       const imglogoUrl = dataUpdate.filename;
-      logoNew =process.env.REACT_APP_BE_URL+"/upload/"+ imglogoUrl;
+      logoNew = process.env.REACT_APP_BE_URL + "/upload/" + imglogoUrl;
     }
 
     //upload qrCode
@@ -233,24 +223,24 @@ const EditContentMain = () => {
       formData.append("image", imageQR);
       var { data: dataUpdate } = await axios.post(
         `/api/products/single`,
-        formData
+        formData,
       );
       const imgqrCodeUrl = dataUpdate.filename;
-      qrNew = process.env.REACT_APP_BE_URL+"/upload/"+imgqrCodeUrl;
+      qrNew = process.env.REACT_APP_BE_URL + "/upload/" + imgqrCodeUrl;
     }
 
     const dataPost = {
       ...data,
       banners: [...bannerNew],
-      logo: logoNew!=""?logoNew:data.logo,
-      qrCode: qrNew!=""?qrNew:data.qrCode,
+      logo: logoNew != "" ? logoNew : data.logo,
+      qrCode: qrNew != "" ? qrNew : data.qrCode,
       links: [...itemPage],
       contacts: [...itemContact],
     };
     dispatch(
       updateContent({
         ...dataPost,
-      })
+      }),
     );
   };
 
@@ -282,11 +272,10 @@ const EditContentMain = () => {
     successPageDelete,
     successContactCreate,
     successContactDelete,
-    success
+    success,
   ]);
 
   useEffect(() => {
-   
     if (!contentUp?._id) {
       dispatch(singleContent());
     } else if (contentUp?._id) {
@@ -309,10 +298,7 @@ const EditContentMain = () => {
     // eslint-disable-next-line
   }, [dispatch, contentUp?._id]);
 
-  
-
-  const {  phone, companyName, companyAddress, fbUrl, zaloUrl } =
-    data;
+  const { phone, companyName, companyAddress, fbUrl, zaloUrl } = data;
 
   const handleUploadInputLogo = (e) => {
     const file = [...e.target.files];
@@ -517,7 +503,7 @@ const EditContentMain = () => {
                                 <tr key={index}>
                                   <td>
                                     <img
-                                    alt="banner"
+                                      alt="banner"
                                       src={
                                         item?.image?.name
                                           ? URL.createObjectURL(item.image)

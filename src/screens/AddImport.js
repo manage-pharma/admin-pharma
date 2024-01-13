@@ -1,7 +1,7 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import AddImportStock from './../components/ImportStock/AddImportStock';
+import AddImportStock from "./../components/ImportStock/AddImportStock";
 
 const AddImport = () => {
   return (

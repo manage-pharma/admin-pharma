@@ -33,6 +33,7 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
+    "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -62,6 +63,7 @@
     "css-loader": "^6.7.3",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-webpack-plugin": "^5.5.0",
+    "prettier": "^3.2.1",
     "sass": "^1.60.0",
     "sass-loader": "^13.2.1",
     "style-loader": "^3.3.2",

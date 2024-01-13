@@ -17,7 +17,6 @@ import {
   INVENTORY_CHECK_STATUS_SUCCESS,
   INVENTORY_CHECK_STATUS_RESET,
   INVENTORY_CHECK_STATUS_FAIL,
-
   INVENTORY_CHECK_LIST_ITEM_REQUEST,
   INVENTORY_CHECK_LIST_ITEM_SUCCESS,
   INVENTORY_CHECK_LIST_ITEM_FAIL,
@@ -31,7 +30,7 @@ import {
 // IMPORT_STOCK LIST
 export const inventoryCheckListReducer = (
   state = { inventoryCheck: [] },
-  action
+  action,
 ) => {
   switch (action.type) {
     case INVENTORY_CHECK_LIST_REQUEST:
@@ -64,7 +63,7 @@ export const inventoryCheckDetailReducer = (state = {}, action) => {
     case INVENTORY_CHECK_DETAILS_FAIL:
       return { loading: false, error: action.payload };
     case INVENTORY_CHECK_DETAILS_RESET:
-        return {};
+      return {};
     default:
       return state;
   }
@@ -132,7 +131,7 @@ export const inventoryCheckUpdateReducer = (state = {}, action) => {
 // GET LIST ITEMPRODUCT IN INVENTORY BY CATEGORY
 export const inventoryCheckListItemReducer = (
   state = { inventoryCheckItem: [] },
-  action
+  action,
 ) => {
   switch (action.type) {
     case INVENTORY_CHECK_LIST_ITEM_REQUEST:
@@ -147,7 +146,7 @@ export const inventoryCheckListItemReducer = (
     case INVENTORY_CHECK_LIST_ITEM_FAIL:
       return { loading: false, error: action.payload };
     case INVENTORY_CHECK_LIST_ITEM_RESET:
-      return {}
+      return {};
     default:
       return state;
   }
@@ -155,7 +154,7 @@ export const inventoryCheckListItemReducer = (
 // cancel
 export const inventoryCheckCancelReducer = (
   state = { inventoryCheckCancel: {} },
-  action
+  action,
 ) => {
   switch (action.type) {
     case INVENTORY_CHECK_CANCEL_REQUEST:
@@ -169,7 +168,7 @@ export const inventoryCheckCancelReducer = (
     case INVENTORY_CHECK_CANCEL_FAIL:
       return { loading: false, error: action.payload };
     case INVENTORY_CHECK_CANCEL_RESET:
-      return {}
+      return {};
     default:
       return state;
   }

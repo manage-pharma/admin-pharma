@@ -2,10 +2,10 @@ import React from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import DetailCategories from "../components/Categories/CategoriesDetail";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 const CategoriesDetail = () => {
-  const {id} = useParams()
+  const { id } = useParams();
   return (
     <>
       <Sidebar />

@@ -34,7 +34,7 @@ export const listNotification = (limit) => async (dispatch, getState) => {
     const checkLimit = limit ? "all" : "limit";
     const { data } = await axios.get(
       `/api/notification/?limit=${checkLimit}`,
-      config
+      config,
     );
     dispatch({ type: NOTIFICATION_LIST_SUCCESS, payload: data });
   } catch (error) {
@@ -134,4 +134,3 @@ export const SetEXPNotification = (value) => ({
   type: NOTIFICATION_SET_EXP,
   payload: value,
 });
-

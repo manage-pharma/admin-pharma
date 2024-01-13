@@ -1,8 +1,8 @@
 import moment from "moment";
-import formatCurrency from '../../util/formatCurrency';
-const printReport = async(data) =>{
-    const importedItem = JSON.parse(JSON.stringify(data?.importItems))
-    const contentPrint = `
+import formatCurrency from "../../util/formatCurrency";
+const printReport = async (data) => {
+  const importedItem = JSON.parse(JSON.stringify(data?.importItems));
+  const contentPrint = `
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -113,7 +113,8 @@ const printReport = async(data) =>{
                             </tr>
                         </thead>
                         <tbody>
-                            ${importedItem?.map((item, index)=>`
+                            ${importedItem?.map(
+                              (item, index) => `
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>${item?.name}</td>
@@ -124,7 +125,8 @@ const printReport = async(data) =>{
                                     <td>${item?.VAT}%</td>
                                     <td>${item.price * item.qty}</td>
                                 </tr>
-                            `)}
+                            `,
+                            )}
                         </tbody>
                     </table>
                 </section>
@@ -142,7 +144,7 @@ const printReport = async(data) =>{
                 </div>
                 <div style="margin-top: 8px; display: flex; align-items: center; width: 100%;">
                 <div style="width: 60%; text-align: right;">Thành tiền:</div>
-                <div style="width: 40%; text-align: right;">${formatCurrency(((data?.totalPrice) + (data?.totalVAT)) - (data?.totalDiscount))}</div>
+                <div style="width: 40%; text-align: right;">${formatCurrency(data?.totalPrice + data?.totalVAT - data?.totalDiscount)}</div>
             </div>
 
                 <div style="margin-top: 8px;">Ghi chú:</div>
@@ -152,7 +154,7 @@ const printReport = async(data) =>{
                         &nbsp;
                     </div>
                     <div style="text-align: center; width: 100%;">
-                        An Giang, ngày ${moment().format('DD')} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}
+                        An Giang, ngày ${moment().format("DD")} tháng ${moment().format("MM")} năm ${moment().format("YYYY")}
                         <div style="height: 100px; font-weight: bold; margin-top: 5px">Người lập</div>
                         <div>${data.user?.name}</div>
                     </div>
@@ -162,22 +164,21 @@ const printReport = async(data) =>{
     </body>
 </html>
 
-    `
+    `;
 
-
-    const iframe = document.createElement('iframe')
-    const div = document.createElement('div')
-    div.id = 'printIF'
-    iframe.srcdoc = contentPrint
-    iframe.name = 'printIF'
-    div.appendChild(iframe)
-    document.querySelector('body').appendChild(div)
-    setTimeout(() => {
-      window.frames['printIF'].focus()
-      window.frames['printIF'].print()
-    }, 500)
-    window.frames['printIF'].onafterprint = () =>
-      document.querySelector('#printIF').remove()
-    return true
-}
-export default printReport
+  const iframe = document.createElement("iframe");
+  const div = document.createElement("div");
+  div.id = "printIF";
+  iframe.srcdoc = contentPrint;
+  iframe.name = "printIF";
+  div.appendChild(iframe);
+  document.querySelector("body").appendChild(div);
+  setTimeout(() => {
+    window.frames["printIF"].focus();
+    window.frames["printIF"].print();
+  }, 500);
+  window.frames["printIF"].onafterprint = () =>
+    document.querySelector("#printIF").remove();
+  return true;
+};
+export default printReport;

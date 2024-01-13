@@ -35,12 +35,12 @@ const InventoryCheck = (props) => {
   const [modalCancel, setModalCancel] = useState(false);
   const [dataModalCancel, setDataModalCancel] = useState();
   const inventoryCheckStatus = useSelector(
-    (state) => state.inventoryCheckStatus
+    (state) => state.inventoryCheckStatus,
   );
   const { success } = inventoryCheckStatus;
 
   const inventoryCheckCancel = useSelector(
-    (state) => state.inventoryCheckCancel
+    (state) => state.inventoryCheckCancel,
   );
   const { success: successCancel } = inventoryCheckCancel;
 

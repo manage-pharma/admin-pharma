@@ -54,8 +54,8 @@ const EditImportStock = (props) => {
     name: "",
     product: "",
     unit: "",
-    qty: 0,        
-    dataTotal: 0
+    qty: 0,
+    dataTotal: 0,
   });
 
   const [data, setData] = useState({
@@ -142,7 +142,7 @@ const EditImportStock = (props) => {
         ...data,
         requestItems: itemProducts,
         reqId,
-      })
+      }),
     );
   };
 
@@ -273,9 +273,13 @@ const EditImportStock = (props) => {
             }}
           />
           <div style={{ marginLeft: 10 }}>
-            {`(${products?.find(item => {
-              return item?._id === row?.product?._id;
-            })?.total_count || row?.dataTotal || 0})`}
+            {`(${
+              products?.find((item) => {
+                return item?._id === row?.product?._id;
+              })?.total_count ||
+              row?.dataTotal ||
+              0
+            })`}
           </div>
         </>
       ),
@@ -311,7 +315,7 @@ const EditImportStock = (props) => {
       product: row?.product?._id || row?.product,
       unit: row?.unit,
       qty: row?.qty,
-      dataTotal: row?.dataTotal
+      dataTotal: row?.dataTotal,
     });
   };
 
@@ -352,7 +356,7 @@ const EditImportStock = (props) => {
           product: selectedOptions.value,
           name: selectedOptions.dataFoo,
           unit: selectedOptions.dataUnit,
-          dataTotal: selectedOptions.dataTotal
+          dataTotal: selectedOptions.dataTotal,
         };
       });
       setSelectedProduct(selectedOptions);

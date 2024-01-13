@@ -1,48 +1,52 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Message from '../LoadingError/Error';
+import Message from "../LoadingError/Error";
 import debounce from "lodash.debounce";
-import { listDrugCancel } from '../../Redux/Actions/DrugCancelAction';
-import Toast from '../LoadingError/Toast';
+import { listDrugCancel } from "../../Redux/Actions/DrugCancelAction";
+import Toast from "../LoadingError/Toast";
 import renderToast from "../../util/Toast";
 import DrugCancelTable from "./DrugCancelTable";
 
+const MainDrugCancel = () => {
+  const dispatch = useDispatch();
 
-const MainDrugCancel
- = () => {
-  const dispatch = useDispatch()
-
-  const [ isStop , setIsStop ] = useState(false)
-  const [dessert, setDessert] = useState(false)
-  const [expanded, setExpanded] = useState(false)
-  const [keyword, setSearch] = useState()
+  const [isStop, setIsStop] = useState(false);
+  const [dessert, setDessert] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [keyword, setSearch] = useState();
   // const [toggleSearch, setToggleSearch] = useState(false)
   const [data, setData] = useState({
-    from: '',
-    to: ''
-  })
-  const {from,to} = data
-  const drugcancelList = useSelector(state=> state.drugCancelList)
-  const { loading, error, drugcancels } = drugcancelList
-  const callApiKeywordSearch = (keyword, from, to) =>{
-      dispatch(listDrugCancel(keyword, from, to))
-  }
-  const debounceDropDown = useRef(debounce((keyword, from, to) => callApiKeywordSearch(keyword, from, to) , 300)).current;
+    from: "",
+    to: "",
+  });
+  const { from, to } = data;
+  const drugcancelList = useSelector((state) => state.drugCancelList);
+  const { loading, error, drugcancels } = drugcancelList;
+  const callApiKeywordSearch = (keyword, from, to) => {
+    dispatch(listDrugCancel(keyword, from, to));
+  };
+  const debounceDropDown = useRef(
+    debounce(
+      (keyword, from, to) => callApiKeywordSearch(keyword, from, to),
+      300,
+    ),
+  ).current;
 
-  const handleSubmitSearch = e =>{
-    e.preventDefault()
-    setSearch(e.target.value)
-    debounceDropDown(e.target.value, data.from, data.to);
-  }
-
-  const handleChange = e =>{
+  const handleSubmitSearch = (e) => {
     e.preventDefault();
-    setData(prev => {
+    setSearch(e.target.value);
+    debounceDropDown(e.target.value, data.from, data.to);
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setData((prev) => {
       return {
-        ...prev, [e.target.name]: e.target.value
-      }
-    })
-  }
+        ...prev,
+        [e.target.name]: e.target.value,
+      };
+    });
+  };
   // const handleSearchDate = (e) =>{
   //   e.preventDefault();
   //   if(!toggleSearch){
@@ -60,52 +64,62 @@ const MainDrugCancel
   //       to: ''
   //     })
   //     dispatch(listDrugCancel(keyword))
-      
+
   //   }
-    
+
   //   setToggleSearch(!toggleSearch)
   // }
 
-  useEffect(()=>{
-      dispatch(listDrugCancel(keyword))
-  },[dispatch,keyword])
+  useEffect(() => {
+    dispatch(listDrugCancel(keyword));
+  }, [dispatch, keyword]);
 
   return (
     <>
-    <Toast/>
-    { error ? (<Message variant="alert-danger">{error}</Message>) : ''}
-    <section className="content-main">
-      <div className="content-header">
-        <h2 className="content-title">Danh sách sản phẩm thuốc đã huỷ</h2>
-      </div>
+      <Toast />
+      {error ? <Message variant="alert-danger">{error}</Message> : ""}
+      <section className="content-main">
+        <div className="content-header">
+          <h2 className="content-title">Danh sách sản phẩm thuốc đã huỷ</h2>
+        </div>
 
-      <div className="card card-custom mb-4 shadow-sm">
-        <header className="card-header bg-aliceblue">
-          <div className="row gx-3 py-3">
-            <div className="col-lg-4 col-md-6 me-auto d-flex">
-              <div className="me-1" style={{flexGrow: '1'}}>
-                <input
-                  type="search"
-                  placeholder="Tìm kiếm tên thuốc..."
-                  className="form-control p-2"
-                  value={keyword}
-                  onChange={handleSubmitSearch}
-                />
+        <div className="card card-custom mb-4 shadow-sm">
+          <header className="card-header bg-aliceblue">
+            <div className="row gx-3 py-3">
+              <div className="col-lg-4 col-md-6 me-auto d-flex">
+                <div className="me-1" style={{ flexGrow: "1" }}>
+                  <input
+                    type="search"
+                    placeholder="Tìm kiếm tên thuốc..."
+                    className="form-control p-2"
+                    value={keyword}
+                    onChange={handleSubmitSearch}
+                  />
+                </div>
+                <div>
+                  <button
+                    className="btn btn-success me-1"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setDessert((prev) => !prev);
+                    }}
+                  >
+                    {!dessert ? "Đổ màu" : "Tắt màu"}
+                  </button>
+                </div>
+                <div>
+                  <button
+                    className="btn btn-success"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setExpanded((prev) => !prev);
+                    }}
+                  >
+                    {!expanded ? "Mở rộng" : "Thu gọn"}
+                  </button>
+                </div>
               </div>
-              <div>
-                <button className="btn btn-success me-1" onClick={(e)=>{
-                  e.preventDefault()
-                  setDessert(prev => !prev)
-                }}>{!dessert ? 'Đổ màu' : 'Tắt màu'}</button>
-              </div>
-              <div>
-                <button className="btn btn-success" onClick={(e)=>{
-                  e.preventDefault()
-                  setExpanded(prev => !prev)
-                }}>{!expanded ? 'Mở rộng' : 'Thu gọn' }</button>
-              </div>
-            </div>
-            {/*<div className="col-lg-2 col-6 col-md-3">
+              {/*<div className="col-lg-2 col-6 col-md-3">
               <div className="d-flex">
                 <span className="label-date">From: </span>
                 <input
@@ -138,22 +152,21 @@ const MainDrugCancel
                 <button className="btn btn-success" onClick={handleSearchDate}>Search</button>
               }
             </div>*/}
-          </div>
-        </header>
+            </div>
+          </header>
 
-        <div>
-          <DrugCancelTable
-            drugcancels={drugcancels}
-            loading={loading}
-            dessert={dessert}
-            expanded={expanded}
-          />
+          <div>
+            <DrugCancelTable
+              drugcancels={drugcancels}
+              loading={loading}
+              dessert={dessert}
+              expanded={expanded}
+            />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </>
   );
 };
 
-export default MainDrugCancel
-;
+export default MainDrugCancel;

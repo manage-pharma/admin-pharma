@@ -50,8 +50,7 @@ import {
   orderCanceledReducer,
   orderConformReducer,
   orderReceivedReducer,
-  orderCompletedReducer
-
+  orderCompletedReducer,
 } from "./Reducers/OrderReducers";
 import {
   categoryCreateReducer,
@@ -124,12 +123,42 @@ import {
   inventoryCheckStatusReducer,
   inventoryCheckUpdateReducer,
 } from "./Reducers/InventoryCheckReducer";
-import {PageCreateReducer, PageDeleteReducer, PageListReducer} from './Reducers/PageReducer';
-import {ContactCreateReducer, ContactDeleteReducer, ContactListReducer} from './Reducers/ContactReducer';
-import {contentSingleReducer,contentUpdateReducer} from './Reducers/ContentReducer';
-import {promotionCreateReducer,promotionUpdateReducer,promotionDeleteReducer,promotionListReducer,promotionProductListReducer} from "./Reducers/PromotionReducer"
-import { reqInventoryCancelReducer, reqInventoryCreateReducer, reqInventoryDetailReducer, reqInventoryListReducer, reqInventoryStatusReducer, reqInventoryUpdateReducer } from "./Reducers/RequestInventoryReducer";
-import { NotificationListReducer, NotificationSetEXPReducer, NotificationSetOHReducer, NotificationSingleReducer, NotificationUpdateReducer } from "./Reducers/NotificationReducer";
+import {
+  PageCreateReducer,
+  PageDeleteReducer,
+  PageListReducer,
+} from "./Reducers/PageReducer";
+import {
+  ContactCreateReducer,
+  ContactDeleteReducer,
+  ContactListReducer,
+} from "./Reducers/ContactReducer";
+import {
+  contentSingleReducer,
+  contentUpdateReducer,
+} from "./Reducers/ContentReducer";
+import {
+  promotionCreateReducer,
+  promotionUpdateReducer,
+  promotionDeleteReducer,
+  promotionListReducer,
+  promotionProductListReducer,
+} from "./Reducers/PromotionReducer";
+import {
+  reqInventoryCancelReducer,
+  reqInventoryCreateReducer,
+  reqInventoryDetailReducer,
+  reqInventoryListReducer,
+  reqInventoryStatusReducer,
+  reqInventoryUpdateReducer,
+} from "./Reducers/RequestInventoryReducer";
+import {
+  NotificationListReducer,
+  NotificationSetEXPReducer,
+  NotificationSetOHReducer,
+  NotificationSingleReducer,
+  NotificationUpdateReducer,
+} from "./Reducers/NotificationReducer";
 import { DrugCancelListReducer } from "./Reducers/DrugCancelReducer";
 const reducer = combineReducers({
   theme: themeReducer,
@@ -146,9 +175,9 @@ const reducer = combineReducers({
   customerList: customerListReducer,
   customerSingle: customerSingleReducer,
   customerUpdate: customerUpdateReducer,
-  customerChangeProfile:customerChangeProfileReducer,
-  customerUpdateProfile:customerUpdateProfileReducer,
-  customerDelete:customerDeleteReducer,
+  customerChangeProfile: customerChangeProfileReducer,
+  customerUpdateProfile: customerUpdateProfileReducer,
+  customerDelete: customerDeleteReducer,
 
   productList: productListReducer,
   productListWithQty: productListWithQtyReducer,
@@ -168,17 +197,17 @@ const reducer = combineReducers({
   drugstoreCategoriesDrug: drugstoreCategoriesDrugReducer,
   drugstoreUpdate: drugstoreUpdateReducer,
   drugstoreImport: drugstoreImportReducer,
-  drugstoreUpdateReview:  drugstoreUpdateReviewReducer,
+  drugstoreUpdateReview: drugstoreUpdateReviewReducer,
 
   orderList: orderListReducer,
-  orderSearchList:orderSearchListReducer,
-  orderSearchD2DList:orderSearchD2DListReducer,
+  orderSearchList: orderSearchListReducer,
+  orderSearchD2DList: orderSearchD2DListReducer,
   orderDetail: orderDetailReducer,
   orderDelivered: orderDeliveredReducer,
-  orderCanceled:orderCanceledReducer,
-  orderConform :orderConformReducer,
-  orderReceived:orderReceivedReducer,
-  orderCompleted:orderCompletedReducer,
+  orderCanceled: orderCanceledReducer,
+  orderConform: orderConformReducer,
+  orderReceived: orderReceivedReducer,
+  orderCompleted: orderCompletedReducer,
 
   categoryList: categoryListReducer,
   categoryCreate: categoryCreateReducer,
@@ -258,19 +287,19 @@ const reducer = combineReducers({
   contentSingle: contentSingleReducer,
   contentUpdate: contentUpdateReducer,
 
-  promotionList:promotionListReducer,
-  promotionCreate:promotionCreateReducer,
-  promotionUpdate:promotionUpdateReducer,
-  promotionDelete:promotionDeleteReducer,
-  promotionProductList:promotionProductListReducer,
+  promotionList: promotionListReducer,
+  promotionCreate: promotionCreateReducer,
+  promotionUpdate: promotionUpdateReducer,
+  promotionDelete: promotionDeleteReducer,
+  promotionProductList: promotionProductListReducer,
 
   notificationList: NotificationListReducer,
   notificationSingle: NotificationSingleReducer,
   notificationUpdate: NotificationUpdateReducer,
-  
+
   notificationOH: NotificationSetOHReducer,
   notificationEXP: NotificationSetEXPReducer,
-  
+
   drugCancelList: DrugCancelListReducer,
 });
 
@@ -287,7 +316,7 @@ const middleware = [thunk];
 const store = createStore(
   reducer,
   initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
+  composeWithDevTools(applyMiddleware(...middleware)),
 );
 
 export default store;

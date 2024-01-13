@@ -29,10 +29,16 @@ const MainInventoryCheck = (props) => {
 
   const inventoryCheckList = useSelector((state) => state.inventoryCheckList);
   const { loading, error, inventoryCheck } = inventoryCheckList;
-  const inventoryCheckStatus = useSelector((state) => state.inventoryCheckStatus);
-  const { loading: loadingStatus, error: errorStatus, success } = inventoryCheckStatus;
+  const inventoryCheckStatus = useSelector(
+    (state) => state.inventoryCheckStatus,
+  );
+  const {
+    loading: loadingStatus,
+    error: errorStatus,
+    success,
+  } = inventoryCheckStatus;
   const inventoryCheckCancel = useSelector(
-    (state) => state.inventoryCheckCancel
+    (state) => state.inventoryCheckCancel,
   );
   const { error: errorCancel } = inventoryCheckCancel;
   const callApiKeywordSearch = (keyword, pageNumber, from, to) => {
@@ -42,8 +48,8 @@ const MainInventoryCheck = (props) => {
     debounce(
       (keyword, pageNumber, from, to) =>
         callApiKeywordSearch(keyword, pageNumber, from, to),
-      300
-    )
+      300,
+    ),
   ).current;
 
   const handleSubmitSearch = (e) => {
@@ -98,7 +104,9 @@ const MainInventoryCheck = (props) => {
     <>
       <Toast />
       {error || errorStatus || errorCancel ? (
-        <Message variant="alert-danger">{error || errorStatus || errorCancel}</Message>
+        <Message variant="alert-danger">
+          {error || errorStatus || errorCancel}
+        </Message>
       ) : (
         ""
       )}
