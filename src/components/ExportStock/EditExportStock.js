@@ -745,7 +745,6 @@ const EditImportStock = (props) => {
                       checked={isExportCanceled}
                       name="isExportCanceled"
                       onChange={() => {
-                        console.log(itemProducts);
                         const hasExpiredLot = itemProducts?.some((item) => {
                           return (
                             item?.lotField &&
