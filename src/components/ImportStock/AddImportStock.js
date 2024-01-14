@@ -657,7 +657,6 @@ const AddImportStock = () => {
                                     </select> */}
                     <Select
                       isSearchable
-                      isClearable
                       options={options}
                       value={selectedOptions}
                       onChange={handleChangeProduct}

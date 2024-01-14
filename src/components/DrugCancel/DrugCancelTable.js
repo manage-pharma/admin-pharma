@@ -65,7 +65,6 @@ const DrugCancelTable = (props) => {
       name: "Số lượng",
       selector: (row) =>
         row?.stock?.reduce((sum, item) => {
-          console.log(item?.count);
           return sum + item.count;
         }, 0),
       sortable: true,

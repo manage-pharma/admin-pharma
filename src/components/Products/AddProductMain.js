@@ -39,6 +39,7 @@ import formatCurrency from "./../../util/formatCurrency";
 import { backendUrlFile } from "../../util/fileUploader";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Select from "react-select";
 
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -51,8 +52,8 @@ const AddProductMain = () => {
   const history = useHistory();
   const [itemAPI, setItemAPI] = useState([]);
   const [fieldAPI, setFieldAPI] = useState({
-    API: "",
-    content: 0,
+    API: null,
+    content: null,
   });
   const [isStop, setIsStop] = useState(false);
   const [modalShowUnit, setModalShowUnit] = useState(false);
@@ -88,6 +89,26 @@ const AddProductMain = () => {
   const categoryDrugList = useSelector((state) => state.categoryDrugList);
   const { categoriesDrug } = categoryDrugList;
 
+  const categoriesOption = [];
+  if (categories?.length > 0) {
+    categories.map((item) => {
+      categoriesOption.push({
+        value: item._id,
+        label: item.name,
+      });
+    });
+  }
+
+  const categoriesDrugOption = [];
+  if (categoriesDrug?.length > 0) {
+    categoriesDrug.map((item) => {
+      categoriesDrugOption.push({
+        value: item._id,
+        label: item.name,
+      });
+    });
+  }
+
   //! UNIT
   const unitList = useSelector((state) => state.unitList);
   const { error: errorUnit, units } = unitList;
@@ -105,6 +126,16 @@ const AddProductMain = () => {
     error: errorUnitDelete,
     success: successUnitDelete,
   } = unitDeleted;
+
+  const unitsOption = [];
+  if (units?.length > 0) {
+    units.map((item) => {
+      unitsOption.push({
+        value: item,
+        label: item,
+      });
+    });
+  }
 
   //! MANUFACTURER
   const manufacturerList = useSelector((state) => state.manufacturerList);
@@ -124,6 +155,16 @@ const AddProductMain = () => {
     success: successManufacturerDelete,
   } = manufacturerDeleted;
 
+  const manufacturersOption = [];
+  if (manufacturers?.length > 0) {
+    manufacturers.map((item) => {
+      manufacturersOption.push({
+        value: item,
+        label: item,
+      });
+    });
+  }
+
   //! COUNTRY OF ORIGIN
   const countryList = useSelector((state) => state.countryList);
   const { error: errorCountry, countries } = countryList;
@@ -141,6 +182,16 @@ const AddProductMain = () => {
     error: errorCountryDelete,
     success: successCountryDelete,
   } = countryDeleted;
+
+  const countriesOption = [];
+  if (countries?.length > 0) {
+    countries.map((item) => {
+      countriesOption.push({
+        value: item,
+        label: item,
+      });
+    });
+  }
 
   //! ACTIVE PHARMA INGREDIENT (API)
   const APIList = useSelector((state) => state.APIList);
@@ -160,6 +211,16 @@ const AddProductMain = () => {
     success: successAPIDelete,
   } = APIDeleted;
 
+  const API_itemOption = [];
+  if (API_item?.length > 0) {
+    API_item.map((item) => {
+      API_itemOption.push({
+        value: item,
+        label: item,
+      });
+    });
+  }
+
   //! Handler
   const handleChange = (e) => {
     let formattedPrice = price;
@@ -173,15 +234,6 @@ const AddProductMain = () => {
     }));
   };
 
-  const handleChangeAPI = (e) => {
-    setFieldAPI((prev) => {
-      return {
-        ...prev,
-        [e.target.name]: e.target.value,
-      };
-    });
-  };
-
   const handleAddAPI = (e) => {
     e.preventDefault();
     let flag = false;
@@ -191,27 +243,26 @@ const AddProductMain = () => {
         renderToast("Hoạt chất chưa được chọn", "error", setIsStop, isStop);
       }
       return;
-    } else if (fieldAPI.content <= 0) {
-      if (!isStop) {
-        renderToast("Hàm lượng phải lớn hơn 0", "error", setIsStop, isStop);
-      }
-      return;
-    } else {
+    }
+    // else if (fieldAPI.content <= 0) {
+    //   if (!isStop) {
+    //     renderToast("Hàm lượng phải lớn hơn 0", "error", setIsStop, isStop);
+    //   }
+    //   return;
+    // }
+    else {
       APIs.forEach((item, index) => {
-        if (item.API === fieldAPI.API) {
+        if (item.API === fieldAPI.API.value) {
           flag = true;
           APIs.splice(index, 1, {
             ...item,
-            content: item.content + parseInt(fieldAPI.content),
+            content,
           });
           setItemAPI(APIs);
         }
       });
       if (!flag) {
-        setItemAPI((prev) => [
-          ...prev,
-          { ...fieldAPI, content: parseInt(content) },
-        ]);
+        setItemAPI((prev) => [...prev, { API: API.value, content: content }]);
       }
     }
   };
@@ -238,7 +289,7 @@ const AddProductMain = () => {
         formData.append("image", image);
         const { data: dataUp } = await axios.post(
           `/api/products/single`,
-          formData,
+          formData
         );
         if (dataUp.filename) {
           arrImg.push(`${backendUrlFile.image}/${dataUp.filename}`);
@@ -247,7 +298,16 @@ const AddProductMain = () => {
     }
 
     data.image = arrImg;
-    dispatch(createProduct({ ...data, APIs: APIs }));
+    dispatch(createProduct({ 
+      ...data, 
+      unit: data?.unit?.value,
+      category: data?.category?.value,
+      categoryDrug: data?.categoryDrug?.value,
+      manufacturer: data?.manufacturer?.value,
+      countryOfOrigin: data?.countryOfOrigin?.value,
+      APIs: APIs
+    }))
+
     setData({
       name: "",
       regisId: "",
@@ -494,20 +554,21 @@ const AddProductMain = () => {
                       <label htmlFor="product_category" className="form-label">
                         Nhóm hàng
                       </label>
-                      <select
-                        value={category}
-                        name="category"
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                      >
-                        <option value="">Chọn nhóm hàng</option>
-                        {categories?.map((item, index) => (
-                          <option key={index} value={item._id}>
-                            {item.name}
-                          </option>
-                        ))}
-                      </select>
+                      <Select
+                        isSearchable
+                        isClearable
+                        options={categoriesOption}
+                        value={data?.category}
+                        onChange={(selectedOptions) =>
+                          setData((prev) => ({
+                            ...prev,
+                            category: selectedOptions,
+                          }))
+                        }
+                        placeholder="Chọn nhóm hàng"
+                        getOptionLabel={(option) => option.label}
+                        getOptionValue={(option) => option.value}
+                      />
                     </div>
 
                     <div>
@@ -517,20 +578,21 @@ const AddProductMain = () => {
                       >
                         Nhóm thuốc
                       </label>
-                      <select
-                        value={categoryDrug}
-                        name="categoryDrug"
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                      >
-                        <option value="">Chọn nhóm thuốc</option>
-                        {categoriesDrug?.map((item, index) => (
-                          <option key={index} value={item._id}>
-                            {item.name}
-                          </option>
-                        ))}
-                      </select>
+                      <Select
+                        isSearchable
+                        isClearable
+                        options={categoriesDrugOption}
+                        value={data?.categoryDrug}
+                        onChange={(selectedOptions) =>
+                          setData((prev) => ({
+                            ...prev,
+                            categoryDrug: selectedOptions,
+                          }))
+                        }
+                        placeholder="Chọn nhóm thuốc"
+                        getOptionLabel={(option) => option.label}
+                        getOptionValue={(option) => option.value}
+                      />
                     </div>
 
                     <div>
@@ -567,20 +629,21 @@ const AddProductMain = () => {
                         <label htmlFor="unit" className="form-label">
                           Đơn vị tính
                         </label>
-                        <select
-                          value={unit}
-                          name="unit"
-                          onChange={handleChange}
-                          className="form-control"
-                          required
-                        >
-                          <option value="">Chọn đơn vị tính</option>
-                          {units?.map((item, index) => (
-                            <option key={index} value={item}>
-                              {item}
-                            </option>
-                          ))}
-                        </select>
+                        <Select
+                          isSearchable
+                          isClearable
+                          options={unitsOption}
+                          value={data?.unit}
+                          onChange={(selectedOptions) =>
+                            setData((prev) => ({
+                              ...prev,
+                              unit: selectedOptions,
+                            }))
+                          }
+                          placeholder="Chọn đơn vị tính"
+                          getOptionLabel={(option) => option.label}
+                          getOptionValue={(option) => option.value}
+                        />
                       </div>
                       <div
                         style={{
@@ -663,20 +726,21 @@ const AddProductMain = () => {
                           <label htmlFor="unit" className="form-label">
                             Hoạt chất
                           </label>
-                          <select
-                            value={API}
-                            name="API"
-                            onChange={handleChangeAPI}
-                            className="form-control"
-                            required
-                          >
-                            <option value="">Chọn hoạt chất</option>
-                            {API_item?.map((item, index) => (
-                              <option key={index} value={item}>
-                                {item}
-                              </option>
-                            ))}
-                          </select>
+                          <Select
+                            isSearchable
+                            isClearable
+                            options={API_itemOption}
+                            value={fieldAPI.API}
+                            onChange={(selectedOptions) => {
+                              setFieldAPI((prev) => ({
+                                ...prev,
+                                API: selectedOptions,
+                              }));
+                            }}
+                            placeholder="Chọn hoạt chất"
+                            getOptionLabel={(option) => option.label}
+                            getOptionValue={(option) => option.value}
+                          />
                         </div>
                         <div
                           style={{
@@ -701,14 +765,18 @@ const AddProductMain = () => {
                             htmlFor="product_packing"
                             className="form-label"
                           >
-                            Hàm lượng (g)
+                            Hàm lượng (đơn vị)
                           </label>
                           <input
                             name="content"
                             value={content}
-                            onChange={handleChangeAPI}
-                            type="number"
-                            placeholder="Nhập số gam"
+                            onChange={(e) => {
+                              setFieldAPI((prev) => ({
+                                ...prev,
+                                content: e.target.value,
+                              }));
+                            }}
+                            placeholder="Nhập hàm lượng"
                             className="form-control"
                             id="product_packing"
                             required
@@ -780,20 +848,21 @@ const AddProductMain = () => {
                       <label htmlFor="unit" className="form-label">
                         Nhà sản xuất
                       </label>
-                      <select
-                        value={manufacturer}
-                        name="manufacturer"
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                      >
-                        <option value="">Chọn nhà sản xuất</option>
-                        {manufacturers?.map((item, index) => (
-                          <option key={index} value={item}>
-                            {item}
-                          </option>
-                        ))}
-                      </select>
+                      <Select
+                        isSearchable
+                        isClearable
+                        options={manufacturersOption}
+                        value={data?.manufacturer}
+                        onChange={(selectedOptions) =>
+                          setData((prev) => ({
+                            ...prev,
+                            manufacturer: selectedOptions,
+                          }))
+                        }
+                        placeholder="Chọn nhà sản xuất"
+                        getOptionLabel={(option) => option.label}
+                        getOptionValue={(option) => option.value}
+                      />
                     </div>
                     <div
                       style={{
@@ -817,20 +886,21 @@ const AddProductMain = () => {
                       <label htmlFor="unit" className="form-label">
                         Nước sản xuất
                       </label>
-                      <select
-                        value={countryOfOrigin}
-                        name="countryOfOrigin"
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                      >
-                        <option value="">Chọn nước sản xuất</option>
-                        {countries?.map((item, index) => (
-                          <option key={index} value={item}>
-                            {item}
-                          </option>
-                        ))}
-                      </select>
+                      <Select
+                        isSearchable
+                        isClearable
+                        options={countriesOption}
+                        value={data?.countryOfOrigin}
+                        onChange={(selectedOptions) =>
+                          setData((prev) => ({
+                            ...prev,
+                            countryOfOrigin: selectedOptions,
+                          }))
+                        }
+                        placeholder="Chọn nước sản xuất"
+                        getOptionLabel={(option) => option.label}
+                        getOptionValue={(option) => option.value}
+                      />
                     </div>
                     <div
                       style={{
@@ -862,7 +932,7 @@ const AddProductMain = () => {
                           writer.setStyle(
                             "height",
                             "350px",
-                            editor.editing.view.document.getRoot(),
+                            editor.editing.view.document.getRoot()
                           );
                         });
                       }}
@@ -882,7 +952,7 @@ const AddProductMain = () => {
                           writer.setStyle(
                             "height",
                             "350px",
-                            editor.editing.view.document.getRoot(),
+                            editor.editing.view.document.getRoot()
                           );
                         });
                       }}

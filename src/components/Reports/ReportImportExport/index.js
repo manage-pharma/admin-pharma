@@ -27,7 +27,6 @@ const ReportEvent = React.memo(({ keyword, from, to, isToday, typeTime }) => {
         <div className="groupItem">
           {Object.entries(dataChart)?.map(([key, value], index) => {
             const hasData = value?.some((d) => d.value > 0);
-            console.log(value?.length);
             return (
               <>
                 {hasData ? (
