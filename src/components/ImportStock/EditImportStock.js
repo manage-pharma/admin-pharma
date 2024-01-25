@@ -10,6 +10,7 @@ import { listUser } from "../../Redux/Actions/UserActions";
 import { listProduct } from "./../../Redux/Actions/ProductActions";
 import { useHistory } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
+import Message from "../LoadingError/Error";
 import {
   IMPORT_STOCK_DETAILS_RESET,
   IMPORT_STOCK_UPDATE_RESET,
@@ -45,7 +46,7 @@ const EditImportStock = (props) => {
   const { users } = userList;
 
   const importUpdate = useSelector((state) => state.importStockUpdate);
-  const { success } = importUpdate;
+  const { success, error } = importUpdate;
 
   const [isStop, setIsStop] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
@@ -516,6 +517,7 @@ const EditImportStock = (props) => {
   return (
     <>
       <Toast />
+      {error ? <Message variant="alert-danger">{error}</Message> : ""}
       <section
         className={`content-main ${importStockItem?.status ? "disabled" : ""}`}
       >

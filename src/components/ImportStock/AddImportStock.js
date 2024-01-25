@@ -11,6 +11,7 @@ import { listUser } from "../../Redux/Actions/UserActions";
 import { listProduct } from "./../../Redux/Actions/ProductActions";
 import { useHistory } from "react-router-dom";
 import Toast from "./../LoadingError/Toast";
+import Message from "../LoadingError/Error";
 import moment from "moment";
 import renderToast from "../../util/Toast";
 import formatCurrency from "./../../util/formatCurrency";
@@ -30,7 +31,7 @@ const AddImportStock = () => {
   const createImportStockStatus = useSelector(
     (state) => state.importStockCreate,
   );
-  const { success } = createImportStockStatus;
+  const { success, error } = createImportStockStatus
 
   const providerList = useSelector((state) => state.providerList);
   const { providers } = providerList;
@@ -522,6 +523,7 @@ const AddImportStock = () => {
   return (
     <>
       <Toast />
+      {error ? <Message variant="alert-danger">{error}</Message> : ""}
       <section className="content-main" style={{ display: "grid" }}>
         <form onSubmit={handleSubmit}>
           <div className="content-header">

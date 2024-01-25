@@ -136,7 +136,18 @@ export const createImportStock =
 
         config,
       );
-      dispatch({ type: IMPORT_STOCK_CREATE_SUCCESS, payload: data });
+      if(data.error){
+        dispatch({
+          type: IMPORT_STOCK_CREATE_FAIL,
+          payload: data.message,
+        });
+        setTimeout(() => {
+          dispatch({ type: IMPORT_STOCK_CREATE_RESET });
+        }, 4000);
+      }
+      else{
+        dispatch({ type: IMPORT_STOCK_CREATE_SUCCESS, payload: data });
+      }
     } catch (error) {
       const message =
         error.response && error.response.data.message
@@ -235,7 +246,18 @@ export const updateImportStock =
         },
         config,
       );
-      dispatch({ type: IMPORT_STOCK_UPDATE_SUCCESS, payload: data });
+      if(data.error){
+        dispatch({
+          type: IMPORT_STOCK_UPDATE_FAIL,
+          payload: data.message,
+        });
+        setTimeout(() => {
+          dispatch({ type: IMPORT_STOCK_UPDATE_RESET });
+        }, 4000);
+      }
+      else{
+        dispatch({ type: IMPORT_STOCK_UPDATE_SUCCESS, payload: data });
+      }
     } catch (error) {
       const message =
         error.response && error.response.data.message
