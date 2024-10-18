@@ -6,7 +6,7 @@ This guide provides step-by-step instructions on how to download and install Mon
 
 2. Once the download is complete, extract the downloaded files and copy them to a suitable location on your computer, such as C:\Program Files\MongoDB\Server\6.0\bin.
 
-3. Add the path C:\Program Files\MongoDB\Server\6.0\bin to the system environment variables.
+3. Add the path ```C:\Program Files\MongoDB\Server\6.0\bin``` to the system environment variables.
 
 #### Importing Data
 1. Get the "tool_mongodb" folder in this project and extract it to your computer. Or you can get tool mongodb at "https://www.mongodb.com/try/download/database-tools"
