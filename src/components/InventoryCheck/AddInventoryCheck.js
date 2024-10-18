@@ -44,7 +44,7 @@ const AddInventoryCheck = () => {
   const [isStop, setIsStop] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
   const [modalShowActivePharma, setModalShowActivePharma] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [field, setFieldProduct] = useState({
     _id: "",
     name: "",
@@ -202,7 +202,7 @@ const AddInventoryCheck = () => {
         realQty: 0,
         unequal: 0,
       });
-      setSelectedProduct({});
+      setSelectedProduct(null);
       setItemProducts([]);
     }
 

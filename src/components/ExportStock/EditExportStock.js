@@ -50,7 +50,7 @@ const EditImportStock = (props) => {
   const [isEdited, setIsEdited] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
   const [globalFlag, setGlobalFlag] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [field, setFieldProduct] = useState({
     countInStock: 0,
     name: "",
@@ -483,7 +483,7 @@ const EditImportStock = (props) => {
       toast.success(`Cập nhật thành công`, ToastObjects);
       dispatch({ type: EXPORT_STOCK_UPDATE_RESET });
       dispatch({ type: EXPORT_STOCK_DETAILS_RESET });
-      setSelectedProduct({});
+      setSelectedProduct(null);
       dispatch(singleExportStock(exportId));
     }
     if (exportId !== exportStockItem?._id) {
@@ -526,8 +526,8 @@ const EditImportStock = (props) => {
     }
     refreshField();
 
-    const tempLot = selectedOptions.dataLotlist
-      ? [...JSON.parse(selectedOptions.dataLotlist)]
+    const tempLot = selectedOptions?.dataLotlist
+      ? [...JSON.parse(selectedOptions?.dataLotlist)]
       : [];
     const updateQtyLot = [];
     const { index, product } = checkExistProduct(idProduct, itemProducts);
@@ -544,9 +544,9 @@ const EditImportStock = (props) => {
       setFieldProduct((prev) => {
         return {
           ...prev,
-          product: selectedOptions.value,
-          name: selectedOptions.dataFoo,
-          countInStock: selectedOptions.dataCountinstock,
+          product: selectedOptions?.value,
+          name: selectedOptions?.dataFoo,
+          countInStock: selectedOptions?.dataCountinstock,
           qty: 0,
           lotField: tempLot,
         };

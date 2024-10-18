@@ -44,7 +44,7 @@ const AddImportStock = () => {
 
   const [isStop, setIsStop] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [field, setFieldProduct] = useState({
     name: "",
     product: "",
@@ -287,7 +287,7 @@ const AddImportStock = () => {
         qty: 0,
       });
       setItemProducts([]);
-      setSelectedProduct({});
+      setSelectedProduct(null);
       dispatch(listImportStock());
     }
     dispatch(listProvider());
@@ -478,7 +478,15 @@ const AddImportStock = () => {
       discount: row?.discount,
       qty: row?.qty,
     });
-  };
+  
+    setSelectedProduct({
+      value: row?.product,
+      label: row?.name,
+      dataFoo: row?.name,
+      dataExpproduct: row?.expProduct,
+    })
+  }
+  
   // start search input
   const options = [];
   if (products?.length > 0) {
@@ -491,8 +499,15 @@ const AddImportStock = () => {
       });
     });
   }
+  const refreshField = () => {
+    const inputElements = document.querySelectorAll("#list-field input");
+    inputElements.forEach((input) => {
+      input.value = "";
+    });
+  };
 
   const handleChangeProduct = (selectedOptions) => {
+    console.log(selectedOptions)
     if (selectedOptions?.target?.name) {
       let formattedPrice = price;
       if (selectedOptions.target.name === "price") {
@@ -509,9 +524,9 @@ const AddImportStock = () => {
       setFieldProduct((prev) => {
         return {
           ...prev,
-          product: selectedOptions.value,
-          name: selectedOptions.dataFoo,
-          expProduct: selectedOptions.dataExpproduct,
+          product: selectedOptions?.value,
+          name: selectedOptions?.dataFoo,
+          expProduct: selectedOptions?.dataExpproduct,
         };
       });
       setSelectedProduct(selectedOptions);
@@ -637,7 +652,7 @@ const AddImportStock = () => {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4" id="list-field">
             <div className="card card-custom mb-4 shadow-sm">
               <div className="card-body">
                 <div className="mb-4 form-divided-2">
@@ -645,22 +660,11 @@ const AddImportStock = () => {
                     <label htmlFor="product_category" className="form-label">
                       Tên thuốc
                     </label>
-                    {/* <select
-                                    id="select-product"
-                                    value={product}
-                                    name="product"
-                                    onChange={handleChangeProduct}
-                                    className="form-control"
-                                    required >
-                                        <option value=''>Chọn thuốc</option>
-                                        {products?.map((item, index)=>(
-                                            <option key={index} value={item._id} data-foo={item.name} data-expproduct={item.expDrug}>{item.name}</option>
-                                        ))}
-                                    </select> */}
                     <Select
                       isSearchable
+                      isClearable
                       options={options}
-                      value={selectedOptions}
+                      value={selectedProduct}
                       onChange={handleChangeProduct}
                       placeholder="Chọn thuốc cần nhập"
                       getOptionLabel={(option) => (
