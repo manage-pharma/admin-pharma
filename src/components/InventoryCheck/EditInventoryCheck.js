@@ -56,7 +56,7 @@ const EditInventoryCheck = (props) => {
   const [isStop, setIsStop] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [field, setFieldProduct] = useState({
     _id: "",
     name: "",
@@ -210,7 +210,7 @@ const EditInventoryCheck = (props) => {
       dispatch({ type: INVENTORY_CHECK_UPDATE_RESET });
       dispatch({ type: INVENTORY_CHECK_DETAILS_RESET });
       dispatch({ type: INVENTORY_CHECK_LIST_ITEM_RESET });
-      setSelectedProduct({});
+      setSelectedProduct(null);
       dispatch(singleInventoryCheck(checkId));
     }
     if (checkId !== inventoryCheckItem?._id) {

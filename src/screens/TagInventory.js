@@ -12,6 +12,7 @@ import { listProduct } from "../Redux/Actions/ProductActions";
 import { tagInventory } from "../Redux/Actions/InventoryAction";
 import NoRecords from "../util/noData";
 import { useHistory } from "react-router-dom";
+import { INVENTORY_TAG_RESET } from "../Redux/Constants/InventoryConstants";
 
 const TagInventory = () => {
   const textNoRecord = "vui lòng chọn thông tin để thống kê";
@@ -38,8 +39,8 @@ const TagInventory = () => {
   const debounceDropDown = useRef(
     debounce(
       (keyword, from, to) => callApiKeywordSearch(keyword, from, to),
-      300,
-    ),
+      300
+    )
   ).current;
 
   const handleSubmitSearch = (e) => {
@@ -184,6 +185,21 @@ const TagInventory = () => {
     }
   }, [dispatch, keyword, data.from, data.to]);
 
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      setSearch("");
+      setData({
+        from: "",
+        to: "",
+      });
+      setToggleSearch(false);
+      dispatch({ type: INVENTORY_TAG_RESET });
+    });
+
+    return () => {
+      unlisten();
+    };
+  }, [history]);
   return (
     <>
       <Sidebar />

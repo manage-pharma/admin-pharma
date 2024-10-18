@@ -23,7 +23,7 @@ const ExpandedComponent = (props) => {
     },
     {
       name: "Ngày sản xuất",
-      selector: (row) => moment(row?.manufactureDate).format("DD-MM-YYYY"),
+      selector: (row) => row?.manufactureDate ? moment(row?.manufactureDate).format("DD-MM-YYYY") : '--/--/----',
       sortable: true,
       minWidth: "180px",
     },

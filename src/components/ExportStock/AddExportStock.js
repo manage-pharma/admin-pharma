@@ -49,7 +49,7 @@ const AddExportStock = () => {
 
   const [isStop, setIsStop] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [field, setFieldProduct] = useState({
     countInStock: 0,
     name: "",
@@ -361,7 +361,7 @@ const AddExportStock = () => {
         qty: 0,
       });
       setItemProducts([]);
-      setSelectedProduct({});
+      setSelectedProduct(null);
       dispatch(listExportStock());
       dispatch(SetEXPNotification([]));
     }
@@ -469,11 +469,11 @@ const AddExportStock = () => {
         };
       });
     } else {
-      const tempLot = selectedOptions.dataLotlist
-        ? [...JSON.parse(selectedOptions.dataLotlist)]
+      const tempLot = selectedOptions?.dataLotlist
+        ? [...JSON.parse(selectedOptions?.dataLotlist)]
         : [];
       const updateQtyLot = [];
-      tempLot.forEach((lot, index) => {
+      tempLot?.forEach((lot, index) => {
         updateQtyLot[index] = {
           name: lot.lotNumber,
           value: 0,
@@ -484,9 +484,9 @@ const AddExportStock = () => {
       setFieldProduct((prev) => {
         return {
           ...prev,
-          product: selectedOptions.value,
-          name: selectedOptions.dataFoo,
-          countInStock: selectedOptions.dataCountinstock,
+          product: selectedOptions?.value,
+          name: selectedOptions?.dataFoo,
+          countInStock: selectedOptions?.dataCountinstock,
           qty: 0,
           lotField: tempLot,
         };

@@ -51,7 +51,7 @@ const AddReqInventory = () => {
     dataTotal: 0,
   });
 
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const [data, setData] = useState({
     requestedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
@@ -156,7 +156,7 @@ const AddReqInventory = () => {
         dataTotal: 0,
       });
       setItemProducts([]);
-      setSelectedProduct({});
+      setSelectedProduct(null);
       dispatch(listReqInventory());
       dispatch(SetOHNotification([]));
     }
