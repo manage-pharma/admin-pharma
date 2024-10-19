@@ -62,14 +62,16 @@ const EditContentMain = () => {
   const { contentUp } = contentUpdate;
   const contentUpdated = useSelector((state) => state.contentUpdate);
   const { success } = contentUpdated;
-  const pageCreated = useSelector((state) => state.pageCreate);
-  const { success: successPageCreate } = pageCreated;
-
   const pageDeleted = useSelector((state) => state.pageDelete);
   const { success: successPageDelete } = pageDeleted;
 
   const contactCreated = useSelector((state) => state.contactCreate);
   const { success: successContactCreate } = contactCreated;
+
+  const pageCreated = useSelector((state) => state.pageCreate);
+  const { success: successPageCreate } = pageCreated;
+
+
 
   const contactDeleted = useSelector((state) => state.contactDelete);
   const { success: successContactDelete } = contactDeleted;
@@ -83,6 +85,7 @@ const EditContentMain = () => {
       };
     });
   };
+  console.log("123123")
 
   //! PAGE
   const handleChangePage = (e) => {
@@ -104,9 +107,7 @@ const EditContentMain = () => {
       }
       return;
     } else if (!fieldPage.link) {
-      if (!isStop) {
-        renderToast("Link liên kết bị bỏ trống", "error", setIsStop, isStop);
-      }
+
       return;
     } else {
       if (!flag) {
@@ -127,9 +128,7 @@ const EditContentMain = () => {
 
   const handleDeletePage = (e, index) => {
     e.preventDefault();
-    const newArr = [...itemPage];
-    newArr.splice(index, 1);
-    setItemPage(newArr);
+
   };
 
   //! Contact

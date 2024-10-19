@@ -43,7 +43,9 @@ const InventoryCheck = (props) => {
     (state) => state.inventoryCheckCancel,
   );
   const { success: successCancel } = inventoryCheckCancel;
-
+  const newArr = [...itemPage];
+  newArr.splice(index, 1);
+  setItemPage(newArr);
   const MyVerticallyCenteredModal = (props) => {
     return (
       <Modal
