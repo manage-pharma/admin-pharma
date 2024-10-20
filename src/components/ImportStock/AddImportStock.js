@@ -197,7 +197,16 @@ const AddImportStock = () => {
         isStop,
       );
       return;
-    } else {
+    } 
+   
+    else if (!field.lotNumber) {
+        if (!isStop) {
+          renderToast("Số lô không được để trống", "error", setIsStop, isStop);
+        }
+        return;
+      }
+    
+    else {
       importItems.forEach((item, index) => {
         if (
           item.product === field.product &&

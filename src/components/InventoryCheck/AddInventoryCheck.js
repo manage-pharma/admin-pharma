@@ -226,26 +226,67 @@ const AddInventoryCheck = () => {
       });
     });
   }
+
+
+  
+  const [optionsState, setOptions] = useState([])
+
+  useEffect(() => {
+    
+    if(inventories){
+      const options = [];
+      inventories.map((p) => {
+        options.push({
+          value: p?.idDrug?._id,
+          label: p.idDrug.name,
+          lotNumber: p.lotNumber,
+          dataFoo: p.idDrug.name,
+          dataInventory: JSON.stringify(p),
+        });
+      });
+      setOptions(options)
+    }
+  }, [inventories])
+
+  
   const handleChangeProduct = (selectedOptions) => {
-    setFieldProduct(() => {
-      let data = selectedOptions.dataInventory
-        ? JSON.parse(selectedOptions.dataInventory)
-        : {};
-      return {
-        _id: data._id,
-        name: data.idDrug.name,
-        product: data.idDrug._id,
-        lotNumber: data.lotNumber,
-        count: data.count,
-        expDrug: data.expDrug,
+    if(selectedOptions?.dataInventory){
+      setFieldProduct(() => {
+        const data = JSON.parse(selectedOptions?.dataInventory);
+        return {
+          _id: data?._id,
+          name: data?.idDrug?.name,
+          product: data?.idDrug?._id,
+          lotNumber: data?.lotNumber,
+          count: data?.count,
+          expDrug: data?.expDrug,
+          realQty: "",
+          unequal: -data?.count,
+        };  
+      });
+      setSelectedProduct(selectedOptions);
+    }
+    else {
+      setFieldProduct({
+        _id: "",
+        name: "",
+        product: "",
+        lotNumber: "",
+        expDrug: moment(new Date(Date.now())).format("YYYY-MM-DD"),
+        count: 0,
         realQty: "",
-        unequal: -data.count,
-      };
-    });
-    setSelectedProduct(selectedOptions);
+        unequal: 0,
+      })
+      setSelectedProduct(null)
+    }
+   
   };
 
   const selectedOptions = selectedProduct;
+  console.log({
+    selectedOptions,
+    field
+  })
   // end search input
   return (
     <>
@@ -344,12 +385,12 @@ const AddInventoryCheck = () => {
                     <Select
                       isSearchable
                       isClearable
-                      options={options}
+                      options={optionsState}
                       value={selectedOptions}
                       onChange={handleChangeProduct}
                       placeholder="Chọn thuốc cần kiểm tra"
                       getOptionLabel={(option) =>
-                        selectedOptions && (
+                        (
                           <div data-foo={option.dataFoo}>
                             {option.label}{" "}
                             {option.label && `- (Số lô: ${option.lotNumber})`}
