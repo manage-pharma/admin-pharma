@@ -73,6 +73,10 @@ const DashboardChart = () => {
   };
 
   useEffect(() => {
+    setKeyword('');
+  }, [])
+
+  useEffect(() => {
     getMessageUpdated();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentFilter, refreshData]);
@@ -165,6 +169,7 @@ const DashboardChart = () => {
       window.document.title = prevTitle;
     };
   }, []);
+
 
   return (
     <>

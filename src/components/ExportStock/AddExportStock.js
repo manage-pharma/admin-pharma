@@ -350,6 +350,7 @@ const AddExportStock = () => {
       dispatch({ type: EXPORT_STOCK_CREATE_RESET });
       setData({
         note: "",
+        reason: "",
         totalPrice: 0,
         exportedAt: moment(new Date(Date.now())).format("YYYY-MM-DD"),
       });

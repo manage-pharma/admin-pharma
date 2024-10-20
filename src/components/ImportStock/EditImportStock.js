@@ -183,6 +183,12 @@ const EditImportStock = (props) => {
       );
       return;
     }
+    else if (!field.lotNumber) {
+      if (!isStop) {
+        renderToast("Số lô không được để trống", "error", setIsStop, isStop);
+      }
+      return;
+    }
     itemProducts.forEach((item, index) => {
       if (
         (item.product._id || item.product) === field.product &&
