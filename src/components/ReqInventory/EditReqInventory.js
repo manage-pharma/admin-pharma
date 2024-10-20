@@ -49,7 +49,7 @@ const EditImportStock = (props) => {
   const [isStop, setIsStop] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [itemProducts, setItemProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [field, setFieldProduct] = useState({
     name: "",
     product: "",
@@ -142,7 +142,7 @@ const EditImportStock = (props) => {
         ...data,
         requestItems: itemProducts,
         reqId,
-      }),
+      })
     );
   };
 
@@ -163,7 +163,7 @@ const EditImportStock = (props) => {
       toast.success(`Cập nhập đơn thành công`, ToastObjects);
       dispatch({ type: REQ_INVENTORY_DETAILS_RESET });
       dispatch({ type: REQ_INVENTORY_UPDATE_RESET });
-      setSelectedProduct({});
+      setSelectedProduct(null);
       dispatch(singleReqInventory(reqId));
     }
     if (reqId !== reqInventoryItem?._id) {
@@ -308,6 +308,68 @@ const EditImportStock = (props) => {
     },
   ];
 
+  const columnsView = [
+    {
+      name: "STT",
+      selector: (row, index) => <b>{index + 1}</b>,
+      reorder: true,
+      width: "60px",
+    },
+    {
+      name: "Tên thuốc",
+      selector: (row) => row?.name,
+      sortable: true,
+      reorder: true,
+      grow: 3,
+    },
+    {
+      name: "Đơn vị",
+      selector: (row) => row?.unit,
+      sortable: true,
+      reorder: true,
+      grow: 2,
+    },
+    {
+      name: "Số lượng",
+      // selector: (row) => row?.qty,
+      sortable: true,
+      reorder: true,
+      cell: (row) => (
+        <>
+          <input
+            type="number"
+            style={{ width: "120px" }}
+            value={row?.qty}
+            onChange={(e) => {
+              itemProducts?.forEach((item, index) => {
+                if (
+                  (item?.product?._id || item?.product) ===
+                  (row?.product?._id || row?.product)
+                ) {
+                  itemProducts?.splice(index, 1, {
+                    ...item,
+                    qty: parseInt(e.target.value),
+                  });
+                  setItemProducts(JSON.parse(JSON.stringify(itemProducts)));
+                }
+              });
+            }}
+          />
+          <div style={{ marginLeft: 10 }}>
+            {`(${
+              products?.find((item) => {
+                return item?._id === row?.product?._id;
+              })?.total_count ||
+              row?.dataTotal ||
+              0
+            })`}
+          </div>
+        </>
+      ),
+      grow: 2,
+    },
+  ];
+
   const handleRowClicked = (row) => {
     setSelectedProduct(null);
     setFieldProduct({
@@ -405,155 +467,168 @@ const EditImportStock = (props) => {
               )}
             </div>
           </div>
-          <div className="mb-4">
-            <div className="card card-custom mb-4 shadow-sm">
-              <div className="card-body">
-                <div className="mb-4 form-divided-2">
-                  <div>
-                    <label htmlFor="name_drug" className="form-label">
-                      Nhà cung cấp
-                    </label>
-                    <select
-                      id="select-provider"
-                      value={provider}
-                      name="provider"
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                    >
-                      <option value="">Chọn nhà cung cấp</option>
-                      {providers?.map((item, index) => (
-                        <option
-                          key={index}
-                          value={item._id}
-                          data-foo={item.invoiceSymbol}
+          {!importStockItem?.status ? (
+            <>
+              <div className="mb-4">
+                <div className="card card-custom mb-4 shadow-sm">
+                  <div className="card-body">
+                    <div className="mb-4 form-divided-2">
+                      <div>
+                        <label htmlFor="name_drug" className="form-label">
+                          Nhà cung cấp
+                        </label>
+                        <select
+                          id="select-provider"
+                          value={provider}
+                          name="provider"
+                          onChange={handleChange}
+                          className="form-control"
+                          required
                         >
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="form-label">Ghi chú</label>
-                    <input
-                      name="note"
-                      className="form-control"
-                      type="text"
-                      onChange={handleChange}
-                      value={note}
-                    ></input>
-                  </div>
-                </div>
-                <div className="mb-4 form-divided-2">
-                  <div>
-                    <label className="form-label">Ngày nhập</label>
-                    <input
-                      id="datePicker"
-                      name="requestedAt"
-                      className="form-control"
-                      type="date"
-                      required
-                      onChange={handleChange}
-                      value={requestedAt}
-                    ></input>
-                  </div>
-                  <div>
-                    <label htmlFor="product_category" className="form-label">
-                      Người nhập
-                    </label>
-                    <select
-                      value={user}
-                      name="user"
-                      onChange={handleChange}
-                      className="form-control"
-                      required
-                    >
-                      <option value="">Chọn người nhập</option>
-                      {users?.map((item, index) => (
-                        <option key={index} value={item._id}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
+                          <option value="">Chọn nhà cung cấp</option>
+                          {providers?.map((item, index) => (
+                            <option
+                              key={index}
+                              value={item._id}
+                              data-foo={item.invoiceSymbol}
+                            >
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="form-label">Ghi chú</label>
+                        <input
+                          name="note"
+                          className="form-control"
+                          type="text"
+                          onChange={handleChange}
+                          value={note}
+                        ></input>
+                      </div>
+                    </div>
+                    <div className="mb-4 form-divided-2">
+                      <div>
+                        <label className="form-label">Ngày nhập</label>
+                        <input
+                          id="datePicker"
+                          name="requestedAt"
+                          className="form-control"
+                          type="date"
+                          required
+                          onChange={handleChange}
+                          value={requestedAt}
+                        ></input>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="product_category"
+                          className="form-label"
+                        >
+                          Người nhập
+                        </label>
+                        <select
+                          value={user}
+                          name="user"
+                          onChange={handleChange}
+                          className="form-control"
+                          required
+                        >
+                          <option value="">Chọn người nhập</option>
+                          {users?.map((item, index) => (
+                            <option key={index} value={item._id}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="mb-4">
-            <div className="card card-custom mb-4 shadow-sm">
-              <div className="card-body">
-                <div className="mb-4 form-divided-2">
-                  <div>
-                    <label htmlFor="product_category" className="form-label">
-                      Tên thuốc
-                    </label>
-                    {/* <select
-                                    id="select-product"
-                                    value={product}
-                                    name="product"
-                                    onChange={handleChangeProduct}
-                                    className="form-control"
-                                    >
-                                        <option value=''>Chọn thuốc</option>
-                                        {products?.map((item, index)=>(
-                                            <option key={index} value={item._id} data-foo={item.name} data-unit={item.unit}>{item.name}</option>
-                                        ))}
-                                    </select> */}
-                    <Select
-                      isSearchable
-                      isClearable
-                      options={options}
-                      value={
-                        selectedOptions ||
-                        options?.find((item) => item.value === product)
-                      }
-                      onChange={handleChangeProduct}
-                      placeholder="Chọn thuốc cần yêu cầu"
-                      getOptionLabel={(option) => (
-                        <div data-foo={option.dataFoo}>
-                          {option.label}{" "}
-                          {option.label && `- (Tổng tồn: ${option.dataTotal})`}
-                        </div>
-                      )}
-                      getOptionValue={(option) => option.value}
-                      filterOption={(option, inputValue) =>
-                        option.data.label
-                          .toLowerCase()
-                          .includes(inputValue.toLowerCase())
-                      }
-                      styles={colourStyles}
-                      getOptionStyle={(option) =>
-                        colourStyles.option(null, { data: option })
-                      }
-                    />
+              <div className="mb-4">
+                <div className="card card-custom mb-4 shadow-sm">
+                  <div className="card-body">
+                    <div className="mb-4 form-divided-2">
+                      <div>
+                        <label
+                          htmlFor="product_category"
+                          className="form-label"
+                        >
+                          Tên thuốc
+                        </label>
+                        {/* <select
+                                          id="select-product"
+                                          value={product}
+                                          name="product"
+                                          onChange={handleChangeProduct}
+                                          className="form-control"
+                                          >
+                                              <option value=''>Chọn thuốc</option>
+                                              {products?.map((item, index)=>(
+                                                  <option key={index} value={item._id} data-foo={item.name} data-unit={item.unit}>{item.name}</option>
+                                              ))}
+                                          </select> */}
+                        <Select
+                          isSearchable
+                          isClearable
+                          options={options}
+                          value={
+                            selectedOptions ||
+                            options?.find((item) => item.value === product)
+                          }
+                          onChange={handleChangeProduct}
+                          placeholder="Chọn thuốc cần yêu cầu"
+                          getOptionLabel={(option) => (
+                            <div data-foo={option.dataFoo}>
+                              {option.label}{" "}
+                              {option.label &&
+                                `- (Tổng tồn: ${option.dataTotal})`}
+                            </div>
+                          )}
+                          getOptionValue={(option) => option.value}
+                          filterOption={(option, inputValue) =>
+                            option.data.label
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                          styles={colourStyles}
+                          getOptionStyle={(option) =>
+                            colourStyles.option(null, { data: option })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="qty" className="form-label">
+                          Số lượng
+                        </label>
+                        <input
+                          name="qty"
+                          value={qty}
+                          type="number"
+                          className="form-control"
+                          onChange={handleChangeProduct}
+                          onFocus={handleFocus}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-6 d-flex justify-content-end">
+                      <button
+                        className="btn btn-success"
+                        onClick={handleAddProduct}
+                      >
+                        Thêm sản phẩm
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <label htmlFor="qty" className="form-label">
-                      Số lượng
-                    </label>
-                    <input
-                      name="qty"
-                      value={qty}
-                      type="number"
-                      className="form-control"
-                      onChange={handleChangeProduct}
-                      onFocus={handleFocus}
-                    />
-                  </div>
-                </div>
-                <div className="mb-6 d-flex justify-content-end">
-                  <button
-                    className="btn btn-success"
-                    onClick={handleAddProduct}
-                  >
-                    Thêm sản phẩm
-                  </button>
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          ) : (
+            <></>
+          )}
         </form>
 
         <div className="card card-custom mb-4 shadow-sm">
@@ -561,7 +636,7 @@ const EditImportStock = (props) => {
             <div className="row gx-3 pt-3">
               <DataTable
                 // theme="solarized"
-                columns={columns}
+                columns={importStockItem?.status ? columnsView : columns}
                 data={itemProducts}
                 noDataComponent={NoRecords()}
                 customStyles={customStyles}

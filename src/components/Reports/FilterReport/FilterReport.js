@@ -7,7 +7,7 @@ const FilterReport = (props) => {
   const { handleChangeFilter, refreshData } = props;
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [triggerHandleChange, setTriggerHandleChange] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const currentYear = new Date().getFullYear();
 
   const productList = useSelector((state) => state.productList);
