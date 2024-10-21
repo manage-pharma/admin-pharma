@@ -194,7 +194,7 @@ const EditContentMain = () => {
         formData.append("image", image.image);
         let { data: dataUpdate } = await axios.post(
           `/api/products/single`,
-          formData,
+          formData
         );
         imgOldURL.push({
           link: image.link,
@@ -211,7 +211,7 @@ const EditContentMain = () => {
       formData.append("image", imageLogo);
       let { data: dataUpdate } = await axios.post(
         `/api/products/single`,
-        formData,
+        formData
       );
       const imglogoUrl = dataUpdate.filename;
       logoNew = process.env.REACT_APP_BE_URL + "/upload/" + imglogoUrl;
@@ -223,7 +223,7 @@ const EditContentMain = () => {
       formData.append("image", imageQR);
       var { data: dataUpdate } = await axios.post(
         `/api/products/single`,
-        formData,
+        formData
       );
       const imgqrCodeUrl = dataUpdate.filename;
       qrNew = process.env.REACT_APP_BE_URL + "/upload/" + imgqrCodeUrl;
@@ -240,7 +240,7 @@ const EditContentMain = () => {
     dispatch(
       updateContent({
         ...dataPost,
-      }),
+      })
     );
   };
 
@@ -387,19 +387,26 @@ const EditContentMain = () => {
                         />
                       </div>
                       <div className="row img-up">
-                        <div key="" className="file_img my-1 w-50 h-50">
-                          <img
-                            src={
-                              imageLogo?.name
-                                ? URL.createObjectURL(imageLogo)
-                                : imageLogo
-                            }
-                            alt=""
-                            className="img-thumbnail rounded"
-                          />
+                        {
+                          imageLogo?.name ? (
+                            <div key="" className="file_img my-1 w-50 h-50">
+                              <img
+                                src={
+                                  imageLogo?.name
+                                    ? URL.createObjectURL(imageLogo)
+                                    : imageLogo
+                                }
+                                alt=""
+                                className="img-thumbnail rounded"
+                              />
 
-                          <span onClick={() => setImageLogo("")}>X</span>
-                        </div>
+                              <span onClick={() => {
+                                setImageLogo("")
+                                document.getElementById('uploadFileLogo').value = ''
+                              }}>X</span>
+                            </div>
+                          ) : <></> 
+                        }
                       </div>
                     </div>
                     <div>
@@ -829,18 +836,25 @@ const EditContentMain = () => {
                       />
                     </div>
                     <div className="row img-up">
-                      <div key="" className="file_img my-1 w-50 h-50">
-                        <img
-                          src={
-                            imageQR?.name
-                              ? URL.createObjectURL(imageQR)
-                              : imageQR
-                          } //imageQR?URL.createObjectURL(imageQR):
-                          alt=""
-                          className="img-thumbnail rounded "
-                        />
-                        <span onClick={() => setImageQR("")}>X</span>
-                      </div>
+                      {imageQR?.name > 0 ? (
+                        <div key="" className="file_img my-1 w-50 h-50">
+                          <img
+                            src={
+                              imageQR?.name
+                                ? URL.createObjectURL(imageQR)
+                                : imageQR
+                            } //imageQR?URL.createObjectURL(imageQR):
+                            alt=""
+                            className="img-thumbnail rounded "
+                          />
+                          <span onClick={() => {
+                            setImageQR("")
+                            document.getElementById('uploadFileQR').value = ''
+                          }}>X</span>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                   <div>
