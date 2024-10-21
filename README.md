@@ -13,9 +13,9 @@ This guide provides step-by-step instructions on how to download and install Mon
 
 2. Copy all the files in the bin folder and paste them into C:\Program Files\MongoDB\Server\6.0\bin.
 
-3. Get the "pharma_dumb" folder in this project and extract it to the D: drive.
+3. Get the ```pharma_dumb``` folder in this project and extract it to the D: drive.
 
-4. Open a CMD in this path "C:\Program Files\MongoDB\Server\6.0\bin" and execute the following command:
+4. Open a CMD in this path ```C:\Program Files\MongoDB\Server\6.0\bin``` and execute the following command:
 ```
 mongorestore --db pharma D:\pharma_dumb
 ```
