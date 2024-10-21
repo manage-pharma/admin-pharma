@@ -405,7 +405,7 @@ const EditProductMain = (props) => {
         type: PRODUCT_UPDATE_RESET,
       });
       dispatch(singleProduct(productId));
-      toast.success("Thuốc đẫ được cập nhật", ToastObjects);
+      toast.success("Thuốc đã được cập nhật", ToastObjects);
     }
     if (successUnitCreate) {
       toast.success("Đơn vị tính đã được thêm", ToastObjects);
@@ -424,7 +424,7 @@ const EditProductMain = (props) => {
       dispatch({ type: MANUFACTURER_DELETE_RESET });
     }
     if (successCountryCreate) {
-      toast.success("Nước sản xuất đẫ được thêm", ToastObjects);
+      toast.success("Nước sản xuất đã được thêm", ToastObjects);
       dispatch({ type: COUNTRY_CREATE_RESET });
     }
     if (successCountryDelete) {
