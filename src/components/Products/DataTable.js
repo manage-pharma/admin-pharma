@@ -93,7 +93,7 @@ const DataTableProduct = (props) => {
       selector: (row) => row?.name,
       sortable: true,
       reorder: true,
-      minWidth: "180px",
+      minWidth: "250px",
     },
     {
       name: "Hình ảnh",
@@ -104,6 +104,7 @@ const DataTableProduct = (props) => {
           alt="ImageCategory"
         />
       ),
+      minWidth: "50px",
     },
     {
       name: "Nhóm hàng",
@@ -117,45 +118,46 @@ const DataTableProduct = (props) => {
       sortable: true,
       minWidth: "180px",
     },
-    {
-      name: "Thuốc kê đơn",
-      selector: (row) =>
-        row?.prescription ? (
-          <span
-            className="badge bg-success text-white p-2"
-            style={{ minWidth: "45px" }}
-          >
-            Có
-          </span>
-        ) : (
-          <span className="badge bg-danger text-white p-2">Không</span>
-        ),
-      sortable: true,
-      reorder: true,
-      sortFunction: (products) => {
-        return [products].map((a, b) => {
-          const fieldA = a?.prescription;
-          const fieldB = b?.prescription;
-          let comparison = 0;
+    // {
+    //   name: "Thuốc kê đơn",
+    //   selector: (row) =>
+    //     row?.prescription ? (
+    //       <span
+    //         className="badge bg-success text-white p-2"
+    //         style={{ minWidth: "45px" }}
+    //       >
+    //         Có
+    //       </span>
+    //     ) : (
+    //       <span className="badge bg-danger text-white p-2">Không</span>
+    //     ),
+    //   sortable: true,
+    //   reorder: true,
+    //   sortFunction: (products) => {
+    //     return [products].map((a, b) => {
+    //       const fieldA = a?.prescription;
+    //       const fieldB = b?.prescription;
+    //       let comparison = 0;
 
-          if (fieldA === fieldB) {
-            comparison = 0;
-          } else if (fieldA === true) {
-            comparison = 1;
-          } else {
-            comparison = -1;
-          }
+    //       if (fieldA === fieldB) {
+    //         comparison = 0;
+    //       } else if (fieldA === true) {
+    //         comparison = 1;
+    //       } else {
+    //         comparison = -1;
+    //       }
 
-          return comparison;
-        });
-      },
-      minWidth: "150px",
-    },
+    //       return comparison;
+    //     });
+    //   },
+    //   minWidth: "150px",
+    // },
     {
       name: "DVT",
       selector: (row) => row?.unit,
       sortable: true,
       reorder: true,
+      minWidth: "80px",
     },
     {
       name: "Giá",
@@ -170,40 +172,40 @@ const DataTableProduct = (props) => {
       reorder: true,
     },
 
-    {
-      name: "Thuốc bán",
-      selector: (row) =>
-        row?.allowToSell ? (
-          <span
-            className="badge bg-success text-white p-2   "
-            style={{ minWidth: "45px" }}
-          >
-            Có
-          </span>
-        ) : (
-          <span className="badge bg-danger text-white p-2 ">Không</span>
-        ),
-      sortable: true,
-      sortFunction: (products) => {
-        return [products].map((a, b) => {
-          const fieldA = a?.prescription;
-          const fieldB = b?.prescription;
-          let comparison = 0;
+    // {
+    //   name: "Thuốc bán",
+    //   selector: (row) =>
+    //     row?.allowToSell ? (
+    //       <span
+    //         className="badge bg-success text-white p-2   "
+    //         style={{ minWidth: "45px" }}
+    //       >
+    //         Có
+    //       </span>
+    //     ) : (
+    //       <span className="badge bg-danger text-white p-2 ">Không</span>
+    //     ),
+    //   sortable: true,
+    //   sortFunction: (products) => {
+    //     return [products].map((a, b) => {
+    //       const fieldA = a?.prescription;
+    //       const fieldB = b?.prescription;
+    //       let comparison = 0;
 
-          if (fieldA === fieldB) {
-            comparison = 0;
-          } else if (fieldA === true) {
-            comparison = 1;
-          } else {
-            comparison = -1;
-          }
+    //       if (fieldA === fieldB) {
+    //         comparison = 0;
+    //       } else if (fieldA === true) {
+    //         comparison = 1;
+    //       } else {
+    //         comparison = -1;
+    //       }
 
-          return comparison;
-        });
-      },
-      reorder: true,
-      minWidth: "120px",
-    },
+    //       return comparison;
+    //     });
+    //   },
+    //   reorder: true,
+    //   minWidth: "120px",
+    // },
     !unShowSetting && {
       name: "Hành động",
       cell: (row) => <CustomMaterialMenu size="small" row={row} />,

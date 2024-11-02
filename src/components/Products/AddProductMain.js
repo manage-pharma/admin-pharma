@@ -349,7 +349,7 @@ const AddProductMain = () => {
       dispatch({ type: MANUFACTURER_DELETE_RESET });
     }
     if (successCountryCreate) {
-      toast.success("Nước sản xuất đẫ được thêm", ToastObjects);
+      toast.success("Nước sản xuất đã được thêm", ToastObjects);
       dispatch({ type: COUNTRY_CREATE_RESET });
     }
     if (successCountryDelete) {
@@ -980,7 +980,7 @@ const AddProductMain = () => {
                       />
                     </div>
                     <div className="row img-up">
-                      {images.map((img, index) => (
+                      {images?.length > 0 && isArray(images) ? images?.map((img, index) => (
                         <div key={index} className="file_img my-1">
                           <img
                             src={img.url ? img.url : URL.createObjectURL(img)}
@@ -989,7 +989,7 @@ const AddProductMain = () => {
                           />
                           <span onClick={() => deleteImage(index)}>X</span>
                         </div>
-                      ))}
+                      )) : <></>}
                     </div>
                   </div>
                   <div className="form-check form-switch">
